@@ -102,7 +102,7 @@ export default function SolutionsDealerships() {
           >
             <span className="inline-flex items-center gap-2 text-sm text-muted-foreground font-medium tracking-wide mb-4">
               <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-              For Car Dealerships
+              For Auto Dealerships
             </span>
             <h1 className="text-4xl lg:text-display-sm font-semibold text-foreground mb-6">
               Convert every internet lead into a showroom appointment

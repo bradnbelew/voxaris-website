@@ -9,7 +9,7 @@ const footerLinks = {
     { name: "Book a Demo", href: "/book-demo" },
   ],
   industries: [
-    { name: "Car Dealerships", href: "/solutions/dealerships" },
+    { name: "Auto Dealerships", href: "/solutions/dealerships" },
     { name: "Contractors", href: "/solutions/contractors" },
     { name: "Law Firms", href: "/solutions/law-firms" },
     { name: "Marketing Agencies", href: "/solutions/agencies" },

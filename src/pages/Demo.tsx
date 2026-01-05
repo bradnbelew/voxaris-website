@@ -192,7 +192,7 @@ export default function Demo() {
                       <Label htmlFor="interest">Industry</Label>
                       <Input
                         id="interest"
-                        placeholder="e.g. Marketing Agency, Car Dealership, Law Firm"
+                        placeholder="e.g. Marketing Agency, Auto Dealership, Law Firm"
                         value={formData.interest}
                         onChange={(e) => setFormData({ ...formData, interest: e.target.value })}
                         className="h-12"

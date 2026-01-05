@@ -157,7 +157,7 @@ export default function BookDemo() {
                       >
                         <option value="">Select your business type</option>
                         <option value="agency">Marketing Agency</option>
-                        <option value="dealership">Car Dealership / Dealer Group</option>
+                        <option value="dealership">Auto Dealership / Dealer Group</option>
                         <option value="home-services">Home Services</option>
                         <option value="multi-location">Multi-Location Business</option>
                         <option value="other">Other</option>

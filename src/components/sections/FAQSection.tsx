@@ -29,7 +29,7 @@ const faqs = [
   },
   {
     question: "Can this work outside dealerships?",
-    answer: "Yes. While we specialize in marketing agencies and car dealerships, Voxaris supports contractors, law firms, home services, and other appointment-based businesses. The qualification logic and workflows are customized for each industry."
+    answer: "Yes. While we specialize in marketing agencies and auto dealerships, Voxaris supports contractors, law firms, home services, and other appointment-based businesses. The qualification logic and workflows are customized for each industry."
   }
 ];
 
