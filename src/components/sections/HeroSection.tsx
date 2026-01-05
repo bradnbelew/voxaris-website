@@ -2,39 +2,59 @@ import { motion, Transition } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ArrowRight, Phone, MessageSquare, Calendar, Database, RefreshCw, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import voxarisLogo from "@/assets/voxaris-logo.png";
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 20 },
   visible: (delay: number) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, delay, ease: "easeOut" } as Transition
+    transition: { duration: 0.7, delay, ease: [0.25, 0.1, 0.25, 1] } as Transition
   })
 };
 
 export default function HeroSection() {
   return (
-    <section className="relative overflow-hidden">
-      {/* Subtle gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-secondary/30 via-background to-background" />
+    <section className="relative min-h-screen flex items-center overflow-hidden">
+      {/* Premium gradient background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-secondary/20" />
       
-      {/* Decorative elements */}
-      <div className="absolute top-20 right-0 w-[600px] h-[600px] rounded-full bg-secondary/40 blur-3xl opacity-50" />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-accent/30 blur-3xl opacity-40" />
+      {/* Subtle grid pattern */}
+      <div 
+        className="absolute inset-0 opacity-[0.015]"
+        style={{
+          backgroundImage: `linear-gradient(hsl(var(--foreground)) 1px, transparent 1px),
+                           linear-gradient(90deg, hsl(var(--foreground)) 1px, transparent 1px)`,
+          backgroundSize: '60px 60px'
+        }}
+      />
+      
+      {/* Elegant decorative orbs */}
+      <div className="absolute top-1/4 right-1/4 w-[500px] h-[500px] rounded-full bg-gradient-to-br from-secondary/60 to-transparent blur-3xl" />
+      <div className="absolute bottom-1/4 left-1/3 w-[400px] h-[400px] rounded-full bg-gradient-to-tr from-accent/40 to-transparent blur-3xl" />
 
-      <div className="container-wide relative">
-        <div className="py-24 lg:py-36 max-w-4xl">
-          {/* Eyebrow */}
+      <div className="container-wide relative w-full">
+        <div className="pt-32 pb-20 lg:pt-40 lg:pb-28">
+          {/* Logo Mark - Hero Feature */}
           <motion.div
             initial="hidden"
             animate="visible"
             custom={0}
             variants={fadeUp}
+            className="mb-10"
           >
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-secondary border border-border text-sm text-muted-foreground mb-8">
-              <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-              AI Sales Infrastructure
-            </span>
+            <div className="inline-flex items-center gap-4 px-5 py-2.5 rounded-full bg-card/80 backdrop-blur-sm border border-border/60 shadow-sm">
+              <img 
+                src={voxarisLogo} 
+                alt="Voxaris" 
+                className="h-7 w-auto"
+              />
+              <div className="w-px h-5 bg-border" />
+              <span className="flex items-center gap-2 text-sm text-muted-foreground font-medium">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                AI Sales Infrastructure
+              </span>
+            </div>
           </motion.div>
 
           {/* Main Headline */}
@@ -43,9 +63,9 @@ export default function HeroSection() {
             animate="visible"
             custom={0.1}
             variants={fadeUp}
-            className="text-4xl sm:text-5xl lg:text-display font-semibold tracking-tight text-foreground mb-6 text-balance"
+            className="text-[2.75rem] sm:text-5xl lg:text-6xl xl:text-[4rem] font-semibold tracking-[-0.02em] text-foreground mb-7 max-w-4xl leading-[1.1]"
           >
-            AI that converts inbound leads into booked appointments — automatically.
+            AI that converts inbound leads into booked appointments — <span className="text-muted-foreground">automatically.</span>
           </motion.h1>
 
           {/* Subheadline */}
@@ -54,7 +74,7 @@ export default function HeroSection() {
             animate="visible"
             custom={0.2}
             variants={fadeUp}
-            className="text-lg lg:text-xl text-muted-foreground max-w-2xl mb-10 leading-relaxed"
+            className="text-lg lg:text-xl text-muted-foreground max-w-2xl mb-12 leading-relaxed font-normal"
           >
             Voxaris is a full-stack AI sales and intake system that responds instantly, qualifies prospects, books appointments, and keeps your CRM clean — without adding staff.
           </motion.p>
@@ -65,12 +85,12 @@ export default function HeroSection() {
             animate="visible"
             custom={0.3}
             variants={fadeUp}
-            className="flex flex-col sm:flex-row gap-4"
+            className="flex flex-col sm:flex-row gap-4 mb-20"
           >
             <Link to="/book-demo">
-              <Button variant="hero" size="xl" className="w-full sm:w-auto">
+              <Button variant="hero" size="xl" className="w-full sm:w-auto shadow-lg shadow-primary/10">
                 Book a Demo
-                <ArrowRight className="h-5 w-5" />
+                <ArrowRight className="h-5 w-5 ml-1" />
               </Button>
             </Link>
             <Link to="/how-it-works">
@@ -79,35 +99,37 @@ export default function HeroSection() {
               </Button>
             </Link>
           </motion.div>
-        </div>
 
-        {/* Feature Pills */}
-        <motion.div
-          initial="hidden"
-          animate="visible"
-          custom={0.5}
-          variants={fadeUp}
-          className="pb-16 lg:pb-24"
-        >
-          <div className="flex flex-wrap gap-3">
-            {[
-              { icon: Phone, label: "Inbound Calls" },
-              { icon: MessageSquare, label: "SMS & Web" },
-              { icon: Calendar, label: "Appointment Booking" },
-              { icon: Database, label: "CRM Updates" },
-              { icon: RefreshCw, label: "Follow-up" },
-              { icon: BarChart3, label: "Attribution" },
-            ].map(({ icon: Icon, label }) => (
-              <div
-                key={label}
-                className="flex items-center gap-2 px-4 py-2 bg-card rounded-full border border-border text-sm text-muted-foreground"
-              >
-                <Icon className="h-4 w-4" />
-                {label}
-              </div>
-            ))}
-          </div>
-        </motion.div>
+          {/* Feature Pills - Refined */}
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            custom={0.5}
+            variants={fadeUp}
+          >
+            <p className="text-xs uppercase tracking-widest text-muted-foreground/60 font-medium mb-4">
+              Full-Stack Capabilities
+            </p>
+            <div className="flex flex-wrap gap-2.5">
+              {[
+                { icon: Phone, label: "Inbound Calls" },
+                { icon: MessageSquare, label: "SMS & Web" },
+                { icon: Calendar, label: "Booking" },
+                { icon: Database, label: "CRM Sync" },
+                { icon: RefreshCw, label: "Follow-up" },
+                { icon: BarChart3, label: "Attribution" },
+              ].map(({ icon: Icon, label }) => (
+                <div
+                  key={label}
+                  className="flex items-center gap-2 px-4 py-2.5 bg-card/60 backdrop-blur-sm rounded-full border border-border/60 text-[13px] text-muted-foreground font-medium hover:bg-card hover:border-border transition-all duration-200"
+                >
+                  <Icon className="h-3.5 w-3.5" />
+                  {label}
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
       </div>
     </section>
   );
