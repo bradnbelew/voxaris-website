@@ -6,7 +6,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Phone, CheckCircle2, Headphones, Calendar } from "lucide-react";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
 
 const expectations = [
   "Maria will answer in under 3 seconds",
@@ -30,27 +29,27 @@ export default function Demo() {
     setIsLoading(true);
     
     try {
-      const { data, error } = await supabase.functions.invoke('create-call', {
-        body: {
+      // Push contact to Go High Level which triggers the outbound call
+      await fetch('https://services.leadconnectorhq.com/hooks/ToDoGRzP16rnhpDlWK19/webhook-trigger/d5b4954a-6dd7-4047-ae2d-c692719e0017', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        mode: 'no-cors',
+        body: JSON.stringify({
           name: formData.name,
           phone: formData.phone,
           email: formData.email,
-        },
+        }),
       });
 
-      if (error) {
-        console.error('Error creating call:', error);
-        toast.error("Failed to initiate call. Please try again.");
-        setIsLoading(false);
-        return;
-      }
-
-      console.log('Call created:', data);
+      console.log('Contact pushed to GHL');
       setSubmitted(true);
       toast.success("Maria is calling you now!");
     } catch (err) {
       console.error('Unexpected error:', err);
       toast.error("Something went wrong. Please try again.");
+    } finally {
       setIsLoading(false);
     }
   };
