@@ -25,20 +25,24 @@ export default function Navigation() {
   const location = useLocation();
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
-      <nav className="container-wide">
-        <div className="flex items-center justify-between h-20">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-3">
+    <header className="fixed top-0 left-0 right-0 z-50">
+      {/* Elegant glass effect */}
+      <div className="absolute inset-0 bg-background/90 backdrop-blur-2xl" />
+      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+      
+      <nav className="container-wide relative">
+        <div className="flex items-center justify-between h-[72px]">
+          {/* Logo - Prominent & Clean */}
+          <Link to="/" className="flex items-center group">
             <img 
               src={voxarisLogo} 
               alt="Voxaris" 
-              className="h-10 w-auto"
+              className="h-9 w-auto transition-transform duration-300 group-hover:scale-[1.02]"
             />
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-8">
+          {/* Desktop Navigation - Centered */}
+          <div className="hidden lg:flex items-center gap-1">
             {navLinks.map((link) => (
               <div key={link.name} className="relative">
                 {link.children ? (
@@ -47,26 +51,30 @@ export default function Navigation() {
                     onMouseEnter={() => setSolutionsOpen(true)}
                     onMouseLeave={() => setSolutionsOpen(false)}
                   >
-                    <button className="flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2">
+                    <button className="flex items-center gap-1.5 px-4 py-2 text-[13px] font-medium text-muted-foreground hover:text-foreground transition-all duration-200 rounded-lg hover:bg-secondary/50">
                       {link.name}
-                      <ChevronDown className="h-4 w-4" />
+                      <ChevronDown 
+                        className="h-3.5 w-3.5 transition-transform duration-200" 
+                        style={{ transform: solutionsOpen ? 'rotate(180deg)' : 'rotate(0)' }} 
+                      />
                     </button>
                     <AnimatePresence>
                       {solutionsOpen && (
                         <motion.div
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: 10 }}
-                          transition={{ duration: 0.2 }}
-                          className="absolute top-full left-0 pt-2"
+                          initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                          transition={{ duration: 0.15, ease: "easeOut" }}
+                          className="absolute top-full left-1/2 -translate-x-1/2 pt-3"
                         >
-                          <div className="bg-card rounded-xl border border-border shadow-elegant p-2 min-w-[200px]">
+                          <div className="bg-card/95 backdrop-blur-xl rounded-xl border border-border/80 shadow-xl p-1.5 min-w-[220px]">
                             {link.children.map((child) => (
                               <Link
                                 key={child.name}
                                 to={child.href}
-                                className="block px-4 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-secondary rounded-lg transition-colors"
+                                className="flex items-center gap-3 px-4 py-3 text-[13px] text-muted-foreground hover:text-foreground hover:bg-secondary/60 rounded-lg transition-all duration-150"
                               >
+                                <div className="w-1.5 h-1.5 rounded-full bg-border" />
                                 {child.name}
                               </Link>
                             ))}
@@ -78,10 +86,10 @@ export default function Navigation() {
                 ) : (
                   <Link
                     to={link.href}
-                    className={`text-sm font-medium transition-colors py-2 ${
+                    className={`px-4 py-2 text-[13px] font-medium transition-all duration-200 rounded-lg ${
                       location.pathname === link.href
-                        ? "text-foreground"
-                        : "text-muted-foreground hover:text-foreground"
+                        ? "text-foreground bg-secondary/50"
+                        : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
                     }`}
                   >
                     {link.name}
@@ -92,14 +100,14 @@ export default function Navigation() {
           </div>
 
           {/* Desktop CTAs */}
-          <div className="hidden lg:flex items-center gap-4">
+          <div className="hidden lg:flex items-center gap-3">
             <Link to="/demo">
-              <Button variant="ghost" size="default">
+              <Button variant="ghost" size="sm" className="text-[13px] font-medium h-9 px-4">
                 Try Demo
               </Button>
             </Link>
             <Link to="/book-demo">
-              <Button variant="hero" size="default">
+              <Button variant="hero" size="sm" className="text-[13px] font-medium h-9 px-5 shadow-md">
                 Book a Demo
               </Button>
             </Link>
@@ -107,14 +115,14 @@ export default function Navigation() {
 
           {/* Mobile Menu Button */}
           <button
-            className="lg:hidden p-2"
+            className="lg:hidden p-2 rounded-lg hover:bg-secondary/50 transition-colors"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle menu"
           >
             {mobileOpen ? (
-              <X className="h-6 w-6" />
+              <X className="h-5 w-5" />
             ) : (
-              <Menu className="h-6 w-6" />
+              <Menu className="h-5 w-5" />
             )}
           </button>
         </div>
@@ -127,15 +135,15 @@ export default function Navigation() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="lg:hidden bg-background border-b border-border"
+            transition={{ duration: 0.25 }}
+            className="lg:hidden bg-background/95 backdrop-blur-xl border-b border-border"
           >
             <div className="container-wide py-6 space-y-4">
               {navLinks.map((link) => (
                 <div key={link.name}>
                   {link.children ? (
                     <div className="space-y-2">
-                      <p className="text-sm font-medium text-foreground">
+                      <p className="text-[13px] font-medium text-foreground">
                         {link.name}
                       </p>
                       <div className="pl-4 space-y-2">
@@ -143,7 +151,7 @@ export default function Navigation() {
                           <Link
                             key={child.name}
                             to={child.href}
-                            className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
+                            className="block text-[13px] text-muted-foreground hover:text-foreground transition-colors"
                             onClick={() => setMobileOpen(false)}
                           >
                             {child.name}
@@ -154,7 +162,7 @@ export default function Navigation() {
                   ) : (
                     <Link
                       to={link.href}
-                      className="block text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                      className="block text-[13px] font-medium text-muted-foreground hover:text-foreground transition-colors"
                       onClick={() => setMobileOpen(false)}
                     >
                       {link.name}
@@ -164,12 +172,12 @@ export default function Navigation() {
               ))}
               <div className="pt-4 space-y-3">
                 <Link to="/demo" onClick={() => setMobileOpen(false)}>
-                  <Button variant="outline" className="w-full">
+                  <Button variant="outline" className="w-full text-[13px]">
                     Try Demo
                   </Button>
                 </Link>
                 <Link to="/book-demo" onClick={() => setMobileOpen(false)}>
-                  <Button variant="hero" className="w-full">
+                  <Button variant="hero" className="w-full text-[13px]">
                     Book a Demo
                   </Button>
                 </Link>
