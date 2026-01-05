@@ -33,7 +33,7 @@ export default function HeroSection() {
       <div className="absolute bottom-1/4 left-1/3 w-[400px] h-[400px] rounded-full bg-gradient-to-tr from-accent/40 to-transparent blur-3xl" />
 
       <div className="container-wide relative w-full">
-        <div className="pt-32 pb-20 lg:pt-40 lg:pb-28">
+        <div className="pt-24 pb-16 lg:pt-28 lg:pb-20">
           {/* Tagline */}
           <motion.div
             initial="hidden"
