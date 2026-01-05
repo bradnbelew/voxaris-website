@@ -189,21 +189,14 @@ export default function Demo() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="interest">I'm interested in Voxaris for</Label>
-                      <Select 
-                        value={formData.interest} 
-                        onValueChange={(value) => setFormData({ ...formData, interest: value })}
-                        required
-                      >
-                        <SelectTrigger className="h-12">
-                          <SelectValue placeholder="Select your industry" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="agency">Marketing Agency</SelectItem>
-                          <SelectItem value="dealership">Car Dealership / Dealer Group</SelectItem>
-                          <SelectItem value="other">Other Industry</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <Label htmlFor="interest">Industry</Label>
+                      <Input
+                        id="interest"
+                        placeholder="e.g. Marketing Agency, Car Dealership, Law Firm"
+                        value={formData.interest}
+                        onChange={(e) => setFormData({ ...formData, interest: e.target.value })}
+                        className="h-12"
+                      />
                     </div>
 
                     <div className="space-y-2">
