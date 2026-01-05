@@ -5,12 +5,14 @@ const footerLinks = {
   product: [
     { name: "How It Works", href: "/how-it-works" },
     { name: "Why Voxaris", href: "/why-voxaris" },
-    { name: "Pricing", href: "/pricing" },
-    { name: "Demo", href: "/demo" },
+    { name: "Live Demo", href: "/demo" },
+    { name: "Book a Demo", href: "/book-demo" },
   ],
-  solutions: [
-    { name: "Marketing Agencies", href: "/solutions/agencies" },
+  industries: [
     { name: "Car Dealerships", href: "/solutions/dealerships" },
+    { name: "Contractors", href: "/solutions/contractors" },
+    { name: "Law Firms", href: "/solutions/law-firms" },
+    { name: "Marketing Agencies", href: "/solutions/agencies" },
   ],
   company: [
     { name: "Book a Demo", href: "/book-demo" },
@@ -33,8 +35,11 @@ export default function Footer() {
                 className="h-7 w-auto brightness-0 invert opacity-90"
               />
             </Link>
-            <p className="text-background/60 text-[15px] leading-relaxed">
+            <p className="text-background/60 text-[15px] leading-relaxed mb-4">
               AI sales infrastructure that converts inbound leads into booked appointments — automatically.
+            </p>
+            <p className="text-background/40 text-sm">
+              team@voxaris.ai
             </p>
           </div>
 
@@ -59,13 +64,13 @@ export default function Footer() {
               </ul>
             </div>
 
-            {/* Solutions */}
+            {/* Industries */}
             <div>
               <h4 className="font-semibold mb-5 text-[13px] tracking-wide uppercase text-background/40">
-                Solutions
+                Industries
               </h4>
               <ul className="space-y-3.5">
-                {footerLinks.solutions.map((link) => (
+                {footerLinks.industries.map((link) => (
                   <li key={link.name}>
                     <Link
                       to={link.href}

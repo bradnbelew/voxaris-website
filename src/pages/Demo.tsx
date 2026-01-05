@@ -4,21 +4,55 @@ import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Phone, Sparkles } from "lucide-react";
+import { Phone, Car, Wrench, Scale, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 
+const demoTypes = [
+  {
+    id: "dealership",
+    icon: Car,
+    title: "Dealership Demo",
+    description: "Experience how Maria qualifies car buyers and books test drives",
+    prompt: "I'm interested in a test drive"
+  },
+  {
+    id: "contractor",
+    icon: Wrench,
+    title: "Contractor Demo",
+    description: "See how Maria handles emergency service calls and books estimates",
+    prompt: "I need my roof repaired"
+  },
+  {
+    id: "lawfirm",
+    icon: Scale,
+    title: "Law Firm Demo",
+    description: "Watch Maria conduct intake screening and book consultations",
+    prompt: "I was in an accident"
+  }
+];
+
+const expectations = [
+  "Maria will answer in under 3 seconds",
+  "She'll ask qualifying questions just like a real agent",
+  "She'll offer to book an appointment (mock calendar)",
+  "The whole call is typically 2-3 minutes"
+];
+
 export default function Demo() {
+  const [selectedDemo, setSelectedDemo] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
     email: "",
-    businessType: ""
   });
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate form submission
+    if (!selectedDemo) {
+      toast.error("Please select a demo type first");
+      return;
+    }
     setSubmitted(true);
     toast.success("Demo request received! Maria will call you shortly.");
   };
@@ -27,56 +61,53 @@ export default function Demo() {
     <Layout>
       <section className="section-padding min-h-[calc(100vh-5rem)]">
         <div className="container-wide">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-            {/* Content */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <span className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-4 block">
-                Live Demo Experience
-              </span>
-              <h1 className="text-4xl lg:text-display-sm font-semibold text-foreground mb-6">
-                Experience Voxaris in action
-              </h1>
-              <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-                Submit your details and Maria — our AI sales agent — will call you within moments to demonstrate how Voxaris handles real sales conversations.
-              </p>
+          {/* Hero */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12"
+          >
+            <h1 className="text-4xl lg:text-display-sm font-semibold text-foreground mb-4">
+              Talk to Maria, our AI sales agent
+            </h1>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              This is a live demonstration. Maria will qualify you just like she would a real customer.
+            </p>
+          </motion.div>
 
-              <div className="bg-secondary/50 rounded-2xl p-6 mb-8">
-                <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
-                  <Sparkles className="h-5 w-5" />
-                  What to expect
-                </h3>
-                <ul className="space-y-2 text-muted-foreground text-sm">
-                  <li className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-foreground mt-2 flex-shrink-0" />
-                    Maria will call you within 60 seconds
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-foreground mt-2 flex-shrink-0" />
-                    She'll introduce herself and simulate a qualification call
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-foreground mt-2 flex-shrink-0" />
-                    You'll experience real AI conversation — not a recording
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-foreground mt-2 flex-shrink-0" />
-                    The call lasts 2-3 minutes
-                  </li>
-                </ul>
-              </div>
+          {/* Demo Type Selection */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12 max-w-4xl mx-auto"
+          >
+            {demoTypes.map((demo) => (
+              <button
+                key={demo.id}
+                onClick={() => setSelectedDemo(demo.id)}
+                className={`p-6 rounded-2xl border-2 text-left transition-all duration-200 ${
+                  selectedDemo === demo.id
+                    ? "border-primary bg-primary/5"
+                    : "border-border hover:border-primary/50 bg-card"
+                }`}
+              >
+                <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${
+                  selectedDemo === demo.id ? "bg-primary text-primary-foreground" : "bg-secondary"
+                }`}>
+                  <demo.icon className="h-6 w-6" />
+                </div>
+                <h3 className="font-semibold text-foreground mb-2">{demo.title}</h3>
+                <p className="text-sm text-muted-foreground">{demo.description}</p>
+              </button>
+            ))}
+          </motion.div>
 
-              <p className="text-sm text-muted-foreground">
-                This is a live AI demonstration. Your information is used only for this demo.
-              </p>
-            </motion.div>
-
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start max-w-5xl mx-auto">
             {/* Form */}
             <motion.div
-              initial={{ opacity: 0, x: 20 }}
+              initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
@@ -131,28 +162,22 @@ export default function Demo() {
                       />
                     </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="businessType">Business Type</Label>
-                      <select
-                        id="businessType"
-                        value={formData.businessType}
-                        onChange={(e) => setFormData({ ...formData, businessType: e.target.value })}
-                        required
-                        className="flex h-12 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                      >
-                        <option value="">Select your business type</option>
-                        <option value="agency">Marketing Agency</option>
-                        <option value="dealership">Car Dealership</option>
-                        <option value="home-services">Home Services</option>
-                        <option value="multi-location">Multi-Location Business</option>
-                        <option value="other">Other</option>
-                      </select>
-                    </div>
-
-                    <Button type="submit" variant="hero" size="xl" className="w-full mt-6">
+                    <Button 
+                      type="submit" 
+                      variant="hero" 
+                      size="xl" 
+                      className="w-full mt-6"
+                      disabled={!selectedDemo}
+                    >
                       Start Demo Call
                       <Phone className="h-5 w-5" />
                     </Button>
+                    
+                    {!selectedDemo && (
+                      <p className="text-sm text-muted-foreground text-center">
+                        Please select a demo type above
+                      </p>
+                    )}
                   </form>
                 </div>
               ) : (
@@ -211,7 +236,67 @@ export default function Demo() {
                 </div>
               )}
             </motion.div>
+
+            {/* What to Expect */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+            >
+              <div className="bg-secondary/50 rounded-2xl p-8">
+                <h3 className="font-semibold text-foreground mb-6 text-lg">
+                  What to expect
+                </h3>
+                <ul className="space-y-4">
+                  {expectations.map((item, index) => (
+                    <li key={index} className="flex items-start gap-3">
+                      <CheckCircle2 className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                      <span className="text-muted-foreground">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {selectedDemo && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-6 bg-card rounded-2xl border border-border p-6"
+                >
+                  <h4 className="font-semibold text-foreground mb-2">Selected scenario:</h4>
+                  <p className="text-muted-foreground text-sm">
+                    "{demoTypes.find(d => d.id === selectedDemo)?.prompt}"
+                  </p>
+                  <p className="text-xs text-muted-foreground/70 mt-2">
+                    Maria will role-play as if you said this to begin the conversation.
+                  </p>
+                </motion.div>
+              )}
+
+              <p className="text-sm text-muted-foreground mt-6">
+                This is a live AI demonstration. Your information is used only for this demo.
+              </p>
+            </motion.div>
           </div>
+
+          {/* After demo CTA */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mt-20 pt-12 border-t border-border"
+          >
+            <h3 className="text-2xl font-semibold text-foreground mb-3">
+              Ready to see this in your business?
+            </h3>
+            <p className="text-muted-foreground mb-6">
+              Book a personalized demo to see how Voxaris would work for your specific use case.
+            </p>
+            <Button variant="heroOutline" size="lg" asChild>
+              <a href="/book-demo">Book a Personalized Demo</a>
+            </Button>
+          </motion.div>
         </div>
       </section>
     </Layout>
