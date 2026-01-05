@@ -4,7 +4,14 @@ import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Phone, CheckCircle2, Headphones, Calendar } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Phone, CheckCircle2, Headphones } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -17,9 +24,13 @@ const expectations = [
 
 export default function Demo() {
   const [formData, setFormData] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     phone: "",
     email: "",
+    company: "",
+    interest: "",
+    leadVolume: "",
   });
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -29,12 +40,28 @@ export default function Demo() {
     setIsLoading(true);
     
     try {
-      // Push contact to Go High Level via edge function for proper debugging
+      // Build tags based on interest
+      const tags = ["demo_request", "maria_live_demo", "source_website"];
+      if (formData.interest === "agency") {
+        tags.push("primary_interest_agency");
+      } else if (formData.interest === "dealership") {
+        tags.push("primary_interest_dealership");
+      } else {
+        tags.push("primary_interest_other");
+      }
+
+      // Push contact to Go High Level via edge function
       const { data, error } = await supabase.functions.invoke('ghl-webhook', {
         body: {
-          name: formData.name,
+          name: `${formData.firstName} ${formData.lastName}`.trim(),
+          firstName: formData.firstName,
+          lastName: formData.lastName,
           phone: formData.phone,
           email: formData.email,
+          company: formData.company,
+          interest: formData.interest,
+          leadVolume: formData.leadVolume,
+          tags: tags,
         },
       });
 
@@ -47,7 +74,6 @@ export default function Demo() {
       }
 
       setSubmitted(true);
-      toast.success("Maria is calling you now!");
     } catch (err) {
       console.error('Unexpected error:', err);
       toast.error("Something went wrong. Please try again.");
@@ -69,13 +95,13 @@ export default function Demo() {
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
               <Headphones className="h-4 w-4" />
-              Live AI Demo
+              Live Experience
             </div>
             <h1 className="text-4xl lg:text-display-sm font-semibold text-foreground mb-4">
-              Meet Maria — Your AI Sales Agent
+              Experience Voxaris live
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Experience a live conversation with Maria. She'll qualify you as a prospect and book an appointment directly to our calendar — just like she would for your business.
+              Maria will call you immediately. Experience a real AI sales conversation — qualification, objection handling, and appointment booking.
             </p>
           </motion.div>
 
@@ -94,21 +120,34 @@ export default function Demo() {
                     </div>
                     <div>
                       <h2 className="font-semibold text-foreground">Have Maria call you</h2>
-                      <p className="text-sm text-muted-foreground">Experience the Voxaris AI in action</p>
+                      <p className="text-sm text-muted-foreground">She'll call you within seconds</p>
                     </div>
                   </div>
 
                   <form onSubmit={handleSubmit} className="space-y-5">
-                    <div className="space-y-2">
-                      <Label htmlFor="name">Full Name</Label>
-                      <Input
-                        id="name"
-                        placeholder="John Smith"
-                        value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        required
-                        className="h-12"
-                      />
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="firstName">First Name</Label>
+                        <Input
+                          id="firstName"
+                          placeholder="John"
+                          value={formData.firstName}
+                          onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                          required
+                          className="h-12"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="lastName">Last Name</Label>
+                        <Input
+                          id="lastName"
+                          placeholder="Smith"
+                          value={formData.lastName}
+                          onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                          required
+                          className="h-12"
+                        />
+                      </div>
                     </div>
 
                     <div className="space-y-2">
@@ -137,6 +176,55 @@ export default function Demo() {
                       />
                     </div>
 
+                    <div className="space-y-2">
+                      <Label htmlFor="company">Company</Label>
+                      <Input
+                        id="company"
+                        placeholder="Your company name"
+                        value={formData.company}
+                        onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                        required
+                        className="h-12"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="interest">I'm interested in Voxaris for</Label>
+                      <Select 
+                        value={formData.interest} 
+                        onValueChange={(value) => setFormData({ ...formData, interest: value })}
+                        required
+                      >
+                        <SelectTrigger className="h-12">
+                          <SelectValue placeholder="Select your industry" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="agency">Marketing Agency</SelectItem>
+                          <SelectItem value="dealership">Car Dealership / Dealer Group</SelectItem>
+                          <SelectItem value="other">Other Industry</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="leadVolume">Monthly Lead Volume (optional)</Label>
+                      <Select 
+                        value={formData.leadVolume} 
+                        onValueChange={(value) => setFormData({ ...formData, leadVolume: value })}
+                      >
+                        <SelectTrigger className="h-12">
+                          <SelectValue placeholder="Select range" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="under-100">Under 100</SelectItem>
+                          <SelectItem value="100-500">100-500</SelectItem>
+                          <SelectItem value="500-1000">500-1,000</SelectItem>
+                          <SelectItem value="1000-5000">1,000-5,000</SelectItem>
+                          <SelectItem value="over-5000">Over 5,000</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
                     <Button 
                       type="submit" 
                       variant="hero" 
@@ -144,7 +232,7 @@ export default function Demo() {
                       className="w-full mt-6"
                       disabled={isLoading}
                     >
-                      {isLoading ? "Connecting..." : "Talk to Maria Now"}
+                      {isLoading ? "Connecting..." : "Call Me Now"}
                       <Phone className="h-5 w-5" />
                     </Button>
                   </form>
@@ -156,18 +244,8 @@ export default function Demo() {
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 0.5 }}
                   >
-                    <div className="w-20 h-20 rounded-full bg-primary flex items-center justify-center mx-auto mb-6">
-                      <Phone className="h-10 w-10 text-primary-foreground" />
-                    </div>
-                    <h2 className="text-2xl font-semibold text-foreground mb-3">
-                      Maria is calling you now
-                    </h2>
-                    <p className="text-muted-foreground mb-6">
-                      Pick up your phone to experience the Voxaris AI demo. The call will come from a local number.
-                    </p>
-                    
-                    {/* Animated rings */}
-                    <div className="relative w-32 h-32 mx-auto">
+                    {/* Calling state */}
+                    <div className="relative w-32 h-32 mx-auto mb-8">
                       {[1, 2, 3].map((i) => (
                         <motion.div
                           key={i}
@@ -188,18 +266,29 @@ export default function Demo() {
                         <motion.div
                           animate={{ scale: [1, 1.1, 1] }}
                           transition={{ duration: 1, repeat: Infinity }}
-                          className="w-16 h-16 rounded-full bg-primary flex items-center justify-center"
+                          className="w-20 h-20 rounded-full bg-primary flex items-center justify-center"
                         >
-                          <Phone className="h-8 w-8 text-primary-foreground" />
+                          <Phone className="h-10 w-10 text-primary-foreground" />
                         </motion.div>
                       </div>
                     </div>
 
+                    <h2 className="text-2xl font-semibold text-foreground mb-3">
+                      Calling now
+                    </h2>
+                    <p className="text-muted-foreground mb-8">
+                      Pick up your phone. Maria is calling you from a local number.
+                    </p>
+
+                    <p className="text-sm text-muted-foreground">
+                      If you miss the call, refresh and try again.
+                    </p>
+
                     <button 
                       onClick={() => setSubmitted(false)}
-                      className="mt-8 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                      className="mt-6 text-sm text-primary hover:text-primary/80 font-medium transition-colors"
                     >
-                      Didn't receive a call? Try again
+                      Try again
                     </button>
                   </motion.div>
                 </div>
@@ -226,46 +315,18 @@ export default function Demo() {
                 </ul>
               </div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mt-6 bg-card rounded-2xl border border-border p-6"
-              >
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Calendar className="h-5 w-5 text-primary" />
-                  </div>
-                  <h4 className="font-semibold text-foreground">Real-time booking</h4>
-                </div>
-                <p className="text-muted-foreground text-sm">
-                  Maria will check real availability and book your appointment directly to our calendar — no back-and-forth emails needed.
+              <div className="mt-6 bg-card rounded-2xl border border-border p-6">
+                <h4 className="font-semibold text-foreground mb-3">This is a live demo</h4>
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  Maria will speak with you as if you were a real prospect. She'll qualify you, answer questions, and attempt to book an appointment to our calendar.
                 </p>
-              </motion.div>
+              </div>
 
               <p className="text-sm text-muted-foreground mt-6">
-                This is a live AI demonstration. Your information is used only for this demo.
+                Your information is used only for this demo and is not shared.
               </p>
             </motion.div>
           </div>
-
-          {/* After demo CTA */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mt-20 pt-12 border-t border-border"
-          >
-            <h3 className="text-2xl font-semibold text-foreground mb-3">
-              Ready to see this in your business?
-            </h3>
-            <p className="text-muted-foreground mb-6">
-              Book a personalized demo to see how Maria would work for your specific use case.
-            </p>
-            <Button variant="heroOutline" size="lg" asChild>
-              <a href="/book-demo">Book a Personalized Demo</a>
-            </Button>
-          </motion.div>
         </div>
       </section>
     </Layout>

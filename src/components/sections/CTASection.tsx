@@ -19,10 +19,10 @@ export default function CTASection() {
           
           <div className="relative max-w-2xl mx-auto text-center">
             <h2 className="text-3xl lg:text-4xl font-semibold mb-4">
-              Ready to see Voxaris in action?
+              Experience Voxaris in action
             </h2>
             <p className="text-lg text-primary-foreground/70 mb-8 leading-relaxed">
-              Try our live demo to experience AI-powered sales conversations, or book a personalized walkthrough for your business.
+              See how Maria handles real conversations, qualifies leads, and books appointments — live.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -33,7 +33,7 @@ export default function CTASection() {
                   className="w-full sm:w-auto bg-primary-foreground text-primary hover:bg-primary-foreground/90"
                 >
                   <Phone className="h-5 w-5 mr-2" />
-                  Try Live Demo
+                  Try Maria Live
                 </Button>
               </Link>
               <Link to="/book-demo">

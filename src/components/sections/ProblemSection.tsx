@@ -1,36 +1,36 @@
 import { motion } from "framer-motion";
-import { AlertCircle, Clock, TrendingDown, Users, Database, BarChart2 } from "lucide-react";
+import { PhoneMissed, Clock, Snowflake, Users, Database, RefreshCcw } from "lucide-react";
 
 const problems = [
   {
-    icon: AlertCircle,
+    icon: PhoneMissed,
     title: "Missed calls",
-    description: "Every unanswered call is a potential customer lost to a competitor."
+    description: "Inbound calls go unanswered. Potential customers move on."
   },
   {
     icon: Clock,
-    title: "Slow follow-up",
-    description: "Leads go cold in minutes, but your team takes hours — or days — to respond."
-  },
-  {
-    icon: TrendingDown,
-    title: "Leads going cold",
-    description: "Without instant engagement, interested prospects lose momentum and move on."
+    title: "Slow speed-to-lead",
+    description: "Minutes matter. Your team responds in hours — or days."
   },
   {
     icon: Users,
     title: "Inconsistent qualification",
-    description: "Different reps ask different questions, leading to unpredictable pipeline quality."
+    description: "Different reps ask different questions. Pipeline quality varies."
+  },
+  {
+    icon: Snowflake,
+    title: "Leads go cold",
+    description: "Without instant engagement, interested prospects lose momentum."
   },
   {
     icon: Database,
-    title: "Messy CRM data",
-    description: "Incomplete records, missing notes, and duplicate entries make reporting unreliable."
+    title: "Messy CRM records",
+    description: "Incomplete data, missing notes, duplicate entries."
   },
   {
-    icon: BarChart2,
-    title: "Lost attribution",
-    description: "You're spending on ads but can't trace which campaigns actually book appointments."
+    icon: RefreshCcw,
+    title: "No consistent follow-up",
+    description: "Leads slip through the cracks. No system to re-engage."
   }
 ];
 
@@ -46,10 +46,10 @@ export default function ProblemSection() {
           className="text-center mb-16"
         >
           <h2 className="text-3xl lg:text-heading font-semibold text-foreground mb-4">
-            The reality of lead management today
+            The reality of lead management
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Most businesses lose leads before they ever become customers. Not because the leads are bad — but because the response is.
+            Most businesses lose leads before they ever become customers — not because the leads are bad, but because the response is.
           </p>
         </motion.div>
 
@@ -60,7 +60,7 @@ export default function ProblemSection() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
+              transition={{ duration: 0.5, delay: index * 0.08 }}
               className="bg-card rounded-2xl p-6 border border-border hover:border-border/80 transition-colors"
             >
               <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center mb-4">

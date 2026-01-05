@@ -26,7 +26,7 @@ const trustPoints = [
 
 export default function TrustSection() {
   return (
-    <section className="section-padding">
+    <section className="section-padding bg-secondary/30">
       <div className="container-wide">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -43,7 +43,7 @@ export default function TrustSection() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           {trustPoints.map((item, index) => (
             <motion.div
               key={item.title}
@@ -53,7 +53,7 @@ export default function TrustSection() {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className="text-center"
             >
-              <div className="w-14 h-14 rounded-2xl bg-secondary flex items-center justify-center mx-auto mb-4">
+              <div className="w-14 h-14 rounded-2xl bg-card border border-border flex items-center justify-center mx-auto mb-4">
                 <item.icon className="h-7 w-7 text-foreground" />
               </div>
               <h3 className="text-lg font-semibold text-foreground mb-2">
@@ -65,6 +65,20 @@ export default function TrustSection() {
             </motion.div>
           ))}
         </div>
+
+        {/* Pilot rollout framing */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="text-center"
+        >
+          <div className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-card border border-border">
+            <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+            <span className="text-sm font-medium text-foreground">Currently deploying with select partners</span>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
