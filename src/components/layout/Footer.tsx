@@ -39,7 +39,7 @@ export default function Footer() {
               AI sales infrastructure that converts inbound leads into booked appointments — automatically.
             </p>
             <p className="text-background/40 text-sm">
-              team@voxaris.ai
+              ethan@voxaris.io
             </p>
           </div>
 
