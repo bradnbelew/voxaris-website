@@ -14,7 +14,7 @@ const fadeUp = {
 
 export default function HeroSection() {
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden">
+    <section className="relative overflow-hidden">
       {/* Premium gradient background */}
       <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-secondary/20" />
       
