@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Phone, CheckCircle2, Headphones, Calendar } from "lucide-react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 const expectations = [
   "Maria will answer in under 3 seconds",
@@ -21,7 +22,6 @@ export default function Demo() {
     email: "",
   });
   const [submitted, setSubmitted] = useState(false);
-
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -29,21 +29,23 @@ export default function Demo() {
     setIsLoading(true);
     
     try {
-      // Push contact to Go High Level which triggers the outbound call
-      await fetch('https://services.leadconnectorhq.com/hooks/ToDoGRzP16rnhpDlWK19/webhook-trigger/d5b4954a-6dd7-4047-ae2d-c692719e0017', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        mode: 'no-cors',
-        body: JSON.stringify({
+      // Push contact to Go High Level via edge function for proper debugging
+      const { data, error } = await supabase.functions.invoke('ghl-webhook', {
+        body: {
           name: formData.name,
           phone: formData.phone,
           email: formData.email,
-        }),
+        },
       });
 
-      console.log('Contact pushed to GHL');
+      console.log('GHL Response:', data);
+
+      if (error) {
+        console.error('Error from GHL webhook:', error);
+        toast.error("Failed to submit. Please try again.");
+        return;
+      }
+
       setSubmitted(true);
       toast.success("Maria is calling you now!");
     } catch (err) {
