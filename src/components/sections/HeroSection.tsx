@@ -56,7 +56,7 @@ export default function HeroSection() {
             variants={fadeUp}
             className="text-[2.75rem] sm:text-5xl lg:text-6xl xl:text-[4rem] font-semibold tracking-[-0.02em] text-foreground mb-7 max-w-4xl leading-[1.1]"
           >
-            Turn every lead into a booked appointment — <span className="text-muted-foreground">automatically.</span>
+            Turns leads into booked appointments — <span className="text-muted-foreground">automatically.</span>
           </motion.h1>
 
           {/* Subheadline */}
@@ -67,7 +67,7 @@ export default function HeroSection() {
             variants={fadeUp}
             className="text-lg lg:text-xl text-muted-foreground max-w-2xl mb-10 leading-relaxed font-normal"
           >
-            Voxaris answers calls, qualifies leads, and books appointments into your calendar — 24/7. Built for marketing agencies and car dealerships that need speed, consistency, and results.
+            Voxaris answers calls, qualifies leads, and books appointments into your calendar — 24/7. Built for marketing agencies and auto dealerships that need speed, consistency, and results.
           </motion.p>
 
           {/* CTAs */}
@@ -124,7 +124,7 @@ export default function HeroSection() {
                 to="/solutions/dealerships"
                 className="px-5 py-2.5 bg-card/60 backdrop-blur-sm rounded-full border border-border/60 text-[13px] text-foreground font-medium hover:bg-card hover:border-border transition-all duration-200"
               >
-                Car Dealerships
+                Auto Dealerships
               </Link>
               <span className="px-5 py-2.5 bg-secondary/40 backdrop-blur-sm rounded-full border border-border/40 text-[13px] text-muted-foreground">
                 + Contractors, Law Firms, Home Services
