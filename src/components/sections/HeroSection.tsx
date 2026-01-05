@@ -1,6 +1,6 @@
 import { motion, Transition } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowRight, Phone, MessageSquare, Calendar, Database, RefreshCw, BarChart3 } from "lucide-react";
+import { ArrowRight, Phone, MessageSquare, Calendar, Database, RefreshCw, BarChart3, Globe, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const fadeUp = {
@@ -67,7 +67,7 @@ export default function HeroSection() {
             variants={fadeUp}
             className="text-lg lg:text-xl text-muted-foreground max-w-2xl mb-12 leading-relaxed font-normal"
           >
-            Voxaris is built for car dealerships, contractors, law firms, and marketing agencies. Our AI sales system responds instantly to every lead, qualifies prospects intelligently, and books appointments directly into your calendar — without adding staff.
+            Voxaris is built for car dealerships, contractors, law firms, and marketing agencies. We build high-converting websites with smart intake forms — and when a lead submits, our AI calls them instantly to qualify and book appointments directly into your calendar.
           </motion.p>
 
           {/* CTAs */}
@@ -104,11 +104,11 @@ export default function HeroSection() {
             </p>
             <div className="flex flex-wrap gap-2.5">
               {[
-                { icon: Phone, label: "Inbound Calls" },
-                { icon: MessageSquare, label: "SMS & Web" },
-                { icon: Calendar, label: "Booking" },
+                { icon: Globe, label: "Website Design" },
+                { icon: FileText, label: "Smart Intake Forms" },
+                { icon: Phone, label: "Instant AI Callbacks" },
+                { icon: Calendar, label: "Auto-Booking" },
                 { icon: Database, label: "CRM Sync" },
-                { icon: RefreshCw, label: "Follow-up" },
                 { icon: BarChart3, label: "Attribution" },
               ].map(({ icon: Icon, label }) => (
                 <div
