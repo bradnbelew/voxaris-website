@@ -2,7 +2,6 @@ import { motion, Transition } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ArrowRight, Phone, MessageSquare, Calendar, Database, RefreshCw, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import voxarisLogo from "@/assets/voxaris-logo.png";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -35,26 +34,18 @@ export default function HeroSection() {
 
       <div className="container-wide relative w-full">
         <div className="pt-32 pb-20 lg:pt-40 lg:pb-28">
-          {/* Logo Mark - Hero Feature */}
+          {/* Tagline */}
           <motion.div
             initial="hidden"
             animate="visible"
             custom={0}
             variants={fadeUp}
-            className="mb-10"
+            className="mb-8"
           >
-            <div className="inline-flex items-center gap-4 px-5 py-2.5 rounded-full bg-card/80 backdrop-blur-sm border border-border/60 shadow-sm">
-              <img 
-                src={voxarisLogo} 
-                alt="Voxaris" 
-                className="h-7 w-auto"
-              />
-              <div className="w-px h-5 bg-border" />
-              <span className="flex items-center gap-2 text-sm text-muted-foreground font-medium">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                AI Sales Infrastructure
-              </span>
-            </div>
+            <span className="inline-flex items-center gap-2 text-sm text-muted-foreground font-medium tracking-wide">
+              <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+              AI Sales Infrastructure
+            </span>
           </motion.div>
 
           {/* Main Headline */}

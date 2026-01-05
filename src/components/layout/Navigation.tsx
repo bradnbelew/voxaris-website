@@ -33,11 +33,11 @@ export default function Navigation() {
       <nav className="container-wide relative">
         <div className="flex items-center justify-between h-[72px]">
           {/* Logo - Prominent & Clean */}
-          <Link to="/" className="flex items-center group">
+          <Link to="/" className="flex items-center">
             <img 
               src={voxarisLogo} 
               alt="Voxaris" 
-              className="h-9 w-auto transition-transform duration-300 group-hover:scale-[1.02]"
+              className="h-8 w-auto"
             />
           </Link>
 
