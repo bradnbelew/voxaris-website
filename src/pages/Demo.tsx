@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Phone, CheckCircle2, Headphones, Calendar } from "lucide-react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 const expectations = [
   "Maria will answer in under 3 seconds",
@@ -22,10 +23,36 @@ export default function Demo() {
   });
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
-    toast.success("Demo request received! Maria will call you shortly.");
+    setIsLoading(true);
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('create-call', {
+        body: {
+          name: formData.name,
+          phone: formData.phone,
+          email: formData.email,
+        },
+      });
+
+      if (error) {
+        console.error('Error creating call:', error);
+        toast.error("Failed to initiate call. Please try again.");
+        setIsLoading(false);
+        return;
+      }
+
+      console.log('Call created:', data);
+      setSubmitted(true);
+      toast.success("Maria is calling you now!");
+    } catch (err) {
+      console.error('Unexpected error:', err);
+      toast.error("Something went wrong. Please try again.");
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -114,8 +141,9 @@ export default function Demo() {
                       variant="hero" 
                       size="xl" 
                       className="w-full mt-6"
+                      disabled={isLoading}
                     >
-                      Talk to Maria Now
+                      {isLoading ? "Connecting..." : "Talk to Maria Now"}
                       <Phone className="h-5 w-5" />
                     </Button>
                   </form>

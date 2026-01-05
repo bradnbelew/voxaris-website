@@ -1,1 +1,7 @@
 project_id = "psiscvlfkpkytfdcpdma"
+
+[functions.retell-webhook]
+verify_jwt = false
+
+[functions.create-call]
+verify_jwt = false
