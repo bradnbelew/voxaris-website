@@ -1,93 +1,97 @@
 import { motion } from "framer-motion";
 import Layout from "@/components/layout/Layout";
-import { Megaphone, TrendingUp, Users, Layers, DollarSign, BarChart3, ArrowRight, Zap, RefreshCw, Phone, Clock, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { Wrench, Phone, Calendar, Clock, Database, Bell, ArrowRight, AlertTriangle, CheckCircle2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
 const problems = [
   {
-    icon: TrendingUp,
-    title: "Clients want lead conversion, not just lead gen",
-    description: "You're driving traffic and leads. But clients want booked appointments, not just form fills."
+    icon: Clock,
+    title: "Emergency calls after hours",
+    description: "Your best leads call at 9 PM when they notice a leak. You lose them by morning."
   },
   {
-    icon: Users,
-    title: "Can't afford to hire for every client",
-    description: "Each client needs custom intake. You can't hire a team of SDRs for every account."
+    icon: Phone,
+    title: "Can't answer while on job sites",
+    description: "Your phone rings while you're on a ladder. By the time you call back, they've called three competitors."
   },
   {
-    icon: DollarSign,
-    title: "Margins are tight on lead gen",
-    description: "You need higher-margin services. AI infrastructure is the upsell every client needs."
+    icon: Calendar,
+    title: "Every estimate counts",
+    description: "Getting someone to commit to an on-site estimate is half the battle. You can't afford no-shows."
   },
   {
     icon: AlertTriangle,
-    title: "Churn from poor conversions",
-    description: "You generate leads but client's team doesn't follow up fast enough. They blame your leads. You lose the account."
+    title: "Seasonal demand spikes",
+    description: "Storm season hits and you're drowning in leads. By the time you respond, half have already booked someone else."
   }
 ];
 
 const benefits = [
   {
-    icon: Layers,
-    title: "White-label deployment",
-    description: "Your brand, your domain, your client portal. We're invisible."
-  },
-  {
-    icon: Users,
-    title: "Per-client customization",
-    description: "Each client gets their own AI agent, scripts, qualification logic, calendar integration."
-  },
-  {
-    icon: BarChart3,
-    title: "Agency dashboard",
-    description: "See performance across all your clients. Which industries convert best, which AI scripts work, real-time call analytics."
-  },
-  {
-    icon: DollarSign,
-    title: "Recurring revenue",
-    description: "You bill the client monthly. We bill you wholesale. Your margin, your pricing."
+    icon: Phone,
+    title: "Answer every call, every time",
+    description: "AI picks up in under 3 seconds. After hours, weekends, holidays — every lead gets immediate response."
   },
   {
     icon: CheckCircle2,
-    title: "Full support",
-    description: "We handle the tech setup, training, and maintenance. You do the sales and account management."
+    title: "Qualify for job type and urgency",
+    description: "Is it emergency water damage or a planned kitchen remodel? AI asks the right questions and prioritizes your calendar."
   },
   {
-    icon: Zap,
-    title: "Fast deployment",
-    description: "New client signed? Deploy their AI agent in 48 hours. Integration with their CRM, calendar, phone."
+    icon: Calendar,
+    title: "Book estimates directly",
+    description: "No phone tag. Maria syncs with your calendar and books estimate appointments while prospect is on the phone."
+  },
+  {
+    icon: Bell,
+    title: "Send confirmations & reminders",
+    description: "Automated SMS with appointment details, directions. Reduces no-shows by 40%+."
+  },
+  {
+    icon: Database,
+    title: "Track lead source automatically",
+    description: "Know exactly which yard sign, truck wrap, or Google ad drove the call. Attribution flows to CRM automatically."
+  },
+  {
+    icon: Wrench,
+    title: "Handle multiple trades",
+    description: "Route plumbing calls differently than HVAC. Each service line gets its own qualification flow."
   }
 ];
 
 const useCases = [
   {
-    title: "Local service agencies",
-    description: "Serve plumbers, roofers, HVAC — each gets their own AI"
+    title: "Emergency services",
+    description: "Water damage, no heat, electrical hazards — AI triages urgency and fast-tracks your calendar"
   },
   {
-    title: "Automotive agencies",
-    description: "Dealership clients get specialized inventory-aware AI"
+    title: "Planned projects",
+    description: "Kitchen remodels, HVAC replacements, new roof — qualify budget and timeline before the estimate"
   },
   {
-    title: "Multi-location clients",
-    description: "Franchise brands, multi-location service businesses"
+    title: "Seasonal campaigns",
+    description: "Storm chasers, AC tune-up season, winterization — handle volume spikes without extra staff"
   }
 ];
 
-const howItWorks = [
-  { step: "1", title: "You sell the client", description: "Position as 'AI sales infrastructure' or '24/7 intake system'" },
-  { step: "2", title: "We deploy", description: "48-hour setup, branded to your agency" },
-  { step: "3", title: "You manage account", description: "Ongoing client relationship, you own the data" },
-  { step: "4", title: "We handle tech", description: "Monitoring, optimization, scaling, support" }
+const industries = [
+  "Roofing",
+  "HVAC",
+  "Plumbing",
+  "Electrical",
+  "Water Restoration",
+  "Kitchen & Bath Remodeling",
+  "General Contracting"
 ];
 
 const integrations = {
-  agency: ["GoHighLevel", "AgencyAnalytics", "DashThis"],
-  crm: ["HubSpot", "Salesforce", "Pipedrive", "GoHighLevel"]
+  crm: ["Jobber", "ServiceTitan", "Housecall Pro", "BuildOps"],
+  calendars: ["Google Calendar", "Outlook", "Apple Calendar"],
+  payments: ["Stripe", "Square"]
 };
 
-export default function SolutionsAgencies() {
+export default function SolutionsContractors() {
   return (
     <Layout>
       {/* Hero */}
@@ -101,14 +105,26 @@ export default function SolutionsAgencies() {
           >
             <span className="inline-flex items-center gap-2 text-sm text-muted-foreground font-medium tracking-wide mb-4">
               <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-              For Marketing Agencies
+              For Contractors
             </span>
             <h1 className="text-4xl lg:text-display-sm font-semibold text-foreground mb-6">
-              White-label AI sales infrastructure for your clients
+              Stop losing emergency calls and last-minute jobs
             </h1>
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              Voxaris provides the AI sales and intake system you can resell under your agency brand. We handle the tech, you own the client relationship and margin.
+            <p className="text-lg text-muted-foreground leading-relaxed mb-8">
+              Voxaris answers every inbound lead 24/7, qualifies the job type and urgency, and books estimate appointments into your calendar — even when you're on a roof or crawling under a house.
             </p>
+            
+            {/* Industry pills */}
+            <div className="flex flex-wrap gap-2">
+              {industries.map((industry) => (
+                <span 
+                  key={industry}
+                  className="px-3 py-1.5 bg-card rounded-full border border-border text-sm text-muted-foreground"
+                >
+                  {industry}
+                </span>
+              ))}
+            </div>
           </motion.div>
         </div>
       </section>
@@ -124,10 +140,10 @@ export default function SolutionsAgencies() {
             className="text-center mb-16"
           >
             <h2 className="text-3xl lg:text-heading font-semibold text-foreground mb-4">
-              The agency problem
+              The contractor problem
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              You're great at generating leads. But if your client's team doesn't follow up, you get blamed.
+              You're great at your trade. But you can't be on a job site AND answering your phone at the same time.
             </p>
           </motion.div>
 
@@ -167,10 +183,10 @@ export default function SolutionsAgencies() {
             className="text-center mb-16"
           >
             <h2 className="text-3xl lg:text-heading font-semibold text-foreground mb-4">
-              What Voxaris offers agencies
+              What Voxaris does for contractors
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Stop losing leads to slow follow-up. Start delivering infrastructure that actually converts.
+              Never miss a lead. Never play phone tag. Never lose a job to a faster competitor.
             </p>
           </motion.div>
 
@@ -210,12 +226,17 @@ export default function SolutionsAgencies() {
             className="text-center mb-16"
           >
             <h2 className="text-3xl lg:text-heading font-semibold text-foreground mb-4">
-              How it works for agencies
+              How it works
             </h2>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            {howItWorks.map((item, index) => (
+            {[
+              { step: "1", title: "Lead comes in", description: "Phone, SMS, web form, Google Local Services" },
+              { step: "2", title: "AI qualifies", description: "Job type, urgency, property details, timeline" },
+              { step: "3", title: "Books estimate", description: "Syncs with your calendar, books the site visit" },
+              { step: "4", title: "Confirms & reminds", description: "SMS with details and what to expect" }
+            ].map((item, index) => (
               <motion.div
                 key={item.step}
                 initial={{ opacity: 0, y: 20 }}
@@ -246,10 +267,10 @@ export default function SolutionsAgencies() {
               transition={{ duration: 0.6 }}
             >
               <h2 className="text-3xl lg:text-heading font-semibold mb-6">
-                Agency use cases
+                Contractor use cases
               </h2>
               <p className="text-lg text-primary-foreground/70 mb-8">
-                Voxaris works with any lead source. Every form submission, every call, every inquiry gets instant, professional response.
+                Whether it's a burst pipe at midnight or a planned renovation, Voxaris handles it all.
               </p>
               <ul className="space-y-6">
                 {useCases.map((useCase) => (
@@ -267,22 +288,37 @@ export default function SolutionsAgencies() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="bg-primary-foreground/5 rounded-3xl p-8 lg:p-10"
             >
-              <h3 className="text-xl font-semibold mb-4">The Agency Advantage</h3>
-              <p className="text-primary-foreground/70 mb-6">
-                Most agencies sell marketing services. With Voxaris, you can sell sales infrastructure — a stickier, higher-value offering that creates recurring revenue and deeper client relationships.
-              </p>
-              <div className="flex items-center gap-4 pt-4 border-t border-primary-foreground/10">
-                <div className="text-center flex-1">
-                  <div className="text-3xl font-bold mb-1">3x</div>
-                  <div className="text-xs text-primary-foreground/60 uppercase tracking-wider">Conversion Lift</div>
+              <h3 className="text-xl font-semibold mb-6">Integrations</h3>
+              <div className="space-y-6">
+                <div>
+                  <h4 className="text-sm uppercase tracking-wider text-primary-foreground/50 mb-3">CRM & Field Service</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {integrations.crm.map((item) => (
+                      <span key={item} className="px-3 py-1.5 bg-primary-foreground/10 rounded-full text-sm">
+                        {item}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-                <div className="text-center flex-1">
-                  <div className="text-3xl font-bold mb-1">&lt;10s</div>
-                  <div className="text-xs text-primary-foreground/60 uppercase tracking-wider">Response Time</div>
+                <div>
+                  <h4 className="text-sm uppercase tracking-wider text-primary-foreground/50 mb-3">Calendars</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {integrations.calendars.map((item) => (
+                      <span key={item} className="px-3 py-1.5 bg-primary-foreground/10 rounded-full text-sm">
+                        {item}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-                <div className="text-center flex-1">
-                  <div className="text-3xl font-bold mb-1">24/7</div>
-                  <div className="text-xs text-primary-foreground/60 uppercase tracking-wider">Availability</div>
+                <div>
+                  <h4 className="text-sm uppercase tracking-wider text-primary-foreground/50 mb-3">Payments</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {integrations.payments.map((item) => (
+                      <span key={item} className="px-3 py-1.5 bg-primary-foreground/10 rounded-full text-sm">
+                        {item}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -290,57 +326,14 @@ export default function SolutionsAgencies() {
         </div>
       </section>
 
-      {/* Integrations */}
-      <section className="section-padding">
-        <div className="container-wide">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl lg:text-heading font-semibold text-foreground mb-4">
-              Integrations
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              We integrate with whatever your clients use.
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
-            <div className="bg-card rounded-2xl border border-border p-6">
-              <h4 className="text-sm uppercase tracking-wider text-muted-foreground mb-4">Agency Platforms</h4>
-              <div className="flex flex-wrap gap-2">
-                {integrations.agency.map((item) => (
-                  <span key={item} className="px-3 py-1.5 bg-secondary rounded-full text-sm">
-                    {item}
-                  </span>
-                ))}
-              </div>
-            </div>
-            <div className="bg-card rounded-2xl border border-border p-6">
-              <h4 className="text-sm uppercase tracking-wider text-muted-foreground mb-4">CRMs</h4>
-              <div className="flex flex-wrap gap-2">
-                {integrations.crm.map((item) => (
-                  <span key={item} className="px-3 py-1.5 bg-secondary rounded-full text-sm">
-                    {item}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* CTA */}
-      <section className="section-padding bg-secondary/30">
+      <section className="section-padding">
         <div className="container-wide text-center">
           <h2 className="text-3xl lg:text-heading font-semibold text-foreground mb-4">
-            Ready to upgrade your agency offering?
+            See Voxaris handle a contractor lead in real-time
           </h2>
           <p className="text-lg text-muted-foreground mb-8 max-w-xl mx-auto">
-            See how Voxaris can help you deliver better results and create new revenue streams.
+            Try our live demo or book a personalized walkthrough for your contracting business.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/demo">

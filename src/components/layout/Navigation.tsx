@@ -1,27 +1,28 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X, ChevronDown, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import voxarisLogo from "@/assets/voxaris-logo.png";
 
 const navLinks = [
   { name: "How It Works", href: "/how-it-works" },
   {
-    name: "Solutions",
-    href: "/solutions",
+    name: "Industries",
+    href: "/industries",
     children: [
-      { name: "Marketing Agencies", href: "/solutions/agencies" },
       { name: "Car Dealerships", href: "/solutions/dealerships" },
+      { name: "Contractors", href: "/solutions/contractors" },
+      { name: "Law Firms", href: "/solutions/law-firms" },
+      { name: "Marketing Agencies", href: "/solutions/agencies" },
     ],
   },
   { name: "Why Voxaris", href: "/why-voxaris" },
-  { name: "Pricing", href: "/pricing" },
 ];
 
 export default function Navigation() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [solutionsOpen, setSolutionsOpen] = useState(false);
+  const [industriesOpen, setIndustriesOpen] = useState(false);
   const location = useLocation();
 
   return (
@@ -52,18 +53,18 @@ export default function Navigation() {
                 {link.children ? (
                   <div
                     className="relative"
-                    onMouseEnter={() => setSolutionsOpen(true)}
-                    onMouseLeave={() => setSolutionsOpen(false)}
+                    onMouseEnter={() => setIndustriesOpen(true)}
+                    onMouseLeave={() => setIndustriesOpen(false)}
                   >
                     <button className="flex items-center gap-1.5 px-4 py-2 text-[13px] font-medium text-muted-foreground hover:text-foreground transition-all duration-200 rounded-lg hover:bg-secondary/50">
                       {link.name}
                       <ChevronDown 
                         className="h-3.5 w-3.5 transition-transform duration-200" 
-                        style={{ transform: solutionsOpen ? 'rotate(180deg)' : 'rotate(0)' }} 
+                        style={{ transform: industriesOpen ? 'rotate(180deg)' : 'rotate(0)' }} 
                       />
                     </button>
                     <AnimatePresence>
-                      {solutionsOpen && (
+                      {industriesOpen && (
                         <motion.div
                           initial={{ opacity: 0, y: 8, scale: 0.96 }}
                           animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -106,13 +107,14 @@ export default function Navigation() {
           {/* Desktop CTAs */}
           <div className="hidden lg:flex items-center gap-3">
             <Link to="/demo">
-              <Button variant="ghost" size="sm" className="text-[13px] font-medium h-9 px-4">
-                Try Demo
+              <Button variant="hero" size="sm" className="text-[13px] font-medium h-9 px-5 shadow-md">
+                <Phone className="h-4 w-4 mr-1" />
+                Try Live Demo
               </Button>
             </Link>
             <Link to="/book-demo">
-              <Button variant="hero" size="sm" className="text-[13px] font-medium h-9 px-5 shadow-md">
-                Book a Demo
+              <Button variant="ghost" size="sm" className="text-[13px] font-medium h-9 px-4">
+                Book Demo
               </Button>
             </Link>
           </div>
@@ -176,12 +178,13 @@ export default function Navigation() {
               ))}
               <div className="pt-4 space-y-3">
                 <Link to="/demo" onClick={() => setMobileOpen(false)}>
-                  <Button variant="outline" className="w-full text-[13px]">
-                    Try Demo
+                  <Button variant="hero" className="w-full text-[13px]">
+                    <Phone className="h-4 w-4 mr-1" />
+                    Try Live Demo
                   </Button>
                 </Link>
                 <Link to="/book-demo" onClick={() => setMobileOpen(false)}>
-                  <Button variant="hero" className="w-full text-[13px]">
+                  <Button variant="outline" className="w-full text-[13px]">
                     Book a Demo
                   </Button>
                 </Link>

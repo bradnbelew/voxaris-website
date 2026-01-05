@@ -56,7 +56,7 @@ export default function HeroSection() {
             variants={fadeUp}
             className="text-[2.75rem] sm:text-5xl lg:text-6xl xl:text-[4rem] font-semibold tracking-[-0.02em] text-foreground mb-7 max-w-4xl leading-[1.1]"
           >
-            AI that converts inbound leads into booked appointments — <span className="text-muted-foreground">automatically.</span>
+            Never miss another lead. AI that answers, qualifies, and books — <span className="text-muted-foreground">24/7.</span>
           </motion.h1>
 
           {/* Subheadline */}
@@ -67,7 +67,7 @@ export default function HeroSection() {
             variants={fadeUp}
             className="text-lg lg:text-xl text-muted-foreground max-w-2xl mb-12 leading-relaxed font-normal"
           >
-            Voxaris is a full-stack AI sales and intake system that responds instantly, qualifies prospects, books appointments, and keeps your CRM clean — without adding staff.
+            Voxaris is built for car dealerships, contractors, law firms, and marketing agencies. Our AI sales system responds instantly to every lead, qualifies prospects intelligently, and books appointments directly into your calendar — without adding staff.
           </motion.p>
 
           {/* CTAs */}
@@ -78,15 +78,16 @@ export default function HeroSection() {
             variants={fadeUp}
             className="flex flex-col sm:flex-row gap-4 mb-20"
           >
-            <Link to="/book-demo">
+            <Link to="/demo">
               <Button variant="hero" size="xl" className="w-full sm:w-auto shadow-lg shadow-primary/10">
-                Book a Demo
-                <ArrowRight className="h-5 w-5 ml-1" />
+                <Phone className="h-5 w-5 mr-1" />
+                Try Live Demo
               </Button>
             </Link>
-            <Link to="/how-it-works">
+            <Link to="/book-demo">
               <Button variant="heroOutline" size="xl" className="w-full sm:w-auto">
-                See How It Works
+                Book a Demo
+                <ArrowRight className="h-5 w-5 ml-1" />
               </Button>
             </Link>
           </motion.div>
