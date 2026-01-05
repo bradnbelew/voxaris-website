@@ -32,13 +32,17 @@ export default function Navigation() {
       
       <nav className="container-wide relative">
         <div className="flex items-center justify-between h-[72px]">
-          {/* Logo - Prominent & Clean */}
-          <Link to="/" className="flex items-center">
+          {/* Brand - Logo Mark + Wordmark */}
+          <Link to="/" className="flex items-center gap-2.5 text-foreground">
             <img 
               src={voxarisLogo} 
-              alt="Voxaris" 
-              className="h-8 w-auto"
+              alt="" 
+              className="h-6 w-6 object-contain"
             />
+            <span className="flex items-baseline gap-0">
+              <span className="font-semibold text-[13px] tracking-[0.28em] uppercase">VOXARIS</span>
+              <sup className="text-[9px] opacity-60 -translate-y-1 ml-0.5">TM</sup>
+            </span>
           </Link>
 
           {/* Desktop Navigation - Centered */}
