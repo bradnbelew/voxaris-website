@@ -6,15 +6,16 @@ import { Button } from "@/components/ui/button";
 import voxarisLogo from "@/assets/voxaris-logo.png";
 
 const navLinks = [
+  { name: "Agencies", href: "/solutions/agencies" },
+  { name: "Dealerships", href: "/solutions/dealerships" },
   { name: "How It Works", href: "/how-it-works" },
   {
-    name: "Industries",
+    name: "More Industries",
     href: "/industries",
     children: [
-      { name: "Car Dealerships", href: "/solutions/dealerships" },
       { name: "Contractors", href: "/solutions/contractors" },
       { name: "Law Firms", href: "/solutions/law-firms" },
-      { name: "Marketing Agencies", href: "/solutions/agencies" },
+      { name: "Home Services", href: "/solutions/contractors" },
     ],
   },
   { name: "Why Voxaris", href: "/why-voxaris" },
@@ -22,7 +23,7 @@ const navLinks = [
 
 export default function Navigation() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [industriesOpen, setIndustriesOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const location = useLocation();
 
   return (
@@ -33,7 +34,7 @@ export default function Navigation() {
       
       <nav className="container-wide relative">
         <div className="flex items-center justify-between h-[72px]">
-          {/* Brand - Logo Mark + Wordmark */}
+          {/* Brand */}
           <Link to="/" className="flex items-center gap-2.5 text-foreground">
             <img 
               src={voxarisLogo} 
@@ -46,25 +47,25 @@ export default function Navigation() {
             </span>
           </Link>
 
-          {/* Desktop Navigation - Centered */}
+          {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-1">
             {navLinks.map((link) => (
               <div key={link.name} className="relative">
                 {link.children ? (
                   <div
                     className="relative"
-                    onMouseEnter={() => setIndustriesOpen(true)}
-                    onMouseLeave={() => setIndustriesOpen(false)}
+                    onMouseEnter={() => setDropdownOpen(true)}
+                    onMouseLeave={() => setDropdownOpen(false)}
                   >
                     <button className="flex items-center gap-1.5 px-4 py-2 text-[13px] font-medium text-muted-foreground hover:text-foreground transition-all duration-200 rounded-lg hover:bg-secondary/50">
                       {link.name}
                       <ChevronDown 
                         className="h-3.5 w-3.5 transition-transform duration-200" 
-                        style={{ transform: industriesOpen ? 'rotate(180deg)' : 'rotate(0)' }} 
+                        style={{ transform: dropdownOpen ? 'rotate(180deg)' : 'rotate(0)' }} 
                       />
                     </button>
                     <AnimatePresence>
-                      {industriesOpen && (
+                      {dropdownOpen && (
                         <motion.div
                           initial={{ opacity: 0, y: 8, scale: 0.96 }}
                           animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -72,7 +73,7 @@ export default function Navigation() {
                           transition={{ duration: 0.15, ease: "easeOut" }}
                           className="absolute top-full left-1/2 -translate-x-1/2 pt-3"
                         >
-                          <div className="bg-card/95 backdrop-blur-xl rounded-xl border border-border/80 shadow-xl p-1.5 min-w-[220px]">
+                          <div className="bg-card/95 backdrop-blur-xl rounded-xl border border-border/80 shadow-xl p-1.5 min-w-[200px]">
                             {link.children.map((child) => (
                               <Link
                                 key={child.name}
@@ -109,7 +110,7 @@ export default function Navigation() {
             <Link to="/demo">
               <Button variant="hero" size="sm" className="text-[13px] font-medium h-9 px-5 shadow-md">
                 <Phone className="h-4 w-4 mr-1" />
-                Try Live Demo
+                Try Maria Live
               </Button>
             </Link>
             <Link to="/book-demo">
@@ -125,11 +126,7 @@ export default function Navigation() {
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle menu"
           >
-            {mobileOpen ? (
-              <X className="h-5 w-5" />
-            ) : (
-              <Menu className="h-5 w-5" />
-            )}
+            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
       </nav>
@@ -149,9 +146,7 @@ export default function Navigation() {
                 <div key={link.name}>
                   {link.children ? (
                     <div className="space-y-2">
-                      <p className="text-[13px] font-medium text-foreground">
-                        {link.name}
-                      </p>
+                      <p className="text-[13px] font-medium text-foreground">{link.name}</p>
                       <div className="pl-4 space-y-2">
                         {link.children.map((child) => (
                           <Link
@@ -180,7 +175,7 @@ export default function Navigation() {
                 <Link to="/demo" onClick={() => setMobileOpen(false)}>
                   <Button variant="hero" className="w-full text-[13px]">
                     <Phone className="h-4 w-4 mr-1" />
-                    Try Live Demo
+                    Try Maria Live
                   </Button>
                 </Link>
                 <Link to="/book-demo" onClick={() => setMobileOpen(false)}>

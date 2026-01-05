@@ -1,12 +1,11 @@
 import Layout from "@/components/layout/Layout";
 import HeroSection from "@/components/sections/HeroSection";
 import ProblemSection from "@/components/sections/ProblemSection";
-import LiveDemoSection from "@/components/sections/LiveDemoSection";
-import SystemOverviewSection from "@/components/sections/SystemOverviewSection";
+import DeliverablesSection from "@/components/sections/DeliverablesSection";
+import HowItWorksSection from "@/components/sections/HowItWorksSection";
+import SolutionsSplitSection from "@/components/sections/SolutionsSplitSection";
 import MariaSection from "@/components/sections/MariaSection";
-import ComparisonSection from "@/components/sections/ComparisonSection";
-import DifferentiationSection from "@/components/sections/DifferentiationSection";
-import AudienceSection from "@/components/sections/AudienceSection";
+import FAQSection from "@/components/sections/FAQSection";
 import TrustSection from "@/components/sections/TrustSection";
 import CTASection from "@/components/sections/CTASection";
 
@@ -15,12 +14,11 @@ const Index = () => {
     <Layout>
       <HeroSection />
       <ProblemSection />
-      <LiveDemoSection />
-      <SystemOverviewSection />
+      <DeliverablesSection />
+      <HowItWorksSection />
+      <SolutionsSplitSection />
       <MariaSection />
-      <ComparisonSection />
-      <DifferentiationSection />
-      <AudienceSection />
+      <FAQSection />
       <TrustSection />
       <CTASection />
     </Layout>

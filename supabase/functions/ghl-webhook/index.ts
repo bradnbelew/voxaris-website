@@ -26,14 +26,18 @@ serve(async (req) => {
     }
 
     const ghlPayload = {
-      firstName: body.name?.split(' ')[0] || '',
-      lastName: body.name?.split(' ').slice(1).join(' ') || '',
-      name: body.name || '',
+      firstName: body.firstName || body.name?.split(' ')[0] || '',
+      lastName: body.lastName || body.name?.split(' ').slice(1).join(' ') || '',
+      name: body.name || `${body.firstName || ''} ${body.lastName || ''}`.trim(),
       phone: phone,
       email: body.email || '',
+      companyName: body.company || '',
       source: 'Voxaris Demo',
+      tags: body.tags || ['demo_request', 'maria_live_demo', 'source_website'],
       customField: {
         demo_requested: new Date().toISOString(),
+        interest: body.interest || '',
+        lead_volume: body.leadVolume || '',
       }
     };
 

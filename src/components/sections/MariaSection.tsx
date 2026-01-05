@@ -1,5 +1,7 @@
 import { motion } from "framer-motion";
-import { Headphones } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Headphones, Phone } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function MariaSection() {
   return (
@@ -14,34 +16,24 @@ export default function MariaSection() {
             transition={{ duration: 0.6 }}
           >
             <span className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-4 block">
-              Meet Maria
+              The voice of Voxaris
             </span>
             <h2 className="text-3xl lg:text-heading font-semibold text-foreground mb-6">
-              Your always-available AI sales representative
+              Meet Maria, Voxaris AI Sales Agent
             </h2>
             <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
-              Maria is the voice of Voxaris — a professional, calm, and naturally-sounding AI agent trained to handle real sales conversations with real prospects.
+              Maria handles inbound and outbound calls, qualifies prospects with custom logic, books appointments in real time, captures structured data fields, and pushes outcomes directly into your CRM.
             </p>
-            <div className="space-y-4">
-              {[
-                "Answers inbound calls 24/7",
-                "Calls new leads within seconds of form submission",
-                "Qualifies prospects with custom logic",
-                "Books appointments in real time",
-                "Confirms appointments via SMS",
-                "Follows up until conversion",
-                "Pushes all data to your CRM"
-              ].map((capability) => (
-                <div key={capability} className="flex items-start gap-3">
-                  <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <svg className="w-3 h-3 text-primary-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <span className="text-foreground">{capability}</span>
-                </div>
-              ))}
-            </div>
+            <p className="text-muted-foreground mb-8 leading-relaxed">
+              She sounds natural, responds in under 3 seconds, and works 24/7 without breaks, sick days, or inconsistent performance.
+            </p>
+            
+            <Link to="/demo">
+              <Button variant="hero" size="lg">
+                <Phone className="h-5 w-5 mr-2" />
+                Try Maria Live
+              </Button>
+            </Link>
           </motion.div>
 
           {/* Visual */}
