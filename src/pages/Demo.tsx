@@ -51,7 +51,7 @@ export default function Demo() {
       }
 
       // Push contact to Go High Level via edge function
-      const { data, error } = await supabase.functions.invoke('ghl-webhook', {
+      const { data: ghlData, error: ghlError } = await supabase.functions.invoke('ghl-webhook', {
         body: {
           name: `${formData.firstName} ${formData.lastName}`.trim(),
           firstName: formData.firstName,
@@ -65,11 +65,30 @@ export default function Demo() {
         },
       });
 
-      console.log('GHL Response:', data);
+      console.log('GHL Response:', ghlData);
 
-      if (error) {
-        console.error('Error from GHL webhook:', error);
-        toast.error("Failed to submit. Please try again.");
+      if (ghlError) {
+        console.error('Error from GHL webhook:', ghlError);
+        // Continue anyway - we still want to make the call
+      }
+
+      // Create outbound call via Retell with dynamic LLM variables
+      const { data: callData, error: callError } = await supabase.functions.invoke('create-call', {
+        body: {
+          phone: formData.phone,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          company: formData.company,
+          industry: formData.interest,
+        },
+      });
+
+      console.log('Retell call response:', callData);
+
+      if (callError) {
+        console.error('Error creating call:', callError);
+        toast.error("Failed to initiate call. Please try again.");
         return;
       }
 
