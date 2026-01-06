@@ -22,8 +22,18 @@ serve(async (req) => {
       );
     }
 
-    const { name, phone, email } = await req.json();
-    console.log('Creating outbound call for:', { name, phone, email });
+    const body = await req.json();
+    console.log('Create call request:', JSON.stringify(body, null, 2));
+
+    const { 
+      phone, 
+      firstName, 
+      lastName, 
+      email, 
+      company, 
+      industry,
+      agentId 
+    } = body;
 
     if (!phone) {
       return new Response(
@@ -32,21 +42,53 @@ serve(async (req) => {
       );
     }
 
-    // Create outbound call via Retell API
+    // Format phone number for Retell (E.164 format)
+    let formattedPhone = phone.replace(/\D/g, '');
+    if (formattedPhone.length === 10) {
+      formattedPhone = '+1' + formattedPhone;
+    } else if (!formattedPhone.startsWith('+')) {
+      formattedPhone = '+' + formattedPhone;
+    }
+
+    // Build the full caller name
+    const callerName = `${firstName || ''} ${lastName || ''}`.trim() || 'there';
+
+    // Dynamic LLM variables that will be injected into Maria's prompt
+    // Use these in your Retell agent prompt: {{caller_name}}, {{caller_first_name}}, 
+    // {{caller_email}}, {{caller_phone}}, {{caller_company}}, {{caller_industry}}
+    const retellVariables = {
+      caller_name: callerName,
+      caller_first_name: firstName || '',
+      caller_last_name: lastName || '',
+      caller_email: email || '',
+      caller_phone: formattedPhone,
+      caller_company: company || '',
+      caller_industry: industry || '',
+    };
+
+    console.log('Retell dynamic variables:', retellVariables);
+
+    // Create the outbound call via Retell API
+    const retellPayload: Record<string, unknown> = {
+      from_number: '+18339665299', // Your Retell phone number
+      to_number: formattedPhone,
+      retell_llm_dynamic_variables: retellVariables,
+    };
+
+    // Add agent_id if provided
+    if (agentId) {
+      retellPayload.override_agent_id = agentId;
+    }
+
+    console.log('Calling Retell API with payload:', JSON.stringify(retellPayload, null, 2));
+
     const response = await fetch('https://api.retellai.com/v2/create-phone-call', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${RETELL_API_KEY}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        from_number: '+18339665299', // Your Retell phone number - update this
-        to_number: phone,
-        retell_llm_dynamic_variables: {
-          customer_name: name || 'there',
-          customer_email: email || '',
-        },
-      }),
+      body: JSON.stringify(retellPayload),
     });
 
     const responseText = await response.text();
@@ -54,18 +96,26 @@ serve(async (req) => {
     console.log('Retell API response:', responseText);
 
     if (!response.ok) {
-      console.error('Retell API error:', responseText);
+      console.error('Retell API error:', response.status, responseText);
       return new Response(
-        JSON.stringify({ error: 'Failed to create call', details: responseText }),
+        JSON.stringify({ 
+          error: 'Failed to create call',
+          status: response.status,
+          details: responseText 
+        }),
         { status: response.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    const data = JSON.parse(responseText);
-    console.log('Call created successfully:', data.call_id);
-
+    const callData = JSON.parse(responseText);
+    console.log('Call created successfully:', callData.call_id);
+    
     return new Response(
-      JSON.stringify({ success: true, call_id: data.call_id }),
+      JSON.stringify({ 
+        success: true, 
+        call_id: callData.call_id,
+        message: 'Call initiated successfully'
+      }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
 
