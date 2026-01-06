@@ -73,11 +73,9 @@ serve(async (req) => {
     };
     const challengeText = challengeMap[challenge] || challenge || '';
 
-    // Dynamic LLM variables that will be injected into Maria's prompt
-    // Use these in your Retell agent prompt: {{caller_name}}, {{caller_first_name}}, 
-    // {{caller_email}}, {{caller_phone}}, {{caller_company}}, {{caller_industry}}, {{caller_challenge}}
-    const retellVariables = {
-      caller_name: callerName,
+    // Metadata that will be passed to Maria's prompt
+    // Use these in your Retell agent prompt: {{caller_first_name}}, {{caller_last_name}}, etc.
+    const metadata = {
       caller_first_name: firstName || '',
       caller_last_name: lastName || '',
       caller_email: email || '',
@@ -87,14 +85,14 @@ serve(async (req) => {
       caller_challenge: challengeText,
     };
 
-    console.log('Retell dynamic variables:', retellVariables);
+    console.log('Retell metadata:', metadata);
 
     // Create the outbound call via Retell API
     const retellPayload: Record<string, unknown> = {
       agent_id: RETELL_AGENT_ID,
       from_number: '+14072891565', // Voxaris outbound phone number
       to_number: formattedPhone,
-      retell_llm_dynamic_variables: retellVariables,
+      metadata: metadata,
     };
 
     console.log('Calling Retell API with payload:', JSON.stringify(retellPayload, null, 2));
