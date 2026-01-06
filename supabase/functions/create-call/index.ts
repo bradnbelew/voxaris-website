@@ -13,11 +13,20 @@ serve(async (req) => {
 
   try {
     const RETELL_API_KEY = Deno.env.get('RETELL_API_KEY');
+    const RETELL_AGENT_ID = Deno.env.get('RETELL_AGENT_ID');
     
     if (!RETELL_API_KEY) {
       console.error('RETELL_API_KEY is not configured');
       return new Response(
         JSON.stringify({ error: 'Retell API key not configured' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+    
+    if (!RETELL_AGENT_ID) {
+      console.error('RETELL_AGENT_ID is not configured');
+      return new Response(
+        JSON.stringify({ error: 'Retell Agent ID not configured' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -82,15 +91,11 @@ serve(async (req) => {
 
     // Create the outbound call via Retell API
     const retellPayload: Record<string, unknown> = {
+      agent_id: RETELL_AGENT_ID,
       from_number: '+14072891565', // Voxaris outbound phone number
       to_number: formattedPhone,
       retell_llm_dynamic_variables: retellVariables,
     };
-
-    // Add agent_id if provided
-    if (agentId) {
-      retellPayload.override_agent_id = agentId;
-    }
 
     console.log('Calling Retell API with payload:', JSON.stringify(retellPayload, null, 2));
 
