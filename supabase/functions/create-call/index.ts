@@ -32,6 +32,7 @@ serve(async (req) => {
       email, 
       company, 
       industry,
+      challenge,
       agentId 
     } = body;
 
@@ -53,9 +54,19 @@ serve(async (req) => {
     // Build the full caller name
     const callerName = `${firstName || ''} ${lastName || ''}`.trim() || 'there';
 
+    // Map challenge value to readable text
+    const challengeMap: Record<string, string> = {
+      'missed-calls': 'Missed calls',
+      'slow-lead-response': 'Slow lead response',
+      'messy-crm': 'Messy CRM',
+      'after-hours-leads': 'After-hours leads',
+      'all-of-the-above': 'All of the above',
+    };
+    const challengeText = challengeMap[challenge] || challenge || '';
+
     // Dynamic LLM variables that will be injected into Maria's prompt
     // Use these in your Retell agent prompt: {{caller_name}}, {{caller_first_name}}, 
-    // {{caller_email}}, {{caller_phone}}, {{caller_company}}, {{caller_industry}}
+    // {{caller_email}}, {{caller_phone}}, {{caller_company}}, {{caller_industry}}, {{caller_challenge}}
     const retellVariables = {
       caller_name: callerName,
       caller_first_name: firstName || '',
@@ -64,6 +75,7 @@ serve(async (req) => {
       caller_phone: formattedPhone,
       caller_company: company || '',
       caller_industry: industry || '',
+      caller_challenge: challengeText,
     };
 
     console.log('Retell dynamic variables:', retellVariables);

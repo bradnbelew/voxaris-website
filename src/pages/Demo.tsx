@@ -29,8 +29,8 @@ export default function Demo() {
     phone: "",
     email: "",
     company: "",
-    interest: "",
-    leadVolume: "",
+    industry: "",
+    challenge: "",
   });
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -40,14 +40,10 @@ export default function Demo() {
     setIsLoading(true);
     
     try {
-      // Build tags based on interest
+      // Build tags based on challenge
       const tags = ["demo_request", "maria_live_demo", "source_website"];
-      if (formData.interest === "agency") {
-        tags.push("primary_interest_agency");
-      } else if (formData.interest === "dealership") {
-        tags.push("primary_interest_dealership");
-      } else {
-        tags.push("primary_interest_other");
+      if (formData.challenge) {
+        tags.push(`challenge_${formData.challenge.replace(/\s+/g, '_').toLowerCase()}`);
       }
 
       // Push contact to Go High Level via edge function
@@ -59,8 +55,8 @@ export default function Demo() {
           phone: formData.phone,
           email: formData.email,
           company: formData.company,
-          interest: formData.interest,
-          leadVolume: formData.leadVolume,
+          industry: formData.industry,
+          challenge: formData.challenge,
           tags: tags,
         },
       });
@@ -80,7 +76,8 @@ export default function Demo() {
           lastName: formData.lastName,
           email: formData.email,
           company: formData.company,
-          industry: formData.interest,
+          industry: formData.industry,
+          challenge: formData.challenge,
         },
       });
 
@@ -183,58 +180,56 @@ export default function Demo() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="email">Email Address</Label>
+                      <Label htmlFor="challenge">What's your biggest challenge right now?</Label>
+                      <Select 
+                        value={formData.challenge} 
+                        onValueChange={(value) => setFormData({ ...formData, challenge: value })}
+                      >
+                        <SelectTrigger className="h-12">
+                          <SelectValue placeholder="Select your challenge" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="missed-calls">Missed calls</SelectItem>
+                          <SelectItem value="slow-lead-response">Slow lead response</SelectItem>
+                          <SelectItem value="messy-crm">Messy CRM</SelectItem>
+                          <SelectItem value="after-hours-leads">After-hours leads</SelectItem>
+                          <SelectItem value="all-of-the-above">All of the above</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="industry">Industry <span className="text-muted-foreground text-xs">(optional)</span></Label>
+                      <Input
+                        id="industry"
+                        placeholder="e.g. Marketing Agency, Auto Dealership, Law Firm"
+                        value={formData.industry}
+                        onChange={(e) => setFormData({ ...formData, industry: e.target.value })}
+                        className="h-12"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Email <span className="text-muted-foreground text-xs">(optional)</span></Label>
                       <Input
                         id="email"
                         type="email"
                         placeholder="john@company.com"
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        required
                         className="h-12"
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="company">Company</Label>
+                      <Label htmlFor="company">Company <span className="text-muted-foreground text-xs">(optional)</span></Label>
                       <Input
                         id="company"
                         placeholder="Your company name"
                         value={formData.company}
                         onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                        required
                         className="h-12"
                       />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="interest">Industry</Label>
-                      <Input
-                        id="interest"
-                        placeholder="e.g. Marketing Agency, Auto Dealership, Law Firm"
-                        value={formData.interest}
-                        onChange={(e) => setFormData({ ...formData, interest: e.target.value })}
-                        className="h-12"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="leadVolume">Monthly Lead Volume (optional)</Label>
-                      <Select 
-                        value={formData.leadVolume} 
-                        onValueChange={(value) => setFormData({ ...formData, leadVolume: value })}
-                      >
-                        <SelectTrigger className="h-12">
-                          <SelectValue placeholder="Select range" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="under-100">Under 100</SelectItem>
-                          <SelectItem value="100-500">100-500</SelectItem>
-                          <SelectItem value="500-1000">500-1,000</SelectItem>
-                          <SelectItem value="1000-5000">1,000-5,000</SelectItem>
-                          <SelectItem value="over-5000">Over 5,000</SelectItem>
-                        </SelectContent>
-                      </Select>
                     </div>
 
                     <Button 
