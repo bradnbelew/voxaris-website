@@ -36,8 +36,8 @@ serve(async (req) => {
       tags: body.tags || ['demo_request', 'maria_live_demo', 'source_website'],
       customField: {
         demo_requested: new Date().toISOString(),
-        interest: body.interest || '',
-        lead_volume: body.leadVolume || '',
+        industry: body.industry || '',
+        challenge: body.challenge || '',
       }
     };
 
