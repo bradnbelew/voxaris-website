@@ -82,7 +82,7 @@ serve(async (req) => {
 
     // Create the outbound call via Retell API
     const retellPayload: Record<string, unknown> = {
-      from_number: '+18339665299', // Your Retell phone number
+      from_number: '+14072891565', // Voxaris outbound phone number
       to_number: formattedPhone,
       retell_llm_dynamic_variables: retellVariables,
     };
