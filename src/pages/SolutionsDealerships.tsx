@@ -1,59 +1,59 @@
 import { motion } from "framer-motion";
 import Layout from "@/components/layout/Layout";
-import { Phone, Calendar, Clock, TrendingDown, Users, Tent, Zap, Target, BarChart3, Play, Headphones, ArrowRight, CheckCircle2 } from "lucide-react";
+import { Phone, Calendar, Clock, TrendingDown, Users, Tent, Zap, Target, BarChart3, Play, Headphones, ArrowRight, CheckCircle2, PhoneIncoming, MessageSquare, Database, Handshake, Bell } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
 const painPoints = [
   {
-    icon: "📱",
+    icon: Phone,
     title: "Weekend & After-Hours Leads",
     description: "Leads that come in after 5PM or on weekends sit cold until Monday."
   },
   {
-    icon: "⏰",
+    icon: Clock,
     title: "Slow Response Times",
     description: "Even during business hours, leads wait 30+ minutes for contact."
   },
   {
-    icon: "📉",
+    icon: TrendingDown,
     title: "BDC Turnover & Burnout",
     description: "Good BDC reps burn out on repetitive qualification calls."
   },
   {
-    icon: "🎪",
+    icon: Users,
     title: "Event Lead Overload",
     description: "Tent sales and promotions flood your BDC with unqualified leads."
   }
 ];
 
 const workflowSteps = [
-  { step: "1", title: "Lead Comes In", description: "From ads, website, events, or third-party leads" },
-  { step: "2", title: "AI Calls in 22 Seconds", description: "Not 22 minutes. We contact while interest is hottest." },
-  { step: "3", title: "Dealer-Specific Conversation", description: "Qualifies for budget, timeline, trade-in, and financing." },
-  { step: "4", title: "Appointment Books to CRM", description: "Confirmed appointment lands in CDK/Reynolds automatically." },
-  { step: "5", title: "Your Team Closes", description: "Sales team gets hot leads, not cold call-backs." }
+  { icon: PhoneIncoming, step: "1", title: "Lead Comes In", description: "From ads, website, events, or third-party leads" },
+  { icon: Zap, step: "2", title: "AI Calls in 22 Seconds", description: "Not 22 minutes. We contact while interest is hottest." },
+  { icon: MessageSquare, step: "3", title: "Dealer-Specific Conversation", description: "Qualifies for budget, timeline, trade-in, and financing." },
+  { icon: Database, step: "4", title: "Appointment Books to CRM", description: "Confirmed appointment lands in CDK/Reynolds automatically." },
+  { icon: Handshake, step: "5", title: "Your Team Closes", description: "Sales team gets hot leads, not cold call-backs." }
 ];
 
 const campaignFeatures = [
   {
-    icon: "🎪",
+    icon: Tent,
     title: "Event & Promotion Mode",
     description: "Frame every conversation around your specific event: \"Our Tent Sale ends Sunday...\""
   },
   {
-    icon: "🚀",
+    icon: Zap,
     title: "22-Second Speed Architecture",
     description: "Engineered for automotive where first contact decides the sale."
   },
   {
-    icon: "📅",
+    icon: Calendar,
     title: "CRM Native Integration",
     description: "Works with CDK, Reynolds, VinSolutions, DealerSocket, and more."
   },
   {
-    icon: "👥",
+    icon: Bell,
     title: "Team Notification System",
     description: "Sales managers get SMS/email alerts for booked appointments."
   }
@@ -187,7 +187,9 @@ export default function SolutionsDealerships() {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="bg-card rounded-2xl border border-border p-6"
               >
-                <div className="text-3xl mb-4">{point.icon}</div>
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+                  <point.icon className="h-6 w-6 text-primary" />
+                </div>
                 <h3 className="text-lg font-semibold text-foreground mb-2">
                   {point.title}
                 </h3>
@@ -215,7 +217,7 @@ export default function SolutionsDealerships() {
             </h2>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
             {workflowSteps.map((item, index) => (
               <motion.div
                 key={item.step}
@@ -223,10 +225,15 @@ export default function SolutionsDealerships() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="text-center"
+                className="relative text-center"
               >
-                <div className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center mx-auto mb-4 text-lg font-semibold">
-                  {item.step}
+                <div className="relative inline-flex items-center justify-center mb-6">
+                  <div className="w-16 h-16 rounded-2xl bg-card border border-border flex items-center justify-center shadow-sm">
+                    <item.icon className="h-7 w-7 text-foreground" />
+                  </div>
+                  <span className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-semibold flex items-center justify-center">
+                    {item.step}
+                  </span>
                 </div>
                 <h3 className="font-semibold text-foreground mb-2">{item.title}</h3>
                 <p className="text-sm text-muted-foreground">{item.description}</p>
@@ -327,7 +334,9 @@ export default function SolutionsDealerships() {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="bg-primary-foreground/5 rounded-2xl p-6"
               >
-                <div className="text-3xl mb-4">{feature.icon}</div>
+                <div className="w-12 h-12 rounded-xl bg-primary-foreground/10 flex items-center justify-center mb-4">
+                  <feature.icon className="h-6 w-6 text-primary-foreground" />
+                </div>
                 <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
                 <p className="text-primary-foreground/70 text-sm leading-relaxed">
                   {feature.description}
