@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
 import Layout from "@/components/layout/Layout";
-import { Car, Phone, Calendar, Users, Bell, Database, ArrowRight, Clock, TrendingUp, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { Car, Phone, Calendar, Users, Bell, Database, ArrowRight, Clock, TrendingUp, AlertTriangle, CheckCircle2, Play, Headphones } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-
+import { useRef, useState } from "react";
 const problems = [
   {
     icon: Clock,
@@ -259,6 +259,51 @@ export default function SolutionsDealerships() {
               </motion.div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Listen to Maria Section */}
+      <section className="section-padding bg-secondary/30">
+        <div className="container-wide">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="max-w-3xl mx-auto text-center"
+          >
+            <div className="inline-flex items-center gap-2 text-sm text-muted-foreground font-medium tracking-wide mb-4">
+              <Headphones className="h-4 w-4" />
+              Real Call Recording
+            </div>
+            <h2 className="text-3xl lg:text-heading font-semibold text-foreground mb-4">
+              Hear Maria handle a live dealership lead
+            </h2>
+            <p className="text-lg text-muted-foreground mb-8">
+              Listen to how Maria qualifies a real car buyer, answers their questions, and guides them toward booking a test drive — all without human intervention.
+            </p>
+            
+            <div className="bg-card rounded-2xl border border-border p-6 lg:p-8">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <Play className="h-6 w-6 text-primary ml-0.5" />
+                </div>
+                <div className="text-left">
+                  <h3 className="font-semibold text-foreground">Maria Demo Call</h3>
+                  <p className="text-sm text-muted-foreground">Auto dealership lead qualification</p>
+                </div>
+              </div>
+              
+              <audio 
+                controls 
+                className="w-full h-12"
+                preload="metadata"
+              >
+                <source src="/audio/maria-dealership-demo.wav" type="audio/wav" />
+                Your browser does not support the audio element.
+              </audio>
+            </div>
+          </motion.div>
         </div>
       </section>
 
