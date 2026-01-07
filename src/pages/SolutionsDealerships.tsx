@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import Layout from "@/components/layout/Layout";
-import { Phone, Calendar, Clock, TrendingDown, Users, Tent, Zap, Target, BarChart3, Play, Headphones, ArrowRight, CheckCircle2, PhoneIncoming, MessageSquare, Database, Handshake, Bell } from "lucide-react";
+import { Phone, Calendar, Clock, TrendingDown, Users, Tent, Zap, Target, BarChart3, ArrowRight, CheckCircle2, PhoneIncoming, MessageSquare, Database, Handshake, Bell } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
@@ -243,71 +243,6 @@ export default function SolutionsDealerships() {
         </div>
       </section>
 
-      {/* Listen to AI Section */}
-      <section className="section-padding">
-        <div className="container-wide">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="max-w-4xl mx-auto"
-          >
-            <div className="text-center mb-8">
-              <div className="inline-flex items-center gap-2 text-sm text-muted-foreground font-medium tracking-wide mb-4">
-                <Headphones className="h-4 w-4" />
-                Real Call Recording
-              </div>
-              <h2 className="text-3xl lg:text-heading font-semibold text-foreground mb-4">
-                Hear Our AI Talk to Car Buyers
-              </h2>
-            </div>
-            
-            <div className="bg-card rounded-2xl border border-border p-6 lg:p-8 mb-8">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                  <Play className="h-6 w-6 text-primary ml-0.5" />
-                </div>
-                <div className="text-left">
-                  <h3 className="font-semibold text-foreground">Facebook Ad Lead → Appointment</h3>
-                  <p className="text-sm text-muted-foreground">Live dealership lead qualification</p>
-                </div>
-              </div>
-              
-              <audio 
-                controls 
-                className="w-full h-12 mb-6"
-                preload="metadata"
-              >
-                <source src="/audio/maria-dealership-demo.wav" type="audio/wav" />
-                Your browser does not support the audio element.
-              </audio>
-
-              {/* Example Transcript */}
-              <div className="bg-secondary/50 rounded-xl p-5 space-y-3">
-                <p className="text-sm">
-                  <strong className="text-foreground">AI:</strong> <span className="text-muted-foreground">"Hi John, this is Alex from [Dealership]. I saw you were looking at the 2023 F-150 on our Facebook ad. Are you still considering that model?"</span>
-                </p>
-                <p className="text-sm">
-                  <strong className="text-foreground">Lead:</strong> <span className="text-muted-foreground">"Yeah, I was just browsing."</span>
-                </p>
-                <p className="text-sm">
-                  <strong className="text-foreground">AI:</strong> <span className="text-muted-foreground">"Perfect. We have a special event pricing ending tomorrow. Would you prefer to come in today or tomorrow for a quick test drive?"</span>
-                </p>
-                <p className="text-sm">
-                  <strong className="text-foreground">Lead:</strong> <span className="text-muted-foreground">"Tomorrow afternoon works."</span>
-                </p>
-                <p className="text-sm">
-                  <strong className="text-foreground">AI:</strong> <span className="text-muted-foreground">"Great, I've scheduled you for 2 PM. You'll meet with our Ford specialist, Mike. I'll text you the details now."</span>
-                </p>
-                <p className="text-sm font-medium text-primary mt-4">
-                  Result: Appointment booked in 87 seconds
-                </p>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
 
       {/* Campaign Features */}
       <section className="section-padding bg-primary text-primary-foreground">
