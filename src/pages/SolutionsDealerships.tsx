@@ -82,14 +82,6 @@ const integrations = [
   "AutoTrader", "Cars.com", "Facebook Ads", "Google Ads"
 ];
 
-const pilotBenefits = [
-  "Free 30-day trial on one lead source",
-  "CRM integration setup by our team",
-  "Dealer-specific AI training for your brand",
-  "Live dashboard showing every call & appointment",
-  "Founder-level support during trial"
-];
-
 const performanceMetrics = [
   "22-second avg. response time",
   "94% contact attempt rate",
@@ -388,48 +380,6 @@ export default function SolutionsDealerships() {
               <p className="text-xs text-muted-foreground mt-4 text-center">
                 *Based on $1,500 average front-end profit
               </p>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Pilot Program */}
-      <section className="section-padding">
-        <div className="container-wide">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="max-w-3xl mx-auto"
-          >
-            <div className="text-center mb-12">
-              <h2 className="text-3xl lg:text-heading font-semibold text-foreground">
-                Join Our Exclusive Dealer Pilot Program
-              </h2>
-            </div>
-
-            <div className="bg-card rounded-2xl border border-border p-8 lg:p-10">
-              <h3 className="text-xl font-semibold text-foreground mb-6">What You Get:</h3>
-              <ul className="space-y-4 mb-8">
-                {pilotBenefits.map((benefit) => (
-                  <li key={benefit} className="flex items-start gap-3">
-                    <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                    <span className="text-muted-foreground">{benefit}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <div className="bg-secondary/50 rounded-xl p-6 text-center">
-                <h4 className="font-semibold text-foreground mb-4">Limited to 10 dealerships</h4>
-                <Button asChild variant="hero" size="lg" className="w-full sm:w-auto">
-                  <Link to="/book-demo">
-                    Apply for Pilot Program
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
-                <p className="text-sm text-muted-foreground mt-4">No contract. Cancel anytime.</p>
-              </div>
             </div>
           </motion.div>
         </div>
