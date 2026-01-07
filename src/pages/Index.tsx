@@ -1,13 +1,12 @@
 import Layout from "@/components/layout/Layout";
 import HeroSection from "@/components/sections/HeroSection";
 import ProblemSection from "@/components/sections/ProblemSection";
+import DeliverablesSection from "@/components/sections/DeliverablesSection";
 import HowItWorksSection from "@/components/sections/HowItWorksSection";
-import CampaignModeSection from "@/components/sections/CampaignModeSection";
-import ConversationIntelligenceSection from "@/components/sections/ConversationIntelligenceSection";
-import IntegrationsSection from "@/components/sections/IntegrationsSection";
-import VoxarisDifferenceSection from "@/components/sections/VoxarisDifferenceSection";
-import PilotProgramSection from "@/components/sections/PilotProgramSection";
+import SolutionsSplitSection from "@/components/sections/SolutionsSplitSection";
+import MariaSection from "@/components/sections/MariaSection";
 import FAQSection from "@/components/sections/FAQSection";
+import TrustSection from "@/components/sections/TrustSection";
 import CTASection from "@/components/sections/CTASection";
 
 const Index = () => {
@@ -15,13 +14,12 @@ const Index = () => {
     <Layout>
       <HeroSection />
       <ProblemSection />
+      <DeliverablesSection />
       <HowItWorksSection />
-      <CampaignModeSection />
-      <ConversationIntelligenceSection />
-      <VoxarisDifferenceSection />
-      <IntegrationsSection />
-      <PilotProgramSection />
+      <SolutionsSplitSection />
+      <MariaSection />
       <FAQSection />
+      <TrustSection />
       <CTASection />
     </Layout>
   );
