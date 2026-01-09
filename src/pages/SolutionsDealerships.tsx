@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import Layout from "@/components/layout/Layout";
-import { Phone, Calendar, Clock, TrendingDown, Users, Tent, Zap, Target, BarChart3, ArrowRight, CheckCircle2, PhoneIncoming, MessageSquare, Database, Handshake, Bell } from "lucide-react";
+import { Phone, Calendar, Clock, TrendingDown, Users, Tent, Zap, Target, BarChart3, ArrowRight, CheckCircle2, PhoneIncoming, MessageSquare, Database, Handshake, Bell, Wrench, Car, FileText, Sparkles, Wifi, Settings, LineChart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
@@ -80,6 +80,42 @@ const proofPoints = [
 const integrations = [
   "CDK", "Reynolds", "VinSolutions", "DealerSocket", 
   "AutoTrader", "Cars.com", "Facebook Ads", "Google Ads"
+];
+
+const departments = [
+  {
+    icon: Car,
+    title: "Sales",
+    description: "Qualify buyers on budget, timeline, trade-in value, and financing. Book showroom appointments that actually show."
+  },
+  {
+    icon: Wrench,
+    title: "Service & Fixed Ops",
+    description: "Not just oil changes. Our AI handles complex repair inquiries—transmission, A/C, diagnostics—with deep mechanical awareness. It knows your shop hours, amenities, and booking logic, handling 100% of inbound service calls without an advisor."
+  },
+  {
+    icon: FileText,
+    title: "Parts",
+    description: "Route parts inquiries to the right counter, check availability, and schedule pickup or delivery."
+  }
+];
+
+const knowledgeBaseFeatures = [
+  {
+    icon: Wifi,
+    title: "Smart Amenities Awareness",
+    description: "Knows if you have WiFi, coffee bar, shuttle service, or loaner vehicles available."
+  },
+  {
+    icon: Settings,
+    title: "Dynamic Skill Cloud",
+    description: "Instantly trained on your specific repair menu and capabilities."
+  },
+  {
+    icon: LineChart,
+    title: "Live RO Dashboard",
+    description: "Watch appointments fill your calendar and service drive in real-time."
+  }
 ];
 
 const performanceMetrics = [
@@ -266,6 +302,94 @@ export default function SolutionsDealerships() {
                 </div>
                 <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
                 <p className="text-primary-foreground/70 text-sm leading-relaxed">
+                  {feature.description}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Handle Every Department */}
+      <section className="section-padding">
+        <div className="container-wide">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-3xl lg:text-heading font-semibold text-foreground mb-4">
+              Handle Every Department
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Stop losing revenue to voicemail. Voxaris answers 24/7/365, intelligently routing calls across your entire dealership.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {departments.map((dept, index) => (
+              <motion.div
+                key={dept.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="bg-card rounded-2xl border border-border p-8"
+              >
+                <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">
+                  <dept.icon className="h-7 w-7 text-primary" />
+                </div>
+                <h3 className="text-xl font-semibold text-foreground mb-3">
+                  {dept.title}
+                </h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  {dept.description}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* The Knowledge Base - New Feature */}
+      <section className="section-padding bg-secondary/30">
+        <div className="container-wide">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12"
+          >
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
+              <Sparkles className="h-4 w-4" />
+              New Capability
+            </span>
+            <h2 className="text-3xl lg:text-heading font-semibold text-foreground mb-4">
+              The Deep Service Brain
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              More than an answering service. Our AI is trained on your specific dealership operations.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {knowledgeBaseFeatures.map((feature, index) => (
+              <motion.div
+                key={feature.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="bg-card rounded-2xl border border-border p-6"
+              >
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+                  <feature.icon className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="text-lg font-semibold text-foreground mb-2">{feature.title}</h3>
+                <p className="text-muted-foreground text-sm leading-relaxed">
                   {feature.description}
                 </p>
               </motion.div>
