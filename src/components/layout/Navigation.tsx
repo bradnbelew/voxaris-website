@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { motion, AnimatePresence, useScroll } from "framer-motion";
 import { Menu, X, ChevronDown, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import voxarisLogo from "@/assets/voxaris-logo.png";
@@ -31,56 +31,34 @@ export default function Navigation() {
 
   useEffect(() => {
     return scrollY.on("change", (latest) => {
-      setIsScrolled(latest > 50);
+      setIsScrolled(latest > 20);
     });
   }, [scrollY]);
 
   return (
-    <motion.header 
-      className="fixed top-0 left-0 right-0 z-50"
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
-    >
-      {/* Dynamic background */}
-      <motion.div 
-        className="absolute inset-0 transition-all duration-500"
-        style={{
-          backgroundColor: isScrolled ? 'hsl(var(--background) / 0.9)' : 'transparent',
-          backdropFilter: isScrolled ? 'blur(24px)' : 'none',
-        }}
-      />
-      <motion.div 
-        className="absolute inset-x-0 bottom-0 h-px transition-opacity duration-500"
-        style={{
-          background: 'linear-gradient(90deg, transparent, hsl(var(--border)), transparent)',
-          opacity: isScrolled ? 1 : 0,
-        }}
+    <header className="fixed top-0 left-0 right-0 z-50">
+      {/* Background */}
+      <div 
+        className={`absolute inset-0 transition-all duration-300 ${
+          isScrolled ? 'bg-background/95 backdrop-blur-md border-b border-border' : 'bg-transparent'
+        }`}
       />
       
       <nav className="container-editorial relative">
-        <div className="flex items-center justify-between h-20">
-          {/* Brand - Distinctive logo treatment */}
-          <Link to="/" className="flex items-center gap-3 text-foreground group">
-            <motion.div 
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.2 }}
-              className="relative"
-            >
-              <img 
-                src={voxarisLogo} 
-                alt="" 
-                className="h-8 w-8 object-contain"
-              />
-              {/* Glow effect on hover */}
-              <div className="absolute inset-0 rounded-full bg-cyan/0 blur-xl transition-all duration-300 group-hover:bg-cyan/30" />
-            </motion.div>
-            <span className="font-semibold text-sm tracking-[0.25em] uppercase">
+        <div className="flex items-center justify-between h-16 lg:h-20">
+          {/* Brand */}
+          <Link to="/" className="flex items-center gap-3 text-foreground">
+            <img 
+              src={voxarisLogo} 
+              alt="" 
+              className="h-8 w-8 object-contain"
+            />
+            <span className="font-semibold text-sm tracking-[0.2em] uppercase">
               VOXARIS
             </span>
           </Link>
 
-          {/* Desktop Navigation - Minimal, spaced */}
+          {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-8">
             {navLinks.map((link) => (
               <div key={link.name} className="relative">
@@ -90,7 +68,7 @@ export default function Navigation() {
                     onMouseEnter={() => setDropdownOpen(true)}
                     onMouseLeave={() => setDropdownOpen(false)}
                   >
-                    <button className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 link-reveal">
+                    <button className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
                       {link.name}
                       <ChevronDown 
                         className="h-3.5 w-3.5 transition-transform duration-200" 
@@ -100,20 +78,19 @@ export default function Navigation() {
                     <AnimatePresence>
                       {dropdownOpen && (
                         <motion.div
-                          initial={{ opacity: 0, y: 8, scale: 0.96 }}
-                          animate={{ opacity: 1, y: 0, scale: 1 }}
-                          exit={{ opacity: 0, y: 8, scale: 0.96 }}
-                          transition={{ duration: 0.2, ease: "easeOut" }}
-                          className="absolute top-full left-1/2 -translate-x-1/2 pt-4"
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 8 }}
+                          transition={{ duration: 0.15 }}
+                          className="absolute top-full left-1/2 -translate-x-1/2 pt-3"
                         >
-                          <div className="glass rounded-2xl border border-border/50 shadow-xl p-2 min-w-[200px]">
+                          <div className="bg-background border border-border rounded-lg shadow-lg p-2 min-w-[180px]">
                             {link.children.map((child) => (
                               <Link
                                 key={child.name}
                                 to={child.href}
-                                className="flex items-center gap-3 px-4 py-3 text-sm text-muted-foreground hover:text-foreground hover:bg-secondary/50 rounded-xl transition-all duration-200"
+                                className="block px-4 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-secondary rounded-md transition-colors"
                               >
-                                <div className="w-1 h-1 rounded-full bg-cyan" />
                                 {child.name}
                               </Link>
                             ))}
@@ -125,9 +102,9 @@ export default function Navigation() {
                 ) : (
                   <Link
                     to={link.href}
-                    className={`text-sm transition-colors duration-200 link-reveal ${
+                    className={`text-sm transition-colors ${
                       location.pathname === link.href
-                        ? "text-foreground"
+                        ? "text-foreground font-medium"
                         : "text-muted-foreground hover:text-foreground"
                     }`}
                   >
@@ -138,14 +115,14 @@ export default function Navigation() {
             ))}
           </div>
 
-          {/* Desktop CTAs - Distinctive buttons */}
-          <div className="hidden lg:flex items-center gap-4">
+          {/* Desktop CTAs */}
+          <div className="hidden lg:flex items-center gap-3">
             <Link to="/demo">
               <Button 
                 size="sm" 
-                className="bg-cyan hover:bg-cyan-glow text-background font-medium rounded-full px-6 h-10 transition-all duration-300 hover:shadow-glow"
+                className="bg-accent hover:bg-accent/90 text-accent-foreground font-medium rounded-full px-5 h-9"
               >
-                <Play className="h-3.5 w-3.5 mr-2 fill-current" />
+                <Play className="h-3.5 w-3.5 mr-1.5 fill-current" />
                 Try Maria Live
               </Button>
             </Link>
@@ -153,7 +130,7 @@ export default function Navigation() {
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className="text-sm font-medium h-10 px-4 text-muted-foreground hover:text-foreground"
+                className="text-sm font-medium h-9 px-4 text-muted-foreground hover:text-foreground"
               >
                 Book Demo
               </Button>
@@ -161,72 +138,38 @@ export default function Navigation() {
           </div>
 
           {/* Mobile Menu Button */}
-          <motion.button
-            whileTap={{ scale: 0.95 }}
-            className="lg:hidden p-2 rounded-xl hover:bg-secondary/50 transition-colors"
+          <button
+            className="lg:hidden p-2 rounded-lg hover:bg-secondary transition-colors"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle menu"
           >
-            <AnimatePresence mode="wait">
-              {mobileOpen ? (
-                <motion.div
-                  key="close"
-                  initial={{ rotate: -90, opacity: 0 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: 90, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <X className="h-5 w-5" />
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="menu"
-                  initial={{ rotate: 90, opacity: 0 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: -90, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <Menu className="h-5 w-5" />
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.button>
+            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
         </div>
       </nav>
 
-      {/* Mobile Menu - Full screen takeover */}
+      {/* Mobile Menu */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="lg:hidden fixed inset-0 top-20 bg-background/98 backdrop-blur-xl"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2 }}
+            className="lg:hidden bg-background border-b border-border"
           >
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              transition={{ duration: 0.3, delay: 0.1 }}
-              className="container-editorial py-8 space-y-6"
-            >
-              {navLinks.map((link, i) => (
-                <motion.div 
-                  key={link.name}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3, delay: 0.1 + i * 0.05 }}
-                >
+            <div className="container-editorial py-6 space-y-4">
+              {navLinks.map((link) => (
+                <div key={link.name}>
                   {link.children ? (
-                    <div className="space-y-4">
-                      <p className="text-lg font-medium text-foreground">{link.name}</p>
-                      <div className="pl-4 space-y-3 border-l border-border/50">
+                    <div className="space-y-3">
+                      <p className="text-sm font-medium text-foreground">{link.name}</p>
+                      <div className="pl-4 space-y-2 border-l border-border">
                         {link.children.map((child) => (
                           <Link
                             key={child.name}
                             to={child.href}
-                            className="block text-muted-foreground hover:text-foreground transition-colors"
+                            className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
                             onClick={() => setMobileOpen(false)}
                           >
                             {child.name}
@@ -237,37 +180,32 @@ export default function Navigation() {
                   ) : (
                     <Link
                       to={link.href}
-                      className="block text-lg font-medium text-muted-foreground hover:text-foreground transition-colors"
+                      className="block text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
                       onClick={() => setMobileOpen(false)}
                     >
                       {link.name}
                     </Link>
                   )}
-                </motion.div>
+                </div>
               ))}
               
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.4 }}
-                className="pt-8 space-y-4"
-              >
+              <div className="pt-4 space-y-3">
                 <Link to="/demo" onClick={() => setMobileOpen(false)}>
-                  <Button className="w-full bg-cyan hover:bg-cyan-glow text-background font-medium rounded-full h-12">
+                  <Button className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-medium rounded-full h-11">
                     <Play className="h-4 w-4 mr-2 fill-current" />
                     Try Maria Live
                   </Button>
                 </Link>
                 <Link to="/book-demo" onClick={() => setMobileOpen(false)}>
-                  <Button variant="outline" className="w-full rounded-full h-12 border-border/50">
+                  <Button variant="outline" className="w-full rounded-full h-11">
                     Book a Demo
                   </Button>
                 </Link>
-              </motion.div>
-            </motion.div>
+              </div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.header>
+    </header>
   );
 }
