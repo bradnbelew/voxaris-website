@@ -4,33 +4,33 @@ import { Video, Zap, Globe, MessageSquare, Smartphone, Eye } from "lucide-react"
 const features = [
   {
     icon: Video,
-    title: "FaceTime-Style Consultations",
-    description: "Synchronous video layer enabling real-time, 1-on-1 digital consultations. Your brand has a face that can hold a video call."
+    title: "Face-to-Face, Anywhere",
+    description: "A synchronous layer that brings your brand into real-time dialogue. No scheduling. No waiting."
   },
   {
     icon: Smartphone,
-    title: "Talking Postcards",
-    description: "Outbound video triggers that bring your message to life. Send personalized video greetings that actually respond."
+    title: "Outbound Intelligence",
+    description: "Your messages don't just arrive—they respond. Personalized triggers that adapt to each interaction."
   },
   {
     icon: Eye,
-    title: "Visual Diagnostics",
-    description: "AI that can see. Show your product issue, get instant diagnosis. Perfect for service departments and technical support."
+    title: "See What They See",
+    description: "Visual understanding built in. Show, don't tell. The interface comprehends context at a glance."
   },
   {
     icon: MessageSquare,
-    title: "Low-Latency Interaction",
-    description: "Sub-second response times create natural conversation flow. No awkward delays—just fluid dialogue."
+    title: "Natural Latency",
+    description: "Conversation that flows. Sub-second response creates the rhythm of real dialogue."
   },
   {
     icon: Zap,
-    title: "Real-Time Reaction",
-    description: "Our AI persona adapts its response based on visual cues, tone, and context. It understands what it sees."
+    title: "Adaptive Presence",
+    description: "Every interaction is contextual. The interface reads, interprets, and responds with precision."
   },
   {
     icon: Globe,
-    title: "Cross-Platform Delivery",
-    description: "Works everywhere your customers are—web, mobile, SMS triggers, QR codes, and embedded widgets."
+    title: "Universal Delivery",
+    description: "Web. Mobile. SMS. QR. Embedded. Wherever your customers are, the interface follows."
   }
 ];
 
@@ -38,7 +38,7 @@ export default function CVISection() {
   return (
     <section id="cvi-section" className="section-padding relative overflow-hidden">
       {/* Background effects */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background via-secondary/10 to-background" />
+      <div className="absolute inset-0 bg-gradient-to-b from-background via-secondary/20 to-background" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-cyan/5 blur-3xl" />
 
       <div className="container-wide relative">
@@ -52,16 +52,14 @@ export default function CVISection() {
         >
           <span className="inline-flex items-center gap-2 px-4 py-2 glass rounded-full text-sm text-cyan font-medium mb-6">
             <Video className="w-4 h-4" />
-            Exclusive Technology
+            Core Technology
           </span>
           
           <h2 className="text-3xl lg:text-heading font-semibold text-foreground mb-4">
-            The <span className="gradient-text-cyan">FaceTime</span> Hook
+            The <span className="gradient-text-cyan">Living Interface</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            Conversational Video Intelligence moves beyond static video and basic chatbots. 
-            It's a synchronous video environment where an AI persona can see, hear, and react 
-            to a human in real-time.
+            Beyond automation. Beyond chatbots. An intelligent layer that sees, hears, and responds—in real time.
           </p>
         </motion.div>
 

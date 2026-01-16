@@ -7,49 +7,49 @@ const pillars = [
   {
     icon: Video,
     accent: true,
-    title: "Interactive CVI",
-    tagline: "Premium FaceTime Interface",
-    description: "The crown jewel. A real-time video interface for high-conversion sales and visual diagnostics. Your brand has a face that can FaceTime your customers.",
+    title: "Interactive Interface",
+    tagline: "Real-Time Engagement",
+    description: "The flagship experience. A synchronous layer where your brand meets customers face-to-face. Not video chat—something more.",
     features: [
-      "Synchronous video consultations",
-      "Visual diagnostic capabilities",
-      "Talking Postcards outbound",
-      "Real-time facial recognition",
-      "Emotion-aware responses"
+      "Real-time visual dialogue",
+      "Adaptive presence",
+      "Personalized outbound triggers",
+      "Contextual understanding",
+      "Seamless integration"
     ],
-    useCase: "Perfect for: Complex sales, service diagnostics, luxury experiences",
+    useCase: "For: High-stakes sales, complex service, premium experiences",
     href: "/book-demo"
   },
   {
     icon: Phone,
     accent: false,
-    title: "Autonomous Agents",
-    tagline: "Voice Intelligence 24/7",
-    description: "High-fidelity inbound and outbound voice agents that never sleep. Handle every call, qualify every lead, book every appointment.",
+    title: "Autonomous Voice",
+    tagline: "Always-On Intelligence",
+    description: "Voice agents that handle every call with precision. Inbound, outbound, qualification—around the clock.",
     features: [
-      "Inbound call handling",
-      "Outbound campaign automation",
-      "Lead qualification & routing",
-      "CRM integration & updates",
-      "Multi-language support"
+      "24/7 call handling",
+      "Outbound automation",
+      "Intelligent routing",
+      "CRM synchronization",
+      "Multi-language"
     ],
-    useCase: "Perfect for: Dealerships, agencies, service businesses",
+    useCase: "For: Dealerships, agencies, service businesses",
     href: "/solutions/dealerships"
   },
   {
     icon: Brain,
     accent: false,
-    title: "Agentic Web Ecosystems",
-    tagline: "The Brain for Your Business",
-    description: "AI-powered digital assets that serve as the intelligent backbone. Websites that think, forms that qualify, and workflows that execute.",
+    title: "Agentic Systems",
+    tagline: "The Intelligent Backbone",
+    description: "Digital infrastructure that thinks. Websites that qualify. Workflows that execute. The brain behind your operations.",
     features: [
-      "Intelligent web interfaces",
-      "Smart form qualification",
-      "Automated workflow triggers",
-      "Knowledge base integration",
-      "Cross-platform orchestration"
+      "Intelligent interfaces",
+      "Automated qualification",
+      "Workflow orchestration",
+      "Knowledge integration",
+      "Cross-platform sync"
     ],
-    useCase: "Perfect for: Scaling operations, consistent brand delivery",
+    useCase: "For: Scaling operations, consistent delivery",
     href: "/solutions/agencies"
   }
 ];
@@ -71,14 +71,14 @@ export default function ProductMatrixSection() {
         >
           <span className="inline-flex items-center gap-2 px-4 py-2 glass rounded-full text-sm text-muted-foreground font-medium mb-6">
             <Sparkles className="w-4 h-4 text-cyan" />
-            The Voxaris Stack
+            The Stack
           </span>
           
           <h2 className="text-3xl lg:text-heading font-semibold text-foreground mb-4">
-            Three Pillars of Intelligence
+            Three Pillars
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            A complete ecosystem of conversational AI—from face-to-face video to autonomous voice to intelligent web systems.
+            A complete system. From real-time interaction to autonomous operations.
           </p>
         </motion.div>
 
