@@ -3,7 +3,9 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Video, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import CVICallSimulator from "@/components/ui/CVICallSimulator";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import TavusConfigModal from "@/components/ui/TavusConfigModal";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -15,7 +17,38 @@ const fadeUp = {
 };
 
 export default function HeroSection() {
-  const [showCallSimulator, setShowCallSimulator] = useState(false);
+  const [showConfigModal, setShowConfigModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleStartCall = async (replicaId: string, personaId: string) => {
+    setIsLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('create-tavus-conversation', {
+        body: {
+          replica_id: replicaId,
+          persona_id: personaId,
+          custom_greeting: "Hello! I'm your Voxaris CVI agent. How can I help you today?",
+          conversational_context: "You are a helpful Voxaris CVI agent demonstrating real-time video AI capabilities. Be professional, friendly, and helpful."
+        }
+      });
+
+      if (error) throw error;
+
+      if (data?.conversation_url) {
+        // Open the Tavus conversation in a new tab
+        window.open(data.conversation_url, '_blank');
+        setShowConfigModal(false);
+        toast.success("CVI call started! Check your new tab.");
+      } else {
+        throw new Error("No conversation URL returned");
+      }
+    } catch (error) {
+      console.error("Error starting CVI call:", error);
+      toast.error("Failed to start CVI call. Please check your credentials.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <section className="relative overflow-hidden min-h-[90vh] flex items-center">
@@ -65,15 +98,15 @@ export default function HeroSection() {
             <span className="gradient-text-cyan text-fluid">A Living Interface.</span>
           </motion.h1>
 
-          {/* Sub-headline */}
+          {/* Slogan */}
           <motion.p
             initial="hidden"
             animate="visible"
             custom={0.15}
             variants={fadeUp}
-            className="text-xl lg:text-2xl text-cyan font-medium mb-6 max-w-3xl"
+            className="text-xl lg:text-2xl text-accent font-medium mb-6 max-w-3xl"
           >
-            Custom Agentic Solutions for High-Stakes Interaction.
+            Personalizing Your Outreach.
           </motion.p>
 
           {/* Description */}
@@ -98,14 +131,14 @@ export default function HeroSection() {
             <Button 
               variant="hero" 
               size="xl" 
-              className="w-full sm:w-auto bg-cyan-glow hover:shadow-cyan transition-all duration-300"
-              onClick={() => setShowCallSimulator(true)}
+              className="w-full sm:w-auto bg-accent hover:bg-accent/90 transition-all duration-300"
+              onClick={() => setShowConfigModal(true)}
             >
               <Video className="h-5 w-5 mr-2" />
-              Simulate CVI Call
+              Start CVI Demo
             </Button>
             <Link to="/book-demo">
-              <Button variant="heroOutline" size="xl" className="w-full sm:w-auto border-cyan/30 hover:border-cyan/60 hover:shadow-cyan/20">
+              <Button variant="heroOutline" size="xl" className="w-full sm:w-auto border-accent/30 hover:border-accent/60">
                 Book a Demo
                 <ArrowRight className="h-5 w-5 ml-1" />
               </Button>
@@ -158,10 +191,12 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* CVI Call Simulator Modal */}
-      <CVICallSimulator 
-        isOpen={showCallSimulator} 
-        onClose={() => setShowCallSimulator(false)} 
+      {/* Tavus Config Modal */}
+      <TavusConfigModal 
+        isOpen={showConfigModal} 
+        onClose={() => setShowConfigModal(false)}
+        onStartCall={handleStartCall}
+        isLoading={isLoading}
       />
     </section>
   );

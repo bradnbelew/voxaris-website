@@ -28,8 +28,8 @@
     --muted: 220 14% 96%;
     --muted-foreground: 220 10% 45%;
 
-    /* Accent - Electric Cyan */
-    --accent: 185 100% 40%;
+    /* Accent - Voxaris Teal (matches logo) */
+    --accent: 174 84% 32%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
@@ -37,7 +37,7 @@
 
     --border: 220 14% 90%;
     --input: 220 14% 90%;
-    --ring: 185 100% 40%;
+    --ring: 174 84% 32%;
 
     --radius: 0.5rem;
 
@@ -50,10 +50,10 @@
     --silver-light: 220 14% 65%;
     --slate: 220 14% 35%;
     
-    /* Electric Cyan - CVI Accent */
-    --cyan: 185 100% 40%;
-    --cyan-glow: 185 100% 50%;
-    --cyan-dark: 185 80% 30%;
+    /* Voxaris Teal - Brand Accent */
+    --cyan: 174 84% 32%;
+    --cyan-glow: 174 72% 40%;
+    --cyan-dark: 174 90% 22%;
 
     /* Gradients */
     --gradient-hero: linear-gradient(135deg, hsl(0 0% 100%) 0%, hsl(220 14% 98%) 100%);
@@ -72,12 +72,12 @@
 
     --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 222 30% 12%;
-    --sidebar-primary: 185 100% 40%;
+    --sidebar-primary: 174 84% 32%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 220 14% 96%;
     --sidebar-accent-foreground: 222 30% 12%;
     --sidebar-border: 220 14% 90%;
-    --sidebar-ring: 185 100% 40%;
+    --sidebar-ring: 174 84% 32%;
   }
 
   .dark {
@@ -100,7 +100,7 @@
     --muted: 222 20% 12%;
     --muted-foreground: 220 10% 55%;
 
-    --accent: 185 100% 50%;
+    --accent: 174 72% 40%;
     --accent-foreground: 222 30% 8%;
 
     --destructive: 0 62.8% 30.6%;
@@ -108,16 +108,16 @@
 
     --border: 222 20% 16%;
     --input: 222 20% 16%;
-    --ring: 185 100% 50%;
+    --ring: 174 72% 40%;
 
     --sidebar-background: 222 30% 8%;
     --sidebar-foreground: 40 20% 95%;
-    --sidebar-primary: 185 100% 50%;
+    --sidebar-primary: 174 72% 40%;
     --sidebar-primary-foreground: 222 30% 8%;
     --sidebar-accent: 222 20% 14%;
     --sidebar-accent-foreground: 40 20% 95%;
     --sidebar-border: 222 20% 16%;
-    --sidebar-ring: 185 100% 50%;
+    --sidebar-ring: 174 72% 40%;
   }
 }
 
