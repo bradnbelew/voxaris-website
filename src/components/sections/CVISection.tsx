@@ -36,7 +36,7 @@ const features = [
 
 export default function CVISection() {
   return (
-    <section id="cvi-section" className="section-padding relative bg-secondary/30">
+    <section id="cvi-section" className="section-padding relative bg-secondary/50">
       <div className="container-editorial">
         {/* Section header */}
         <div className="max-w-2xl mb-16">
@@ -46,7 +46,7 @@ export default function CVISection() {
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6 }}
           >
-            <span className="inline-flex items-center gap-2 text-sm font-medium text-accent mb-4">
+            <span className="inline-flex items-center gap-2 text-sm font-medium text-foreground mb-4">
               <Video className="w-4 h-4" />
               Core Technology
             </span>
@@ -69,10 +69,10 @@ export default function CVISection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="group p-6 bg-background rounded-xl border border-border hover:border-accent/30 transition-colors"
+              className="group p-6 bg-background rounded-xl border border-border hover:border-foreground/20 transition-colors"
             >
-              <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center mb-4">
-                <feature.icon className="h-5 w-5 text-accent" />
+              <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center mb-4">
+                <feature.icon className="h-5 w-5 text-foreground" />
               </div>
               
               <h3 className="text-lg font-semibold text-foreground mb-2">

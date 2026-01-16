@@ -7,44 +7,40 @@
 
 @layer base {
   :root {
-    /* Minimalist Light Theme - White/Gray/Navy */
+    /* Minimalist Light Theme - White/Gray/Charcoal */
     --background: 0 0% 100%;
-    --foreground: 222 47% 11%;
+    --foreground: 0 0% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 0 0% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: 0 0% 15%;
 
-    /* Primary - Navy from logo */
-    --primary: 222 47% 11%;
+    /* Primary - Charcoal from logo */
+    --primary: 0 0% 15%;
     --primary-foreground: 0 0% 100%;
 
     /* Secondary - Light gray */
-    --secondary: 220 14% 96%;
-    --secondary-foreground: 222 47% 11%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 15%;
 
     /* Muted */
-    --muted: 220 14% 96%;
-    --muted-foreground: 220 9% 46%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
 
-    /* Accent - Teal from logo */
-    --accent: 174 84% 32%;
+    /* Accent - Same charcoal (monochrome brand) */
+    --accent: 0 0% 15%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 222 47% 11%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 0 0% 15%;
 
     --radius: 0.5rem;
-
-    /* Custom tokens */
-    --navy: 222 47% 11%;
-    --navy-light: 222 30% 20%;
 
     /* Shadows - subtle */
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.03);
@@ -52,13 +48,13 @@
     --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.05);
 
     --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 222 47% 11%;
-    --sidebar-primary: 174 84% 32%;
+    --sidebar-foreground: 0 0% 15%;
+    --sidebar-primary: 0 0% 15%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 14% 96%;
-    --sidebar-accent-foreground: 222 47% 11%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 222 47% 11%;
+    --sidebar-accent: 0 0% 96%;
+    --sidebar-accent-foreground: 0 0% 15%;
+    --sidebar-border: 0 0% 90%;
+    --sidebar-ring: 0 0% 15%;
   }
 }
 
@@ -108,16 +104,6 @@
   .headline-lg {
     font-family: 'Inter', system-ui, sans-serif;
     @apply text-[clamp(2rem,5vw,3.5rem)] font-semibold leading-[1.1] tracking-[-0.02em];
-  }
-
-  /* Pill styles */
-  .pill {
-    @apply inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium;
-    @apply bg-secondary border border-border;
-  }
-
-  .pill-accent {
-    @apply pill border-accent/30 text-accent bg-accent/5;
   }
 
   /* Glass - very subtle for minimalist */

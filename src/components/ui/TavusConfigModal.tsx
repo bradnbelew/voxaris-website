@@ -55,8 +55,8 @@ export default function TavusConfigModal({
               {/* Header */}
               <div className="flex items-center justify-between p-5 border-b border-border">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
-                    <Settings className="w-5 h-5 text-accent" />
+                  <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center">
+                    <Settings className="w-5 h-5 text-foreground" />
                   </div>
                   <div>
                     <h3 className="text-base font-semibold text-foreground">CVI Configuration</h3>
@@ -109,7 +109,7 @@ export default function TavusConfigModal({
 
                 {/* Info box */}
                 <div className="flex items-start gap-3 p-4 rounded-lg bg-secondary">
-                  <Zap className="w-4 h-4 text-accent mt-0.5 flex-shrink-0" />
+                  <Zap className="w-4 h-4 text-foreground mt-0.5 flex-shrink-0" />
                   <p className="text-sm text-muted-foreground leading-relaxed">
                     <span className="font-medium text-foreground">Sparrow-1:</span> Human-level conversational timing with real-time voice processing.
                   </p>
@@ -118,13 +118,13 @@ export default function TavusConfigModal({
                 <Button
                   type="submit"
                   disabled={!isValid || isLoading}
-                  className="w-full h-11 bg-accent hover:bg-accent/90 text-accent-foreground font-medium rounded-lg"
+                  className="w-full h-11 bg-foreground hover:bg-foreground/90 text-background font-medium rounded-lg"
                 >
                   {isLoading ? (
                     <motion.div
                       animate={{ rotate: 360 }}
                       transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-                      className="w-4 h-4 border-2 border-accent-foreground/30 border-t-accent-foreground rounded-full"
+                      className="w-4 h-4 border-2 border-background/30 border-t-background rounded-full"
                     />
                   ) : (
                     <>
