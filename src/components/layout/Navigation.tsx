@@ -41,10 +41,7 @@ export default function Navigation() {
               alt="" 
               className="h-6 w-6 object-contain"
             />
-            <span className="flex items-baseline gap-0">
-              <span className="font-semibold text-[13px] tracking-[0.28em] uppercase">VOXARIS</span>
-              <sup className="text-[9px] opacity-60 -translate-y-1 ml-0.5">TM</sup>
-            </span>
+            <span className="font-semibold text-[13px] tracking-[0.28em] uppercase">VOXARIS</span>
           </Link>
 
           {/* Desktop Navigation */}
