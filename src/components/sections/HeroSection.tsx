@@ -5,21 +5,24 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import TavusConfigModal from "@/components/ui/TavusConfigModal";
+
+
+// Hardcoded Tavus credentials for demo
+const REPLICA_ID = "r9fa0878977a";
+const PERSONA_ID = "p5332d853291";
 
 export default function HeroSection() {
-  const [showConfigModal, setShowConfigModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleStartCall = async (replicaId: string, personaId: string) => {
+  const handleStartDemo = async () => {
     setIsLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke('create-tavus-conversation', {
         body: {
-          replica_id: replicaId,
-          persona_id: personaId,
-          custom_greeting: "Hello! I'm your Voxaris CVI agent. How can I help you today?",
-          conversational_context: "You are a helpful Voxaris CVI agent demonstrating real-time video AI capabilities. Be professional, friendly, and helpful."
+          replica_id: REPLICA_ID,
+          persona_id: PERSONA_ID,
+          custom_greeting: "Hello! I'm Maria from Voxaris. How can I help you today?",
+          conversational_context: "You are Maria, a helpful Voxaris CVI agent demonstrating real-time video AI capabilities. Be professional, friendly, and helpful."
         }
       });
 
@@ -27,14 +30,13 @@ export default function HeroSection() {
 
       if (data?.conversation_url) {
         window.open(data.conversation_url, '_blank');
-        setShowConfigModal(false);
         toast.success("CVI call started! Check your new tab.");
       } else {
         throw new Error("No conversation URL returned");
       }
     } catch (error) {
       console.error("Error starting CVI call:", error);
-      toast.error("Failed to start CVI call. Please check your credentials.");
+      toast.error("Failed to start CVI call. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -88,10 +90,11 @@ export default function HeroSection() {
               <Button 
                 size="lg" 
                 className="bg-foreground hover:bg-foreground/90 text-background font-medium rounded-full px-6"
-                onClick={() => setShowConfigModal(true)}
+                onClick={handleStartDemo}
+                disabled={isLoading}
               >
                 <Video className="h-4 w-4 mr-2" />
-                Start CVI Demo
+                {isLoading ? "Connecting..." : "Start CVI Demo"}
               </Button>
               <Link to="/book-demo">
                 <Button 
@@ -136,10 +139,9 @@ export default function HeroSection() {
           >
             {/* Video container - larger with click to start */}
             <div 
-              onClick={() => setShowConfigModal(true)}
-              className="relative bg-foreground rounded-2xl overflow-hidden aspect-video cursor-pointer group shadow-2xl"
+              onClick={handleStartDemo}
+              className={`relative bg-foreground rounded-2xl overflow-hidden aspect-video cursor-pointer group shadow-2xl ${isLoading ? 'pointer-events-none opacity-75' : ''}`}
             >
-              {/* Placeholder video area - dark like Tavus */}
               <div className="absolute inset-0 flex items-center justify-center bg-foreground">
                 {/* Play button overlay */}
                 <div className="absolute inset-0 flex items-center justify-center">
@@ -198,13 +200,6 @@ export default function HeroSection() {
         </motion.div>
       </div>
 
-      {/* Tavus Config Modal */}
-      <TavusConfigModal 
-        isOpen={showConfigModal} 
-        onClose={() => setShowConfigModal(false)}
-        onStartCall={handleStartCall}
-        isLoading={isLoading}
-      />
     </section>
   );
 }
