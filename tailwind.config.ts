@@ -70,6 +70,11 @@ export default {
           light: "hsl(var(--silver-light))",
         },
         slate: "hsl(var(--slate))",
+        cyan: {
+          DEFAULT: "hsl(var(--cyan))",
+          glow: "hsl(var(--cyan-glow))",
+          dark: "hsl(var(--cyan-dark))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -91,6 +96,7 @@ export default {
         'elegant': 'var(--shadow-elegant)',
         'card': 'var(--shadow-lg)',
         'subtle': 'var(--shadow-md)',
+        'cyan': 'var(--shadow-cyan)',
       },
       keyframes: {
         "accordion-down": {

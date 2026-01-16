@@ -36,10 +36,13 @@ export default function Footer() {
               />
             </Link>
             <p className="text-background/60 text-[15px] leading-relaxed mb-4">
-              AI sales infrastructure that converts inbound leads into booked appointments — automatically.
+              Conversational Video Intelligence and Autonomous AI Agents for high-stakes customer interaction.
             </p>
-            <p className="text-background/40 text-sm">
+            <p className="text-background/40 text-sm mb-4">
               ethan@voxaris.io
+            </p>
+            <p className="text-background/30 text-xs italic">
+              All Voxaris agents are grounded in proprietary client data for zero-hallucination accuracy.
             </p>
           </div>
 
