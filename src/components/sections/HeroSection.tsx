@@ -127,51 +127,48 @@ export default function HeroSection() {
             </motion.div>
           </div>
 
-          {/* Right column - Video Demo Preview */}
+          {/* Right column - Video Demo Preview - Full size like Tavus.io */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="relative"
+            className="relative lg:min-h-[500px]"
           >
-            {/* Video container with Tavus-style interface */}
-            <div className="relative bg-secondary rounded-2xl overflow-hidden aspect-[4/3] border border-border">
-              {/* Header bar */}
-              <div className="absolute top-0 left-0 right-0 z-10 flex items-center gap-2 px-4 py-3 bg-background/90 backdrop-blur-sm border-b border-border">
-                <span className="w-2 h-2 rounded-full bg-red-500" />
-                <span className="text-sm font-medium text-foreground uppercase tracking-wider">Face-to-Face Video</span>
-                <div className="flex-1 h-px bg-border ml-4" />
-              </div>
-
-              {/* Placeholder video area */}
-              <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-secondary to-muted">
-                <div className="text-center">
-                  <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-foreground/10 flex items-center justify-center">
-                    <Video className="w-10 h-10 text-foreground/40" />
+            {/* Video container - larger with click to start */}
+            <div 
+              onClick={() => setShowConfigModal(true)}
+              className="relative bg-foreground rounded-2xl overflow-hidden aspect-video cursor-pointer group shadow-2xl"
+            >
+              {/* Placeholder video area - dark like Tavus */}
+              <div className="absolute inset-0 flex items-center justify-center bg-foreground">
+                {/* Play button overlay */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-20 h-20 rounded-full bg-background/20 backdrop-blur-sm flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                    <div className="w-0 h-0 border-t-[12px] border-t-transparent border-l-[20px] border-l-background border-b-[12px] border-b-transparent ml-1" />
                   </div>
-                  <p className="text-muted-foreground text-sm">Click to start a live demo</p>
+                </div>
+                
+                {/* Avatar placeholder in center */}
+                <div className="absolute bottom-1/3 left-1/2 -translate-x-1/2 translate-y-1/2">
+                  <div className="w-32 h-32 rounded-full bg-muted-foreground/20 border-4 border-muted-foreground/30" />
                 </div>
               </div>
 
-              {/* Bottom controls */}
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 px-4 py-2 bg-background rounded-full border border-border shadow-lg">
-                <button className="p-2 hover:bg-secondary rounded-lg transition-colors">
-                  <MessageSquare className="w-4 h-4 text-foreground" />
-                </button>
-                <button className="p-2 hover:bg-secondary rounded-lg transition-colors">
-                  <Video className="w-4 h-4 text-foreground" />
-                </button>
-                <button className="p-2 hover:bg-secondary rounded-lg transition-colors">
-                  <Phone className="w-4 h-4 text-foreground" />
-                </button>
+              {/* Live indicator */}
+              <div className="absolute top-4 left-4 flex items-center gap-2 px-3 py-1.5 bg-background/10 backdrop-blur-sm rounded-full">
+                <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                <span className="text-xs font-medium text-background uppercase tracking-wider">Live Demo</span>
               </div>
-            </div>
 
-            {/* Floating label */}
-            <div className="absolute -bottom-4 left-4 right-4 flex justify-center">
-              <span className="px-4 py-2 bg-background border border-border rounded-full text-xs text-muted-foreground shadow-sm">
-                Powered by real-time AI with human-level conversational timing
-              </span>
+              {/* Bottom gradient */}
+              <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/50 to-transparent" />
+              
+              {/* CTA text */}
+              <div className="absolute bottom-6 left-1/2 -translate-x-1/2">
+                <span className="text-background/80 text-sm font-medium group-hover:text-background transition-colors">
+                  Click to talk with Maria
+                </span>
+              </div>
             </div>
           </motion.div>
         </div>
