@@ -40,22 +40,19 @@ export default function Navigation() {
       {/* Background */}
       <div 
         className={`absolute inset-0 transition-all duration-300 ${
-          isScrolled ? 'bg-background/95 backdrop-blur-md border-b border-border' : 'bg-transparent'
+          isScrolled ? 'bg-background border-b border-border' : 'bg-background'
         }`}
       />
       
       <nav className="container-editorial relative">
-        <div className="flex items-center justify-between h-16 lg:h-20">
-          {/* Brand */}
-          <Link to="/" className="flex items-center gap-3 text-foreground">
+        <div className="flex items-center justify-between h-20">
+          {/* Brand - Using logo image */}
+          <Link to="/" className="flex items-center">
             <img 
               src={voxarisLogo} 
-              alt="" 
-              className="h-8 w-8 object-contain"
+              alt="Voxaris" 
+              className="h-8 object-contain"
             />
-            <span className="font-semibold text-sm tracking-[0.2em] uppercase">
-              VOXARIS
-            </span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -120,7 +117,7 @@ export default function Navigation() {
             <Link to="/demo">
               <Button 
                 size="sm" 
-                className="bg-accent hover:bg-accent/90 text-accent-foreground font-medium rounded-full px-5 h-9"
+                className="bg-foreground hover:bg-foreground/90 text-background font-medium rounded-full px-5 h-9"
               >
                 <Play className="h-3.5 w-3.5 mr-1.5 fill-current" />
                 Try Maria Live
@@ -191,7 +188,7 @@ export default function Navigation() {
               
               <div className="pt-4 space-y-3">
                 <Link to="/demo" onClick={() => setMobileOpen(false)}>
-                  <Button className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-medium rounded-full h-11">
+                  <Button className="w-full bg-foreground hover:bg-foreground/90 text-background font-medium rounded-full h-11">
                     <Play className="h-4 w-4 mr-2 fill-current" />
                     Try Maria Live
                   </Button>
