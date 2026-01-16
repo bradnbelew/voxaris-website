@@ -6,82 +6,82 @@
 
 @layer base {
   :root {
-    /* Voxaris Premium Obsidian Theme */
-    --background: 222 30% 6%;
-    --foreground: 40 20% 95%;
+    /* Voxaris Premium Light Theme */
+    --background: 0 0% 100%;
+    --foreground: 222 30% 12%;
 
-    --card: 222 25% 10%;
-    --card-foreground: 40 20% 95%;
+    --card: 0 0% 99%;
+    --card-foreground: 222 30% 12%;
 
-    --popover: 222 25% 10%;
-    --popover-foreground: 40 20% 95%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 30% 12%;
 
     /* Deep Navy - Primary Brand Color */
-    --primary: 40 20% 95%;
-    --primary-foreground: 222 30% 8%;
+    --primary: 222 30% 12%;
+    --primary-foreground: 0 0% 100%;
 
-    /* Soft Dark */
-    --secondary: 222 20% 14%;
-    --secondary-foreground: 40 20% 95%;
+    /* Soft Light Gray */
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 222 30% 12%;
 
-    /* Muted Dark Gray */
-    --muted: 222 20% 12%;
-    --muted-foreground: 220 10% 55%;
+    /* Muted Light */
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 10% 45%;
 
     /* Accent - Electric Cyan */
-    --accent: 185 100% 50%;
-    --accent-foreground: 222 30% 8%;
+    --accent: 185 100% 40%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
-    --destructive-foreground: 40 20% 97%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 222 20% 16%;
-    --input: 222 20% 16%;
-    --ring: 185 100% 50%;
+    --border: 220 14% 90%;
+    --input: 220 14% 90%;
+    --ring: 185 100% 40%;
 
     --radius: 0.5rem;
 
     /* Custom Voxaris Tokens */
-    --navy: 222 30% 8%;
-    --navy-light: 222 20% 16%;
-    --cream: 40 20% 95%;
-    --cream-dark: 40 15% 88%;
-    --silver: 220 10% 60%;
-    --silver-light: 220 14% 70%;
-    --slate: 220 14% 40%;
+    --navy: 222 30% 12%;
+    --navy-light: 222 20% 20%;
+    --cream: 40 20% 98%;
+    --cream-dark: 40 15% 94%;
+    --silver: 220 10% 50%;
+    --silver-light: 220 14% 65%;
+    --slate: 220 14% 35%;
     
     /* Electric Cyan - CVI Accent */
-    --cyan: 185 100% 50%;
-    --cyan-glow: 185 100% 60%;
-    --cyan-dark: 185 80% 35%;
+    --cyan: 185 100% 40%;
+    --cyan-glow: 185 100% 50%;
+    --cyan-dark: 185 80% 30%;
 
     /* Gradients */
-    --gradient-hero: linear-gradient(135deg, hsl(222 30% 6%) 0%, hsl(222 25% 10%) 100%);
-    --gradient-card: linear-gradient(180deg, hsl(222 25% 12%) 0%, hsl(222 25% 8%) 100%);
-    --gradient-navy: linear-gradient(135deg, hsl(222 30% 8%) 0%, hsl(222 25% 14%) 100%);
-    --gradient-subtle: linear-gradient(180deg, transparent 0%, hsl(222 20% 12% / 0.5) 100%);
-    --gradient-cyan: linear-gradient(135deg, hsl(185 100% 50%) 0%, hsl(185 80% 40%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(0 0% 100%) 0%, hsl(220 14% 98%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(220 14% 98%) 100%);
+    --gradient-navy: linear-gradient(135deg, hsl(222 30% 12%) 0%, hsl(222 25% 18%) 100%);
+    --gradient-subtle: linear-gradient(180deg, transparent 0%, hsl(220 14% 96% / 0.5) 100%);
+    --gradient-cyan: linear-gradient(135deg, hsl(185 100% 40%) 0%, hsl(185 80% 35%) 100%);
 
     /* Shadows */
-    --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.2);
-    --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.3), 0 2px 4px -2px hsl(0 0% 0% / 0.2);
-    --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.3), 0 4px 6px -4px hsl(0 0% 0% / 0.2);
-    --shadow-xl: 0 20px 25px -5px hsl(0 0% 0% / 0.4), 0 8px 10px -6px hsl(0 0% 0% / 0.2);
-    --shadow-elegant: 0 25px 50px -12px hsl(0 0% 0% / 0.5);
-    --shadow-cyan: 0 0 30px -5px hsl(185 100% 50% / 0.3);
+    --shadow-sm: 0 1px 2px 0 hsl(222 30% 12% / 0.04);
+    --shadow-md: 0 4px 6px -1px hsl(222 30% 12% / 0.06), 0 2px 4px -2px hsl(222 30% 12% / 0.04);
+    --shadow-lg: 0 10px 15px -3px hsl(222 30% 12% / 0.08), 0 4px 6px -4px hsl(222 30% 12% / 0.04);
+    --shadow-xl: 0 20px 25px -5px hsl(222 30% 12% / 0.1), 0 8px 10px -6px hsl(222 30% 12% / 0.06);
+    --shadow-elegant: 0 25px 50px -12px hsl(222 30% 12% / 0.15);
+    --shadow-cyan: 0 0 30px -5px hsl(185 100% 40% / 0.2);
 
-    --sidebar-background: 222 30% 8%;
-    --sidebar-foreground: 40 20% 95%;
-    --sidebar-primary: 185 100% 50%;
-    --sidebar-primary-foreground: 222 30% 8%;
-    --sidebar-accent: 222 20% 14%;
-    --sidebar-accent-foreground: 40 20% 95%;
-    --sidebar-border: 222 20% 16%;
-    --sidebar-ring: 185 100% 50%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 222 30% 12%;
+    --sidebar-primary: 185 100% 40%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 14% 96%;
+    --sidebar-accent-foreground: 222 30% 12%;
+    --sidebar-border: 220 14% 90%;
+    --sidebar-ring: 185 100% 40%;
   }
 
   .dark {
-    /* Dark mode uses same tokens as default (obsidian is default) */
+    /* Dark mode - Obsidian */
     --background: 222 30% 6%;
     --foreground: 40 20% 95%;
 
@@ -155,12 +155,12 @@
 
   .gradient-text {
     @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(135deg, hsl(var(--cream)) 0%, hsl(var(--silver)) 100%);
+    background-image: linear-gradient(135deg, hsl(var(--navy)) 0%, hsl(var(--slate)) 100%);
   }
 
   .gradient-text-cyan {
     @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(135deg, hsl(var(--cyan)) 0%, hsl(var(--cyan-glow)) 100%);
+    background-image: linear-gradient(135deg, hsl(var(--cyan)) 0%, hsl(var(--cyan-dark)) 100%);
   }
 
   /* Glassmorphism */

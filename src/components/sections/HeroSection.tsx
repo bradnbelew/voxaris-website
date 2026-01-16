@@ -49,7 +49,7 @@ export default function HeroSection() {
           >
             <span className="inline-flex items-center gap-2 px-4 py-2 glass rounded-full text-sm text-muted-foreground font-medium tracking-wide">
               <Sparkles className="w-4 h-4 text-cyan" />
-              Introducing Conversational Video Intelligence
+              Beyond Automation
             </span>
           </motion.div>
 
@@ -61,8 +61,8 @@ export default function HeroSection() {
             variants={fadeUp}
             className="text-[2.75rem] sm:text-5xl lg:text-6xl xl:text-[4.5rem] font-semibold tracking-[-0.02em] text-foreground mb-4 max-w-5xl leading-[1.05]"
           >
-            The Era of{" "}
-            <span className="gradient-text-cyan text-fluid">Conversational Video Intelligence</span>
+            Your Brand.{" "}
+            <span className="gradient-text-cyan text-fluid">A Living Interface.</span>
           </motion.h1>
 
           {/* Sub-headline */}
@@ -84,7 +84,7 @@ export default function HeroSection() {
             variants={fadeUp}
             className="text-lg lg:text-xl text-muted-foreground max-w-2xl mb-10 leading-relaxed font-normal"
           >
-            Your brand doesn't just send messages—it has a face. A real-time video interface that can see, hear, and react. From FaceTime-style consultations to autonomous voice agents, we build the intelligence layer that closes deals.
+            We build the intelligence layer that transforms how your customers engage. Not chatbots. Not call centers. Something new.
           </motion.p>
 
           {/* CTAs */}
