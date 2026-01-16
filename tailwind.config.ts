@@ -75,6 +75,10 @@ export default {
           glow: "hsl(var(--cyan-glow))",
           dark: "hsl(var(--cyan-dark))",
         },
+        orange: {
+          DEFAULT: "hsl(var(--orange))",
+          glow: "hsl(var(--orange-glow))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -84,7 +88,8 @@ export default {
         "3xl": "1.5rem",
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['DM Sans', 'system-ui', '-apple-system', 'sans-serif'],
+        display: ['Space Grotesk', 'system-ui', 'sans-serif'],
       },
       fontSize: {
         'display': ['4.5rem', { lineHeight: '1.1', letterSpacing: '-0.02em' }],
@@ -97,6 +102,7 @@ export default {
         'card': 'var(--shadow-lg)',
         'subtle': 'var(--shadow-md)',
         'cyan': 'var(--shadow-cyan)',
+        'glow': 'var(--shadow-glow)',
       },
       keyframes: {
         "accordion-down": {
