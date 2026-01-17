@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { CVIProvider } from "@/components/cvi";
 import Index from "./pages/Index";
 import HowItWorks from "./pages/HowItWorks";
 import WhyVoxaris from "./pages/WhyVoxaris";
@@ -18,11 +19,12 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
+    <CVIProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/how-it-works" element={<HowItWorks />} />
           <Route path="/why-voxaris" element={<WhyVoxaris />} />
@@ -33,11 +35,12 @@ const App = () => (
           <Route path="/solutions/dealerships" element={<SolutionsDealerships />} />
           <Route path="/solutions/contractors" element={<SolutionsContractors />} />
           <Route path="/solutions/law-firms" element={<SolutionsLawFirms />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </CVIProvider>
   </QueryClientProvider>
 );
 

@@ -8,3 +8,6 @@ verify_jwt = false
 
 [functions.ghl-webhook]
 verify_jwt = false
+
+[functions.create-tavus-conversation]
+verify_jwt = false

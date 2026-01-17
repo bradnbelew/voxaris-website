@@ -1,10 +1,11 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Play, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { Conversation } from "@/components/cvi";
 
 // Hardcoded Tavus credentials for demo
 const REPLICA_ID = "r9fa0878977a";
@@ -12,6 +13,8 @@ const PERSONA_ID = "p5332d853291";
 
 export default function HeroSection() {
   const [isLoading, setIsLoading] = useState(false);
+  const [conversationUrl, setConversationUrl] = useState<string | null>(null);
+  const [isInCall, setIsInCall] = useState(false);
 
   const handleStartDemo = async () => {
     setIsLoading(true);
@@ -20,16 +23,17 @@ export default function HeroSection() {
         body: {
           replica_id: REPLICA_ID,
           persona_id: PERSONA_ID,
-          custom_greeting: "Hello! I'm here to help. What can I do for you today?",
-          conversational_context: "You are a helpful Voxaris CVI agent demonstrating real-time video AI capabilities. Be professional, friendly, and helpful."
+          custom_greeting: "Hello! I'm Maria from Voxaris. How can I help you today?",
+          conversational_context: "You are Maria, a friendly and professional Voxaris CVI agent demonstrating real-time video AI capabilities. You help visitors understand how Conversational Video Intelligence works."
         }
       });
 
       if (error) throw error;
 
       if (data?.conversation_url) {
-        window.open(data.conversation_url, '_blank');
-        toast.success("Conversation started! Check your new tab.");
+        setConversationUrl(data.conversation_url);
+        setIsInCall(true);
+        toast.success("Connected! Say hello to Maria.");
       } else {
         throw new Error("No conversation URL returned");
       }
@@ -39,6 +43,11 @@ export default function HeroSection() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleLeaveCall = () => {
+    setIsInCall(false);
+    setConversationUrl(null);
   };
 
   return (
@@ -85,9 +94,9 @@ export default function HeroSection() {
             size="lg" 
             className="bg-ink hover:bg-charcoal text-white font-medium rounded-full px-8 h-14 text-base transition-colors duration-200"
             onClick={handleStartDemo}
-            disabled={isLoading}
+            disabled={isLoading || isInCall}
           >
-            {isLoading ? "Connecting..." : "Talk to Maria"}
+            {isLoading ? "Connecting..." : isInCall ? "In Conversation" : "Talk to Maria"}
           </Button>
           <Link to="/how-it-works" className="group">
             <span className="text-slate font-medium hover:text-ink transition-colors duration-200 flex items-center gap-1">
@@ -104,30 +113,61 @@ export default function HeroSection() {
           transition={{ duration: 0.7, delay: 0.4, ease: "easeOut" }}
           className="max-w-[800px] mx-auto mb-12"
         >
-          <div 
-            onClick={handleStartDemo}
-            className={`video-frame aspect-video relative cursor-pointer group shadow-lg ${isLoading ? 'pointer-events-none opacity-75' : ''}`}
-          >
-            {/* Placeholder content */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center">
-              {/* Live badge */}
-              <div className="absolute top-4 left-4 flex items-center gap-2 px-3 py-1.5 bg-white rounded-full border border-frost shadow-sm">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
-                </span>
-                <span className="text-xs font-medium text-ink">LIVE</span>
-              </div>
+          <div className="video-frame aspect-video relative shadow-lg overflow-hidden">
+            <AnimatePresence mode="wait">
+              {isInCall && conversationUrl ? (
+                <motion.div
+                  key="conversation"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="absolute inset-0"
+                >
+                  <Conversation 
+                    conversationUrl={conversationUrl} 
+                    onLeave={handleLeaveCall}
+                  />
+                  {/* Close button */}
+                  <button
+                    onClick={handleLeaveCall}
+                    className="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/50 hover:bg-black/70 flex items-center justify-center transition-colors z-10"
+                  >
+                    <X className="w-5 h-5 text-white" />
+                  </button>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="placeholder"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onClick={handleStartDemo}
+                  className={`absolute inset-0 flex flex-col items-center justify-center cursor-pointer group bg-mist ${isLoading ? 'pointer-events-none opacity-75' : ''}`}
+                >
+                  {/* Live badge */}
+                  <div className="absolute top-4 left-4 flex items-center gap-2 px-3 py-1.5 bg-white rounded-full border border-frost shadow-sm">
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75" />
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+                    </span>
+                    <span className="text-xs font-medium text-ink">LIVE</span>
+                  </div>
 
-              {/* Play button */}
-              <div className="w-20 h-20 rounded-full bg-white shadow-lg flex items-center justify-center group-hover:scale-105 transition-transform duration-300 border border-frost">
-                <div className="w-0 h-0 border-t-[12px] border-t-transparent border-l-[20px] border-l-ink border-b-[12px] border-b-transparent ml-1.5" />
-              </div>
-              
-              <p className="mt-4 text-sm text-slate">
-                {isLoading ? "Connecting..." : "Click to start a live conversation"}
-              </p>
-            </div>
+                  {/* Play button */}
+                  <div className="w-20 h-20 rounded-full bg-white shadow-lg flex items-center justify-center group-hover:scale-105 transition-transform duration-300 border border-frost">
+                    {isLoading ? (
+                      <div className="w-6 h-6 border-2 border-ink/30 border-t-ink rounded-full animate-spin" />
+                    ) : (
+                      <Play className="w-8 h-8 text-ink ml-1" fill="currentColor" />
+                    )}
+                  </div>
+                  
+                  <p className="mt-4 text-sm text-slate">
+                    {isLoading ? "Connecting..." : "Click to start a live conversation"}
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </motion.div>
 
