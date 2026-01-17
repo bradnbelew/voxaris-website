@@ -48,7 +48,7 @@ export default function Navigation() {
         <div className="flex items-center justify-between h-20">
           {/* Brand - Text based */}
           <Link to="/" className="flex items-center">
-            <span className="text-2xl font-bold tracking-tight text-foreground">Voxaris</span>
+            <span className="text-2xl font-bold tracking-tight text-foreground uppercase font-sans">VOXARIS</span>
           </Link>
 
           {/* Desktop Navigation */}
