@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence, useScroll } from "framer-motion";
 import { Menu, X, ChevronDown, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import voxarisLogo from "@/assets/voxaris-logo-banner.png";
+import voxarisLogo from "@/assets/voxaris-logo-square.png";
 
 const navLinks = [
   { name: "Agencies", href: "/solutions/agencies" },
