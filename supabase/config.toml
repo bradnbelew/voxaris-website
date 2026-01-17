@@ -11,3 +11,9 @@ verify_jwt = false
 
 [functions.create-tavus-conversation]
 verify_jwt = false
+
+[functions.calcom-booking]
+verify_jwt = false
+
+[functions.tavus-tool-handler]
+verify_jwt = false
