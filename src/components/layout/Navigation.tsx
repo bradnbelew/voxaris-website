@@ -47,9 +47,8 @@ export default function Navigation() {
       <nav className="container-editorial relative">
         <div className="flex items-center justify-between h-20">
           {/* Brand - Text based */}
-          <Link to="/" className="flex items-baseline gap-2">
+          <Link to="/" className="flex items-center">
             <span className="text-2xl font-bold tracking-tight text-foreground">Voxaris</span>
-            <span className="text-xs text-muted-foreground tracking-wide">Personalizing Outreach</span>
           </Link>
 
           {/* Desktop Navigation */}
