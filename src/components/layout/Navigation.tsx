@@ -45,15 +45,15 @@ export default function Navigation() {
         }`}
       />
       
-      <nav className="container-editorial relative">
-        <div className="flex items-center justify-between h-20">
+      <nav className="container-editorial relative px-4 lg:px-6">
+        <div className="flex items-center justify-between h-16">
           {/* Brand - Logo */}
-          <Link to="/" className="flex items-center">
-            <img src={voxarisLogo} alt="Voxaris" className="h-10 w-auto" />
+          <Link to="/" className="flex items-center shrink-0">
+            <img src={voxarisLogo} alt="Voxaris" className="h-9 w-auto" />
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-8">
+          <div className="hidden lg:flex items-center gap-6">
             {navLinks.map((link) => (
               <div key={link.name} className="relative">
                 {link.children ? (
@@ -110,13 +110,13 @@ export default function Navigation() {
           </div>
 
           {/* Desktop CTAs */}
-          <div className="hidden lg:flex items-center gap-3">
+          <div className="hidden lg:flex items-center gap-2">
             <Link to="/demo">
               <Button 
                 size="sm" 
-                className="bg-foreground hover:bg-foreground/90 text-background font-medium rounded-full px-5 h-9"
+                className="bg-foreground hover:bg-foreground/90 text-background font-medium rounded-full px-4 h-8 text-xs"
               >
-                <Play className="h-3.5 w-3.5 mr-1.5 fill-current" />
+                <Play className="h-3 w-3 mr-1 fill-current" />
                 Try Maria Live
               </Button>
             </Link>
@@ -124,7 +124,7 @@ export default function Navigation() {
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className="text-sm font-medium h-9 px-4 text-muted-foreground hover:text-foreground"
+                className="text-xs font-medium h-8 px-3 text-muted-foreground hover:text-foreground"
               >
                 Book Demo
               </Button>
