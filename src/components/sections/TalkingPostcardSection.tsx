@@ -27,7 +27,7 @@ const steps = [
 export default function TalkingPostcardSection() {
   return (
     <section className="section-padding bg-white">
-      <div className="container-editorial">
+      <div className="container-wide">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}

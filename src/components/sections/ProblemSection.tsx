@@ -18,7 +18,7 @@ const painPoints = [
 export default function ProblemSection() {
   return (
     <section className="section-padding bg-mist">
-      <div className="container-editorial max-w-3xl">
+      <div className="container-wide max-w-4xl">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

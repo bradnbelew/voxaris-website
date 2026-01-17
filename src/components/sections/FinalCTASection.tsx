@@ -39,8 +39,8 @@ export default function FinalCTASection() {
   };
 
   return (
-    <section className="section-padding section-dark">
-      <div className="container-editorial">
+    <section className="section-padding-lg section-dark">
+      <div className="container-wide">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
