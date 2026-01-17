@@ -39,37 +39,38 @@ export default function FinalCTASection() {
   };
 
   return (
-    <section className="section-padding bg-background">
+    <section className="section-padding section-dark">
       <div className="container-editorial">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.5 }}
-          className="text-center max-w-xl mx-auto"
+          transition={{ duration: 0.7 }}
+          className="text-center"
         >
           {/* Headline */}
-          <h2 className="headline-lg text-foreground mb-8">
+          <h2 className="headline-xl text-white mb-6">
             Experience it yourself.
           </h2>
 
-          {/* Primary CTA */}
-          <Button
+          {/* Subheadline */}
+          <p className="text-lg text-silver max-w-xl mx-auto mb-12">
+            Talk to Maria. See the technology. Make your decision.
+          </p>
+
+          {/* CTA Button */}
+          <Button 
             size="lg"
-            className="bg-foreground hover:bg-obsidian text-background font-medium rounded-lg px-10 h-14 text-base transition-colors duration-200 mb-6"
             onClick={handleStartDemo}
             disabled={isLoading}
+            className="bg-white hover:bg-snow text-ink font-semibold rounded-full px-10 h-16 text-lg shadow-lg hover:shadow-xl transition-all"
           >
-            {isLoading ? "Connecting..." : "Start a Live Demo"}
+            {isLoading ? "Connecting..." : "Start a Conversation"}
           </Button>
 
-          {/* Secondary option */}
-          <p className="text-muted-foreground text-sm">
-            or call{" "}
-            <a href="tel:+13215551234" className="text-foreground hover:underline font-medium">
-              (321) 555-1234
-            </a>
-            {" "}for a human
+          {/* Phone number */}
+          <p className="mt-8 text-silver text-sm">
+            or call <a href="tel:+13215550000" className="text-white hover:underline">(321) XXX-XXXX</a> for a human
           </p>
         </motion.div>
       </div>
