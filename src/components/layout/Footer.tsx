@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import voxarisLogo from "@/assets/voxaris-logo-banner.svg";
+import voxarisLogo from "@/assets/voxaris-logo-dark.png";
 
 export default function Footer() {
   return (
