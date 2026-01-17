@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence, useScroll } from "framer-motion";
 import { Menu, X, ChevronDown, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import voxarisLogo from "@/assets/voxaris-logo-square.png";
+
 
 const navLinks = [
   { name: "Agencies", href: "/solutions/agencies" },
@@ -46,13 +46,10 @@ export default function Navigation() {
       
       <nav className="container-editorial relative">
         <div className="flex items-center justify-between h-20">
-          {/* Brand - Using logo image */}
-          <Link to="/" className="flex items-center">
-            <img 
-              src={voxarisLogo} 
-              alt="Voxaris" 
-              className="h-[200px] w-auto"
-            />
+          {/* Brand - Text based */}
+          <Link to="/" className="flex flex-col">
+            <span className="text-2xl font-bold tracking-tight text-foreground">Voxaris</span>
+            <span className="text-xs text-muted-foreground tracking-wide">Personalizing Outreach</span>
           </Link>
 
           {/* Desktop Navigation */}
