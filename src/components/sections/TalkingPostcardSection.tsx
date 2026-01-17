@@ -1,26 +1,32 @@
 import { motion } from "framer-motion";
-import { QrCode, Video, Calendar, ArrowRight } from "lucide-react";
+import { Mail, QrCode, Video, CalendarCheck, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
 const steps = [
   {
     number: "01",
-    icon: QrCode,
-    title: "Send personalized mailer",
-    description: "QR code links to your AI agent, not a form.",
+    icon: Mail,
+    title: "Send",
+    description: "Personalized mailer with QR code",
   },
   {
     number: "02",
-    icon: Video,
-    title: "Customer scans & connects",
-    description: "Instant face-to-face video call. No app downloads.",
+    icon: QrCode,
+    title: "Scan",
+    description: "Customer scans, instant connection",
   },
   {
     number: "03",
-    icon: Calendar,
-    title: "Appointment booked",
-    description: "AI agent qualifies and books—while they're engaged.",
+    icon: Video,
+    title: "Connect",
+    description: "Face-to-face with Maria",
+  },
+  {
+    number: "04",
+    icon: CalendarCheck,
+    title: "Book",
+    description: "Appointment confirmed",
   },
 ];
 
@@ -31,146 +37,207 @@ export default function TalkingPostcardSection() {
       <div className="absolute top-1/2 left-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[150px] -translate-y-1/2 pointer-events-none" />
       
       <div className="container-editorial relative">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          {/* Left - Content */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6 }}
-          >
-            <span className="eyebrow mb-4 block">The Killer App</span>
-            <h2 className="headline-lg text-foreground mb-6">
-              Turn direct mail into a{" "}
-              <span className="text-primary">FaceTime call.</span>
-            </h2>
-            <p className="text-xl text-muted-foreground mb-10 leading-relaxed">
-              When a customer scans a QR code on physical mail, they're immediately 
-              in a personalized video conversation with a digital twin who knows 
-              their CRM data, vehicle history, and equity status.
-            </p>
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
+          <span className="eyebrow mb-4 block">The Killer App</span>
+          <h2 className="headline-lg text-foreground mb-6">
+            Direct Mail, Meet{" "}
+            <span className="text-primary">Digital Twin.</span>
+          </h2>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            When a customer scans a QR code on physical mail, they're immediately in a personalized video conversation with an AI that knows their name, vehicle, and service history.
+          </p>
+        </motion.div>
+
+        {/* Horizontal Journey Timeline */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="mb-16"
+        >
+          <div className="relative">
+            {/* Connection line */}
+            <div className="hidden md:block absolute top-1/2 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-border to-transparent -translate-y-1/2" />
+            
+            {/* Animated progress line */}
+            <motion.div
+              initial={{ scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1.5, delay: 0.5, ease: "easeOut" }}
+              className="hidden md:block absolute top-1/2 left-[12.5%] right-[12.5%] h-[2px] bg-gradient-to-r from-primary via-primary to-primary/50 -translate-y-1/2 origin-left"
+            />
 
             {/* Steps */}
-            <div className="space-y-6 mb-10">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               {steps.map((step, index) => (
                 <motion.div
                   key={step.number}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.15 }}
-                  className="flex items-start gap-4 group"
+                  transition={{ duration: 0.5, delay: 0.3 + index * 0.15 }}
+                  className="relative"
                 >
-                  <div className="shrink-0 w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                    <step.icon className="w-5 h-5 text-primary" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-foreground mb-1">{step.title}</h4>
+                  <div className="glass-card p-6 text-center card-hover">
+                    {/* Icon */}
+                    <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center">
+                      <step.icon className="w-8 h-8 text-primary" />
+                    </div>
+                    
+                    {/* Number badge */}
+                    <span className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-card border border-primary/30 flex items-center justify-center text-xs font-mono text-primary font-bold">
+                      {step.number}
+                    </span>
+
+                    {/* Content */}
+                    <h4 className="text-lg font-bold text-foreground mb-2">{step.title}</h4>
                     <p className="text-sm text-muted-foreground">{step.description}</p>
                   </div>
+
+                  {/* Arrow between steps (mobile) */}
+                  {index < steps.length - 1 && (
+                    <div className="md:hidden flex justify-center my-4">
+                      <ArrowRight className="w-5 h-5 text-primary rotate-90" />
+                    </div>
+                  )}
                 </motion.div>
               ))}
             </div>
+          </div>
+        </motion.div>
 
-            <Link to="/technology">
-              <Button 
-                variant="outline" 
-                className="rounded-full px-6 h-12 border-border/50 hover:border-primary/30 hover:bg-primary/5 transition-all"
-              >
-                Learn About Our Technology
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            </Link>
-          </motion.div>
+        {/* Visual Demo */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-16"
+        >
+          {/* Postcard */}
+          <div className="relative flex justify-center">
+            <motion.div
+              initial={{ rotate: -3 }}
+              whileInView={{ rotate: -3 }}
+              className="glass-card p-6 w-full max-w-[320px] transform"
+            >
+              <div className="text-center mb-6">
+                <p className="text-xs text-primary uppercase tracking-widest mb-2">Service Reminder</p>
+                <h4 className="text-lg font-bold text-foreground mb-2">Your 2021 Accord</h4>
+                <p className="text-sm text-muted-foreground">is due for its 60k service</p>
+              </div>
+              
+              {/* QR Code placeholder */}
+              <div className="w-32 h-32 mx-auto bg-foreground/10 rounded-xl flex items-center justify-center border border-border mb-4">
+                <QrCode className="w-20 h-20 text-foreground/40" />
+              </div>
+              
+              <p className="text-center text-xs text-muted-foreground">Scan to meet Maria, your Service Advisor</p>
+            </motion.div>
 
-          {/* Right - Visual */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="relative"
-          >
-            {/* Connection visualization */}
-            <div className="relative flex items-center justify-center gap-6">
-              {/* Postcard */}
-              <motion.div
-                initial={{ rotate: -5 }}
-                whileInView={{ rotate: -5 }}
-                className="relative glass-card p-6 w-[200px] h-[280px] flex flex-col items-center justify-between"
-              >
-                <div className="text-center">
-                  <p className="text-xs text-muted-foreground mb-2">SERVICE REMINDER</p>
-                  <p className="text-sm font-medium text-foreground">Your 2021 Accord is due for its 60k service</p>
+            {/* Scan animation */}
+            <motion.div
+              animate={{ opacity: [0.3, 1, 0.3], scale: [0.95, 1.05, 0.95] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="absolute top-1/2 right-0 lg:right-auto lg:left-full transform -translate-y-1/2 lg:-translate-x-1/2"
+            >
+              <div className="glass px-4 py-2 rounded-full text-xs font-mono text-primary">
+                SCANNING...
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Video call interface */}
+          <div className="relative flex justify-center">
+            <motion.div
+              initial={{ rotate: 3 }}
+              whileInView={{ rotate: 3 }}
+              className="glass-card w-full max-w-[320px] overflow-hidden transform"
+            >
+              {/* Video header */}
+              <div className="p-3 flex items-center justify-between bg-card/50 border-b border-border/30">
+                <div className="flex items-center gap-2">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
+                  </span>
+                  <span className="text-xs font-medium text-foreground">LIVE</span>
                 </div>
-                
-                {/* QR Code placeholder */}
-                <div className="w-24 h-24 bg-foreground/10 rounded-lg flex items-center justify-center border border-border">
-                  <QrCode className="w-16 h-16 text-foreground/40" />
-                </div>
-                
-                <p className="text-xs text-muted-foreground">Scan to schedule</p>
-              </motion.div>
-
-              {/* Animated connection arrow */}
-              <div className="relative w-20 flex-shrink-0">
-                <motion.div
-                  animate={{ x: [0, 10, 0] }}
-                  transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                  className="flex items-center justify-center"
-                >
-                  <div className="w-full h-[2px] bg-gradient-to-r from-primary/50 to-primary" />
-                  <ArrowRight className="w-6 h-6 text-primary absolute right-0" />
-                </motion.div>
-                <motion.div
-                  animate={{ opacity: [0.3, 1, 0.3] }}
-                  transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                  className="absolute inset-0 flex items-center justify-center"
-                >
-                  <div className="px-2 py-1 glass rounded text-[10px] font-mono text-primary uppercase tracking-widest -mt-8">
-                    QR SCAN
-                  </div>
-                </motion.div>
+                <span className="text-xs text-muted-foreground font-mono">00:15</span>
               </div>
 
-              {/* Video call interface */}
-              <motion.div
-                initial={{ rotate: 5 }}
-                whileInView={{ rotate: 5 }}
-                className="relative glass-card w-[220px] h-[300px] overflow-hidden"
-              >
-                {/* Video header */}
-                <div className="absolute top-0 left-0 right-0 p-3 flex items-center justify-between bg-gradient-to-b from-background/80 to-transparent z-10">
-                  <div className="flex items-center gap-2">
-                    <span className="relative flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
-                    </span>
-                    <span className="text-xs font-medium text-foreground">LIVE</span>
-                  </div>
-                  <span className="text-xs text-muted-foreground">00:15</span>
-                </div>
+              {/* Avatar */}
+              <div className="aspect-[4/3] relative bg-gradient-to-br from-card via-card to-muted flex items-center justify-center">
+                <div className="w-24 h-24 rounded-full bg-gradient-to-br from-muted to-card border-2 border-border/50" />
+              </div>
 
-                {/* Avatar */}
-                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-card via-card to-muted">
-                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-muted to-card border-2 border-border/50" />
-                </div>
-
-                {/* Speech bubble */}
+              {/* Speech bubble */}
+              <div className="p-4">
                 <motion.div
                   animate={{ opacity: [0.8, 1, 0.8] }}
                   transition={{ duration: 2, repeat: Infinity }}
-                  className="absolute bottom-4 left-4 right-4 glass p-3 rounded-lg"
+                  className="glass p-3 rounded-lg"
                 >
-                  <p className="text-xs text-foreground leading-relaxed">
-                    "Hi John, I see your 2021 Accord is due for its 60k service. 
-                    I have Thursday at 2pm available..."
+                  <p className="text-sm text-foreground leading-relaxed">
+                    "Hi John, I see your 2021 Accord is due for its 60k service. I have Thursday at 2pm available..."
                   </p>
                 </motion.div>
-              </motion.div>
+              </div>
+            </motion.div>
+          </div>
+        </motion.div>
+
+        {/* Stats bar */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+          className="glass-card p-6"
+        >
+          <div className="grid grid-cols-3 gap-6 text-center">
+            <div>
+              <p className="text-2xl font-bold text-primary font-display">10x</p>
+              <p className="text-sm text-muted-foreground">Response Rate</p>
             </div>
-          </motion.div>
-        </div>
+            <div>
+              <p className="text-2xl font-bold text-primary font-display">30%</p>
+              <p className="text-sm text-muted-foreground">Booking Rate</p>
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-primary font-display">$0</p>
+              <p className="text-sm text-muted-foreground">Additional Labor</p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* CTA */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+          className="text-center mt-10"
+        >
+          <Link to="/technology">
+            <Button 
+              variant="outline" 
+              className="rounded-full px-8 h-12 border-border/50 hover:border-primary/30 hover:bg-primary/5 transition-all"
+            >
+              Learn About Our Technology
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
+          </Link>
+        </motion.div>
       </div>
     </section>
   );

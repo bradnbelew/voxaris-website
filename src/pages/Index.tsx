@@ -1,5 +1,6 @@
 import Layout from "@/components/layout/Layout";
 import HeroSection from "@/components/sections/HeroSection";
+import GapSection from "@/components/sections/GapSection";
 import VSuiteSection from "@/components/sections/VSuiteSection";
 import TalkingPostcardSection from "@/components/sections/TalkingPostcardSection";
 import LivingShowroomSection from "@/components/sections/LivingShowroomSection";
@@ -10,6 +11,7 @@ const Index = () => {
   return (
     <Layout>
       <HeroSection />
+      <GapSection />
       <VSuiteSection />
       <TalkingPostcardSection />
       <LivingShowroomSection />

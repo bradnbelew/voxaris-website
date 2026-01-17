@@ -10,64 +10,64 @@
   :root {
     /* Obsidian Minimalist Theme */
     --background: 0 0% 4%;           /* #0a0a0b - Deep obsidian */
-    --foreground: 0 0% 90%;          /* #e5e5e5 - Silver text */
+    --foreground: 0 0% 98%;          /* #fafafa - White text */
 
     --card: 0 0% 7%;                 /* #111113 - Graphite */
-    --card-foreground: 0 0% 90%;
+    --card-foreground: 0 0% 98%;
 
     --popover: 0 0% 7%;
-    --popover-foreground: 0 0% 90%;
+    --popover-foreground: 0 0% 98%;
 
-    /* Primary - Signal Green */
-    --primary: 153 100% 50%;         /* #00ff88 - Signal green */
+    /* Primary - Signal Green (Go color) */
+    --primary: 142 71% 45%;          /* #22c55e - Signal green */
     --primary-foreground: 0 0% 4%;
 
     /* Secondary - Slate surfaces */
-    --secondary: 0 0% 10%;           /* #1a1a1d */
-    --secondary-foreground: 0 0% 90%;
+    --secondary: 240 6% 10%;         /* #18181b */
+    --secondary-foreground: 0 0% 98%;
 
     /* Muted */
-    --muted: 0 0% 10%;
-    --muted-foreground: 0 0% 63%;    /* #a1a1a6 - Zinc */
+    --muted: 240 4% 16%;             /* #27272a - Ash */
+    --muted-foreground: 240 4% 65%;  /* #a1a1aa - Zinc */
 
     /* Accent */
-    --accent: 0 0% 17%;              /* #2a2a2d - Ash */
-    --accent-foreground: 0 0% 90%;
+    --accent: 240 4% 16%;            /* #27272a - Ash */
+    --accent-foreground: 0 0% 98%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 17%;              /* #2a2a2d */
-    --input: 0 0% 17%;
-    --ring: 153 100% 50%;
+    --border: 240 4% 16%;            /* #27272a */
+    --input: 240 4% 16%;
+    --ring: 142 71% 45%;
 
     --radius: 0.75rem;
 
     /* Custom colors */
     --obsidian: 0 0% 4%;
     --graphite: 0 0% 7%;
-    --slate: 0 0% 10%;
-    --ash: 0 0% 17%;
-    --silver: 0 0% 90%;
-    --zinc: 0 0% 63%;
-    --steel: 0 0% 44%;
-    --signal: 153 100% 50%;
-    --signal-dim: 153 100% 50%;
+    --slate: 240 6% 10%;
+    --ash: 240 4% 16%;
+    --silver: 240 5% 90%;            /* #e4e4e7 */
+    --zinc: 240 4% 65%;              /* #a1a1aa */
+    --steel: 240 4% 46%;             /* #71717a */
+    --signal: 142 71% 45%;           /* #22c55e */
+    --signal-glow: 142 71% 45%;
 
     /* Shadows */
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
     --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4);
     --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4);
-    --shadow-glow: 0 0 40px -10px hsl(153 100% 50% / 0.3);
+    --shadow-glow: 0 0 40px -10px hsl(142 71% 45% / 0.4);
 
     --sidebar-background: 0 0% 4%;
-    --sidebar-foreground: 0 0% 90%;
-    --sidebar-primary: 153 100% 50%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 142 71% 45%;
     --sidebar-primary-foreground: 0 0% 4%;
-    --sidebar-accent: 0 0% 10%;
-    --sidebar-accent-foreground: 0 0% 90%;
-    --sidebar-border: 0 0% 17%;
-    --sidebar-ring: 153 100% 50%;
+    --sidebar-accent: 240 6% 10%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 240 4% 16%;
+    --sidebar-ring: 142 71% 45%;
   }
 }
 
