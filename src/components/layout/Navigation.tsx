@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence, useScroll } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import voxarisLogo from "@/assets/voxaris-logo-banner.svg";
+import voxarisLogo from "@/assets/voxaris-logo-dark.png";
 
 const navLinks = [
   { name: "Technology", href: "/technology" },
