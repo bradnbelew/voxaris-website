@@ -47,11 +47,11 @@ export default function Navigation() {
       <nav className="container-editorial relative">
         <div className="flex items-center justify-between h-20">
           {/* Brand - Using logo image */}
-          <Link to="/" className="flex items-center">
+          <Link to="/" className="flex items-center gap-2">
             <img 
               src={voxarisLogo} 
               alt="Voxaris" 
-              className="h-6 w-auto"
+              className="h-10 w-auto shrink-0"
             />
           </Link>
 
