@@ -34,7 +34,7 @@ const capabilities = [
 export default function TechnologySection() {
   return (
     <section className="section-padding section-dark">
-      <div className="container-editorial">
+      <div className="container-wide">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

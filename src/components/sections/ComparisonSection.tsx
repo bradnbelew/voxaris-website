@@ -46,7 +46,7 @@ function FeatureIndicator({ value }: { value: FeatureValue }) {
 export default function ComparisonSection() {
   return (
     <section className="section-padding bg-mist">
-      <div className="container-editorial max-w-3xl">
+      <div className="container-wide max-w-4xl">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}

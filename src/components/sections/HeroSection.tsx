@@ -52,143 +52,152 @@ export default function HeroSection() {
 
   return (
     <section className="min-h-screen flex flex-col justify-center bg-white">
-      <div className="container-editorial py-16 lg:py-24">
-        {/* Eyebrow */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="text-center mb-8"
-        >
-          <span className="eyebrow">Conversational Video Intelligence</span>
-        </motion.div>
+      <div className="container-hero py-16 lg:py-20">
+        {/* Two Column Layout */}
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+          {/* Left Column - Content */}
+          <div className="order-2 lg:order-1">
+            {/* Eyebrow */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              className="mb-6"
+            >
+              <span className="eyebrow">Conversational Video Intelligence</span>
+            </motion.div>
 
-        {/* Headline */}
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
-          className="headline-xl text-ink text-center mb-6"
-        >
-          The Human Interface
-        </motion.h1>
+            {/* Headline */}
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
+              className="headline-xl text-ink mb-6"
+            >
+              The Human Interface
+            </motion.h1>
 
-        {/* Subheadline */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-          className="text-xl text-charcoal text-center max-w-2xl mx-auto mb-10"
-        >
-          Face-to-face AI that sees, speaks, and converts.
-        </motion.p>
+            {/* Subheadline */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+              className="text-xl text-charcoal max-w-lg mb-8"
+            >
+              Face-to-face AI that sees, speaks, and converts. Your 24/7 video concierge that never misses a lead.
+            </motion.p>
 
-        {/* CTAs */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
-          className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16"
-        >
-          <Button 
-            size="lg" 
-            className="bg-ink hover:bg-charcoal text-white font-medium rounded-full px-8 h-14 text-base transition-colors duration-200"
-            onClick={handleStartDemo}
-            disabled={isLoading || isInCall}
-          >
-            {isLoading ? "Connecting..." : isInCall ? "In Conversation" : "Talk to Maria"}
-          </Button>
-          <Link to="/how-it-works" className="group">
-            <span className="text-slate font-medium hover:text-ink transition-colors duration-200 flex items-center gap-1">
-              See How It Works
-              <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
-            </span>
-          </Link>
-        </motion.div>
+            {/* CTAs */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+              className="flex flex-col sm:flex-row gap-4 mb-12"
+            >
+              <Button 
+                size="lg" 
+                className="bg-ink hover:bg-charcoal text-white font-medium rounded-full px-8 h-14 text-base transition-colors duration-200"
+                onClick={handleStartDemo}
+                disabled={isLoading || isInCall}
+              >
+                {isLoading ? "Connecting..." : isInCall ? "In Conversation" : "Talk to Maria"}
+              </Button>
+              <Link to="/how-it-works" className="group flex items-center justify-center sm:justify-start">
+                <span className="text-slate font-medium hover:text-ink transition-colors duration-200 flex items-center gap-1">
+                  See How It Works
+                  <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
+                </span>
+              </Link>
+            </motion.div>
 
-        {/* Video Demo Container */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.4, ease: "easeOut" }}
-          className="max-w-[800px] mx-auto mb-12"
-        >
-          <div className="video-frame aspect-video relative shadow-lg overflow-hidden">
-            <AnimatePresence mode="wait">
-              {isInCall && conversationUrl ? (
-                <motion.div
-                  key="conversation"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="absolute inset-0"
-                >
-                  <Conversation 
-                    conversationUrl={conversationUrl} 
-                    onLeave={handleLeaveCall}
-                  />
-                  {/* Close button */}
-                  <button
-                    onClick={handleLeaveCall}
-                    className="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/50 hover:bg-black/70 flex items-center justify-center transition-colors z-10"
-                  >
-                    <X className="w-5 h-5 text-white" />
-                  </button>
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="placeholder"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  onClick={handleStartDemo}
-                  className={`absolute inset-0 flex flex-col items-center justify-center cursor-pointer group bg-mist ${isLoading ? 'pointer-events-none opacity-75' : ''}`}
-                >
-                  {/* Live badge */}
-                  <div className="absolute top-4 left-4 flex items-center gap-2 px-3 py-1.5 bg-white rounded-full border border-frost shadow-sm">
-                    <span className="relative flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75" />
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
-                    </span>
-                    <span className="text-xs font-medium text-ink">LIVE</span>
-                  </div>
-
-                  {/* Play button */}
-                  <div className="w-20 h-20 rounded-full bg-white shadow-lg flex items-center justify-center group-hover:scale-105 transition-transform duration-300 border border-frost">
-                    {isLoading ? (
-                      <div className="w-6 h-6 border-2 border-ink/30 border-t-ink rounded-full animate-spin" />
-                    ) : (
-                      <Play className="w-8 h-8 text-ink ml-1" fill="currentColor" />
-                    )}
-                  </div>
-                  
-                  <p className="mt-4 text-sm text-slate">
-                    {isLoading ? "Connecting..." : "Click to start a live conversation"}
-                  </p>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {/* Stats Row */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.5, ease: "easeOut" }}
+              className="flex flex-wrap gap-8 lg:gap-12"
+            >
+              {[
+                { value: "500ms", label: "Response Time" },
+                { value: "24/7", label: "Availability" },
+                { value: "0%", label: "Hallucinations" },
+              ].map((stat) => (
+                <div key={stat.label} className="text-left">
+                  <p className="text-2xl font-bold text-ink font-display">{stat.value}</p>
+                  <p className="text-sm text-slate mt-1">{stat.label}</p>
+                </div>
+              ))}
+            </motion.div>
           </div>
-        </motion.div>
 
-        {/* Stats Row */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5, ease: "easeOut" }}
-          className="flex flex-wrap justify-center gap-8 lg:gap-16"
-        >
-          {[
-            { value: "500ms", label: "Response Time" },
-            { value: "24/7", label: "Availability" },
-            { value: "0%", label: "Hallucinations" },
-          ].map((stat) => (
-            <div key={stat.label} className="text-center">
-              <p className="text-2xl font-bold text-ink font-display">{stat.value}</p>
-              <p className="text-sm text-slate mt-1">{stat.label}</p>
+          {/* Right Column - CVI Video Demo */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
+            className="order-1 lg:order-2"
+          >
+            <div className="video-frame aspect-[4/3] lg:aspect-video relative shadow-xl overflow-hidden">
+              <AnimatePresence mode="wait">
+                {isInCall && conversationUrl ? (
+                  <motion.div
+                    key="conversation"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="absolute inset-0"
+                  >
+                    <Conversation 
+                      conversationUrl={conversationUrl} 
+                      onLeave={handleLeaveCall}
+                    />
+                    {/* Close button */}
+                    <button
+                      onClick={handleLeaveCall}
+                      className="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/50 hover:bg-black/70 flex items-center justify-center transition-colors z-10"
+                    >
+                      <X className="w-5 h-5 text-white" />
+                    </button>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="placeholder"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    onClick={handleStartDemo}
+                    className={`absolute inset-0 flex flex-col items-center justify-center cursor-pointer group bg-gradient-to-br from-mist to-frost ${isLoading ? 'pointer-events-none opacity-75' : ''}`}
+                  >
+                    {/* Live badge */}
+                    <div className="absolute top-4 left-4 flex items-center gap-2 px-3 py-1.5 bg-white rounded-full border border-frost shadow-sm">
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75" />
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+                      </span>
+                      <span className="text-xs font-medium text-ink">LIVE</span>
+                    </div>
+
+                    {/* Play button */}
+                    <div className="w-24 h-24 rounded-full bg-white shadow-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-300 border border-frost">
+                      {isLoading ? (
+                        <div className="w-8 h-8 border-2 border-ink/30 border-t-ink rounded-full animate-spin" />
+                      ) : (
+                        <Play className="w-10 h-10 text-ink ml-1" fill="currentColor" />
+                      )}
+                    </div>
+                    
+                    <p className="mt-6 text-base text-charcoal font-medium">
+                      {isLoading ? "Connecting..." : "Click to talk to Maria"}
+                    </p>
+                    <p className="mt-1 text-sm text-slate">
+                      Live AI video conversation
+                    </p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
-          ))}
-        </motion.div>
+          </motion.div>
+        </div>
       </div>
     </section>
   );

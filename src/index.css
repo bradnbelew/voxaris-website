@@ -102,15 +102,31 @@
 }
 
 @layer components {
-  .container-wide {
-    @apply max-w-7xl mx-auto px-6 lg:px-8;
+  /* Full width container with edge-to-edge support */
+  .container-full {
+    @apply w-full px-6 sm:px-8 lg:px-16 xl:px-24;
   }
 
+  /* Wide container - for most content sections */
+  .container-wide {
+    @apply max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12;
+  }
+
+  /* Editorial container - for text-heavy content */
   .container-editorial {
     @apply max-w-[1200px] mx-auto px-6 lg:px-12;
   }
 
+  /* Extra wide for hero sections */
+  .container-hero {
+    @apply max-w-[1600px] mx-auto px-6 sm:px-8 lg:px-16;
+  }
+
   .section-padding {
+    @apply py-20 lg:py-28;
+  }
+
+  .section-padding-lg {
     @apply py-24 lg:py-32;
   }
 
