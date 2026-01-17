@@ -18,7 +18,7 @@ const capabilities = [
     description: "Real-time emotion detection. Reads engagement, confusion, interest — and adapts.",
     icon: Eye,
     stat: "Real-time",
-    statLabel: "emotion analysis",
+    statLabel: "analysis",
   },
   {
     id: "flow",
@@ -33,7 +33,7 @@ const capabilities = [
 
 export default function TechnologySection() {
   return (
-    <section className="section-padding bg-obsidian">
+    <section className="section-padding section-dark">
       <div className="container-editorial">
         {/* Header */}
         <motion.div
@@ -44,11 +44,14 @@ export default function TechnologySection() {
           className="text-center mb-16"
         >
           <span className="text-xs font-semibold uppercase tracking-[0.15em] text-silver mb-4 block">
-            Conversational Video Intelligence
+            The Technology
           </span>
-          <h2 className="headline-lg text-white">
-            Three systems. One human experience.
+          <h2 className="headline-lg text-white mb-4">
+            Conversational Video Intelligence
           </h2>
+          <p className="text-lg text-silver max-w-xl mx-auto">
+            Three systems working together.
+          </p>
         </motion.div>
 
         {/* Capability Cards */}
@@ -60,10 +63,10 @@ export default function TechnologySection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="bg-graphite border border-graphite rounded-xl p-8"
+              className="glass-card p-8"
             >
               {/* Icon */}
-              <div className="w-12 h-12 rounded-lg bg-white/5 flex items-center justify-center mb-6">
+              <div className="w-12 h-12 rounded-lg bg-white/10 flex items-center justify-center mb-6">
                 <cap.icon className="w-6 h-6 text-white" />
               </div>
 

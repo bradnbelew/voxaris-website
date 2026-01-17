@@ -2,9 +2,9 @@ import Layout from "@/components/layout/Layout";
 import HeroSection from "@/components/sections/HeroSection";
 import ProblemSection from "@/components/sections/ProblemSection";
 import TechnologySection from "@/components/sections/TechnologySection";
-import UseCaseSection from "@/components/sections/UseCaseSection";
-import HowItWorksSection from "@/components/sections/HowItWorksSection";
-import ComplianceSection from "@/components/sections/ComplianceSection";
+import TalkingPostcardSection from "@/components/sections/TalkingPostcardSection";
+import ComparisonSection from "@/components/sections/ComparisonSection";
+import LivingShowroomSection from "@/components/sections/LivingShowroomSection";
 import FinalCTASection from "@/components/sections/FinalCTASection";
 
 const Index = () => {
@@ -13,9 +13,9 @@ const Index = () => {
       <HeroSection />
       <ProblemSection />
       <TechnologySection />
-      <UseCaseSection />
-      <HowItWorksSection />
-      <ComplianceSection />
+      <TalkingPostcardSection />
+      <ComparisonSection />
+      <LivingShowroomSection />
       <FinalCTASection />
     </Layout>
   );

@@ -1,69 +1,63 @@
 import { motion } from "framer-motion";
 import { Check, X, Minus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 type FeatureValue = boolean | "partial";
 
 interface Feature {
   name: string;
-  chatbots: FeatureValue;
   voiceAI: FeatureValue;
   voxaris: FeatureValue;
 }
 
 const features: Feature[] = [
-  { name: "Sees the customer", chatbots: false, voiceAI: false, voxaris: true },
-  { name: "Reads body language", chatbots: false, voiceAI: false, voxaris: true },
-  { name: "Face-to-face interaction", chatbots: false, voiceAI: false, voxaris: true },
-  { name: "Knowledge-grounded", chatbots: "partial", voiceAI: true, voxaris: true },
-  { name: "Books appointments", chatbots: "partial", voiceAI: true, voxaris: true },
-  { name: "24/7 availability", chatbots: true, voiceAI: true, voxaris: true },
-  { name: "Natural conversation flow", chatbots: false, voiceAI: "partial", voxaris: true },
-  { name: "Multi-language support", chatbots: true, voiceAI: "partial", voxaris: true },
+  { name: "Sees the customer", voiceAI: false, voxaris: true },
+  { name: "Reads emotions", voiceAI: false, voxaris: true },
+  { name: "Micro-expressions", voiceAI: false, voxaris: true },
+  { name: "Natural timing", voiceAI: "partial", voxaris: true },
+  { name: "Books appointments", voiceAI: true, voxaris: true },
+  { name: "24/7 availability", voiceAI: true, voxaris: true },
+  { name: "Works via QR scan", voiceAI: false, voxaris: true },
 ];
 
 function FeatureIndicator({ value }: { value: FeatureValue }) {
   if (value === true) {
     return (
-      <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
-        <Check className="w-4 h-4 text-primary" />
+      <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
+        <Check className="w-4 h-4 text-green-600" />
       </div>
     );
   }
   if (value === "partial") {
     return (
-      <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
-        <Minus className="w-4 h-4 text-muted-foreground" />
+      <div className="w-8 h-8 rounded-full bg-mist flex items-center justify-center">
+        <Minus className="w-4 h-4 text-slate" />
       </div>
     );
   }
   return (
-    <div className="w-8 h-8 rounded-full bg-destructive/10 flex items-center justify-center">
-      <X className="w-4 h-4 text-destructive/70" />
+    <div className="w-8 h-8 rounded-full bg-mist flex items-center justify-center">
+      <X className="w-4 h-4 text-slate" />
     </div>
   );
 }
 
 export default function ComparisonSection() {
   return (
-    <section className="relative section-padding">
-      <div className="container-editorial">
+    <section className="section-padding bg-mist">
+      <div className="container-editorial max-w-3xl">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-12"
         >
-          <span className="eyebrow mb-4 block">The Difference</span>
-          <h2 className="headline-lg text-foreground mb-6">
-            Not a chatbot. Not a voicemail.
-            <br />
-            <span className="text-primary">Intelligence.</span>
+          <h2 className="headline-lg text-ink">
+            Why face-to-face matters
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            See how Voxaris CVI compares to traditional solutions.
-          </p>
         </motion.div>
 
         {/* Comparison Table */}
@@ -75,27 +69,18 @@ export default function ComparisonSection() {
           className="glass-card overflow-hidden"
         >
           {/* Header Row */}
-          <div className="grid grid-cols-4 gap-4 p-6 border-b border-border/50 bg-card/50">
-            <div className="text-sm font-medium text-muted-foreground">Feature</div>
+          <div className="grid grid-cols-3 gap-4 p-6 border-b border-frost bg-mist">
+            <div className="text-sm font-medium text-slate uppercase tracking-wide">Feature</div>
             <div className="text-center">
-              <p className="text-sm font-medium text-muted-foreground">Chatbots</p>
-              <p className="text-xs text-muted-foreground/60">Traditional</p>
+              <p className="text-sm font-medium text-slate uppercase tracking-wide">Voice AI</p>
             </div>
             <div className="text-center">
-              <p className="text-sm font-medium text-muted-foreground">Voice AI</p>
-              <p className="text-xs text-muted-foreground/60">Competitors</p>
-            </div>
-            <div className="text-center relative">
-              <div className="absolute -top-1 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-primary text-primary-foreground text-[10px] font-medium rounded-full uppercase tracking-wider">
-                Best
-              </div>
-              <p className="text-sm font-bold text-primary mt-2">Voxaris CVI</p>
-              <p className="text-xs text-primary/60">Intelligence Layer</p>
+              <p className="text-sm font-bold text-ink uppercase tracking-wide">Voxaris</p>
             </div>
           </div>
 
           {/* Feature Rows */}
-          <div className="divide-y divide-border/30">
+          <div className="divide-y divide-frost">
             {features.map((feature, index) => (
               <motion.div
                 key={feature.name}
@@ -103,13 +88,10 @@ export default function ComparisonSection() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: 0.3 + index * 0.05 }}
-                className="grid grid-cols-4 gap-4 p-6 hover:bg-card/30 transition-colors"
+                className={`grid grid-cols-3 gap-4 py-4 px-6 ${index % 2 === 0 ? 'bg-white' : 'bg-snow'}`}
               >
-                <div className="text-sm text-foreground font-medium flex items-center">
+                <div className="text-sm text-ink font-medium flex items-center">
                   {feature.name}
-                </div>
-                <div className="flex justify-center items-center">
-                  <FeatureIndicator value={feature.chatbots} />
                 </div>
                 <div className="flex justify-center items-center">
                   <FeatureIndicator value={feature.voiceAI} />
@@ -122,16 +104,20 @@ export default function ComparisonSection() {
           </div>
         </motion.div>
 
-        {/* Bottom CTA */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
+        {/* CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.5 }}
-          className="text-center text-muted-foreground mt-10"
+          className="text-center mt-10"
         >
-          Voxaris isn't competing with voice AI companies — we're creating a new category.
-        </motion.p>
+          <Link to="/demo">
+            <Button className="bg-ink hover:bg-charcoal text-white rounded-full px-8 h-12 font-medium">
+              Experience the difference
+            </Button>
+          </Link>
+        </motion.div>
       </div>
     </section>
   );

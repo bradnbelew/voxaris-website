@@ -1,43 +1,25 @@
 import { motion } from "framer-motion";
-import { PhoneMissed, Clock, Snowflake, Users, Database, RefreshCcw } from "lucide-react";
 
-const problems = [
+const painPoints = [
   {
-    icon: PhoneMissed,
-    title: "Missed calls",
-    description: "Inbound calls go unanswered. Potential customers move on."
+    main: "They hear, but can't see.",
+    supporting: "Voice AI is blind to body language, facial expressions, and visual cues."
   },
   {
-    icon: Clock,
-    title: "Slow speed-to-lead",
-    description: "Minutes matter. Your team responds in hours — or days."
+    main: "They respond, but can't react.",
+    supporting: "Scripted responses can't adapt to confusion, frustration, or interest."
   },
   {
-    icon: Users,
-    title: "Inconsistent qualification",
-    description: "Different reps ask different questions. Pipeline quality varies."
-  },
-  {
-    icon: Snowflake,
-    title: "Leads go cold",
-    description: "Without instant engagement, interested prospects lose momentum."
-  },
-  {
-    icon: Database,
-    title: "Messy CRM records",
-    description: "Incomplete data, missing notes, duplicate entries."
-  },
-  {
-    icon: RefreshCcw,
-    title: "No consistent follow-up",
-    description: "Leads slip through the cracks. No system to re-engage."
+    main: "They answer, but can't understand.",
+    supporting: "Without perception, conversation becomes transaction."
   }
 ];
 
 export default function ProblemSection() {
   return (
-    <section className="section-padding bg-secondary/30">
-      <div className="container-wide">
+    <section className="section-padding bg-mist">
+      <div className="container-editorial max-w-3xl">
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -45,36 +27,47 @@ export default function ProblemSection() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl lg:text-heading font-semibold text-foreground mb-4">
-            The reality of lead management
+          <h2 className="text-4xl font-bold text-ink mb-2">
+            Every AI promised connection.
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Most businesses lose leads before they ever become customers — not because the leads are bad, but because the response is.
-          </p>
+          <h2 className="text-4xl font-bold text-slate">
+            They delivered automation.
+          </h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {problems.map((problem, index) => (
+        {/* Pain Points */}
+        <div className="space-y-8 mb-16">
+          {painPoints.map((point, index) => (
             <motion.div
-              key={problem.title}
+              key={point.main}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.5, delay: index * 0.08 }}
-              className="bg-card rounded-2xl p-6 border border-border hover:border-border/80 transition-colors"
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              className="text-center"
             >
-              <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center mb-4">
-                <problem.icon className="h-6 w-6 text-foreground" />
-              </div>
-              <h3 className="text-lg font-semibold text-foreground mb-2">
-                {problem.title}
-              </h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                {problem.description}
+              <p className="text-xl font-medium text-ink mb-2">
+                {point.main}
+              </p>
+              <p className="text-base text-slate">
+                {point.supporting}
               </p>
             </motion.div>
           ))}
         </div>
+
+        {/* Transition */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="text-center"
+        >
+          <p className="text-xl font-bold text-ink">
+            Voxaris is different.
+          </p>
+        </motion.div>
       </div>
     </section>
   );
