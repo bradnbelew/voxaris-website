@@ -4,45 +4,36 @@ import voxarisLogo from "@/assets/voxaris-logo.png";
 const footerLinks = {
   product: [
     { name: "How It Works", href: "/how-it-works" },
-    { name: "Why Voxaris", href: "/why-voxaris" },
-    { name: "Live Demo", href: "/demo" },
-    { name: "Book a Demo", href: "/book-demo" },
+    { name: "Technology", href: "/technology" },
+    { name: "Demo", href: "/demo" },
   ],
   industries: [
-    { name: "Auto Dealerships", href: "/solutions/dealerships" },
+    { name: "Automotive", href: "/solutions/dealerships" },
     { name: "Contractors", href: "/solutions/contractors" },
     { name: "Law Firms", href: "/solutions/law-firms" },
-    { name: "Marketing Agencies", href: "/solutions/agencies" },
   ],
   company: [
-    { name: "Book a Demo", href: "/book-demo" },
     { name: "Contact", href: "/book-demo" },
   ],
 };
 
 export default function Footer() {
   return (
-    <footer className="bg-foreground text-background">
-      <div className="container-wide py-20 lg:py-24">
-        {/* Top Section with Logo */}
-        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-12 lg:gap-16 mb-16">
-          {/* Brand - Prominent */}
+    <footer className="bg-obsidian text-white">
+      <div className="container-editorial py-16 lg:py-20">
+        {/* Top Section */}
+        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-12 lg:gap-16 mb-12">
+          {/* Brand */}
           <div className="lg:max-w-sm">
-            <Link to="/" className="inline-block mb-5">
+            <Link to="/" className="inline-block mb-4">
               <img 
                 src={voxarisLogo} 
                 alt="Voxaris" 
-                className="h-7 w-auto brightness-0 invert opacity-90"
+                className="h-6 w-auto brightness-0 invert opacity-90"
               />
             </Link>
-            <p className="text-background/60 text-[15px] leading-relaxed mb-4">
-              Conversational Video Intelligence and Autonomous AI Agents for high-stakes customer interaction.
-            </p>
-            <p className="text-background/40 text-sm mb-4">
-              ethan@voxaris.io
-            </p>
-            <p className="text-background/30 text-xs italic">
-              All Voxaris agents are grounded in proprietary client data for zero-hallucination accuracy.
+            <p className="text-silver text-sm leading-relaxed">
+              Face-to-face AI that sees, speaks, and converts.
             </p>
           </div>
 
@@ -50,15 +41,15 @@ export default function Footer() {
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-10 lg:gap-16">
             {/* Product */}
             <div>
-              <h4 className="font-semibold mb-5 text-[13px] tracking-wide uppercase text-background/40">
+              <h4 className="font-medium mb-4 text-xs tracking-wide uppercase text-silver">
                 Product
               </h4>
-              <ul className="space-y-3.5">
+              <ul className="space-y-3">
                 {footerLinks.product.map((link) => (
                   <li key={link.name}>
                     <Link
                       to={link.href}
-                      className="text-[15px] text-background/60 hover:text-background transition-colors duration-200"
+                      className="text-sm text-silver hover:text-white transition-colors"
                     >
                       {link.name}
                     </Link>
@@ -69,15 +60,15 @@ export default function Footer() {
 
             {/* Industries */}
             <div>
-              <h4 className="font-semibold mb-5 text-[13px] tracking-wide uppercase text-background/40">
+              <h4 className="font-medium mb-4 text-xs tracking-wide uppercase text-silver">
                 Industries
               </h4>
-              <ul className="space-y-3.5">
+              <ul className="space-y-3">
                 {footerLinks.industries.map((link) => (
                   <li key={link.name}>
                     <Link
                       to={link.href}
-                      className="text-[15px] text-background/60 hover:text-background transition-colors duration-200"
+                      className="text-sm text-silver hover:text-white transition-colors"
                     >
                       {link.name}
                     </Link>
@@ -88,15 +79,15 @@ export default function Footer() {
 
             {/* Company */}
             <div>
-              <h4 className="font-semibold mb-5 text-[13px] tracking-wide uppercase text-background/40">
+              <h4 className="font-medium mb-4 text-xs tracking-wide uppercase text-silver">
                 Company
               </h4>
-              <ul className="space-y-3.5">
+              <ul className="space-y-3">
                 {footerLinks.company.map((link) => (
                   <li key={link.name}>
                     <Link
                       to={link.href}
-                      className="text-[15px] text-background/60 hover:text-background transition-colors duration-200"
+                      className="text-sm text-silver hover:text-white transition-colors"
                     >
                       {link.name}
                     </Link>
@@ -107,22 +98,22 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bottom - Clean separator */}
-        <div className="pt-8 border-t border-background/10">
+        {/* Bottom */}
+        <div className="pt-8 border-t border-white/10">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p className="text-[13px] text-background/40">
+            <p className="text-xs text-silver">
               © {new Date().getFullYear()} Voxaris. All rights reserved.
             </p>
-            <div className="flex items-center gap-8">
+            <div className="flex items-center gap-6">
               <Link
                 to="/privacy"
-                className="text-[13px] text-background/40 hover:text-background/70 transition-colors duration-200"
+                className="text-xs text-silver hover:text-white transition-colors"
               >
                 Privacy
               </Link>
               <Link
                 to="/terms"
-                className="text-[13px] text-background/40 hover:text-background/70 transition-colors duration-200"
+                className="text-xs text-silver hover:text-white transition-colors"
               >
                 Terms
               </Link>
