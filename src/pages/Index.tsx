@@ -1,22 +1,22 @@
 import Layout from "@/components/layout/Layout";
 import HeroSection from "@/components/sections/HeroSection";
-import GapSection from "@/components/sections/GapSection";
-import VSuiteSection from "@/components/sections/VSuiteSection";
-import TalkingPostcardSection from "@/components/sections/TalkingPostcardSection";
-import LivingShowroomSection from "@/components/sections/LivingShowroomSection";
-import ComparisonSection from "@/components/sections/ComparisonSection";
-import NewCTASection from "@/components/sections/NewCTASection";
+import ProblemSection from "@/components/sections/ProblemSection";
+import TechnologySection from "@/components/sections/TechnologySection";
+import UseCaseSection from "@/components/sections/UseCaseSection";
+import HowItWorksSection from "@/components/sections/HowItWorksSection";
+import ComplianceSection from "@/components/sections/ComplianceSection";
+import FinalCTASection from "@/components/sections/FinalCTASection";
 
 const Index = () => {
   return (
     <Layout>
       <HeroSection />
-      <GapSection />
-      <VSuiteSection />
-      <TalkingPostcardSection />
-      <LivingShowroomSection />
-      <ComparisonSection />
-      <NewCTASection />
+      <ProblemSection />
+      <TechnologySection />
+      <UseCaseSection />
+      <HowItWorksSection />
+      <ComplianceSection />
+      <FinalCTASection />
     </Layout>
   );
 };
