@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import HowItWorks from "./pages/HowItWorks";
 import WhyVoxaris from "./pages/WhyVoxaris";
+import Technology from "./pages/Technology";
 import Demo from "./pages/Demo";
 import BookDemo from "./pages/BookDemo";
 import SolutionsAgencies from "./pages/SolutionsAgencies";
@@ -13,7 +14,6 @@ import SolutionsDealerships from "./pages/SolutionsDealerships";
 import SolutionsContractors from "./pages/SolutionsContractors";
 import SolutionsLawFirms from "./pages/SolutionsLawFirms";
 import NotFound from "./pages/NotFound";
-
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -26,6 +26,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/how-it-works" element={<HowItWorks />} />
           <Route path="/why-voxaris" element={<WhyVoxaris />} />
+          <Route path="/technology" element={<Technology />} />
           <Route path="/demo" element={<Demo />} />
           <Route path="/book-demo" element={<BookDemo />} />
           <Route path="/solutions/agencies" element={<SolutionsAgencies />} />
