@@ -51,7 +51,7 @@ export default function Navigation() {
             <img 
               src={voxarisLogo} 
               alt="Voxaris" 
-              className="h-12 w-auto"
+              className="h-[1000px] w-auto"
             />
           </Link>
 
