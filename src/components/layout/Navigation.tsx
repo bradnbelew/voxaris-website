@@ -5,26 +5,31 @@ import { Menu, X, ChevronDown, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import voxarisLogo from "@/assets/voxaris-logo-banner.svg";
 
-
 const navLinks = [
-  { name: "Agencies", href: "/solutions/agencies" },
-  { name: "Dealerships", href: "/solutions/dealerships" },
-  { name: "How It Works", href: "/how-it-works" },
+  {
+    name: "Platform",
+    href: "/technology",
+    children: [
+      { name: "The Living Interface", href: "/technology", description: "Our core neural architecture" },
+      { name: "How It Works", href: "/how-it-works", description: "See Voxaris in action" },
+      { name: "Why Voxaris", href: "/why-voxaris", description: "What sets us apart" },
+    ],
+  },
   {
     name: "Industries",
     href: "/industries",
     children: [
-      { name: "Contractors", href: "/solutions/contractors" },
-      { name: "Law Firms", href: "/solutions/law-firms" },
-      { name: "Home Services", href: "/solutions/contractors" },
+      { name: "Agencies", href: "/solutions/agencies", description: "Scale client engagement" },
+      { name: "Dealerships", href: "/solutions/dealerships", description: "Sell more vehicles" },
+      { name: "Contractors", href: "/solutions/contractors", description: "Never miss a lead" },
+      { name: "Law Firms", href: "/solutions/law-firms", description: "Qualify cases 24/7" },
     ],
   },
-  { name: "Why Voxaris", href: "/why-voxaris" },
 ];
 
 export default function Navigation() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const location = useLocation();
   
   const { scrollY } = useScroll();
@@ -59,18 +64,18 @@ export default function Navigation() {
                 {link.children ? (
                   <div
                     className="relative"
-                    onMouseEnter={() => setDropdownOpen(true)}
-                    onMouseLeave={() => setDropdownOpen(false)}
+                    onMouseEnter={() => setActiveDropdown(link.name)}
+                    onMouseLeave={() => setActiveDropdown(null)}
                   >
                     <button className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
                       {link.name}
                       <ChevronDown 
                         className="h-3.5 w-3.5 transition-transform duration-200" 
-                        style={{ transform: dropdownOpen ? 'rotate(180deg)' : 'rotate(0)' }} 
+                        style={{ transform: activeDropdown === link.name ? 'rotate(180deg)' : 'rotate(0)' }} 
                       />
                     </button>
                     <AnimatePresence>
-                      {dropdownOpen && (
+                      {activeDropdown === link.name && (
                         <motion.div
                           initial={{ opacity: 0, y: 8 }}
                           animate={{ opacity: 1, y: 0 }}
@@ -78,14 +83,21 @@ export default function Navigation() {
                           transition={{ duration: 0.15 }}
                           className="absolute top-full left-1/2 -translate-x-1/2 pt-3"
                         >
-                          <div className="bg-background border border-border rounded-lg shadow-lg p-2 min-w-[180px]">
+                          <div className="bg-background border border-border rounded-xl shadow-lg p-2 min-w-[220px]">
                             {link.children.map((child) => (
                               <Link
                                 key={child.name}
                                 to={child.href}
-                                className="block px-4 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-secondary rounded-md transition-colors"
+                                className="block px-4 py-3 hover:bg-secondary rounded-lg transition-colors group"
                               >
-                                {child.name}
+                                <span className="block text-sm font-medium text-foreground group-hover:text-foreground">
+                                  {child.name}
+                                </span>
+                                {'description' in child && (
+                                  <span className="block text-xs text-muted-foreground mt-0.5">
+                                    {child.description}
+                                  </span>
+                                )}
                               </Link>
                             ))}
                           </div>
