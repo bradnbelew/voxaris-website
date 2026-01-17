@@ -57,28 +57,15 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
-        navy: {
-          DEFAULT: "hsl(var(--navy))",
-          light: "hsl(var(--navy-light))",
-        },
-        cream: {
-          DEFAULT: "hsl(var(--cream))",
-          dark: "hsl(var(--cream-dark))",
-        },
-        silver: {
-          DEFAULT: "hsl(var(--silver))",
-          light: "hsl(var(--silver-light))",
-        },
+        // Obsidian palette
+        obsidian: "hsl(var(--obsidian))",
+        graphite: "hsl(var(--graphite))",
         slate: "hsl(var(--slate))",
-        cyan: {
-          DEFAULT: "hsl(var(--cyan))",
-          glow: "hsl(var(--cyan-glow))",
-          dark: "hsl(var(--cyan-dark))",
-        },
-        orange: {
-          DEFAULT: "hsl(var(--orange))",
-          glow: "hsl(var(--orange-glow))",
-        },
+        ash: "hsl(var(--ash))",
+        silver: "hsl(var(--silver))",
+        zinc: "hsl(var(--zinc))",
+        steel: "hsl(var(--steel))",
+        signal: "hsl(var(--signal))",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -88,21 +75,20 @@ export default {
         "3xl": "1.5rem",
       },
       fontFamily: {
-        sans: ['DM Sans', 'system-ui', '-apple-system', 'sans-serif'],
-        display: ['Space Grotesk', 'system-ui', 'sans-serif'],
+        sans: ['General Sans', 'system-ui', '-apple-system', 'sans-serif'],
+        display: ['Satoshi', 'system-ui', 'sans-serif'],
+        mono: ['JetBrains Mono', 'monospace'],
       },
       fontSize: {
-        'display': ['4.5rem', { lineHeight: '1.1', letterSpacing: '-0.02em' }],
-        'display-sm': ['3.5rem', { lineHeight: '1.15', letterSpacing: '-0.02em' }],
-        'heading': ['2.5rem', { lineHeight: '1.2', letterSpacing: '-0.01em' }],
+        'display': ['5rem', { lineHeight: '0.95', letterSpacing: '-0.03em' }],
+        'display-sm': ['3.5rem', { lineHeight: '1', letterSpacing: '-0.02em' }],
+        'heading': ['2.5rem', { lineHeight: '1.1', letterSpacing: '-0.02em' }],
         'subheading': ['1.5rem', { lineHeight: '1.4', letterSpacing: '-0.01em' }],
       },
       boxShadow: {
-        'elegant': 'var(--shadow-elegant)',
-        'card': 'var(--shadow-lg)',
-        'subtle': 'var(--shadow-md)',
-        'cyan': 'var(--shadow-cyan)',
-        'glow': 'var(--shadow-glow)',
+        'glow': '0 0 40px -10px hsl(var(--signal) / 0.4)',
+        'glow-lg': '0 0 60px -15px hsl(var(--signal) / 0.5)',
+        'subtle': '0 4px 20px -5px rgb(0 0 0 / 0.3)',
       },
       keyframes: {
         "accordion-down": {
@@ -114,7 +100,7 @@ export default {
           to: { height: "0" },
         },
         "fade-up": {
-          from: { opacity: "0", transform: "translateY(20px)" },
+          from: { opacity: "0", transform: "translateY(30px)" },
           to: { opacity: "1", transform: "translateY(0)" },
         },
         "fade-in": {
@@ -125,13 +111,28 @@ export default {
           from: { opacity: "0", transform: "translateX(20px)" },
           to: { opacity: "1", transform: "translateX(0)" },
         },
+        "pulse-glow": {
+          "0%, 100%": { boxShadow: "0 0 20px -5px hsl(var(--signal) / 0.4)" },
+          "50%": { boxShadow: "0 0 40px -5px hsl(var(--signal) / 0.6)" },
+        },
+        "float": {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-10px)" },
+        },
+        "shimmer": {
+          "0%": { backgroundPosition: "-200% 0" },
+          "100%": { backgroundPosition: "200% 0" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "fade-up": "fade-up 0.6s ease-out forwards",
-        "fade-in": "fade-in 0.4s ease-out forwards",
+        "fade-up": "fade-up 0.7s ease-out forwards",
+        "fade-in": "fade-in 0.5s ease-out forwards",
         "slide-in-right": "slide-in-right 0.5s ease-out forwards",
+        "pulse-glow": "pulse-glow 2s ease-in-out infinite",
+        "float": "float 6s ease-in-out infinite",
+        "shimmer": "shimmer 2s linear infinite",
       },
     },
   },

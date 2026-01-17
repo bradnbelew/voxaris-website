@@ -43,10 +43,10 @@ export default function Navigation() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
-      {/* Background */}
+      {/* Background with glassmorphism */}
       <div 
         className={`absolute inset-0 transition-all duration-300 ${
-          isScrolled ? 'bg-background border-b border-border' : 'bg-background'
+          isScrolled ? 'bg-background/80 backdrop-blur-xl border-b border-border/50' : 'bg-transparent'
         }`}
       />
       
