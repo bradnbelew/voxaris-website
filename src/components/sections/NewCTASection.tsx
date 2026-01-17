@@ -19,7 +19,7 @@ export default function NewCTASection() {
           className="text-center"
         >
           {/* Eyebrow */}
-          <span className="eyebrow mb-6 block">Experience the Difference</span>
+          <span className="eyebrow mb-6 block">Stop Reading. Start Seeing.</span>
 
           {/* Main headline */}
           <h2 className="headline-xl text-foreground mb-8 max-w-4xl mx-auto">
@@ -30,7 +30,7 @@ export default function NewCTASection() {
 
           {/* Description */}
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-12">
-            Talk to Maria right now and experience what the future of customer engagement feels like.
+            Talk to Maria right now and experience what the future of automotive engagement feels like.
           </p>
 
           {/* CTAs */}
@@ -71,14 +71,34 @@ export default function NewCTASection() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.5 }}
-            className="flex items-center justify-center gap-2 text-muted-foreground"
+            className="flex items-center justify-center gap-2 text-muted-foreground mb-16"
           >
             <Phone className="w-4 h-4" />
-            <span className="text-sm">Or call us directly:</span>
+            <span className="text-sm">Or call us for a human:</span>
             <a href="tel:+13215550000" className="text-primary font-medium hover:underline">
-              (321) 555-VOXR
+              (321) XXX-XXXX
             </a>
           </motion.div>
+        </motion.div>
+
+        {/* Integration logos */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+          className="pt-12 border-t border-border/30"
+        >
+          <p className="text-center text-sm text-muted-foreground mb-8">
+            Integrates with your existing stack
+          </p>
+          <div className="flex flex-wrap justify-center items-center gap-8 opacity-50">
+            {["GoHighLevel", "CDK", "DealerSocket", "XTime", "Salesforce"].map((name) => (
+              <div key={name} className="px-4 py-2 text-muted-foreground font-medium text-sm">
+                {name}
+              </div>
+            ))}
+          </div>
         </motion.div>
 
         {/* Trust badges */}
@@ -86,11 +106,11 @@ export default function NewCTASection() {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          className="mt-20 pt-12 border-t border-border/30"
+          transition={{ duration: 0.6, delay: 0.7 }}
+          className="mt-12 pt-12 border-t border-border/30"
         >
-          <p className="text-center text-sm text-muted-foreground mb-8">
-            Trusted by forward-thinking businesses
+          <p className="text-center text-sm text-muted-foreground mb-6">
+            Trusted by forward-thinking dealerships
           </p>
           <div className="flex flex-wrap justify-center items-center gap-8 opacity-40">
             {["Gulf Coast Mitsubishi", "Hill Nissan", "Premier Auto Group", "Legacy Motors"].map((name) => (

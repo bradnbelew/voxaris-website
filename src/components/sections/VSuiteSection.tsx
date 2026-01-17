@@ -1,32 +1,38 @@
 import { motion } from "framer-motion";
-import { Eye, Brain, Waves } from "lucide-react";
+import { Sparkles, Eye, Zap } from "lucide-react";
 
 const features = [
   {
-    id: "v-sync",
-    label: "V-SYNC",
-    title: "3D Neural Rendering",
-    subtitle: "The Face",
-    description: "Captures micro-expressions, cheek movements, and ocular crinkles. Eliminates the uncanny valley—your digital twin is indistinguishable from the real person.",
-    icon: Waves,
+    id: "v-render",
+    label: "V-RENDER",
+    model: "Phoenix-4",
+    title: "Digital Humans That Feel Human",
+    description: "Full-face neural rendering with micro-expressions, pixel-perfect lip sync, and identity preservation. The first model that eliminates the uncanny valley.",
+    icon: Sparkles,
+    stat: "2 min",
+    statLabel: "Training time",
     gradient: "from-emerald-500/20 to-transparent",
   },
   {
-    id: "v-sight",
-    label: "V-SIGHT",
-    title: "Real-Time AI Vision",
-    subtitle: "The Eyes",
-    description: "Your AI agent 'sees' the customer. Detects engagement, eye contact, and emotional cues. Pivots the conversation if they look confused or uninterested.",
+    id: "v-sense",
+    label: "V-SENSE",
+    model: "Raven-1",
+    title: "AI That Actually Sees You",
+    description: "Real-time emotion detection, body language interpretation, and engagement monitoring. Distinguishes politeness from genuine interest.",
     icon: Eye,
+    stat: "500ms",
+    statLabel: "Perception latency",
     gradient: "from-cyan-500/20 to-transparent",
   },
   {
     id: "v-flow",
     label: "V-FLOW",
-    title: "Transformer Conversation",
-    subtitle: "The Brain",
-    description: "Manages the human flow of conversation. Handles interruptions naturally and masters the meaningful pause. Fluid, not robotic.",
-    icon: Brain,
+    model: "Sparrow-1",
+    title: "Conversations That Feel Natural",
+    description: "Intelligent turn-taking with sub-second response times. Handles interruptions, knows when to pause, when to speak. Adapts to individual speaking patterns.",
+    icon: Zap,
+    stat: "50%",
+    statLabel: "Engagement lift",
     gradient: "from-violet-500/20 to-transparent",
   },
 ];
@@ -48,10 +54,10 @@ export default function VSuiteSection() {
         >
           <span className="eyebrow mb-4 block">The V-Suite</span>
           <h2 className="headline-lg text-foreground mb-6">
-            Conversational Video Intelligence
+            Three systems. One human experience.
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Three integrated neural engines. One intelligent experience.
+            Powered by the only neural rendering stack that makes AI indistinguishable from real human interaction.
           </p>
         </motion.div>
 
@@ -71,30 +77,40 @@ export default function VSuiteSection() {
                 <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl`} />
                 
                 <div className="relative">
-                  {/* Label */}
+                  {/* Icon & Labels */}
                   <div className="flex items-center gap-3 mb-6">
-                    <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center">
-                      <feature.icon className="w-5 h-5 text-primary" />
+                    <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center group-hover:shadow-glow transition-shadow duration-300">
+                      <feature.icon className="w-6 h-6 text-primary" />
                     </div>
-                    <span className="font-mono text-xs text-primary tracking-widest uppercase">
-                      {feature.label}
-                    </span>
+                    <div>
+                      <span className="font-mono text-sm text-primary tracking-widest uppercase font-bold">
+                        {feature.label}
+                      </span>
+                      <p className="text-xs text-muted-foreground font-mono">
+                        {feature.model}
+                      </p>
+                    </div>
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-xl font-bold text-foreground mb-2">
+                  <h3 className="text-xl font-bold text-foreground mb-4">
                     {feature.title}
                   </h3>
-                  
-                  {/* Subtitle */}
-                  <p className="text-sm text-primary/80 font-medium mb-4">
-                    {feature.subtitle}
-                  </p>
 
                   {/* Description */}
-                  <p className="text-muted-foreground leading-relaxed">
+                  <p className="text-muted-foreground leading-relaxed mb-6">
                     {feature.description}
                   </p>
+
+                  {/* Stat */}
+                  <div className="pt-6 border-t border-border/30">
+                    <p className="text-3xl font-bold text-primary font-display">
+                      {feature.stat}
+                    </p>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {feature.statLabel}
+                    </p>
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -111,10 +127,10 @@ export default function VSuiteSection() {
         >
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
-              { value: "3", label: "Neural Engines" },
-              { value: "<200ms", label: "End-to-End Latency" },
+              { value: "~500ms", label: "End-to-End Latency" },
               { value: "30+", label: "Languages Supported" },
-              { value: "100%", label: "Knowledge Grounded" },
+              { value: "2B+", label: "Interactions at Scale" },
+              { value: "80%", label: "Higher Retention" },
             ].map((stat, index) => (
               <motion.div
                 key={stat.label}
@@ -124,13 +140,28 @@ export default function VSuiteSection() {
                 transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
                 className="text-center"
               >
-                <p className="text-3xl lg:text-4xl font-bold text-primary font-display">
+                <p className="text-2xl lg:text-3xl font-bold text-foreground font-display">
                   {stat.value}
                 </p>
                 <p className="text-sm text-muted-foreground mt-2">{stat.label}</p>
               </motion.div>
             ))}
           </div>
+        </motion.div>
+
+        {/* Compliance badges */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+          className="flex flex-wrap justify-center gap-4 mt-10"
+        >
+          {["SOC 2 Certified", "HIPAA Compliant", "GDPR Compliant"].map((badge) => (
+            <span key={badge} className="px-4 py-2 glass rounded-full text-xs text-muted-foreground font-medium">
+              {badge}
+            </span>
+          ))}
         </motion.div>
       </div>
     </section>
