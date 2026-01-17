@@ -44,7 +44,7 @@ export default function HeroSection() {
 
   return (
     <section className="relative min-h-[calc(100vh-80px)] flex items-center">
-      <div className="container-editorial relative py-12 lg:py-16">
+      <div className="container-editorial relative py-8 lg:py-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left column - Content */}
           <div>
