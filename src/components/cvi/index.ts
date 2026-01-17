@@ -1,4 +1,2 @@
-export { CVIProvider } from './CVIProvider';
-export { Conversation } from './Conversation';
-export * from './types';
-export * from './atoms';
+export { CVIProvider } from './components/cvi-provider';
+export { Conversation } from './components/conversation';
