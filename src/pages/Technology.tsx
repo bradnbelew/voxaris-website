@@ -40,7 +40,7 @@ const neuralEngines = [
 const dvpFeatures = [
   {
     icon: Users,
-    title: "Digital Twins",
+    title: "Digital twins",
     description: "High-fidelity digital replicas of your leadership or sales team, indistinguishable from the real person."
   },
   {
