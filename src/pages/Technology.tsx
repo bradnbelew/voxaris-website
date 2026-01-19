@@ -41,7 +41,7 @@ const dvpFeatures = [
   {
     icon: Users,
     title: "Digital Twins",
-    description: "High-fidelity Digital Replicas of your leadership or sales team, indistinguishable from the real person."
+    description: "High-fidelity digital replicas of your leadership or sales team, indistinguishable from the real person."
   },
   {
     icon: Zap,
