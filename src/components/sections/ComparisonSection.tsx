@@ -19,7 +19,7 @@ const features: Feature[] = [
   { name: "Doesn't interrupt you", voiceAI: true, voxaris: true },
   { name: "Books appointments for you", voiceAI: true, voxaris: true },
   { name: "Available anytime", voiceAI: true, voxaris: true },
-  { name: "Works from a QR code", voiceAI: false, voxaris: true },
+  { name: "Works from a QR code", voiceAI: true, voxaris: true },
 ];
 
 function FeatureIndicator({ value }: { value: FeatureValue }) {
