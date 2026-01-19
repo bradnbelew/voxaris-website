@@ -3,20 +3,20 @@ import { X, Check } from "lucide-react";
 
 const comparisons = [
   {
-    promised: "Intelligent conversations",
-    delivered: "Scripted responses",
+    promised: "It'll feel like talking to a person",
+    delivered: "It feels like talking to a menu",
   },
   {
-    promised: "Personal connection",
-    delivered: '"Press 1 for service"',
+    promised: "It'll understand what you need",
+    delivered: "It only understands keywords",
   },
   {
-    promised: "Real understanding",
-    delivered: "Keyword matching",
+    promised: "It'll save you time",
+    delivered: "You're still on hold",
   },
   {
-    promised: "Human-like",
-    delivered: "Robot-like",
+    promised: "It'll be just like the real thing",
+    delivered: "It's really, really not",
   },
 ];
 
@@ -37,9 +37,9 @@ export default function GapSection() {
         >
           <span className="eyebrow mb-4 block">The Problem</span>
           <h2 className="headline-lg text-foreground mb-6 max-w-3xl mx-auto">
-            Voice AI promised the future.
+            They said it would be easy.
             <br />
-            <span className="text-muted-foreground">It delivered voicemail.</span>
+            <span className="text-muted-foreground">It wasn't.</span>
           </h2>
         </motion.div>
 
@@ -94,7 +94,7 @@ export default function GapSection() {
           className="text-center"
         >
           <p className="text-xl text-muted-foreground mb-4">
-            Every other "AI" is just a voicemail with personality.
+            Most "AI assistants" are just fancy phone trees.
           </p>
           <h3 className="text-2xl font-bold text-foreground">
             Voxaris is different.

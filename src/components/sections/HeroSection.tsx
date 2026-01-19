@@ -155,7 +155,7 @@ export default function HeroSection() {
               transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
               className="text-xl text-charcoal max-w-lg mb-8"
             >
-              Face-to-face AI that sees, speaks, and converts. Your 24/7 video concierge that never misses a lead.
+              AI you can actually talk to—face-to-face. It sees you, hears you, and helps you. Available 24/7.
             </motion.p>
 
             {/* CTA */}

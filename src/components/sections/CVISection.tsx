@@ -4,33 +4,33 @@ import { Video, Zap, Globe, MessageSquare, Smartphone, Eye } from "lucide-react"
 const features = [
   {
     icon: Video,
-    title: "Face-to-Face, Anywhere",
-    description: "Synchronous dialogue. No scheduling. No waiting."
+    title: "Talk Face-to-Face",
+    description: "Have a real conversation, right now. No appointments needed."
   },
   {
     icon: Smartphone,
-    title: "Outbound Intelligence",
-    description: "Messages that respond. Personalized triggers that adapt."
+    title: "It Reaches Out to You",
+    description: "Get a personalized video message that actually responds when you reply."
   },
   {
     icon: Eye,
-    title: "Visual Understanding",
-    description: "Show, don't tell. Context at a glance."
+    title: "It Can See You",
+    description: "Show it what you're looking at. It understands context instantly."
   },
   {
     icon: MessageSquare,
-    title: "Natural Latency",
-    description: "Sub-second response. Real dialogue rhythm."
+    title: "No Awkward Pauses",
+    description: "Responds in under a second. Feels like talking to a real person."
   },
   {
     icon: Zap,
-    title: "Adaptive Presence",
-    description: "Every interaction is contextual. Precision response."
+    title: "It Remembers You",
+    description: "Picks up where you left off. Knows your history."
   },
   {
     icon: Globe,
-    title: "Universal Delivery",
-    description: "Web. Mobile. SMS. QR. Everywhere."
+    title: "Works Everywhere",
+    description: "Your phone, laptop, a QR code on a postcard—anywhere."
   }
 ];
 
@@ -52,10 +52,10 @@ export default function CVISection() {
             </span>
             
             <h2 className="headline-lg text-foreground mb-4">
-              The Living Interface
+              What makes it different
             </h2>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              Beyond automation. Beyond chatbots. An intelligent layer that sees, hears, and responds—in real time.
+              It's not a chatbot. It's not a phone tree. It's a face you can talk to—and it actually listens.
             </p>
           </motion.div>
         </div>
