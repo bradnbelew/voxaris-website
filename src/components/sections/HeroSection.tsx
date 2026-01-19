@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ArrowRight, X } from "lucide-react";
-import FaceTimeAvatar from "@/components/ui/FaceTimeAvatar";
+import FaceTimeCallButtons from "@/components/ui/FaceTimeCallButtons";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -91,9 +91,18 @@ export default function HeroSection() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    onClick={handleStartDemo}
-                    className={`absolute inset-0 flex flex-col items-center justify-center cursor-pointer group bg-gradient-to-br from-mist to-frost ${isLoading ? 'pointer-events-none opacity-75' : ''}`}
+                    className="absolute inset-0"
                   >
+                    {/* Full-frame video */}
+                    <video 
+                      src="https://cdn.replica.tavus.io/20283/9de1f64e.mp4" 
+                      className="w-full h-full object-cover"
+                      autoPlay 
+                      loop 
+                      muted 
+                      playsInline
+                    />
+                    
                     {/* Live badge */}
                     <div className="absolute top-4 left-4 flex items-center gap-2 px-3 py-1.5 bg-white rounded-full border border-frost shadow-sm">
                       <span className="relative flex h-2 w-2">
@@ -103,23 +112,14 @@ export default function HeroSection() {
                       <span className="text-xs font-medium text-ink">LIVE</span>
                     </div>
 
-                    {/* Avatar with Olivia video */}
-                    <div className="group-hover:scale-105 transition-transform duration-300">
-                      {isLoading ? (
-                        <div className="w-32 h-32 rounded-full bg-white shadow-xl flex items-center justify-center border border-frost">
-                          <div className="w-8 h-8 border-2 border-ink/30 border-t-ink rounded-full animate-spin" />
-                        </div>
-                      ) : (
-                        <FaceTimeAvatar />
-                      )}
+                    {/* Answer button overlay at bottom */}
+                    <div className="absolute bottom-6 left-0 right-0">
+                      <FaceTimeCallButtons 
+                        onAccept={handleStartDemo}
+                        onDecline={() => {}}
+                        isConnecting={isLoading}
+                      />
                     </div>
-                    
-                    <p className="mt-6 text-base text-charcoal font-medium">
-                      {isLoading ? "Connecting..." : "Click to talk to Maria"}
-                    </p>
-                    <p className="mt-1 text-sm text-slate">
-                      Live AI video conversation
-                    </p>
                   </motion.div>
                 )}
               </AnimatePresence>
