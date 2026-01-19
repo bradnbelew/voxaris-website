@@ -1,51 +1,116 @@
 import { motion } from "framer-motion";
 import Layout from "@/components/layout/Layout";
-import { Phone, Globe, PhoneOutgoing, CheckSquare, Calendar, Database, Bell, RefreshCw, ArrowRight } from "lucide-react";
+import { Phone, Globe, PhoneOutgoing, CheckSquare, Calendar, Database, Bell, RefreshCw, ArrowRight, Zap, Shield, BarChart3 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
-const steps = [
+const coreFeatures = [
   {
     icon: Phone,
     title: "Inbound Call Handling",
-    description: "When a lead calls your business, Voxaris answers instantly — 24/7, 365 days a year. No hold times, no voicemail, no missed opportunities."
+    description: "Instant 24/7 call answering with zero hold times. Every call is professionally handled, qualified, and routed — no voicemails, no missed opportunities.",
+    highlights: ["24/7/365 availability", "Instant pickup", "Professional greeting"]
   },
   {
     icon: Globe,
     title: "Web Form Response",
-    description: "The moment a prospect submits a form, Maria calls them back within seconds. Speed-to-lead is the strongest predictor of conversion."
+    description: "Automatic callback within seconds of form submission. Speed-to-lead technology that dramatically increases conversion rates.",
+    highlights: ["Sub-60 second response", "Multi-channel capture", "Smart prioritization"]
   },
   {
     icon: PhoneOutgoing,
     title: "AI Outbound Calling",
-    description: "For leads that don't answer immediately, Maria makes follow-up calls at optimal times until contact is made."
-  },
+    description: "Intelligent follow-up calls at optimal times until contact is made. Persistent but respectful outreach that maximizes connection rates.",
+    highlights: ["Smart timing optimization", "Multi-attempt sequences", "Voicemail detection"]
+  }
+];
+
+const qualificationFeatures = [
   {
     icon: CheckSquare,
     title: "Intelligent Qualification",
-    description: "Using your custom criteria, Maria qualifies each prospect — asking the right questions, scoring intent, and filtering out non-fits."
+    description: "Custom qualification criteria powered by conversational AI. Ask the right questions, score intent, and filter prospects automatically.",
+    highlights: ["Custom question flows", "Intent scoring", "Lead filtering"]
   },
   {
     icon: Calendar,
-    title: "Appointment Booking",
-    description: "Qualified leads are booked directly into your calendar system in real time. No back-and-forth, no scheduling friction."
+    title: "Real-Time Booking",
+    description: "Qualified leads are booked directly into your calendar. No back-and-forth, no scheduling friction — just confirmed appointments.",
+    highlights: ["Calendar integration", "Availability sync", "Instant confirmation"]
   },
   {
     icon: Database,
-    title: "CRM Integration",
-    description: "Every call is logged, summarized, and pushed to your CRM with clean, structured data — no manual entry required."
-  },
+    title: "CRM Synchronization",
+    description: "Every interaction is logged, summarized, and pushed to your CRM with structured data. Complete visibility, zero manual entry.",
+    highlights: ["Auto-logging", "Call summaries", "Data enrichment"]
+  }
+];
+
+const automationFeatures = [
   {
     icon: Bell,
     title: "Confirmation & Reminders",
-    description: "Appointments are confirmed via SMS and email. Reminders are sent automatically to minimize no-shows."
+    description: "Automated appointment confirmations via SMS and email. Smart reminder sequences that minimize no-shows and maximize show rates.",
+    highlights: ["SMS confirmations", "Email reminders", "No-show reduction"]
   },
   {
     icon: RefreshCw,
     title: "Persistent Follow-up",
-    description: "Leads that don't book on the first call enter automated follow-up sequences until they convert or explicitly decline."
+    description: "Leads that don't book enter automated nurture sequences. Multi-touch follow-up until conversion or explicit opt-out.",
+    highlights: ["Nurture sequences", "Re-engagement", "Smart persistence"]
   }
 ];
+
+const capabilities = [
+  {
+    icon: Zap,
+    title: "Speed",
+    stat: "<60s",
+    description: "Average response time to new leads"
+  },
+  {
+    icon: Shield,
+    title: "Reliability",
+    stat: "99.9%",
+    description: "Uptime with enterprise infrastructure"
+  },
+  {
+    icon: BarChart3,
+    title: "Performance",
+    stat: "3x",
+    description: "Typical increase in booked appointments"
+  }
+];
+
+const FeatureCard = ({ feature, index }: { feature: typeof coreFeatures[0], index: number }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true, margin: "-50px" }}
+    transition={{ duration: 0.5, delay: index * 0.1 }}
+    className="bg-card border border-border rounded-2xl p-6 lg:p-8 hover:border-primary/30 transition-colors"
+  >
+    <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-5">
+      <feature.icon className="h-6 w-6" />
+    </div>
+    <h3 className="text-xl font-semibold text-foreground mb-3">
+      {feature.title}
+    </h3>
+    <p className="text-muted-foreground leading-relaxed mb-5">
+      {feature.description}
+    </p>
+    <div className="flex flex-wrap gap-2">
+      {feature.highlights.map((highlight) => (
+        <span 
+          key={highlight}
+          className="text-xs font-medium px-3 py-1 rounded-full bg-secondary text-secondary-foreground"
+        >
+          {highlight}
+        </span>
+      ))}
+    </div>
+  </motion.div>
+);
 
 export default function HowItWorks() {
   return (
@@ -60,50 +125,128 @@ export default function HowItWorks() {
             className="max-w-3xl"
           >
             <span className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-4 block">
-              How It Works
+              Platform Features
             </span>
             <h1 className="text-4xl lg:text-display-sm font-semibold text-foreground mb-6">
-              One system. Complete lead-to-appointment automation.
+              Everything you need for complete lead automation
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              Voxaris handles every step from first contact to confirmed appointment — automatically, consistently, and professionally.
+              A unified platform that handles every touchpoint — from first contact to confirmed appointment — with AI-powered precision.
             </p>
           </motion.div>
         </div>
       </section>
 
-      {/* Steps */}
-      <section className="section-padding">
+      {/* Stats */}
+      <section className="py-12 border-b border-border">
         <div className="container-wide">
-          <div className="space-y-8">
-            {steps.map((step, index) => (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {capabilities.map((cap, index) => (
               <motion.div
-                key={step.title}
+                key={cap.title}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.5, delay: index * 0.05 }}
-                className="flex gap-6 lg:gap-8 items-start"
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="text-center"
               >
-                <div className="flex-shrink-0">
-                  <div className="w-14 h-14 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center">
-                    <step.icon className="h-6 w-6" />
-                  </div>
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 text-primary mb-4">
+                  <cap.icon className="h-5 w-5" />
                 </div>
-                <div className="flex-1 pb-8 border-b border-border last:border-0">
-                  <div className="flex items-center gap-3 mb-2">
-                    <span className="text-sm text-muted-foreground font-medium">
-                      Step {index + 1}
-                    </span>
-                  </div>
-                  <h3 className="text-xl font-semibold text-foreground mb-2">
-                    {step.title}
-                  </h3>
-                  <p className="text-muted-foreground leading-relaxed max-w-2xl">
-                    {step.description}
-                  </p>
+                <div className="text-3xl lg:text-4xl font-bold text-foreground mb-1">
+                  {cap.stat}
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  {cap.description}
                 </div>
               </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Core Features */}
+      <section className="section-padding">
+        <div className="container-wide">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="mb-12"
+          >
+            <span className="text-sm font-medium text-primary uppercase tracking-wider mb-3 block">
+              Lead Capture
+            </span>
+            <h2 className="text-3xl lg:text-heading font-semibold text-foreground mb-4">
+              Capture every lead, every channel
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl">
+              Multi-channel lead capture that responds instantly — whether they call, submit a form, or need follow-up.
+            </p>
+          </motion.div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {coreFeatures.map((feature, index) => (
+              <FeatureCard key={feature.title} feature={feature} index={index} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Qualification Features */}
+      <section className="section-padding bg-secondary/30">
+        <div className="container-wide">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="mb-12"
+          >
+            <span className="text-sm font-medium text-primary uppercase tracking-wider mb-3 block">
+              Qualification & Booking
+            </span>
+            <h2 className="text-3xl lg:text-heading font-semibold text-foreground mb-4">
+              Qualify and book automatically
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl">
+              Intelligent qualification that filters prospects and books appointments in real-time — no human intervention required.
+            </p>
+          </motion.div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {qualificationFeatures.map((feature, index) => (
+              <FeatureCard key={feature.title} feature={feature} index={index} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Automation Features */}
+      <section className="section-padding">
+        <div className="container-wide">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="mb-12"
+          >
+            <span className="text-sm font-medium text-primary uppercase tracking-wider mb-3 block">
+              Automation & Follow-up
+            </span>
+            <h2 className="text-3xl lg:text-heading font-semibold text-foreground mb-4">
+              Never let a lead slip away
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl">
+              Automated confirmations, reminders, and follow-up sequences that maximize show rates and re-engage cold leads.
+            </p>
+          </motion.div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
+            {automationFeatures.map((feature, index) => (
+              <FeatureCard key={feature.title} feature={feature} index={index} />
             ))}
           </div>
         </div>
@@ -113,10 +256,10 @@ export default function HowItWorks() {
       <section className="section-padding bg-primary text-primary-foreground">
         <div className="container-wide text-center">
           <h2 className="text-3xl lg:text-heading font-semibold mb-4">
-            Ready to automate your lead-to-appointment process?
+            Ready to see these features in action?
           </h2>
           <p className="text-lg text-primary-foreground/70 mb-8 max-w-xl mx-auto">
-            See how Voxaris can transform your operations with a personalized demo.
+            Get a personalized demo and see how Voxaris can transform your lead conversion.
           </p>
           <Link to="/book-demo">
             <Button 
