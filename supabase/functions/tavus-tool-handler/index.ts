@@ -5,14 +5,18 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-// Antigravity n8n webhook URL
-const N8N_WEBHOOK_URL = Deno.env.get("N8N_WEBHOOK_URL") || "https://voxaris.app.n8n.cloud/webhook/a81af492-6e82-453e-9dc9-52184864cdd9";
+// Antigravity backend webhook URL from secrets
+const ANTIGRAVITY_WEBHOOK_URL = Deno.env.get("ANTIGRAVITY_WEBHOOK_URL");
 
-// Helper to call the Antigravity n8n workflow
+// Helper to call the Antigravity backend
 async function callAntigravityWorkflow(toolName: string, args: Record<string, unknown>, conversationId: string) {
-  console.log(`Calling Antigravity n8n workflow: ${toolName}`, args);
+  if (!ANTIGRAVITY_WEBHOOK_URL) {
+    throw new Error("ANTIGRAVITY_WEBHOOK_URL not configured");
+  }
   
-  const response = await fetch(N8N_WEBHOOK_URL, {
+  console.log(`Calling Antigravity backend: ${toolName}`, args);
+  
+  const response = await fetch(ANTIGRAVITY_WEBHOOK_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
