@@ -1,16 +1,9 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence, useScroll } from "framer-motion";
-import { Menu, X, Video, Phone, PhoneIncoming, PhoneOutgoing, Globe, ChevronDown } from "lucide-react";
+import { Menu, X, Video, PhoneIncoming, PhoneOutgoing, Globe, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import voxarisLogo from "@/assets/voxaris-logo-dark.png";
-
-const navLinks = [
-  { name: "Technology", href: "/technology" },
-  { name: "Industries", href: "/solutions/dealerships", hasDropdown: true },
-  { name: "Demo", href: "/demo" },
-  { name: "Contact", href: "/book-demo" },
-];
 
 const products = [
   {
@@ -52,6 +45,7 @@ const industries = [
 
 export default function Navigation() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [vsuiteOpen, setVsuiteOpen] = useState(false);
   const [industriesOpen, setIndustriesOpen] = useState(false);
   const location = useLocation();
   
@@ -64,14 +58,22 @@ export default function Navigation() {
     });
   }, [scrollY]);
 
-  // Close dropdown when clicking outside
+  // Close dropdowns when clicking outside
   useEffect(() => {
-    const handleClick = () => setIndustriesOpen(false);
-    if (industriesOpen) {
+    const handleClick = () => {
+      setVsuiteOpen(false);
+      setIndustriesOpen(false);
+    };
+    if (vsuiteOpen || industriesOpen) {
       document.addEventListener('click', handleClick);
       return () => document.removeEventListener('click', handleClick);
     }
-  }, [industriesOpen]);
+  }, [vsuiteOpen, industriesOpen]);
+
+  const closeDropdowns = () => {
+    setVsuiteOpen(false);
+    setIndustriesOpen(false);
+  };
 
   return (
     <>
@@ -92,94 +94,132 @@ export default function Navigation() {
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center gap-8">
-              {navLinks.map((link) => (
-                link.hasDropdown ? (
-                  <div key={link.name} className="relative">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setIndustriesOpen(!industriesOpen);
-                      }}
-                      className={`flex items-center gap-1 text-sm font-medium transition-colors ${
-                        location.pathname.includes('/solutions')
-                          ? "text-ink"
-                          : "text-slate hover:text-ink"
-                      }`}
+              {/* V·Suite Dropdown */}
+              <div className="relative">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setVsuiteOpen(!vsuiteOpen);
+                    setIndustriesOpen(false);
+                  }}
+                  className={`flex items-center gap-1 text-sm font-medium transition-colors ${
+                    vsuiteOpen ? "text-ink" : "text-slate hover:text-ink"
+                  }`}
+                >
+                  V·Suite
+                  <ChevronDown className={`w-4 h-4 transition-transform ${vsuiteOpen ? 'rotate-180' : ''}`} />
+                </button>
+                
+                <AnimatePresence>
+                  {vsuiteOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-[480px] bg-white rounded-2xl border border-frost shadow-xl p-5 z-50"
+                      onClick={(e) => e.stopPropagation()}
                     >
-                      {link.name}
-                      <ChevronDown className={`w-4 h-4 transition-transform ${industriesOpen ? 'rotate-180' : ''}`} />
-                    </button>
-                    
-                    <AnimatePresence>
-                      {industriesOpen && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: 10 }}
-                          transition={{ duration: 0.15 }}
-                          className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-[520px] bg-white rounded-2xl border border-frost shadow-xl p-6"
-                          onClick={(e) => e.stopPropagation()}
+                      <div className="grid grid-cols-2 gap-3">
+                        {products.map((product) => (
+                          <Link
+                            key={product.name}
+                            to={product.href}
+                            onClick={closeDropdowns}
+                            className="p-4 rounded-xl border border-frost hover:border-charcoal/20 hover:bg-snow transition-all group"
+                          >
+                            <div className="flex items-center gap-3 mb-2">
+                              <div className="w-8 h-8 rounded-lg bg-ink flex items-center justify-center">
+                                <product.icon className="w-4 h-4 text-white" />
+                              </div>
+                              <div>
+                                <p className="font-semibold text-ink text-sm">{product.name}</p>
+                                <p className="text-xs text-slate">{product.tagline}</p>
+                              </div>
+                            </div>
+                            <p className="text-xs text-charcoal">{product.description}</p>
+                          </Link>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Industries Dropdown */}
+              <div className="relative">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIndustriesOpen(!industriesOpen);
+                    setVsuiteOpen(false);
+                  }}
+                  className={`flex items-center gap-1 text-sm font-medium transition-colors ${
+                    location.pathname.includes('/solutions') || industriesOpen
+                      ? "text-ink"
+                      : "text-slate hover:text-ink"
+                  }`}
+                >
+                  Industries
+                  <ChevronDown className={`w-4 h-4 transition-transform ${industriesOpen ? 'rotate-180' : ''}`} />
+                </button>
+                
+                <AnimatePresence>
+                  {industriesOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-56 bg-white rounded-xl border border-frost shadow-xl p-2 z-50"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {industries.map((industry) => (
+                        <Link
+                          key={industry.name}
+                          to={industry.href}
+                          onClick={closeDropdowns}
+                          className="block px-4 py-3 rounded-lg text-sm text-charcoal hover:text-ink hover:bg-snow transition-all"
                         >
-                          {/* Products */}
-                          <div className="mb-6">
-                            <p className="text-xs font-semibold text-slate uppercase tracking-wider mb-3">Products</p>
-                            <div className="grid grid-cols-2 gap-3">
-                              {products.map((product) => (
-                                <Link
-                                  key={product.name}
-                                  to={product.href}
-                                  onClick={() => setIndustriesOpen(false)}
-                                  className="p-4 rounded-xl border border-frost hover:border-charcoal/20 hover:bg-snow transition-all group"
-                                >
-                                  <div className="flex items-center gap-3 mb-2">
-                                    <div className="w-8 h-8 rounded-lg bg-ink flex items-center justify-center">
-                                      <product.icon className="w-4 h-4 text-white" />
-                                    </div>
-                                    <div>
-                                      <p className="font-semibold text-ink text-sm">{product.name}</p>
-                                      <p className="text-xs text-slate">{product.tagline}</p>
-                                    </div>
-                                  </div>
-                                  <p className="text-xs text-charcoal">{product.description}</p>
-                                </Link>
-                              ))}
-                            </div>
-                          </div>
-                          
-                          {/* Industries */}
-                          <div>
-                            <p className="text-xs font-semibold text-slate uppercase tracking-wider mb-3">Industries</p>
-                            <div className="grid grid-cols-2 gap-2">
-                              {industries.map((industry) => (
-                                <Link
-                                  key={industry.name}
-                                  to={industry.href}
-                                  onClick={() => setIndustriesOpen(false)}
-                                  className="px-3 py-2 rounded-lg text-sm text-charcoal hover:text-ink hover:bg-snow transition-all"
-                                >
-                                  {industry.name}
-                                </Link>
-                              ))}
-                            </div>
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                ) : (
-                  <Link
-                    key={link.name}
-                    to={link.href}
-                    className={`text-sm font-medium transition-colors ${
-                      location.pathname === link.href
-                        ? "text-ink"
-                        : "text-slate hover:text-ink"
-                    }`}
-                  >
-                    {link.name}
-                  </Link>
-                )
-              ))}
+                          {industry.name}
+                        </Link>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Static Links */}
+              <Link
+                to="/technology"
+                className={`text-sm font-medium transition-colors ${
+                  location.pathname === '/technology'
+                    ? "text-ink"
+                    : "text-slate hover:text-ink"
+                }`}
+              >
+                Technology
+              </Link>
+              <Link
+                to="/demo"
+                className={`text-sm font-medium transition-colors ${
+                  location.pathname === '/demo'
+                    ? "text-ink"
+                    : "text-slate hover:text-ink"
+                }`}
+              >
+                Demo
+              </Link>
+              <Link
+                to="/book-demo"
+                className={`text-sm font-medium transition-colors ${
+                  location.pathname === '/book-demo'
+                    ? "text-ink"
+                    : "text-slate hover:text-ink"
+                }`}
+              >
+                Contact
+              </Link>
             </div>
 
             {/* Desktop CTA */}
@@ -230,9 +270,9 @@ export default function Navigation() {
               className="fixed top-16 left-0 right-0 z-50 lg:hidden bg-white border-b border-frost shadow-lg max-h-[80vh] overflow-y-auto"
             >
               <div className="container-editorial py-6 space-y-6 px-4">
-                {/* Products Section */}
+                {/* V·Suite Section */}
                 <div>
-                  <p className="text-xs font-semibold text-slate uppercase tracking-wider mb-3">Products</p>
+                  <p className="text-xs font-semibold text-slate uppercase tracking-wider mb-3">V·Suite</p>
                   <div className="space-y-3">
                     {products.map((product) => (
                       <Link
