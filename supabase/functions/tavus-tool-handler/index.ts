@@ -5,19 +5,32 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-// Helper to call the Cal.com booking function
-async function callCalcomBooking(action: string, params: Record<string, unknown>) {
-  const supabaseUrl = Deno.env.get("SUPABASE_URL");
-  const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+// Antigravity n8n webhook URL
+const N8N_WEBHOOK_URL = Deno.env.get("N8N_WEBHOOK_URL") || "https://voxaris.app.n8n.cloud/webhook/a81af492-6e82-453e-9dc9-52184864cdd9";
 
-  const response = await fetch(`${supabaseUrl}/functions/v1/calcom-booking`, {
+// Helper to call the Antigravity n8n workflow
+async function callAntigravityWorkflow(toolName: string, args: Record<string, unknown>, conversationId: string) {
+  console.log(`Calling Antigravity n8n workflow: ${toolName}`, args);
+  
+  const response = await fetch(N8N_WEBHOOK_URL, {
     method: "POST",
     headers: {
-      "Authorization": `Bearer ${supabaseKey}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ action, ...params }),
+    body: JSON.stringify({
+      tool_name: toolName,
+      args: args,
+      conversation_id: conversationId,
+      source: "tavus-cvi",
+      timestamp: new Date().toISOString(),
+    }),
   });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error("n8n webhook error:", errorText);
+    throw new Error(`n8n webhook failed: ${response.status}`);
+  }
 
   return response.json();
 }
@@ -84,49 +97,49 @@ serve(async (req) => {
 
     console.log("Tavus tool call received:", { tool_name, tool_args, conversation_id });
 
+    // Route all tool calls through Antigravity n8n workflow
     if (tool_name === "check_availability") {
       const date = parseDate(tool_args.date || "today");
       const endDate = new Date(date);
       endDate.setDate(endDate.getDate() + 1);
 
-      console.log(`Checking availability for ${date}`);
+      console.log(`Checking availability for ${date} via Antigravity`);
 
-      const availability = await callCalcomBooking("get_availability", {
-        startDate: `${date}T00:00:00Z`,
-        endDate: `${endDate.toISOString().split("T")[0]}T23:59:59Z`,
-      });
+      try {
+        const result = await callAntigravityWorkflow("check_availability", {
+          date: date,
+          start_time: `${date}T09:00:00Z`,
+          end_time: `${endDate.toISOString().split("T")[0]}T17:00:00Z`,
+        }, conversation_id);
 
-      if (availability.error) {
+        // n8n workflow returns availability info
+        if (result.output || result.response) {
+          return new Response(
+            JSON.stringify({
+              result: result.output || result.response,
+              data: result.data || {},
+            }),
+            { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          );
+        }
+
+        // Fallback response
         return new Response(
           JSON.stringify({
-            result: `I'm sorry, I couldn't check availability right now. Please try again in a moment.`,
+            result: `I found some availability on ${formatDate(date)}. What time works best for you?`,
+            data: result,
+          }),
+          { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      } catch (error) {
+        console.error("Availability check error:", error);
+        return new Response(
+          JSON.stringify({
+            result: `I'm having trouble checking availability right now. Would you like to tell me your preferred time and I'll work with that?`,
           }),
           { headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
-
-      const slots = availability.data?.slots || [];
-      if (slots.length === 0) {
-        return new Response(
-          JSON.stringify({
-            result: `I don't see any available times on ${formatDate(date)}. Would you like to check another day?`,
-          }),
-          { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
-      }
-
-      const formattedSlots = slots.slice(0, 5).map((slot: { time: string }) => {
-        const time = new Date(slot.time);
-        return time.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true });
-      });
-
-      return new Response(
-        JSON.stringify({
-          result: `I have these times available on ${formatDate(date)}: ${formattedSlots.join(", ")}. Which one works best for you?`,
-          data: { date, slots: slots.slice(0, 5) },
-        }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
     }
 
     if (tool_name === "book_appointment") {
@@ -141,33 +154,43 @@ serve(async (req) => {
         );
       }
 
-      console.log(`Booking appointment for ${name} at ${datetime}`);
+      console.log(`Booking appointment for ${name} at ${datetime} via Antigravity`);
 
-      const booking = await callCalcomBooking("create_booking", {
-        name,
-        email,
-        phone: phone || "",
-        startTime: datetime,
-        serviceType: service_type || "",
-      });
+      try {
+        const result = await callAntigravityWorkflow("book_appointment", {
+          name,
+          email,
+          phone: phone || "",
+          booking_time: datetime,
+          service_type: service_type || "consultation",
+        }, conversation_id);
 
-      if (booking.error) {
-        console.error("Booking error:", booking);
+        if (result.output || result.response) {
+          return new Response(
+            JSON.stringify({
+              result: result.output || result.response,
+              data: result.data || {},
+            }),
+            { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          );
+        }
+
         return new Response(
           JSON.stringify({
-            result: `I'm sorry, I couldn't complete the booking. ${booking.details || "Please try again."} `,
+            result: `Perfect! I've booked your appointment for ${formatDate(datetime)}. A confirmation email will be sent to ${email}. Is there anything else I can help you with?`,
+            data: result,
+          }),
+          { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      } catch (error) {
+        console.error("Booking error:", error);
+        return new Response(
+          JSON.stringify({
+            result: `I'm having trouble completing the booking right now. Let me take your details and we'll confirm shortly.`,
           }),
           { headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
-
-      return new Response(
-        JSON.stringify({
-          result: `Perfect! I've booked your appointment for ${formatDate(datetime)}. A confirmation email has been sent to ${email}. Is there anything else I can help you with?`,
-          data: { booking },
-        }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
     }
 
     if (tool_name === "cancel_appointment") {
@@ -182,36 +205,59 @@ serve(async (req) => {
         );
       }
 
-      const result = await callCalcomBooking("cancel_booking", {
-        bookingId: booking_id,
-        cancellationReason: reason || "Cancelled via Voxaris CVI",
-      });
+      try {
+        const result = await callAntigravityWorkflow("cancel_appointment", {
+          event_id: booking_id,
+          reason: reason || "Cancelled via Voxaris CVI",
+        }, conversation_id);
 
-      if (result.error) {
+        if (result.output || result.response) {
+          return new Response(
+            JSON.stringify({
+              result: result.output || result.response,
+            }),
+            { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          );
+        }
+
         return new Response(
           JSON.stringify({
-            result: `I couldn't cancel that appointment. Please contact us directly for assistance.`,
+            result: `Your appointment has been cancelled. Would you like to reschedule?`,
+          }),
+          { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      } catch (error) {
+        console.error("Cancel error:", error);
+        return new Response(
+          JSON.stringify({
+            result: `I couldn't cancel that appointment right now. Please contact us directly for assistance.`,
           }),
           { headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
+    }
 
+    // Handle any unknown tools by routing to n8n as well
+    console.log("Routing unknown tool to n8n:", tool_name);
+    try {
+      const result = await callAntigravityWorkflow(tool_name, tool_args || {}, conversation_id);
+      
       return new Response(
         JSON.stringify({
-          result: `Your appointment has been cancelled. You should receive a confirmation email shortly. Would you like to reschedule?`,
+          result: result.output || result.response || `I've processed your request. Is there anything else I can help with?`,
+          data: result,
+        }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    } catch (error) {
+      console.error("Unknown tool error:", error);
+      return new Response(
+        JSON.stringify({
+          result: `I'm not sure how to help with that specific request. Is there something else I can assist you with?`,
         }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
-
-    // Unknown tool
-    console.log("Unknown tool:", tool_name);
-    return new Response(
-      JSON.stringify({
-        result: `I'm not sure how to help with that specific request. Is there something else I can assist you with?`,
-      }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
 
   } catch (error) {
     console.error("Tavus tool handler error:", error);

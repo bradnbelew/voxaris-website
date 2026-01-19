@@ -38,7 +38,7 @@ export default function Navigation() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center shrink-0">
-            <img src={voxarisLogo} alt="Voxaris" className="h-6 w-auto" />
+            <img src={voxarisLogo} alt="Voxaris" className="h-10 w-auto" />
           </Link>
 
           {/* Desktop Navigation */}
