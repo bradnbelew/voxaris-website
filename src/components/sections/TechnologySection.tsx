@@ -4,30 +4,30 @@ import { Sparkles, Eye, Zap } from "lucide-react";
 const capabilities = [
   {
     id: "render",
-    label: "RENDER",
-    subtitle: "Neural Video Generation",
-    description: "Full-face rendering with micro-expressions and pixel-perfect lip sync. No uncanny valley.",
+    label: "LOOKS REAL",
+    subtitle: "You'd never know it's AI",
+    description: "Facial expressions, natural movements, lips that actually match the words. It looks like a video call with a real person.",
     icon: Sparkles,
     stat: "500ms",
     statLabel: "response time",
   },
   {
     id: "sense",
-    label: "SENSE",
-    subtitle: "Visual Perception",
-    description: "Real-time emotion detection. Reads engagement, confusion, interest — and adapts.",
+    label: "SEES YOU",
+    subtitle: "Picks up on how you're feeling",
+    description: "Notices when you're confused, interested, or ready to move on—and adjusts in real time.",
     icon: Eye,
     stat: "Real-time",
-    statLabel: "analysis",
+    statLabel: "reads your reactions",
   },
   {
     id: "flow",
-    label: "FLOW",
-    subtitle: "Conversational Timing",
-    description: "Knows when to speak, when to listen, when to pause. Natural turn-taking.",
+    label: "TALKS NATURALLY",
+    subtitle: "No interruptions or weird delays",
+    description: "Knows when to talk, when to listen, when to give you a moment. Just like a real conversation.",
     icon: Zap,
     stat: "50%",
-    statLabel: "engagement lift",
+    statLabel: "more engaging",
   },
 ];
 
@@ -47,10 +47,10 @@ export default function TechnologySection() {
             The Technology
           </span>
           <h2 className="headline-lg text-white mb-4">
-            Conversational Video Intelligence
+            How it actually works
           </h2>
           <p className="text-lg text-silver max-w-xl mx-auto">
-            Three systems working together.
+            Three things that make it feel human.
           </p>
         </motion.div>
 

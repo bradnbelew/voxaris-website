@@ -4,35 +4,35 @@ import { Sparkles, Eye, Zap } from "lucide-react";
 const features = [
   {
     id: "v-render",
-    label: "V-RENDER",
-    model: "Phoenix-4",
-    title: "Digital Humans That Feel Human",
-    description: "Full-face neural rendering with micro-expressions, pixel-perfect lip sync, and identity preservation. The first model that eliminates the uncanny valley.",
+    label: "THE FACE",
+    model: "Looks completely real",
+    title: "You'd Swear It's a Real Person",
+    description: "The face moves naturally. The lips match the words. It smiles, thinks, reacts—just like someone on a video call. No creepy robot vibes.",
     icon: Sparkles,
     stat: "2 min",
-    statLabel: "Training time",
+    statLabel: "to create your AI twin",
     gradient: "from-emerald-500/20 to-transparent",
   },
   {
     id: "v-sense",
-    label: "V-SENSE",
-    model: "Raven-1",
-    title: "AI That Actually Sees You",
-    description: "Real-time emotion detection, body language interpretation, and engagement monitoring. Distinguishes politeness from genuine interest.",
+    label: "THE EYES",
+    model: "Reads the room",
+    title: "It Can Tell How You're Feeling",
+    description: "Confused? It slows down. Interested? It dives deeper. Bored? It gets to the point. It picks up on the little things humans notice.",
     icon: Eye,
     stat: "500ms",
-    statLabel: "Perception latency",
+    statLabel: "to read your reaction",
     gradient: "from-cyan-500/20 to-transparent",
   },
   {
     id: "v-flow",
-    label: "V-FLOW",
-    model: "Sparrow-1",
-    title: "Conversations That Feel Natural",
-    description: "Intelligent turn-taking with sub-second response times. Handles interruptions, knows when to pause, when to speak. Adapts to individual speaking patterns.",
+    label: "THE RHYTHM",
+    model: "Talks like a human",
+    title: "Conversations That Actually Flow",
+    description: "No interrupting. No awkward pauses. It knows when to talk and when to listen. Feels like catching up with someone who gets you.",
     icon: Zap,
     stat: "50%",
-    statLabel: "Engagement lift",
+    statLabel: "more engaging than voice AI",
     gradient: "from-violet-500/20 to-transparent",
   },
 ];
@@ -52,12 +52,12 @@ export default function VSuiteSection() {
           transition={{ duration: 0.6 }}
           className="text-center mb-20"
         >
-          <span className="eyebrow mb-4 block">The V-Suite</span>
+          <span className="eyebrow mb-4 block">Under the Hood</span>
           <h2 className="headline-lg text-foreground mb-6">
-            Three systems. One human experience.
+            What makes Voxaris feel so real
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Powered by the only neural rendering stack that makes AI indistinguishable from real human interaction.
+            Three things working together so you forget you're talking to AI.
           </p>
         </motion.div>
 

@@ -12,13 +12,13 @@ interface Feature {
 }
 
 const features: Feature[] = [
-  { name: "Sees the customer", voiceAI: false, voxaris: true },
-  { name: "Reads emotions", voiceAI: false, voxaris: true },
-  { name: "Micro-expressions", voiceAI: false, voxaris: true },
-  { name: "Natural timing", voiceAI: "partial", voxaris: true },
-  { name: "Books appointments", voiceAI: true, voxaris: true },
-  { name: "24/7 availability", voiceAI: true, voxaris: true },
-  { name: "Works via QR scan", voiceAI: false, voxaris: true },
+  { name: "Can see you", voiceAI: false, voxaris: true },
+  { name: "Knows when you're confused", voiceAI: false, voxaris: true },
+  { name: "Reacts to your expressions", voiceAI: false, voxaris: true },
+  { name: "Doesn't interrupt you", voiceAI: "partial", voxaris: true },
+  { name: "Books appointments for you", voiceAI: true, voxaris: true },
+  { name: "Available anytime", voiceAI: true, voxaris: true },
+  { name: "Works from a QR code", voiceAI: false, voxaris: true },
 ];
 
 function FeatureIndicator({ value }: { value: FeatureValue }) {
