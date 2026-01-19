@@ -1,101 +1,64 @@
 import { motion } from "framer-motion";
 import Layout from "@/components/layout/Layout";
-import { Wrench, Phone, Calendar, Clock, Database, Bell, ArrowRight, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { PhoneIncoming, PhoneOutgoing, Video, Globe, ArrowRight, CheckCircle2, Wrench, Zap, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import VIcon from "@/components/ui/VIcon";
 
-const problems = [
+const products = [
   {
-    icon: Clock,
-    title: "Emergency calls after hours",
-    description: "Your best leads call at 9 PM when they notice a leak. You lose them by morning."
+    icon: PhoneIncoming,
+    name: "V·INBOUND",
+    tagline: "Inbound Voice AI",
+    description: "Answers every call instantly — even when you're on a roof or under a house. Qualifies job type, urgency, and books estimates directly into your calendar.",
+    features: ["24/7 emergency call handling", "Job type qualification", "Direct calendar booking"],
+    cta: "Best for: Emergency calls, estimate scheduling"
   },
   {
-    icon: Phone,
-    title: "Can't answer while on job sites",
-    description: "Your phone rings while you're on a ladder. By the time you call back, they've called three competitors."
+    icon: PhoneOutgoing,
+    name: "V·OUTBOUND",
+    tagline: "Outbound Voice AI",
+    description: "Proactive follow-up on quotes, appointment reminders, and seasonal campaigns. Never lose a job to a faster competitor again.",
+    features: ["Quote follow-up automation", "Appointment confirmations", "Seasonal campaign calls"],
+    cta: "Best for: Quote follow-up, seasonal campaigns"
   },
   {
-    icon: Calendar,
-    title: "Every estimate counts",
-    description: "Getting someone to commit to an on-site estimate is half the battle. You can't afford no-shows."
+    icon: Video,
+    name: "V·CVI",
+    tagline: "Conversational Video Intelligence",
+    description: "Face-to-face AI for your website or marketing materials. QR codes on trucks, yard signs, and mailers connect customers directly to your AI.",
+    features: ["QR code activation", "Truck & yard sign integration", "Visual job descriptions"],
+    cta: "Best for: High-touch customer experience"
   },
   {
-    icon: AlertTriangle,
-    title: "Seasonal demand spikes",
-    description: "Storm season hits and you're drowning in leads. By the time you respond, half have already booked someone else."
+    icon: Globe,
+    name: "V·WEB",
+    tagline: "AI-Powered Website",
+    description: "Your website becomes a 24/7 sales rep. Captures leads, qualifies jobs, and books estimates while you sleep.",
+    features: ["Intelligent lead capture", "Service area verification", "Instant estimate booking"],
+    cta: "Best for: Website lead conversion"
   }
 ];
 
 const benefits = [
-  {
-    icon: Phone,
-    title: "Answer every call, every time",
-    description: "AI picks up in under 3 seconds. After hours, weekends, holidays — every lead gets immediate response."
-  },
-  {
-    icon: CheckCircle2,
-    title: "Qualify for job type and urgency",
-    description: "Is it emergency water damage or a planned kitchen remodel? AI asks the right questions and prioritizes your calendar."
-  },
-  {
-    icon: Calendar,
-    title: "Book estimates directly",
-    description: "No phone tag. Maria syncs with your calendar and books estimate appointments while prospect is on the phone."
-  },
-  {
-    icon: Bell,
-    title: "Send confirmations & reminders",
-    description: "Automated SMS with appointment details, directions. Reduces no-shows by 40%+."
-  },
-  {
-    icon: Database,
-    title: "Track lead source automatically",
-    description: "Know exactly which yard sign, truck wrap, or Google ad drove the call. Attribution flows to CRM automatically."
-  },
-  {
-    icon: Wrench,
-    title: "Handle multiple trades",
-    description: "Route plumbing calls differently than HVAC. Each service line gets its own qualification flow."
-  }
+  { stat: "<3s", label: "Answer Time", description: "We pick up while they're still interested" },
+  { stat: "40%", label: "Fewer No-Shows", description: "Automated reminders that work" },
+  { stat: "24/7", label: "Availability", description: "Nights, weekends, holidays" }
 ];
 
-const useCases = [
-  {
-    title: "Emergency services",
-    description: "Water damage, no heat, electrical hazards — AI triages urgency and fast-tracks your calendar"
-  },
-  {
-    title: "Planned projects",
-    description: "Kitchen remodels, HVAC replacements, new roof — qualify budget and timeline before the estimate"
-  },
-  {
-    title: "Seasonal campaigns",
-    description: "Storm chasers, AC tune-up season, winterization — handle volume spikes without extra staff"
-  }
+const serviceTypes = [
+  { icon: Zap, title: "Emergency Services", description: "Water damage, no heat, electrical hazards — AI triages urgency and fast-tracks your calendar." },
+  { icon: Wrench, title: "Planned Projects", description: "Kitchen remodels, HVAC replacements, new roofs — qualify budget and timeline before the estimate." },
+  { icon: Clock, title: "Seasonal Campaigns", description: "Storm season, AC tune-ups, winterization — handle volume spikes without extra staff." }
 ];
 
-const industries = [
-  "Roofing",
-  "HVAC",
-  "Plumbing",
-  "Electrical",
-  "Water Restoration",
-  "Kitchen & Bath Remodeling",
-  "General Contracting"
-];
-
-const integrations = {
-  crm: ["Jobber", "ServiceTitan", "Housecall Pro", "BuildOps"],
-  calendars: ["Google Calendar", "Outlook", "Apple Calendar"],
-  payments: ["Stripe", "Square"]
-};
+const integrations = ["Jobber", "ServiceTitan", "Housecall Pro", "BuildOps", "Google Calendar", "QuickBooks"];
 
 export default function SolutionsContractors() {
   return (
     <Layout>
       {/* Hero */}
-      <section className="section-padding bg-secondary/30">
+      <section className="bg-white pt-24 pb-16">
         <div className="container-wide">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -103,111 +66,82 @@ export default function SolutionsContractors() {
             transition={{ duration: 0.6 }}
             className="max-w-3xl"
           >
-            <span className="inline-flex items-center gap-2 text-sm text-muted-foreground font-medium tracking-wide mb-4">
-              <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-              For Contractors
-            </span>
-            <h1 className="text-4xl lg:text-display-sm font-semibold text-foreground mb-6">
+            <div className="flex items-center gap-3 mb-6">
+              <VIcon size="md" variant="gradient" />
+              <span className="eyebrow">Contractors</span>
+            </div>
+            
+            <h1 className="headline-xl text-ink mb-6">
               Stop losing emergency calls and last-minute jobs
             </h1>
-            <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-              Voxaris answers every inbound lead 24/7, qualifies the job type and urgency, and books estimate appointments into your calendar — even when you're on a roof or crawling under a house.
-            </p>
             
-            {/* Industry pills */}
-            <div className="flex flex-wrap gap-2">
-              {industries.map((industry) => (
-                <span 
-                  key={industry}
-                  className="px-3 py-1.5 bg-card rounded-full border border-border text-sm text-muted-foreground"
-                >
-                  {industry}
-                </span>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Problem Section */}
-      <section className="section-padding">
-        <div className="container-wide">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl lg:text-heading font-semibold text-foreground mb-4">
-              The contractor problem
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              You're great at your trade. But you can't be on a job site AND answering your phone at the same time.
+            <p className="text-xl text-charcoal leading-relaxed mb-10">
+              Four products that work while you're on the job: <strong className="text-ink">Inbound</strong> and <strong className="text-ink">Outbound</strong> voice AI, <strong className="text-ink">face-to-face video AI</strong>, and <strong className="text-ink">intelligent websites</strong>.
             </p>
-          </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {problems.map((problem, index) => (
-              <motion.div
-                key={problem.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-card rounded-2xl border border-border p-6"
-              >
-                <div className="w-11 h-11 rounded-xl bg-destructive/10 flex items-center justify-center mb-4">
-                  <problem.icon className="h-5 w-5 text-destructive" />
-                </div>
-                <h3 className="text-lg font-semibold text-foreground mb-2">
-                  {problem.title}
-                </h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">
-                  {problem.description}
-                </p>
-              </motion.div>
-            ))}
-          </div>
+            <Button asChild size="lg" className="bg-ink hover:bg-charcoal text-white rounded-full px-8 h-14">
+              <Link to="/book-demo">
+                Book a Demo
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </motion.div>
         </div>
       </section>
 
-      {/* Benefits */}
-      <section className="section-padding bg-secondary/30">
+      {/* Product Differentiation */}
+      <section className="bg-snow py-20">
         <div className="container-wide">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-center mb-16"
+            className="text-center mb-12"
           >
-            <h2 className="text-3xl lg:text-heading font-semibold text-foreground mb-4">
-              What Voxaris does for contractors
+            <h2 className="headline-lg text-ink mb-4">
+              Four products. Complete coverage.
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-lg text-charcoal max-w-2xl mx-auto">
               Never miss a lead. Never play phone tag. Never lose a job to a faster competitor.
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {benefits.map((benefit, index) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {products.map((product, index) => (
               <motion.div
-                key={benefit.title}
+                key={product.name}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
+                viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-card rounded-2xl border border-border p-6"
+                className="bg-white rounded-2xl border border-frost p-8 hover:border-charcoal/20 transition-colors"
               >
-                <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
-                  <benefit.icon className="h-5 w-5 text-primary" />
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-14 h-14 rounded-2xl bg-ink flex items-center justify-center">
+                    <product.icon className="w-7 h-7 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-ink">{product.name}</h3>
+                    <p className="text-sm text-charcoal">{product.tagline}</p>
+                  </div>
                 </div>
-                <h3 className="text-lg font-semibold text-foreground mb-2">
-                  {benefit.title}
-                </h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">
-                  {benefit.description}
+                
+                <p className="text-charcoal leading-relaxed mb-6">
+                  {product.description}
+                </p>
+                
+                <ul className="space-y-3 mb-6">
+                  {product.features.map((feature) => (
+                    <li key={feature} className="flex items-center gap-3">
+                      <CheckCircle2 className="w-5 h-5 text-ink flex-shrink-0" />
+                      <span className="text-charcoal">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                
+                <p className="text-sm font-semibold text-ink bg-snow rounded-lg px-4 py-3">
+                  {product.cta}
                 </p>
               </motion.div>
             ))}
@@ -215,8 +149,30 @@ export default function SolutionsContractors() {
         </div>
       </section>
 
-      {/* How It Works */}
-      <section className="section-padding">
+      {/* Stats Row */}
+      <section className="bg-white py-20">
+        <div className="container-wide">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {benefits.map((benefit, index) => (
+              <motion.div
+                key={benefit.label}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="text-center p-8 rounded-2xl border border-frost"
+              >
+                <p className="text-4xl font-bold text-ink font-display mb-2">{benefit.stat}</p>
+                <p className="text-sm font-semibold text-ink uppercase tracking-wider mb-2">{benefit.label}</p>
+                <p className="text-sm text-slate">{benefit.description}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Service Types */}
+      <section className="section-padding bg-white border-t border-frost">
         <div className="container-wide">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -225,130 +181,96 @@ export default function SolutionsContractors() {
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl lg:text-heading font-semibold text-foreground mb-4">
-              How it works
+            <h2 className="headline-lg text-ink mb-4">
+              Handle every service type
             </h2>
+            <p className="text-lg text-charcoal max-w-2xl mx-auto">
+              Whether it's a burst pipe at midnight or a planned renovation, Voxaris handles it all.
+            </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            {[
-              { step: "1", title: "Lead comes in", description: "Phone, SMS, web form, Google Local Services" },
-              { step: "2", title: "AI qualifies", description: "Job type, urgency, property details, timeline" },
-              { step: "3", title: "Books estimate", description: "Syncs with your calendar, books the site visit" },
-              { step: "4", title: "Confirms & reminds", description: "SMS with details and what to expect" }
-            ].map((item, index) => (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {serviceTypes.map((service, index) => (
               <motion.div
-                key={item.step}
+                key={service.title}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="text-center"
+                className="p-8 rounded-2xl border border-frost hover:border-charcoal/20 transition-colors"
               >
-                <div className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center mx-auto mb-4 text-lg font-semibold">
-                  {item.step}
+                <div className="w-12 h-12 rounded-xl bg-snow flex items-center justify-center mb-6">
+                  <service.icon className="h-6 w-6 text-ink" />
                 </div>
-                <h3 className="font-semibold text-foreground mb-2">{item.title}</h3>
-                <p className="text-sm text-muted-foreground">{item.description}</p>
+                <h3 className="text-xl font-semibold text-ink mb-3">{service.title}</h3>
+                <p className="text-charcoal leading-relaxed">{service.description}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Use Cases */}
-      <section className="section-padding bg-primary text-primary-foreground">
+      {/* Integrations */}
+      <section className="section-padding bg-snow">
         <div className="container-wide">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              <h2 className="text-3xl lg:text-heading font-semibold mb-6">
-                Contractor use cases
-              </h2>
-              <p className="text-lg text-primary-foreground/70 mb-8">
-                Whether it's a burst pipe at midnight or a planned renovation, Voxaris handles it all.
-              </p>
-              <ul className="space-y-6">
-                {useCases.map((useCase) => (
-                  <li key={useCase.title}>
-                    <h4 className="font-semibold mb-1">{useCase.title}</h4>
-                    <p className="text-primary-foreground/70 text-sm">{useCase.description}</p>
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="bg-primary-foreground/5 rounded-3xl p-8 lg:p-10"
-            >
-              <h3 className="text-xl font-semibold mb-6">Integrations</h3>
-              <div className="space-y-6">
-                <div>
-                  <h4 className="text-sm uppercase tracking-wider text-primary-foreground/50 mb-3">CRM & Field Service</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {integrations.crm.map((item) => (
-                      <span key={item} className="px-3 py-1.5 bg-primary-foreground/10 rounded-full text-sm">
-                        {item}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <h4 className="text-sm uppercase tracking-wider text-primary-foreground/50 mb-3">Calendars</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {integrations.calendars.map((item) => (
-                      <span key={item} className="px-3 py-1.5 bg-primary-foreground/10 rounded-full text-sm">
-                        {item}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <h4 className="text-sm uppercase tracking-wider text-primary-foreground/50 mb-3">Payments</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {integrations.payments.map((item) => (
-                      <span key={item} className="px-3 py-1.5 bg-primary-foreground/10 rounded-full text-sm">
-                        {item}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12"
+          >
+            <h2 className="headline-lg text-ink mb-4">Works with your stack</h2>
+            <p className="text-charcoal">We connect in hours, not weeks. No IT headache.</p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="flex flex-wrap justify-center gap-4 mb-8"
+          >
+            {integrations.map((integration) => (
+              <span key={integration} className="px-5 py-3 bg-white rounded-full border border-frost text-ink font-medium">
+                {integration}
+              </span>
+            ))}
+          </motion.div>
+
+          <p className="text-center text-charcoal">
+            Don't see yours? <Link to="/book-demo" className="text-ink font-medium underline underline-offset-2 hover:no-underline">Let us know</Link> — we'll make it work.
+          </p>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="section-padding">
-        <div className="container-wide text-center">
-          <h2 className="text-3xl lg:text-heading font-semibold text-foreground mb-4">
-            See Voxaris handle a contractor lead in real-time
-          </h2>
-          <p className="text-lg text-muted-foreground mb-8 max-w-xl mx-auto">
-            Try our live demo or book a personalized walkthrough for your contracting business.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/demo">
-              <Button variant="hero" size="xl">
-                <Phone className="h-5 w-5 mr-2" />
-                Try Live Demo
-              </Button>
-            </Link>
-            <Link to="/book-demo">
-              <Button variant="heroOutline" size="xl">
+      {/* Final CTA */}
+      <section className="section-padding-lg section-dark">
+        <div className="container-wide">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center"
+          >
+            <div className="flex justify-center mb-8">
+              <VIcon size="xl" variant="outline" className="border-white/30 text-white" />
+            </div>
+            
+            <h2 className="headline-xl text-white mb-6">Ready to book more jobs?</h2>
+            
+            <p className="text-lg text-silver max-w-xl mx-auto mb-10">
+              See how Voxaris works on YOUR contracting leads.
+            </p>
+
+            <Button asChild size="lg" className="bg-white hover:bg-snow text-ink font-semibold rounded-full px-10 h-16 text-lg">
+              <Link to="/book-demo">
                 Book a Demo
-                <ArrowRight className="h-5 w-5 ml-2" />
-              </Button>
-            </Link>
-          </div>
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
+          </motion.div>
         </div>
       </section>
     </Layout>

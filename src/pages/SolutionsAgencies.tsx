@@ -1,97 +1,64 @@
 import { motion } from "framer-motion";
 import Layout from "@/components/layout/Layout";
-import { Megaphone, TrendingUp, Users, Layers, DollarSign, BarChart3, ArrowRight, Zap, RefreshCw, Phone, Clock, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { PhoneIncoming, PhoneOutgoing, Video, Globe, ArrowRight, CheckCircle2, Layers, BarChart3, DollarSign } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import VIcon from "@/components/ui/VIcon";
 
-const problems = [
+const products = [
   {
-    icon: TrendingUp,
-    title: "Clients want lead conversion, not just lead gen",
-    description: "You're driving traffic and leads. But clients want booked appointments, not just form fills."
+    icon: PhoneIncoming,
+    name: "V·INBOUND",
+    tagline: "Inbound Voice AI",
+    description: "White-label AI that answers your clients' leads instantly. Each client gets their own custom scripts, qualification logic, and calendar integration.",
+    features: ["Per-client customization", "Custom qualification scripts", "Calendar integration"],
+    cta: "Best for: Lead qualification, intake"
   },
   {
-    icon: Users,
-    title: "Can't afford to hire for every client",
-    description: "Each client needs custom intake. You can't hire a team of SDRs for every account."
+    icon: PhoneOutgoing,
+    name: "V·OUTBOUND",
+    tagline: "Outbound Voice AI",
+    description: "Proactive follow-up that converts more of the leads you generate. Your clients get better results, you get less churn.",
+    features: ["Lead follow-up automation", "Appointment confirmations", "Re-engagement campaigns"],
+    cta: "Best for: Lead nurturing, follow-up"
   },
   {
-    icon: DollarSign,
-    title: "Margins are tight on lead gen",
-    description: "You need higher-margin services. AI infrastructure is the upsell every client needs."
+    icon: Video,
+    name: "V·CVI",
+    tagline: "Conversational Video Intelligence",
+    description: "Face-to-face AI your clients can deploy on their websites, kiosks, and QR codes. Premium positioning for premium pricing.",
+    features: ["White-label deployment", "Multi-client management", "Premium upsell opportunity"],
+    cta: "Best for: High-value client offerings"
   },
   {
-    icon: AlertTriangle,
-    title: "Churn from poor conversions",
-    description: "You generate leads but client's team doesn't follow up fast enough. They blame your leads. You lose the account."
+    icon: Globe,
+    name: "V·WEB",
+    tagline: "AI-Powered Website",
+    description: "AI sales infrastructure for every client website. Intelligent lead capture that actually converts — not just form fills.",
+    features: ["Website conversion optimization", "Intelligent lead capture", "Real-time qualification"],
+    cta: "Best for: Website services upsell"
   }
 ];
 
 const benefits = [
-  {
-    icon: Layers,
-    title: "White-label deployment",
-    description: "Your brand, your domain, your client portal. We're invisible."
-  },
-  {
-    icon: Users,
-    title: "Per-client customization",
-    description: "Each client gets their own AI agent, scripts, qualification logic, calendar integration."
-  },
-  {
-    icon: BarChart3,
-    title: "Agency dashboard",
-    description: "See performance across all your clients. Which industries convert best, which AI scripts work, real-time call analytics."
-  },
-  {
-    icon: DollarSign,
-    title: "Recurring revenue",
-    description: "You bill the client monthly. We bill you wholesale. Your margin, your pricing."
-  },
-  {
-    icon: CheckCircle2,
-    title: "Full support",
-    description: "We handle the tech setup, training, and maintenance. You do the sales and account management."
-  },
-  {
-    icon: Zap,
-    title: "Fast deployment",
-    description: "New client signed? Deploy their AI agent in 48 hours. Integration with their CRM, calendar, phone."
-  }
+  { stat: "3x", label: "Conversion Lift", description: "Average client improvement" },
+  { stat: "<10s", label: "Response Time", description: "Every lead, every time" },
+  { stat: "48hr", label: "Deployment", description: "New client to live" }
 ];
 
-const useCases = [
-  {
-    title: "Local service agencies",
-    description: "Serve plumbers, roofers, HVAC — each gets their own AI"
-  },
-  {
-    title: "Automotive agencies",
-    description: "Dealership clients get specialized inventory-aware AI"
-  },
-  {
-    title: "Multi-location clients",
-    description: "Franchise brands, multi-location service businesses"
-  }
+const agencyBenefits = [
+  { icon: Layers, title: "White-Label Everything", description: "Your brand, your domain, your client portal. We're invisible to your clients." },
+  { icon: BarChart3, title: "Agency Dashboard", description: "See performance across all clients. Which industries convert best, which scripts work, real-time analytics." },
+  { icon: DollarSign, title: "Recurring Revenue", description: "You bill the client monthly. We bill you wholesale. Your margin, your pricing." }
 ];
 
-const howItWorks = [
-  { step: "1", title: "You sell the client", description: "Position as 'AI sales infrastructure' or '24/7 intake system'" },
-  { step: "2", title: "We deploy", description: "48-hour setup, branded to your agency" },
-  { step: "3", title: "You manage account", description: "Ongoing client relationship, you own the data" },
-  { step: "4", title: "We handle tech", description: "Monitoring, optimization, scaling, support" }
-];
-
-const integrations = {
-  agency: ["GoHighLevel", "AgencyAnalytics", "DashThis"],
-  crm: ["HubSpot", "Salesforce", "Pipedrive", "GoHighLevel"]
-};
+const integrations = ["GoHighLevel", "HubSpot", "Salesforce", "Pipedrive", "AgencyAnalytics", "DashThis"];
 
 export default function SolutionsAgencies() {
   return (
     <Layout>
       {/* Hero */}
-      <section className="section-padding bg-secondary/30">
+      <section className="bg-white pt-24 pb-16">
         <div className="container-wide">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -99,99 +66,82 @@ export default function SolutionsAgencies() {
             transition={{ duration: 0.6 }}
             className="max-w-3xl"
           >
-            <span className="inline-flex items-center gap-2 text-sm text-muted-foreground font-medium tracking-wide mb-4">
-              <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-              For Marketing Agencies
-            </span>
-            <h1 className="text-4xl lg:text-display-sm font-semibold text-foreground mb-6">
+            <div className="flex items-center gap-3 mb-6">
+              <VIcon size="md" variant="gradient" />
+              <span className="eyebrow">Agencies</span>
+            </div>
+            
+            <h1 className="headline-xl text-ink mb-6">
               White-label AI sales infrastructure for your clients
             </h1>
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              Voxaris provides the AI sales and intake system you can resell under your agency brand. We handle the tech, you own the client relationship and margin.
+            
+            <p className="text-xl text-charcoal leading-relaxed mb-10">
+              Four products you can resell under your brand: <strong className="text-ink">Inbound</strong> and <strong className="text-ink">Outbound</strong> voice AI, <strong className="text-ink">face-to-face video AI</strong>, and <strong className="text-ink">intelligent websites</strong>.
             </p>
+
+            <Button asChild size="lg" className="bg-ink hover:bg-charcoal text-white rounded-full px-8 h-14">
+              <Link to="/book-demo">
+                Book a Demo
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
           </motion.div>
         </div>
       </section>
 
-      {/* Problem Section */}
-      <section className="section-padding">
+      {/* Product Differentiation */}
+      <section className="bg-snow py-20">
         <div className="container-wide">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-center mb-16"
+            className="text-center mb-12"
           >
-            <h2 className="text-3xl lg:text-heading font-semibold text-foreground mb-4">
-              The agency problem
+            <h2 className="headline-lg text-ink mb-4">
+              Four products. Complete coverage.
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              You're great at generating leads. But if your client's team doesn't follow up, you get blamed.
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {problems.map((problem, index) => (
-              <motion.div
-                key={problem.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-card rounded-2xl border border-border p-6"
-              >
-                <div className="w-11 h-11 rounded-xl bg-destructive/10 flex items-center justify-center mb-4">
-                  <problem.icon className="h-5 w-5 text-destructive" />
-                </div>
-                <h3 className="text-lg font-semibold text-foreground mb-2">
-                  {problem.title}
-                </h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">
-                  {problem.description}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Benefits */}
-      <section className="section-padding bg-secondary/30">
-        <div className="container-wide">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl lg:text-heading font-semibold text-foreground mb-4">
-              What Voxaris offers agencies
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-lg text-charcoal max-w-2xl mx-auto">
               Stop losing leads to slow follow-up. Start delivering infrastructure that actually converts.
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {benefits.map((benefit, index) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {products.map((product, index) => (
               <motion.div
-                key={benefit.title}
+                key={product.name}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
+                viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-card rounded-2xl border border-border p-6"
+                className="bg-white rounded-2xl border border-frost p-8 hover:border-charcoal/20 transition-colors"
               >
-                <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
-                  <benefit.icon className="h-5 w-5 text-primary" />
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-14 h-14 rounded-2xl bg-ink flex items-center justify-center">
+                    <product.icon className="w-7 h-7 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-ink">{product.name}</h3>
+                    <p className="text-sm text-charcoal">{product.tagline}</p>
+                  </div>
                 </div>
-                <h3 className="text-lg font-semibold text-foreground mb-2">
-                  {benefit.title}
-                </h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">
-                  {benefit.description}
+                
+                <p className="text-charcoal leading-relaxed mb-6">
+                  {product.description}
+                </p>
+                
+                <ul className="space-y-3 mb-6">
+                  {product.features.map((feature) => (
+                    <li key={feature} className="flex items-center gap-3">
+                      <CheckCircle2 className="w-5 h-5 text-ink flex-shrink-0" />
+                      <span className="text-charcoal">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                
+                <p className="text-sm font-semibold text-ink bg-snow rounded-lg px-4 py-3">
+                  {product.cta}
                 </p>
               </motion.div>
             ))}
@@ -199,8 +149,30 @@ export default function SolutionsAgencies() {
         </div>
       </section>
 
-      {/* How It Works */}
-      <section className="section-padding">
+      {/* Stats Row */}
+      <section className="bg-white py-20">
+        <div className="container-wide">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {benefits.map((benefit, index) => (
+              <motion.div
+                key={benefit.label}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="text-center p-8 rounded-2xl border border-frost"
+              >
+                <p className="text-4xl font-bold text-ink font-display mb-2">{benefit.stat}</p>
+                <p className="text-sm font-semibold text-ink uppercase tracking-wider mb-2">{benefit.label}</p>
+                <p className="text-sm text-slate">{benefit.description}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Agency Benefits */}
+      <section className="section-padding bg-white border-t border-frost">
         <div className="container-wide">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -209,153 +181,96 @@ export default function SolutionsAgencies() {
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl lg:text-heading font-semibold text-foreground mb-4">
-              How it works for agencies
+            <h2 className="headline-lg text-ink mb-4">
+              Built for agencies
             </h2>
+            <p className="text-lg text-charcoal max-w-2xl mx-auto">
+              We handle the tech. You own the client relationship and margin.
+            </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            {howItWorks.map((item, index) => (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {agencyBenefits.map((benefit, index) => (
               <motion.div
-                key={item.step}
+                key={benefit.title}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="text-center"
+                className="p-8 rounded-2xl border border-frost hover:border-charcoal/20 transition-colors"
               >
-                <div className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center mx-auto mb-4 text-lg font-semibold">
-                  {item.step}
+                <div className="w-12 h-12 rounded-xl bg-snow flex items-center justify-center mb-6">
+                  <benefit.icon className="h-6 w-6 text-ink" />
                 </div>
-                <h3 className="font-semibold text-foreground mb-2">{item.title}</h3>
-                <p className="text-sm text-muted-foreground">{item.description}</p>
+                <h3 className="text-xl font-semibold text-ink mb-3">{benefit.title}</h3>
+                <p className="text-charcoal leading-relaxed">{benefit.description}</p>
               </motion.div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Use Cases */}
-      <section className="section-padding bg-primary text-primary-foreground">
-        <div className="container-wide">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              <h2 className="text-3xl lg:text-heading font-semibold mb-6">
-                Agency use cases
-              </h2>
-              <p className="text-lg text-primary-foreground/70 mb-8">
-                Voxaris works with any lead source. Every form submission, every call, every inquiry gets instant, professional response.
-              </p>
-              <ul className="space-y-6">
-                {useCases.map((useCase) => (
-                  <li key={useCase.title}>
-                    <h4 className="font-semibold mb-1">{useCase.title}</h4>
-                    <p className="text-primary-foreground/70 text-sm">{useCase.description}</p>
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="bg-primary-foreground/5 rounded-3xl p-8 lg:p-10"
-            >
-              <h3 className="text-xl font-semibold mb-4">The Agency Advantage</h3>
-              <p className="text-primary-foreground/70 mb-6">
-                Most agencies sell marketing services. With Voxaris, you can sell sales infrastructure — a stickier, higher-value offering that creates recurring revenue and deeper client relationships.
-              </p>
-              <div className="flex items-center gap-4 pt-4 border-t border-primary-foreground/10">
-                <div className="text-center flex-1">
-                  <div className="text-3xl font-bold mb-1">3x</div>
-                  <div className="text-xs text-primary-foreground/60 uppercase tracking-wider">Conversion Lift</div>
-                </div>
-                <div className="text-center flex-1">
-                  <div className="text-3xl font-bold mb-1">&lt;10s</div>
-                  <div className="text-xs text-primary-foreground/60 uppercase tracking-wider">Response Time</div>
-                </div>
-                <div className="text-center flex-1">
-                  <div className="text-3xl font-bold mb-1">24/7</div>
-                  <div className="text-xs text-primary-foreground/60 uppercase tracking-wider">Availability</div>
-                </div>
-              </div>
-            </motion.div>
           </div>
         </div>
       </section>
 
       {/* Integrations */}
-      <section className="section-padding">
+      <section className="section-padding bg-snow">
         <div className="container-wide">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-center mb-16"
+            className="text-center mb-12"
           >
-            <h2 className="text-3xl lg:text-heading font-semibold text-foreground mb-4">
-              Integrations
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              We integrate with whatever your clients use.
-            </p>
+            <h2 className="headline-lg text-ink mb-4">Works with your stack</h2>
+            <p className="text-charcoal">We integrate with whatever your clients use.</p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
-            <div className="bg-card rounded-2xl border border-border p-6">
-              <h4 className="text-sm uppercase tracking-wider text-muted-foreground mb-4">Agency Platforms</h4>
-              <div className="flex flex-wrap gap-2">
-                {integrations.agency.map((item) => (
-                  <span key={item} className="px-3 py-1.5 bg-secondary rounded-full text-sm">
-                    {item}
-                  </span>
-                ))}
-              </div>
-            </div>
-            <div className="bg-card rounded-2xl border border-border p-6">
-              <h4 className="text-sm uppercase tracking-wider text-muted-foreground mb-4">CRMs</h4>
-              <div className="flex flex-wrap gap-2">
-                {integrations.crm.map((item) => (
-                  <span key={item} className="px-3 py-1.5 bg-secondary rounded-full text-sm">
-                    {item}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="flex flex-wrap justify-center gap-4 mb-8"
+          >
+            {integrations.map((integration) => (
+              <span key={integration} className="px-5 py-3 bg-white rounded-full border border-frost text-ink font-medium">
+                {integration}
+              </span>
+            ))}
+          </motion.div>
+
+          <p className="text-center text-charcoal">
+            Don't see yours? <Link to="/book-demo" className="text-ink font-medium underline underline-offset-2 hover:no-underline">Let us know</Link> — we'll make it work.
+          </p>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="section-padding bg-secondary/30">
-        <div className="container-wide text-center">
-          <h2 className="text-3xl lg:text-heading font-semibold text-foreground mb-4">
-            Ready to upgrade your agency offering?
-          </h2>
-          <p className="text-lg text-muted-foreground mb-8 max-w-xl mx-auto">
-            See how Voxaris can help you deliver better results and create new revenue streams.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/demo">
-              <Button variant="hero" size="xl">
-                <Phone className="h-5 w-5 mr-2" />
-                Try Live Demo
-              </Button>
-            </Link>
-            <Link to="/book-demo">
-              <Button variant="heroOutline" size="xl">
+      {/* Final CTA */}
+      <section className="section-padding-lg section-dark">
+        <div className="container-wide">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center"
+          >
+            <div className="flex justify-center mb-8">
+              <VIcon size="xl" variant="outline" className="border-white/30 text-white" />
+            </div>
+            
+            <h2 className="headline-xl text-white mb-6">Ready to upgrade your agency offering?</h2>
+            
+            <p className="text-lg text-silver max-w-xl mx-auto mb-10">
+              See how Voxaris can help you deliver better results and create new revenue streams.
+            </p>
+
+            <Button asChild size="lg" className="bg-white hover:bg-snow text-ink font-semibold rounded-full px-10 h-16 text-lg">
+              <Link to="/book-demo">
                 Book a Demo
-                <ArrowRight className="h-5 w-5 ml-2" />
-              </Button>
-            </Link>
-          </div>
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
+          </motion.div>
         </div>
       </section>
     </Layout>
