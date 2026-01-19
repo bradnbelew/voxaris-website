@@ -55,8 +55,76 @@ export default function HeroSection() {
       <div className="container-hero py-16 lg:py-20">
         {/* Two Column Layout */}
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          {/* Left Column - Content */}
-          <div className="order-2 lg:order-1">
+          {/* Left Column - CVI Video Demo */}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
+            className="order-1 lg:order-1"
+          >
+            <div className="video-frame aspect-[4/3] lg:aspect-video relative shadow-xl overflow-hidden">
+              <AnimatePresence mode="wait">
+                {isInCall && conversationUrl ? (
+                  <motion.div
+                    key="conversation"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="absolute inset-0"
+                  >
+                    <Conversation 
+                      conversationUrl={conversationUrl} 
+                      onLeave={handleLeaveCall}
+                    />
+                    {/* Close button */}
+                    <button
+                      onClick={handleLeaveCall}
+                      className="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/50 hover:bg-black/70 flex items-center justify-center transition-colors z-10"
+                    >
+                      <X className="w-5 h-5 text-white" />
+                    </button>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="placeholder"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    onClick={handleStartDemo}
+                    className={`absolute inset-0 flex flex-col items-center justify-center cursor-pointer group bg-gradient-to-br from-mist to-frost ${isLoading ? 'pointer-events-none opacity-75' : ''}`}
+                  >
+                    {/* Live badge */}
+                    <div className="absolute top-4 left-4 flex items-center gap-2 px-3 py-1.5 bg-white rounded-full border border-frost shadow-sm">
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75" />
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+                      </span>
+                      <span className="text-xs font-medium text-ink">LIVE</span>
+                    </div>
+
+                    {/* Play button */}
+                    <div className="w-24 h-24 rounded-full bg-white shadow-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-300 border border-frost">
+                      {isLoading ? (
+                        <div className="w-8 h-8 border-2 border-ink/30 border-t-ink rounded-full animate-spin" />
+                      ) : (
+                        <Play className="w-10 h-10 text-ink ml-1" fill="currentColor" />
+                      )}
+                    </div>
+                    
+                    <p className="mt-6 text-base text-charcoal font-medium">
+                      {isLoading ? "Connecting..." : "Click to talk to Maria"}
+                    </p>
+                    <p className="mt-1 text-sm text-slate">
+                      Live AI video conversation
+                    </p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </motion.div>
+
+          {/* Right Column - Content */}
+          <div className="order-2 lg:order-2">
             {/* Eyebrow */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -129,74 +197,6 @@ export default function HeroSection() {
               ))}
             </motion.div>
           </div>
-
-          {/* Right Column - CVI Video Demo */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
-            className="order-1 lg:order-2"
-          >
-            <div className="video-frame aspect-[4/3] lg:aspect-video relative shadow-xl overflow-hidden">
-              <AnimatePresence mode="wait">
-                {isInCall && conversationUrl ? (
-                  <motion.div
-                    key="conversation"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="absolute inset-0"
-                  >
-                    <Conversation 
-                      conversationUrl={conversationUrl} 
-                      onLeave={handleLeaveCall}
-                    />
-                    {/* Close button */}
-                    <button
-                      onClick={handleLeaveCall}
-                      className="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/50 hover:bg-black/70 flex items-center justify-center transition-colors z-10"
-                    >
-                      <X className="w-5 h-5 text-white" />
-                    </button>
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="placeholder"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    onClick={handleStartDemo}
-                    className={`absolute inset-0 flex flex-col items-center justify-center cursor-pointer group bg-gradient-to-br from-mist to-frost ${isLoading ? 'pointer-events-none opacity-75' : ''}`}
-                  >
-                    {/* Live badge */}
-                    <div className="absolute top-4 left-4 flex items-center gap-2 px-3 py-1.5 bg-white rounded-full border border-frost shadow-sm">
-                      <span className="relative flex h-2 w-2">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75" />
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
-                      </span>
-                      <span className="text-xs font-medium text-ink">LIVE</span>
-                    </div>
-
-                    {/* Play button */}
-                    <div className="w-24 h-24 rounded-full bg-white shadow-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-300 border border-frost">
-                      {isLoading ? (
-                        <div className="w-8 h-8 border-2 border-ink/30 border-t-ink rounded-full animate-spin" />
-                      ) : (
-                        <Play className="w-10 h-10 text-ink ml-1" fill="currentColor" />
-                      )}
-                    </div>
-                    
-                    <p className="mt-6 text-base text-charcoal font-medium">
-                      {isLoading ? "Connecting..." : "Click to talk to Maria"}
-                    </p>
-                    <p className="mt-1 text-sm text-slate">
-                      Live AI video conversation
-                    </p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          </motion.div>
         </div>
       </div>
     </section>
