@@ -38,7 +38,7 @@ export default function TalkingPostcardSection() {
         >
           <span className="eyebrow mb-4 block">The Breakthrough</span>
           <h2 className="headline-lg text-ink mb-6">
-            Direct Mail → Digital Twin
+            Direct Mail → Talking Postcard
           </h2>
           <p className="text-lg text-charcoal max-w-2xl mx-auto">
             Turn every postcard into a face-to-face conversation.
