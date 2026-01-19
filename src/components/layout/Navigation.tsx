@@ -269,24 +269,27 @@ export default function Navigation() {
               transition={{ duration: 0.2 }}
               className="fixed top-16 left-0 right-0 z-50 lg:hidden bg-white border-b border-frost shadow-lg max-h-[80vh] overflow-y-auto"
             >
-              <div className="container-editorial py-6 space-y-6 px-4">
+              <div className="py-8 px-6 space-y-8">
                 {/* V·Suite Section */}
                 <div>
-                  <p className="text-xs font-semibold text-slate uppercase tracking-wider mb-3">V·Suite</p>
+                  <p className="text-xs font-semibold text-slate uppercase tracking-wider mb-4">V·Suite</p>
                   <div className="space-y-3">
                     {products.map((product) => (
                       <Link
                         key={product.name}
                         to={product.href}
                         onClick={() => setMobileOpen(false)}
-                        className="flex items-center gap-4 p-4 rounded-xl border border-frost"
+                        className="flex items-start gap-4 p-5 rounded-2xl border border-frost hover:bg-snow transition-colors"
                       >
-                        <div className="w-10 h-10 rounded-lg bg-ink flex items-center justify-center flex-shrink-0">
-                          <product.icon className="w-5 h-5 text-white" />
+                        <div className="w-12 h-12 rounded-xl bg-ink flex items-center justify-center flex-shrink-0">
+                          <product.icon className="w-6 h-6 text-white" />
                         </div>
-                        <div>
-                          <p className="font-semibold text-ink">{product.name} <span className="font-normal text-slate">— {product.tagline}</span></p>
-                          <p className="text-sm text-charcoal">{product.description}</p>
+                        <div className="pt-0.5">
+                          <p className="text-base">
+                            <span className="font-bold text-ink">{product.name}</span>
+                            <span className="text-charcoal"> — {product.tagline}</span>
+                          </p>
+                          <p className="text-sm text-slate mt-1">{product.description}</p>
                         </div>
                       </Link>
                     ))}
@@ -295,14 +298,14 @@ export default function Navigation() {
 
                 {/* Industries Section */}
                 <div>
-                  <p className="text-xs font-semibold text-slate uppercase tracking-wider mb-3">Industries</p>
-                  <div className="grid grid-cols-2 gap-2">
+                  <p className="text-xs font-semibold text-slate uppercase tracking-wider mb-4">Industries</p>
+                  <div className="grid grid-cols-2 gap-3">
                     {industries.map((industry) => (
                       <Link
                         key={industry.name}
                         to={industry.href}
                         onClick={() => setMobileOpen(false)}
-                        className="px-4 py-3 rounded-lg text-sm text-charcoal hover:text-ink hover:bg-snow transition-all border border-frost"
+                        className="px-5 py-4 rounded-xl text-base text-charcoal hover:text-ink hover:bg-snow transition-all border border-frost"
                       >
                         {industry.name}
                       </Link>
