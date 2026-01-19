@@ -63,7 +63,7 @@ const cviFeatures = [
   },
   {
     icon: Clock,
-    title: "<200ms Latency",
+    title: "<500ms Latency",
     description: "Engineered for ultra-low latency. The 'FaceTime' experience feels instantaneous and natural."
   },
   {
@@ -74,7 +74,7 @@ const cviFeatures = [
 ];
 
 const stats = [
-  { value: "<200ms", label: "Response Latency", detail: "Human-grade speed" },
+  { value: "<500ms", label: "Response Latency", detail: "Human-grade speed" },
   { value: "0", label: "Hallucinations", detail: "Knowledge-grounded" },
   { value: "30+", label: "Languages", detail: "Native lip-sync" },
   { value: "24/7", label: "Availability", detail: "Never sleeps" },
