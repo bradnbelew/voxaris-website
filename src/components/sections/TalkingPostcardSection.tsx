@@ -26,7 +26,7 @@ const steps = [
   {
     icon: Mail,
     title: "Confirm",
-    description: "Follow-up sent with details",
+    description: "Automated follow-up sent",
   },
 ];
 
