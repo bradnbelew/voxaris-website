@@ -51,8 +51,8 @@ export default function HeroSection() {
   };
 
   return (
-    <section className="min-h-screen flex flex-col justify-center bg-white pt-20">
-      <div className="container-hero py-12 md:py-16 lg:py-20">
+    <section className="bg-white pt-24 pb-16 md:pt-28 md:pb-20">
+      <div className="container-hero">
         {/* Two Column Layout - side by side on md+ screens */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 lg:gap-20 items-center">
           {/* Left Column - CVI Video Demo */}
