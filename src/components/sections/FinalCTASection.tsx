@@ -1,44 +1,8 @@
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
 import VIcon from "@/components/ui/VIcon";
-
-const REPLICA_ID = "r9fa0878977a";
-const PERSONA_ID = "p5332d853291";
+import VoxarisLivingInterface from "@/components/ui/VoxarisLivingInterface";
 
 export default function FinalCTASection() {
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleStartDemo = async () => {
-    setIsLoading(true);
-    try {
-      const { data, error } = await supabase.functions.invoke('create-tavus-conversation', {
-        body: {
-          replica_id: REPLICA_ID,
-          persona_id: PERSONA_ID,
-          custom_greeting: "Hello! I'm here to help. What can I do for you today?",
-          conversational_context: "You are a helpful Voxaris CVI agent demonstrating real-time video AI capabilities."
-        }
-      });
-
-      if (error) throw error;
-
-      if (data?.conversation_url) {
-        window.open(data.conversation_url, '_blank');
-        toast.success("Conversation started!");
-      } else {
-        throw new Error("No conversation URL returned");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      toast.error("Failed to start conversation.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   return (
     <section className="section-padding-lg section-dark">
       <div className="container-wide">
@@ -64,19 +28,12 @@ export default function FinalCTASection() {
             Talk to Maria. See the V·Suite in action. Make your decision.
           </p>
 
-          {/* CTA Button */}
-          <Button 
-            size="lg"
-            onClick={handleStartDemo}
-            disabled={isLoading}
-            className="bg-white hover:bg-snow text-ink font-semibold rounded-full px-10 h-16 text-lg shadow-lg hover:shadow-xl transition-all"
-          >
-            {isLoading ? "Connecting..." : "Start a Conversation"}
-          </Button>
+          {/* Embedded Demo Experience */}
+          <VoxarisLivingInterface />
 
           {/* Phone number */}
           <p className="mt-8 text-silver text-sm">
-            or call <a href="tel:+13215550000" className="text-white hover:underline">(321) XXX-XXXX</a> for a human
+            or call <a href="tel:+14078195809" className="text-white hover:underline">(407) 819-5809</a> for a human
           </p>
         </motion.div>
       </div>
