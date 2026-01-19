@@ -155,26 +155,21 @@ export default function HeroSection() {
               Face-to-face AI that sees, speaks, and converts. Your 24/7 video concierge that never misses a lead.
             </motion.p>
 
-            {/* CTAs */}
+            {/* CTA */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
-              className="flex flex-col sm:flex-row gap-4 mb-12"
+              className="mb-12"
             >
-              <Button 
-                size="lg" 
-                className="bg-ink hover:bg-charcoal text-white font-medium rounded-full px-8 h-14 text-base transition-colors duration-200"
-                onClick={handleStartDemo}
-                disabled={isLoading || isInCall}
-              >
-                {isLoading ? "Connecting..." : isInCall ? "In Conversation" : "Talk to Maria"}
-              </Button>
-              <Link to="/how-it-works" className="group flex items-center justify-center sm:justify-start">
-                <span className="text-slate font-medium hover:text-ink transition-colors duration-200 flex items-center gap-1">
+              <Link to="/how-it-works">
+                <Button 
+                  size="lg" 
+                  className="bg-ink hover:bg-charcoal text-white font-medium rounded-full px-8 h-14 text-base transition-colors duration-200"
+                >
                   See How It Works
-                  <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
-                </span>
+                  <ArrowRight className="h-5 w-5 ml-2" />
+                </Button>
               </Link>
             </motion.div>
 
