@@ -279,7 +279,7 @@ export default function Technology() {
                   <MessageSquare className="w-7 h-7 text-background" />
                 </div>
                 <div>
-                  <h3 className="text-2xl lg:text-3xl font-bold text-background">Conversational Video Interface</h3>
+                  <h3 className="text-2xl lg:text-3xl font-bold text-background">Conversational Video Intelligence</h3>
                   <p className="text-background/60 font-medium">CVI — The Killer App</p>
                 </div>
               </div>
