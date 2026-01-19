@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Mail, QrCode, Video, CalendarCheck, ArrowRight } from "lucide-react";
+import VIcon from "@/components/ui/VIcon";
 
 const steps = [
   {
@@ -36,7 +37,10 @@ export default function TalkingPostcardSection() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <span className="eyebrow mb-4 block">The Breakthrough</span>
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <VIcon size="md" variant="solid" />
+            <span className="eyebrow">V·MAIL</span>
+          </div>
           <h2 className="headline-lg text-ink mb-6">
             Direct Mail → Talking Postcard
           </h2>

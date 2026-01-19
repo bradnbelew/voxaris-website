@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Check, X, Minus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import VIcon from "@/components/ui/VIcon";
 
 type FeatureValue = boolean | "partial";
 
@@ -55,6 +56,10 @@ export default function ComparisonSection() {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <VIcon size="md" variant="solid" />
+            <span className="eyebrow">V·COMPARE</span>
+          </div>
           <h2 className="headline-lg text-ink">
             Why face-to-face matters
           </h2>
@@ -74,7 +79,8 @@ export default function ComparisonSection() {
             <div className="text-center">
               <p className="text-sm font-medium text-slate uppercase tracking-wide">Voice AI</p>
             </div>
-            <div className="text-center">
+            <div className="text-center flex flex-col items-center">
+              <VIcon size="sm" variant="solid" className="mb-2" />
               <p className="text-sm font-bold text-ink uppercase tracking-wide">Voxaris</p>
             </div>
           </div>

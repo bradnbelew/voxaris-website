@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import VIcon from "@/components/ui/VIcon";
 
 const painPoints = [
   {
@@ -64,9 +65,12 @@ export default function ProblemSection() {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="text-center"
         >
-          <p className="text-xl font-bold text-ink">
-            Voxaris is different.
-          </p>
+          <div className="flex items-center justify-center gap-3">
+            <VIcon size="md" variant="solid" />
+            <p className="text-xl font-bold text-ink">
+              Voxaris is different.
+            </p>
+          </div>
         </motion.div>
       </div>
     </section>

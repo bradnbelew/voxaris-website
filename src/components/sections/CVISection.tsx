@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Video, Zap, Globe, MessageSquare, Smartphone, Eye } from "lucide-react";
+import VIcon from "@/components/ui/VIcon";
 
 const features = [
   {
@@ -46,10 +47,10 @@ export default function CVISection() {
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6 }}
           >
-            <span className="inline-flex items-center gap-2 text-sm font-medium text-foreground mb-4">
-              <Video className="w-4 h-4" />
-              Core Technology
-            </span>
+            <div className="flex items-center gap-3 mb-4">
+              <VIcon size="md" variant="solid" />
+              <span className="text-sm font-medium text-foreground">V·CVI</span>
+            </div>
             
             <h2 className="headline-lg text-foreground mb-4">
               What makes it different

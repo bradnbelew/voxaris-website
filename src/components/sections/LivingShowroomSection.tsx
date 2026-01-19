@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import VIcon from "@/components/ui/VIcon";
 
 export default function LivingShowroomSection() {
   return (
@@ -14,7 +15,10 @@ export default function LivingShowroomSection() {
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6 }}
           >
-            <span className="eyebrow mb-4 block">Agentic Web</span>
+            <div className="flex items-center gap-3 mb-4">
+              <VIcon size="md" variant="solid" />
+              <span className="eyebrow">V·WEB</span>
+            </div>
             <h2 className="headline-lg text-ink mb-6">
               Websites that sell
             </h2>

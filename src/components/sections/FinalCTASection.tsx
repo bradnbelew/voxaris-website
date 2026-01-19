@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import VIcon from "@/components/ui/VIcon";
 
 const REPLICA_ID = "r9fa0878977a";
 const PERSONA_ID = "p5332d853291";
@@ -48,6 +49,11 @@ export default function FinalCTASection() {
           transition={{ duration: 0.7 }}
           className="text-center"
         >
+          {/* V Icon */}
+          <div className="flex justify-center mb-8">
+            <VIcon size="xl" variant="outline" className="border-white/30 text-white" />
+          </div>
+
           {/* Headline */}
           <h2 className="headline-xl text-white mb-6">
             Experience it yourself.
@@ -55,7 +61,7 @@ export default function FinalCTASection() {
 
           {/* Subheadline */}
           <p className="text-lg text-silver max-w-xl mx-auto mb-12">
-            Talk to Maria. See the technology. Make your decision.
+            Talk to Maria. See the V·Suite in action. Make your decision.
           </p>
 
           {/* CTA Button */}
