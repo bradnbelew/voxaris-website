@@ -239,39 +239,6 @@ export default function Technology() {
               </motion.div>
             ))}
           </div>
-
-          {/* Architecture Connection Visual */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="mt-16 p-8 lg:p-12 bg-foreground rounded-3xl"
-          >
-            <div className="flex flex-col lg:flex-row justify-center items-center gap-8 lg:gap-0">
-              {neuralEngines.map((engine, index) => (
-                <div key={engine.id} className="flex items-center">
-                  <div className="text-center">
-                    <div className="w-20 h-20 lg:w-24 lg:h-24 rounded-2xl bg-background/10 flex items-center justify-center mx-auto mb-4 border border-background/20">
-                      <engine.icon className="w-10 h-10 lg:w-12 lg:h-12 text-background" />
-                    </div>
-                    <p className="text-background font-bold text-lg">{engine.label}</p>
-                    <p className="text-background/50 text-sm">{engine.subtitle}</p>
-                  </div>
-                  {index < neuralEngines.length - 1 && (
-                    <div className="hidden lg:flex items-center mx-8">
-                      <Waves className="w-6 h-6 text-background/40 animate-pulse" />
-                      <div className="w-16 h-px bg-background/30" />
-                      <Waves className="w-6 h-6 text-background/40 animate-pulse" />
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-            <p className="mt-10 text-center text-background/60 text-sm font-medium">
-              Integrated Neural Network • Real-Time Processing • Human-Grade Output
-            </p>
-          </motion.div>
         </div>
       </section>
 
