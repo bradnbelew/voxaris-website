@@ -261,7 +261,7 @@ export default function SolutionsDealerships() {
             <h2 className="headline-xl text-white mb-6">Ready to fill your showroom?</h2>
             
             <p className="text-lg text-silver max-w-xl mx-auto mb-10">
-              See how Voxaris works on YOUR dealership's leads. No commitment.
+              See how Voxaris works on YOUR dealership's leads.
             </p>
 
             <Button asChild size="lg" className="bg-white hover:bg-snow text-ink font-semibold rounded-full px-10 h-16 text-lg">
