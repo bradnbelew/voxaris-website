@@ -1,97 +1,45 @@
 import { motion } from "framer-motion";
 import Layout from "@/components/layout/Layout";
-import { Phone, Calendar, Clock, TrendingDown, Users, Tent, Zap, Target, BarChart3, ArrowRight, CheckCircle2, PhoneIncoming, MessageSquare, Database, Handshake, Bell, Wrench, Car, FileText, Sparkles, Wifi, Settings, LineChart } from "lucide-react";
+import { Phone, Calendar, Clock, Users, Zap, ArrowRight, CheckCircle2, Car, Wrench, FileText } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import VIcon from "@/components/ui/VIcon";
 
 const painPoints = [
+  "Weekend leads sit cold until Monday",
+  "BDC teams burn out on repetitive calls",
+  "Slow response times lose hot buyers",
+  "Event leads overwhelm your team"
+];
+
+const benefits = [
   {
-    icon: Phone,
-    title: "Weekend & After-Hours Leads",
-    description: "Leads that come in after 5PM or on weekends sit cold until Monday."
+    stat: "22s",
+    label: "Response Time",
+    description: "We call while interest is hottest"
   },
   {
-    icon: Clock,
-    title: "Slow Response Times",
-    description: "Even during business hours, leads wait 30+ minutes for contact."
+    stat: "47%",
+    label: "Appointment Rate",
+    description: "On contacted leads"
   },
   {
-    icon: TrendingDown,
-    title: "BDC Turnover & Burnout",
-    description: "Good BDC reps burn out on repetitive qualification calls."
-  },
-  {
-    icon: Users,
-    title: "Event Lead Overload",
-    description: "Tent sales and promotions flood your BDC with unqualified leads."
+    stat: "24/7",
+    label: "Availability",
+    description: "Never miss a lead again"
   }
-];
-
-const workflowSteps = [
-  { icon: PhoneIncoming, step: "1", title: "Lead Comes In", description: "From ads, website, events, or third-party leads" },
-  { icon: Zap, step: "2", title: "AI Calls in 22 Seconds", description: "Not 22 minutes. We contact while interest is hottest." },
-  { icon: MessageSquare, step: "3", title: "Dealer-Specific Conversation", description: "Qualifies for budget, timeline, trade-in, and financing." },
-  { icon: Database, step: "4", title: "Appointment Books to CRM", description: "Confirmed appointment lands in CDK/Reynolds automatically." },
-  { icon: Handshake, step: "5", title: "Your Team Closes", description: "Sales team gets hot leads, not cold call-backs." }
-];
-
-const campaignFeatures = [
-  {
-    icon: Tent,
-    title: "Event & Promotion Mode",
-    description: "Frame every conversation around your specific event: \"Our Tent Sale ends Sunday...\""
-  },
-  {
-    icon: Zap,
-    title: "22-Second Speed Architecture",
-    description: "Engineered for automotive where first contact decides the sale."
-  },
-  {
-    icon: Calendar,
-    title: "CRM Native Integration",
-    description: "Works with CDK, Reynolds, VinSolutions, DealerSocket, and more."
-  },
-  {
-    icon: Bell,
-    title: "Team Notification System",
-    description: "Sales managers get SMS/email alerts for booked appointments."
-  }
-];
-
-const proofPoints = [
-  {
-    icon: Zap,
-    title: "Speed Matters Most",
-    description: "Calling in 5 minutes vs. 5 seconds can mean a 10x difference in contact rate."
-  },
-  {
-    icon: Target,
-    title: "Built for Automotive",
-    description: "We understand trade-in questions, financing concerns, and inventory urgency."
-  },
-  {
-    icon: BarChart3,
-    title: "Measurable ROI",
-    description: "Every call is tracked. Every appointment measured. You see the exact ROI."
-  }
-];
-
-const integrations = [
-  "CDK", "Reynolds", "VinSolutions", "DealerSocket", 
-  "AutoTrader", "Cars.com", "Facebook Ads", "Google Ads"
 ];
 
 const departments = [
   {
     icon: Car,
     title: "Sales",
-    description: "Qualify buyers on budget, timeline, trade-in value, and financing. Book showroom appointments that actually show."
+    description: "Qualify buyers on budget, timeline, trade-in, and financing. Book showroom appointments that actually show."
   },
   {
     icon: Wrench,
-    title: "Service & Fixed Ops",
-    description: "Not just oil changes. Our AI handles complex repair inquiries—transmission, A/C, diagnostics—with deep mechanical awareness. It knows your shop hours, amenities, and booking logic, handling 100% of inbound service calls without an advisor."
+    title: "Service",
+    description: "Handle complex repair inquiries with deep mechanical awareness. Knows your shop hours, amenities, and booking logic."
   },
   {
     icon: FileText,
@@ -100,180 +48,119 @@ const departments = [
   }
 ];
 
-const knowledgeBaseFeatures = [
-  {
-    icon: Wifi,
-    title: "Smart Amenities Awareness",
-    description: "Knows if you have WiFi, coffee bar, shuttle service, or loaner vehicles available."
-  },
-  {
-    icon: Settings,
-    title: "Dynamic Skill Cloud",
-    description: "Instantly trained on your specific repair menu and capabilities."
-  },
-  {
-    icon: LineChart,
-    title: "Live RO Dashboard",
-    description: "Watch appointments fill your calendar and service drive in real-time."
-  }
-];
-
-const performanceMetrics = [
-  "22-second avg. response time",
-  "94% contact attempt rate",
-  "47% appointment rate on contacted leads",
-  "24/7/365 availability"
+const integrations = [
+  "CDK", "Reynolds", "VinSolutions", "DealerSocket", 
+  "AutoTrader", "Cars.com", "Facebook Ads", "Google Ads"
 ];
 
 export default function SolutionsDealerships() {
-  const [monthlyLeads, setMonthlyLeads] = useState(300);
-  const [showRate, setShowRate] = useState(15);
-
-  // Calculate ROI metrics
-  const voxarisShowRate = 47;
-  const currentAppointments = Math.round(monthlyLeads * (showRate / 100));
-  const voxarisAppointments = Math.round(monthlyLeads * (voxarisShowRate / 100));
-  const additionalAppointments = voxarisAppointments - currentAppointments;
-  const additionalRevenue = additionalAppointments * 1500;
-
   return (
     <Layout>
-      {/* Hero */}
-      <section className="section-padding bg-secondary/30">
+      {/* Hero - Clean White */}
+      <section className="bg-white pt-24 pb-16">
         <div className="container-wide">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="max-w-4xl"
+            className="max-w-3xl"
           >
-            <span className="inline-flex items-center gap-2 text-sm text-muted-foreground font-medium tracking-wide mb-4">
-              <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-              For Auto Dealerships
-            </span>
-            <h1 className="text-4xl lg:text-display-sm font-semibold text-foreground mb-6">
-              Stop Losing Car Buyers to Slow Response Times
+            <div className="flex items-center gap-3 mb-6">
+              <VIcon size="md" variant="gradient" />
+              <span className="eyebrow">Auto Dealerships</span>
+            </div>
+            
+            <h1 className="headline-xl text-ink mb-6">
+              Stop losing buyers to slow response times
             </h1>
-            <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-              Voxaris is the AI Sales Agent built specifically for automotive campaigns. We call every lead in <strong className="text-foreground">22 seconds</strong>—qualifying interest and booking confirmed appointments directly into your CRM.
+            
+            <p className="text-xl text-charcoal leading-relaxed mb-10">
+              Voxaris calls every lead in <strong className="text-ink">22 seconds</strong>—qualifying interest and booking confirmed appointments directly into your CRM.
             </p>
 
-            {/* Stats */}
-            <div className="flex flex-wrap gap-6 mb-8">
-              <div className="bg-card rounded-xl border border-border px-5 py-3">
-                <span className="text-foreground font-semibold">22-second</span>
-                <span className="text-muted-foreground text-sm ml-1">avg. response</span>
-              </div>
-              <div className="bg-card rounded-xl border border-border px-5 py-3">
-                <span className="text-foreground font-semibold">47%</span>
-                <span className="text-muted-foreground text-sm ml-1">appointment rate</span>
-              </div>
-              <div className="bg-card rounded-xl border border-border px-5 py-3">
-                <span className="text-foreground font-semibold">24/7/365</span>
-                <span className="text-muted-foreground text-sm ml-1">availability</span>
-              </div>
-            </div>
-
             <div className="flex flex-wrap gap-4">
-              <Button asChild variant="hero" size="lg">
+              <Button asChild size="lg" className="bg-ink hover:bg-charcoal text-white rounded-full px-8 h-14">
                 <Link to="/book-demo">
-                  Get Free Dealership Audit
+                  Get a Free Audit
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="lg">
-                <Link to="/demo">Watch 90-Second Demo</Link>
+              <Button asChild variant="outline" size="lg" className="rounded-full px-8 h-14 border-frost">
+                <Link to="/demo">Watch Demo</Link>
               </Button>
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* Pain Points */}
-      <section className="section-padding">
+      {/* Stats Row */}
+      <section className="bg-white pb-20">
         <div className="container-wide">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl lg:text-heading font-semibold text-foreground mb-4">
-              "Our Leads Die on Weekends"<br />
-              <span className="text-muted-foreground">Sound Familiar?</span>
-            </h2>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {painPoints.map((point, index) => (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {benefits.map((benefit, index) => (
               <motion.div
-                key={point.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-card rounded-2xl border border-border p-6"
-              >
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
-                  <point.icon className="h-6 w-6 text-primary" />
-                </div>
-                <h3 className="text-lg font-semibold text-foreground mb-2">
-                  {point.title}
-                </h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">
-                  {point.description}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works */}
-      <section className="section-padding bg-secondary/30">
-        <div className="container-wide">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl lg:text-heading font-semibold text-foreground mb-4">
-              How Voxaris Works for Your Dealership
-            </h2>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
-            {workflowSteps.map((item, index) => (
-              <motion.div
-                key={item.step}
+                key={benefit.label}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="relative text-center"
+                className="text-center p-8 rounded-2xl border border-frost"
               >
-                <div className="relative inline-flex items-center justify-center mb-6">
-                  <div className="w-16 h-16 rounded-2xl bg-card border border-border flex items-center justify-center shadow-sm">
-                    <item.icon className="h-7 w-7 text-foreground" />
-                  </div>
-                  <span className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-semibold flex items-center justify-center">
-                    {item.step}
-                  </span>
-                </div>
-                <h3 className="font-semibold text-foreground mb-2">{item.title}</h3>
-                <p className="text-sm text-muted-foreground">{item.description}</p>
+                <p className="text-4xl font-bold text-ink font-display mb-2">{benefit.stat}</p>
+                <p className="text-sm font-semibold text-ink uppercase tracking-wider mb-2">{benefit.label}</p>
+                <p className="text-sm text-slate">{benefit.description}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
+      {/* Problem Section */}
+      <section className="section-padding bg-white border-t border-frost">
+        <div className="container-wide">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <h2 className="headline-lg text-ink mb-6">
+                "Our leads die on weekends"
+              </h2>
+              <p className="text-lg text-charcoal mb-8">
+                Sound familiar? Every hour a lead waits, your chances of closing drop dramatically. And your BDC team can't be everywhere at once.
+              </p>
+              <ul className="space-y-4">
+                {painPoints.map((point) => (
+                  <li key={point} className="flex items-start gap-3">
+                    <CheckCircle2 className="w-5 h-5 text-ink mt-0.5 flex-shrink-0" />
+                    <span className="text-charcoal">{point}</span>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+            
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="bg-snow rounded-2xl p-10"
+            >
+              <p className="text-lg text-charcoal leading-relaxed">
+                <span className="text-ink font-semibold">Voxaris changes that.</span> Our AI Sales Agent contacts every lead instantly—nights, weekends, holidays. It qualifies for budget, timeline, trade-in, and financing, then books the appointment directly into your CRM.
+              </p>
+              <p className="text-lg text-charcoal leading-relaxed mt-6">
+                Your sales team shows up to a hot lead who's ready to buy. Not a cold callback.
+              </p>
+            </motion.div>
+          </div>
+        </div>
+      </section>
 
-      {/* Campaign Features */}
-      <section className="section-padding bg-primary text-primary-foreground">
+      {/* Departments */}
+      <section className="section-padding bg-white">
         <div className="container-wide">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -282,49 +169,11 @@ export default function SolutionsDealerships() {
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl lg:text-heading font-semibold mb-4">
-              Your Secret Weapon for Sales Events
+            <h2 className="headline-lg text-ink mb-4">
+              Handle every department
             </h2>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {campaignFeatures.map((feature, index) => (
-              <motion.div
-                key={feature.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-primary-foreground/5 rounded-2xl p-6"
-              >
-                <div className="w-12 h-12 rounded-xl bg-primary-foreground/10 flex items-center justify-center mb-4">
-                  <feature.icon className="h-6 w-6 text-primary-foreground" />
-                </div>
-                <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
-                <p className="text-primary-foreground/70 text-sm leading-relaxed">
-                  {feature.description}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Handle Every Department */}
-      <section className="section-padding">
-        <div className="container-wide">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl lg:text-heading font-semibold text-foreground mb-4">
-              Handle Every Department
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Stop losing revenue to voicemail. Voxaris answers 24/7/365, intelligently routing calls across your entire dealership.
+            <p className="text-lg text-charcoal max-w-2xl mx-auto">
+              Stop losing revenue to voicemail. Voxaris answers 24/7, intelligently routing across your entire dealership.
             </p>
           </motion.div>
 
@@ -334,17 +183,17 @@ export default function SolutionsDealerships() {
                 key={dept.title}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
+                viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-card rounded-2xl border border-border p-8"
+                className="p-8 rounded-2xl border border-frost hover:border-charcoal/20 transition-colors"
               >
-                <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">
-                  <dept.icon className="h-7 w-7 text-primary" />
+                <div className="w-12 h-12 rounded-xl bg-snow flex items-center justify-center mb-6">
+                  <dept.icon className="h-6 w-6 text-ink" />
                 </div>
-                <h3 className="text-xl font-semibold text-foreground mb-3">
+                <h3 className="text-xl font-semibold text-ink mb-3">
                   {dept.title}
                 </h3>
-                <p className="text-muted-foreground leading-relaxed">
+                <p className="text-charcoal leading-relaxed">
                   {dept.description}
                 </p>
               </motion.div>
@@ -353,53 +202,8 @@ export default function SolutionsDealerships() {
         </div>
       </section>
 
-      {/* The Knowledge Base - New Feature */}
-      <section className="section-padding bg-secondary/30">
-        <div className="container-wide">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
-          >
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
-              <Sparkles className="h-4 w-4" />
-              New Capability
-            </span>
-            <h2 className="text-3xl lg:text-heading font-semibold text-foreground mb-4">
-              The Deep Service Brain
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              More than an answering service. Our AI is trained on your specific dealership operations.
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {knowledgeBaseFeatures.map((feature, index) => (
-              <motion.div
-                key={feature.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-card rounded-2xl border border-border p-6"
-              >
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
-                  <feature.icon className="h-6 w-6 text-primary" />
-                </div>
-                <h3 className="text-lg font-semibold text-foreground mb-2">{feature.title}</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">
-                  {feature.description}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Integrations */}
-      <section className="section-padding">
+      <section className="section-padding bg-snow">
         <div className="container-wide">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -408,9 +212,12 @@ export default function SolutionsDealerships() {
             transition={{ duration: 0.6 }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl lg:text-heading font-semibold text-foreground mb-4">
-              Plays Nice With Your Stack
+            <h2 className="headline-lg text-ink mb-4">
+              Works with your stack
             </h2>
+            <p className="text-charcoal">
+              We connect in hours, not weeks. No IT headache.
+            </p>
           </motion.div>
 
           <motion.div
@@ -418,204 +225,54 @@ export default function SolutionsDealerships() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="flex flex-wrap justify-center gap-4 mb-8"
+            className="flex flex-wrap justify-center gap-4"
           >
             {integrations.map((integration) => (
               <span
                 key={integration}
-                className="px-5 py-3 bg-card rounded-xl border border-border text-foreground font-medium"
+                className="px-5 py-3 bg-white rounded-full border border-frost text-ink font-medium"
               >
                 {integration}
               </span>
             ))}
           </motion.div>
-
-          <p className="text-center text-muted-foreground">
-            We connect in hours, not weeks. No IT headache.
-          </p>
-        </div>
-      </section>
-
-      {/* ROI Calculator */}
-      <section className="section-padding bg-secondary/30">
-        <div className="container-wide">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="max-w-3xl mx-auto"
-          >
-            <div className="text-center mb-12">
-              <h2 className="text-3xl lg:text-heading font-semibold text-foreground mb-4">
-                How Many Cars Are You Losing?
-              </h2>
-            </div>
-
-            <div className="bg-card rounded-2xl border border-border p-8">
-              <div className="space-y-8 mb-8">
-                <div>
-                  <div className="flex justify-between mb-2">
-                    <label className="text-sm font-medium text-foreground">Monthly Leads:</label>
-                    <span className="text-sm font-semibold text-foreground">{monthlyLeads}</span>
-                  </div>
-                  <input
-                    type="range"
-                    min="50"
-                    max="2000"
-                    step="50"
-                    value={monthlyLeads}
-                    onChange={(e) => setMonthlyLeads(parseInt(e.target.value))}
-                    className="w-full h-2 bg-secondary rounded-lg appearance-none cursor-pointer accent-primary"
-                  />
-                </div>
-
-                <div>
-                  <div className="flex justify-between mb-2">
-                    <label className="text-sm font-medium text-foreground">Current Show Rate:</label>
-                    <span className="text-sm font-semibold text-foreground">{showRate}%</span>
-                  </div>
-                  <input
-                    type="range"
-                    min="5"
-                    max="50"
-                    step="1"
-                    value={showRate}
-                    onChange={(e) => setShowRate(parseInt(e.target.value))}
-                    className="w-full h-2 bg-secondary rounded-lg appearance-none cursor-pointer accent-primary"
-                  />
-                </div>
-              </div>
-
-              <div className="bg-primary text-primary-foreground rounded-xl p-6">
-                <h3 className="font-semibold mb-4">With Voxaris:</h3>
-                <div className="grid grid-cols-2 gap-6">
-                  <div>
-                    <div className="text-3xl font-bold">+{additionalAppointments}</div>
-                    <div className="text-sm text-primary-foreground/70">More appointments/month</div>
-                  </div>
-                  <div>
-                    <div className="text-3xl font-bold">+${additionalRevenue.toLocaleString()}</div>
-                    <div className="text-sm text-primary-foreground/70">Potential revenue/month*</div>
-                  </div>
-                </div>
-              </div>
-
-              <p className="text-xs text-muted-foreground mt-4 text-center">
-                *Based on $1,500 average front-end profit
-              </p>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Why Dealers Are Switching */}
-      <section className="section-padding bg-secondary/30">
-        <div className="container-wide">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl lg:text-heading font-semibold text-foreground">
-              Why Dealers Are Switching
-            </h2>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-            {proofPoints.map((point, index) => (
-              <motion.div
-                key={point.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="text-center"
-              >
-                <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                  <point.icon className="h-7 w-7 text-primary" />
-                </div>
-                <h3 className="text-lg font-semibold text-foreground mb-2">{point.title}</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">{point.description}</p>
-              </motion.div>
-            ))}
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="bg-card rounded-2xl border border-border p-8 max-w-2xl mx-auto"
-          >
-            <h3 className="font-semibold text-foreground mb-4 text-center">Our Performance Metrics:</h3>
-            <div className="grid grid-cols-2 gap-4">
-              {performanceMetrics.map((metric) => (
-                <div key={metric} className="bg-secondary/50 rounded-lg px-4 py-3 text-center">
-                  <span className="text-sm text-foreground">{metric}</span>
-                </div>
-              ))}
-            </div>
-          </motion.div>
         </div>
       </section>
 
       {/* Final CTA */}
-      <section className="section-padding bg-primary text-primary-foreground">
+      <section className="section-padding-lg section-dark">
         <div className="container-wide">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-center mb-12"
+            className="text-center"
           >
-            <h2 className="text-3xl lg:text-heading font-semibold mb-4">
-              Ready to Fill Your Showroom Floor?
+            <div className="flex justify-center mb-8">
+              <VIcon size="xl" variant="outline" className="border-white/30 text-white" />
+            </div>
+            
+            <h2 className="headline-xl text-white mb-6">
+              Ready to fill your showroom?
             </h2>
-            <p className="text-lg text-primary-foreground/70 max-w-2xl mx-auto">
-              Stop losing weekend leads and event opportunities. See how Voxaris works on YOUR dealership's leads.
+            
+            <p className="text-lg text-silver max-w-xl mx-auto mb-10">
+              See how Voxaris works on YOUR dealership's leads. Free audit, no commitment.
             </p>
-          </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="bg-primary-foreground/5 rounded-2xl p-8"
-            >
-              <h3 className="text-xl font-semibold mb-4">Option 1: Free Lead Audit</h3>
-              <p className="text-primary-foreground/70 text-sm mb-6 leading-relaxed">
-                Send us your last 30 days of dead leads. We'll show you which ones we would have contacted and how many appointments you might have booked.
-              </p>
-              <Button asChild variant="secondary" size="lg" className="w-full">
+            <div className="flex flex-wrap justify-center gap-4">
+              <Button asChild size="lg" className="bg-white hover:bg-snow text-ink font-semibold rounded-full px-10 h-16 text-lg">
                 <Link to="/book-demo">
-                  Request Free Audit
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  Get Free Audit
+                  <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="bg-primary-foreground/5 rounded-2xl p-8"
-            >
-              <h3 className="text-xl font-semibold mb-4">Option 2: Live Demo</h3>
-              <p className="text-primary-foreground/70 text-sm mb-6 leading-relaxed">
-                20-minute walkthrough showing our AI contacting real leads and booking appointments into a CRM just like yours.
-              </p>
-              <Button asChild variant="outline" size="lg" className="w-full border-primary-foreground/20 hover:bg-primary-foreground/10">
-                <Link to="/demo">Schedule Live Demo</Link>
+              <Button asChild variant="outline" size="lg" className="rounded-full px-10 h-16 text-lg border-white/20 text-white hover:bg-white/10">
+                <Link to="/demo">Watch Demo</Link>
               </Button>
-            </motion.div>
-          </div>
+            </div>
+          </motion.div>
         </div>
       </section>
     </Layout>
