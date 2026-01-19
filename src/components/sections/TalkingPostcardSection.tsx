@@ -23,6 +23,11 @@ const steps = [
     title: "Book",
     description: "Appointment confirmed automatically",
   },
+  {
+    icon: Mail,
+    title: "Confirm",
+    description: "Follow-up sent with details",
+  },
 ];
 
 export default function TalkingPostcardSection() {
@@ -57,7 +62,7 @@ export default function TalkingPostcardSection() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="mb-16"
         >
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 relative">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-6 relative">
             {/* Connection line (desktop) */}
             <div className="hidden md:block absolute top-[50px] left-[12%] right-[12%] h-[2px] bg-frost" />
             
