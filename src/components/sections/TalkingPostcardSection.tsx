@@ -25,8 +25,8 @@ const steps = [
   },
   {
     icon: Mail,
-    title: "Confirm",
-    description: "Automated follow-up sent",
+    title: "Notify",
+    description: "Real-time alert to your team",
   },
 ];
 
