@@ -79,17 +79,12 @@ export default function SolutionsDealerships() {
               Four products that cover every touchpoint: <strong className="text-ink">Inbound</strong> and <strong className="text-ink">Outbound</strong> voice AI, <strong className="text-ink">face-to-face video AI</strong>, and <strong className="text-ink">intelligent websites</strong>.
             </p>
 
-            <div className="flex flex-wrap gap-4">
-              <Button asChild size="lg" className="bg-ink hover:bg-charcoal text-white rounded-full px-8 h-14">
-                <Link to="/book-demo">
-                  Get a Free Audit
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="rounded-full px-8 h-14 border-frost">
-                <Link to="/demo">Watch Demo</Link>
-              </Button>
-            </div>
+            <Button asChild size="lg" className="bg-ink hover:bg-charcoal text-white rounded-full px-8 h-14">
+              <Link to="/book-demo">
+                Book a Demo
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
           </motion.div>
         </div>
       </section>
@@ -266,20 +261,15 @@ export default function SolutionsDealerships() {
             <h2 className="headline-xl text-white mb-6">Ready to fill your showroom?</h2>
             
             <p className="text-lg text-silver max-w-xl mx-auto mb-10">
-              See how Voxaris works on YOUR dealership's leads. Free audit, no commitment.
+              See how Voxaris works on YOUR dealership's leads. No commitment.
             </p>
 
-            <div className="flex flex-wrap justify-center gap-4">
-              <Button asChild size="lg" className="bg-white hover:bg-snow text-ink font-semibold rounded-full px-10 h-16 text-lg">
-                <Link to="/book-demo">
-                  Get Free Audit
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="rounded-full px-10 h-16 text-lg border-white/20 text-white hover:bg-white/10">
-                <Link to="/demo">Watch Demo</Link>
-              </Button>
-            </div>
+            <Button asChild size="lg" className="bg-white hover:bg-snow text-ink font-semibold rounded-full px-10 h-16 text-lg">
+              <Link to="/book-demo">
+                Book a Demo
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
           </motion.div>
         </div>
       </section>
