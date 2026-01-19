@@ -234,7 +234,7 @@ export default function SolutionsDealerships() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="flex flex-wrap justify-center gap-4"
+            className="flex flex-wrap justify-center gap-4 mb-8"
           >
             {integrations.map((integration) => (
               <span key={integration} className="px-5 py-3 bg-white rounded-full border border-frost text-ink font-medium">
@@ -242,6 +242,10 @@ export default function SolutionsDealerships() {
               </span>
             ))}
           </motion.div>
+
+          <p className="text-center text-charcoal">
+            Don't see yours? <Link to="/book-demo" className="text-ink font-medium underline underline-offset-2 hover:no-underline">Let us know</Link> — we'll make it work.
+          </p>
         </div>
       </section>
 
