@@ -1,19 +1,44 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence, useScroll } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Video, Phone, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import voxarisLogo from "@/assets/voxaris-logo-dark.png";
 
 const navLinks = [
   { name: "Technology", href: "/technology" },
-  { name: "Industries", href: "/solutions/dealerships" },
+  { name: "Industries", href: "/solutions/dealerships", hasDropdown: true },
   { name: "Demo", href: "/demo" },
   { name: "Contact", href: "/book-demo" },
 ];
 
+const products = [
+  {
+    name: "V·CVI",
+    tagline: "Video AI",
+    description: "Face-to-face AI that sees and responds to you",
+    icon: Video,
+    href: "/technology"
+  },
+  {
+    name: "V·VOICE",
+    tagline: "Voice AI", 
+    description: "Instant phone calls that qualify and book",
+    icon: Phone,
+    href: "/solutions/dealerships"
+  }
+];
+
+const industries = [
+  { name: "Auto Dealerships", href: "/solutions/dealerships" },
+  { name: "Law Firms", href: "/solutions/law-firms" },
+  { name: "Contractors", href: "/solutions/contractors" },
+  { name: "Agencies", href: "/solutions/agencies" },
+];
+
 export default function Navigation() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [industriesOpen, setIndustriesOpen] = useState(false);
   const location = useLocation();
   
   const { scrollY } = useScroll();
@@ -24,6 +49,15 @@ export default function Navigation() {
       setIsScrolled(latest > 20);
     });
   }, [scrollY]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClick = () => setIndustriesOpen(false);
+    if (industriesOpen) {
+      document.addEventListener('click', handleClick);
+      return () => document.removeEventListener('click', handleClick);
+    }
+  }, [industriesOpen]);
 
   return (
     <>
@@ -45,17 +79,92 @@ export default function Navigation() {
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center gap-8">
               {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  to={link.href}
-                  className={`text-sm font-medium transition-colors ${
-                    location.pathname === link.href
-                      ? "text-ink"
-                      : "text-slate hover:text-ink"
-                  }`}
-                >
-                  {link.name}
-                </Link>
+                link.hasDropdown ? (
+                  <div key={link.name} className="relative">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIndustriesOpen(!industriesOpen);
+                      }}
+                      className={`flex items-center gap-1 text-sm font-medium transition-colors ${
+                        location.pathname.includes('/solutions')
+                          ? "text-ink"
+                          : "text-slate hover:text-ink"
+                      }`}
+                    >
+                      {link.name}
+                      <ChevronDown className={`w-4 h-4 transition-transform ${industriesOpen ? 'rotate-180' : ''}`} />
+                    </button>
+                    
+                    <AnimatePresence>
+                      {industriesOpen && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 10 }}
+                          transition={{ duration: 0.15 }}
+                          className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-[420px] bg-white rounded-2xl border border-frost shadow-xl p-6"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          {/* Products */}
+                          <div className="mb-6">
+                            <p className="text-xs font-semibold text-slate uppercase tracking-wider mb-3">Products</p>
+                            <div className="grid grid-cols-2 gap-3">
+                              {products.map((product) => (
+                                <Link
+                                  key={product.name}
+                                  to={product.href}
+                                  onClick={() => setIndustriesOpen(false)}
+                                  className="p-4 rounded-xl border border-frost hover:border-charcoal/20 hover:bg-snow transition-all group"
+                                >
+                                  <div className="flex items-center gap-3 mb-2">
+                                    <div className="w-8 h-8 rounded-lg bg-ink flex items-center justify-center">
+                                      <product.icon className="w-4 h-4 text-white" />
+                                    </div>
+                                    <div>
+                                      <p className="font-semibold text-ink text-sm">{product.name}</p>
+                                      <p className="text-xs text-slate">{product.tagline}</p>
+                                    </div>
+                                  </div>
+                                  <p className="text-xs text-charcoal">{product.description}</p>
+                                </Link>
+                              ))}
+                            </div>
+                          </div>
+                          
+                          {/* Industries */}
+                          <div>
+                            <p className="text-xs font-semibold text-slate uppercase tracking-wider mb-3">Industries</p>
+                            <div className="grid grid-cols-2 gap-2">
+                              {industries.map((industry) => (
+                                <Link
+                                  key={industry.name}
+                                  to={industry.href}
+                                  onClick={() => setIndustriesOpen(false)}
+                                  className="px-3 py-2 rounded-lg text-sm text-charcoal hover:text-ink hover:bg-snow transition-all"
+                                >
+                                  {industry.name}
+                                </Link>
+                              ))}
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                ) : (
+                  <Link
+                    key={link.name}
+                    to={link.href}
+                    className={`text-sm font-medium transition-colors ${
+                      location.pathname === link.href
+                        ? "text-ink"
+                        : "text-slate hover:text-ink"
+                    }`}
+                  >
+                    {link.name}
+                  </Link>
+                )
               ))}
             </div>
 
@@ -84,7 +193,7 @@ export default function Navigation() {
         </nav>
       </header>
 
-      {/* Mobile Menu - Outside header for proper stacking */}
+      {/* Mobile Menu */}
       <AnimatePresence>
         {mobileOpen && (
           <>
@@ -104,19 +213,73 @@ export default function Navigation() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
-              className="fixed top-16 left-0 right-0 z-50 lg:hidden bg-white border-b border-frost shadow-lg"
+              className="fixed top-16 left-0 right-0 z-50 lg:hidden bg-white border-b border-frost shadow-lg max-h-[80vh] overflow-y-auto"
             >
-              <div className="container-editorial py-6 space-y-4 px-4">
-                {navLinks.map((link) => (
+              <div className="container-editorial py-6 space-y-6 px-4">
+                {/* Products Section */}
+                <div>
+                  <p className="text-xs font-semibold text-slate uppercase tracking-wider mb-3">Products</p>
+                  <div className="space-y-3">
+                    {products.map((product) => (
+                      <Link
+                        key={product.name}
+                        to={product.href}
+                        onClick={() => setMobileOpen(false)}
+                        className="flex items-center gap-4 p-4 rounded-xl border border-frost"
+                      >
+                        <div className="w-10 h-10 rounded-lg bg-ink flex items-center justify-center flex-shrink-0">
+                          <product.icon className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <p className="font-semibold text-ink">{product.name} <span className="font-normal text-slate">— {product.tagline}</span></p>
+                          <p className="text-sm text-charcoal">{product.description}</p>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Industries Section */}
+                <div>
+                  <p className="text-xs font-semibold text-slate uppercase tracking-wider mb-3">Industries</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {industries.map((industry) => (
+                      <Link
+                        key={industry.name}
+                        to={industry.href}
+                        onClick={() => setMobileOpen(false)}
+                        className="px-4 py-3 rounded-lg text-sm text-charcoal hover:text-ink hover:bg-snow transition-all border border-frost"
+                      >
+                        {industry.name}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Other Links */}
+                <div className="space-y-2 pt-4 border-t border-frost">
                   <Link
-                    key={link.name}
-                    to={link.href}
-                    className="block text-base font-medium text-slate hover:text-ink transition-colors py-3 border-b border-frost last:border-0"
+                    to="/technology"
+                    className="block text-base font-medium text-charcoal hover:text-ink transition-colors py-2"
                     onClick={() => setMobileOpen(false)}
                   >
-                    {link.name}
+                    Technology
                   </Link>
-                ))}
+                  <Link
+                    to="/demo"
+                    className="block text-base font-medium text-charcoal hover:text-ink transition-colors py-2"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    Demo
+                  </Link>
+                  <Link
+                    to="/book-demo"
+                    className="block text-base font-medium text-charcoal hover:text-ink transition-colors py-2"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    Contact
+                  </Link>
+                </div>
                 
                 <div className="pt-4">
                   <Link to="/demo" onClick={() => setMobileOpen(false)}>

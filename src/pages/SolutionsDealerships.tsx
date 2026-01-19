@@ -1,62 +1,47 @@
 import { motion } from "framer-motion";
 import Layout from "@/components/layout/Layout";
-import { Phone, Calendar, Clock, Users, Zap, ArrowRight, CheckCircle2, Car, Wrench, FileText } from "lucide-react";
+import { Phone, Video, ArrowRight, CheckCircle2, Car, Wrench, FileText } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import VIcon from "@/components/ui/VIcon";
 
-const painPoints = [
-  "Weekend leads sit cold until Monday",
-  "BDC teams burn out on repetitive calls",
-  "Slow response times lose hot buyers",
-  "Event leads overwhelm your team"
+const products = [
+  {
+    icon: Video,
+    name: "V·CVI",
+    tagline: "Conversational Video Intelligence",
+    description: "Face-to-face AI your customers can see and talk to. Perfect for showroom kiosks, website embeds, and QR codes on mailers. It reads emotions, responds naturally, and builds trust like a real person.",
+    features: ["Sees and responds to facial cues", "Embedded on your website or kiosk", "QR code activated from mailers"],
+    cta: "Best for: High-touch customer experiences"
+  },
+  {
+    icon: Phone,
+    name: "V·VOICE",
+    tagline: "Voice AI Sales Agent",
+    description: "Instant phone calls that contact every lead in 22 seconds. Qualifies for budget, timeline, and trade-in, then books appointments directly into your CRM. Works 24/7/365.",
+    features: ["Calls leads in 22 seconds", "Qualifies and books automatically", "Integrates with your CRM"],
+    cta: "Best for: High-volume lead response"
+  }
 ];
 
 const benefits = [
-  {
-    stat: "22s",
-    label: "Response Time",
-    description: "We call while interest is hottest"
-  },
-  {
-    stat: "47%",
-    label: "Appointment Rate",
-    description: "On contacted leads"
-  },
-  {
-    stat: "24/7",
-    label: "Availability",
-    description: "Never miss a lead again"
-  }
+  { stat: "22s", label: "Response Time", description: "We call while interest is hottest" },
+  { stat: "47%", label: "Appointment Rate", description: "On contacted leads" },
+  { stat: "24/7", label: "Availability", description: "Never miss a lead again" }
 ];
 
 const departments = [
-  {
-    icon: Car,
-    title: "Sales",
-    description: "Qualify buyers on budget, timeline, trade-in, and financing. Book showroom appointments that actually show."
-  },
-  {
-    icon: Wrench,
-    title: "Service",
-    description: "Handle complex repair inquiries with deep mechanical awareness. Knows your shop hours, amenities, and booking logic."
-  },
-  {
-    icon: FileText,
-    title: "Parts",
-    description: "Route parts inquiries to the right counter, check availability, and schedule pickup or delivery."
-  }
+  { icon: Car, title: "Sales", description: "Qualify buyers on budget, timeline, trade-in, and financing. Book showroom appointments that actually show." },
+  { icon: Wrench, title: "Service", description: "Handle complex repair inquiries with deep mechanical awareness. Knows your shop hours, amenities, and booking logic." },
+  { icon: FileText, title: "Parts", description: "Route parts inquiries to the right counter, check availability, and schedule pickup or delivery." }
 ];
 
-const integrations = [
-  "CDK", "Reynolds", "VinSolutions", "DealerSocket", 
-  "AutoTrader", "Cars.com", "Facebook Ads", "Google Ads"
-];
+const integrations = ["CDK", "Reynolds", "VinSolutions", "DealerSocket", "AutoTrader", "Cars.com", "Facebook Ads", "Google Ads"];
 
 export default function SolutionsDealerships() {
   return (
     <Layout>
-      {/* Hero - Clean White */}
+      {/* Hero */}
       <section className="bg-white pt-24 pb-16">
         <div className="container-wide">
           <motion.div
@@ -75,7 +60,7 @@ export default function SolutionsDealerships() {
             </h1>
             
             <p className="text-xl text-charcoal leading-relaxed mb-10">
-              Voxaris calls every lead in <strong className="text-ink">22 seconds</strong>—qualifying interest and booking confirmed appointments directly into your CRM.
+              Two AI products that work together: <strong className="text-ink">Video AI</strong> for face-to-face engagement and <strong className="text-ink">Voice AI</strong> for instant lead response.
             </p>
 
             <div className="flex flex-wrap gap-4">
@@ -93,8 +78,68 @@ export default function SolutionsDealerships() {
         </div>
       </section>
 
+      {/* Product Differentiation - THE KEY SECTION */}
+      <section className="bg-snow py-20">
+        <div className="container-wide">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12"
+          >
+            <h2 className="headline-lg text-ink mb-4">
+              Two products. One goal.
+            </h2>
+            <p className="text-lg text-charcoal max-w-2xl mx-auto">
+              Voxaris offers two distinct AI products. Choose one or use both together.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {products.map((product, index) => (
+              <motion.div
+                key={product.name}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="bg-white rounded-2xl border border-frost p-8 hover:border-charcoal/20 transition-colors"
+              >
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-14 h-14 rounded-2xl bg-ink flex items-center justify-center">
+                    <product.icon className="w-7 h-7 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-ink">{product.name}</h3>
+                    <p className="text-sm text-charcoal">{product.tagline}</p>
+                  </div>
+                </div>
+                
+                <p className="text-charcoal leading-relaxed mb-6">
+                  {product.description}
+                </p>
+                
+                <ul className="space-y-3 mb-6">
+                  {product.features.map((feature) => (
+                    <li key={feature} className="flex items-center gap-3">
+                      <CheckCircle2 className="w-5 h-5 text-ink flex-shrink-0" />
+                      <span className="text-charcoal">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                
+                <p className="text-sm font-semibold text-ink bg-snow rounded-lg px-4 py-3">
+                  {product.cta}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Stats Row */}
-      <section className="bg-white pb-20">
+      <section className="bg-white py-20">
         <div className="container-wide">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {benefits.map((benefit, index) => (
@@ -115,52 +160,8 @@ export default function SolutionsDealerships() {
         </div>
       </section>
 
-      {/* Problem Section */}
-      <section className="section-padding bg-white border-t border-frost">
-        <div className="container-wide">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              <h2 className="headline-lg text-ink mb-6">
-                "Our leads die on weekends"
-              </h2>
-              <p className="text-lg text-charcoal mb-8">
-                Sound familiar? Every hour a lead waits, your chances of closing drop dramatically. And your BDC team can't be everywhere at once.
-              </p>
-              <ul className="space-y-4">
-                {painPoints.map((point) => (
-                  <li key={point} className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-ink mt-0.5 flex-shrink-0" />
-                    <span className="text-charcoal">{point}</span>
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="bg-snow rounded-2xl p-10"
-            >
-              <p className="text-lg text-charcoal leading-relaxed">
-                <span className="text-ink font-semibold">Voxaris changes that.</span> Our AI Sales Agent contacts every lead instantly—nights, weekends, holidays. It qualifies for budget, timeline, trade-in, and financing, then books the appointment directly into your CRM.
-              </p>
-              <p className="text-lg text-charcoal leading-relaxed mt-6">
-                Your sales team shows up to a hot lead who's ready to buy. Not a cold callback.
-              </p>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
       {/* Departments */}
-      <section className="section-padding bg-white">
+      <section className="section-padding bg-white border-t border-frost">
         <div className="container-wide">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -190,12 +191,8 @@ export default function SolutionsDealerships() {
                 <div className="w-12 h-12 rounded-xl bg-snow flex items-center justify-center mb-6">
                   <dept.icon className="h-6 w-6 text-ink" />
                 </div>
-                <h3 className="text-xl font-semibold text-ink mb-3">
-                  {dept.title}
-                </h3>
-                <p className="text-charcoal leading-relaxed">
-                  {dept.description}
-                </p>
+                <h3 className="text-xl font-semibold text-ink mb-3">{dept.title}</h3>
+                <p className="text-charcoal leading-relaxed">{dept.description}</p>
               </motion.div>
             ))}
           </div>
@@ -212,12 +209,8 @@ export default function SolutionsDealerships() {
             transition={{ duration: 0.6 }}
             className="text-center mb-12"
           >
-            <h2 className="headline-lg text-ink mb-4">
-              Works with your stack
-            </h2>
-            <p className="text-charcoal">
-              We connect in hours, not weeks. No IT headache.
-            </p>
+            <h2 className="headline-lg text-ink mb-4">Works with your stack</h2>
+            <p className="text-charcoal">We connect in hours, not weeks. No IT headache.</p>
           </motion.div>
 
           <motion.div
@@ -228,10 +221,7 @@ export default function SolutionsDealerships() {
             className="flex flex-wrap justify-center gap-4"
           >
             {integrations.map((integration) => (
-              <span
-                key={integration}
-                className="px-5 py-3 bg-white rounded-full border border-frost text-ink font-medium"
-              >
+              <span key={integration} className="px-5 py-3 bg-white rounded-full border border-frost text-ink font-medium">
                 {integration}
               </span>
             ))}
@@ -253,9 +243,7 @@ export default function SolutionsDealerships() {
               <VIcon size="xl" variant="outline" className="border-white/30 text-white" />
             </div>
             
-            <h2 className="headline-xl text-white mb-6">
-              Ready to fill your showroom?
-            </h2>
+            <h2 className="headline-xl text-white mb-6">Ready to fill your showroom?</h2>
             
             <p className="text-lg text-silver max-w-xl mx-auto mb-10">
               See how Voxaris works on YOUR dealership's leads. Free audit, no commitment.
