@@ -1,26 +1,42 @@
 import { motion } from "framer-motion";
 import Layout from "@/components/layout/Layout";
-import { Phone, Video, ArrowRight, CheckCircle2, Car, Wrench, FileText } from "lucide-react";
+import { Phone, PhoneOutgoing, PhoneIncoming, Video, Globe, ArrowRight, CheckCircle2, Car, Wrench, FileText } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import VIcon from "@/components/ui/VIcon";
 
 const products = [
   {
+    icon: PhoneIncoming,
+    name: "V·INBOUND",
+    tagline: "Inbound Voice AI",
+    description: "Answers every call instantly. Handles inquiries, checks real-time DMS inventory, and books appointments on the spot. No hold times, no missed calls.",
+    features: ["Real-time DMS inventory check", "Instant appointment booking", "24/7 call handling"],
+    cta: "Best for: Service scheduling, sales inquiries"
+  },
+  {
+    icon: PhoneOutgoing,
+    name: "V·OUTBOUND",
+    tagline: "Outbound Voice AI",
+    description: "Proactively calls your customers for recalls, service reminders, and follow-ups. 'Do you have a blue Altima on the lot?' — handled automatically.",
+    features: ["Recall & service campaigns", "Lead follow-up in <5 seconds", "Inventory-specific requests"],
+    cta: "Best for: Recalls, service reminders, lead response"
+  },
+  {
     icon: Video,
     name: "V·CVI",
     tagline: "Conversational Video Intelligence",
-    description: "Face-to-face AI your customers can see and talk to. Perfect for showroom kiosks, website embeds, and QR codes on mailers. It reads emotions, responds naturally, and builds trust like a real person.",
-    features: ["Sees and responds to facial cues", "Embedded on your website or kiosk", "QR code activated from mailers"],
-    cta: "Best for: High-touch customer experiences"
+    description: "Face-to-face AI your customers can see and talk to. Perfect for showroom kiosks, website embeds, and QR codes on mailers. Reads emotions and builds trust.",
+    features: ["Sees and responds to facial cues", "Kiosk & website embedded", "QR code activated"],
+    cta: "Best for: High-touch showroom experience"
   },
   {
-    icon: Phone,
-    name: "V·VOICE",
-    tagline: "Voice AI Sales Agent",
-    description: "Instant phone calls that contact every lead in under 5 seconds. Qualifies for budget, timeline, and trade-in, then books appointments directly into your CRM. Works 24/7/365.",
-    features: ["Calls leads in <5 seconds", "Qualifies and books automatically", "Integrates with your CRM"],
-    cta: "Best for: High-volume lead response"
+    icon: Globe,
+    name: "V·WEB",
+    tagline: "AI-Powered Website",
+    description: "Your website becomes an active sales agent. Embedded video widgets, real-time inventory integration, and intelligent lead capture that works 24/7.",
+    features: ["Living showroom experience", "Real-time inventory display", "Intelligent lead capture"],
+    cta: "Best for: Website conversion optimization"
   }
 ];
 
@@ -56,11 +72,11 @@ export default function SolutionsDealerships() {
             </div>
             
             <h1 className="headline-xl text-ink mb-6">
-              Stop losing buyers to slow response times
+              The complete AI solution for auto dealerships
             </h1>
             
             <p className="text-xl text-charcoal leading-relaxed mb-10">
-              Two AI products that work together: <strong className="text-ink">Video AI</strong> for face-to-face engagement and <strong className="text-ink">Voice AI</strong> for instant lead response.
+              Four products that cover every touchpoint: <strong className="text-ink">Inbound</strong> and <strong className="text-ink">Outbound</strong> voice AI, <strong className="text-ink">face-to-face video AI</strong>, and <strong className="text-ink">intelligent websites</strong>.
             </p>
 
             <div className="flex flex-wrap gap-4">
@@ -89,14 +105,14 @@ export default function SolutionsDealerships() {
             className="text-center mb-12"
           >
             <h2 className="headline-lg text-ink mb-4">
-              Two products. One goal.
+              Four products. Complete coverage.
             </h2>
             <p className="text-lg text-charcoal max-w-2xl mx-auto">
-              Voxaris offers two distinct AI products. Choose one or use both together.
+              Every customer touchpoint handled by AI that works 24/7.
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {products.map((product, index) => (
               <motion.div
                 key={product.name}
