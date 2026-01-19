@@ -51,18 +51,18 @@ export default function HeroSection() {
   };
 
   return (
-    <section className="min-h-screen flex flex-col justify-center bg-white">
-      <div className="container-hero py-16 lg:py-20">
-        {/* Two Column Layout */}
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+    <section className="min-h-screen flex flex-col justify-center bg-white pt-20">
+      <div className="container-hero py-12 md:py-16 lg:py-20">
+        {/* Two Column Layout - side by side on md+ screens */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 lg:gap-20 items-center">
           {/* Left Column - CVI Video Demo */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
-            className="order-1 lg:order-1"
+            className="w-full"
           >
-            <div className="video-frame aspect-[4/3] lg:aspect-video relative shadow-xl overflow-hidden">
+            <div className="video-frame aspect-[4/3] md:aspect-video relative shadow-xl overflow-hidden rounded-2xl">
               <AnimatePresence mode="wait">
                 {isInCall && conversationUrl ? (
                   <motion.div
@@ -124,7 +124,7 @@ export default function HeroSection() {
           </motion.div>
 
           {/* Right Column - Content */}
-          <div className="order-2 lg:order-2">
+          <div className="w-full">
             {/* Eyebrow */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
