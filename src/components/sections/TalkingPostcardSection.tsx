@@ -105,7 +105,7 @@ export default function TalkingPostcardSection() {
         >
           <div className="grid grid-cols-3 gap-6 text-center">
             <div>
-              <p className="text-2xl font-bold text-ink font-display">10x</p>
+              <p className="text-2xl font-bold text-ink font-display">100x</p>
               <p className="text-sm text-slate">vs traditional direct mail</p>
             </div>
             <div>
