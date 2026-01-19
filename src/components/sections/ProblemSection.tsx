@@ -2,16 +2,16 @@ import { motion } from "framer-motion";
 
 const painPoints = [
   {
-    main: "They hear, but can't see.",
-    supporting: "Voice AI is blind to body language, facial expressions, and visual cues."
+    main: "It can't see you're confused.",
+    supporting: "You're squinting at the screen, but the AI just keeps talking."
   },
   {
-    main: "They respond, but can't react.",
-    supporting: "Scripted responses can't adapt to confusion, frustration, or interest."
+    main: "It can't tell you're frustrated.",
+    supporting: "You've repeated yourself three times. It doesn't notice."
   },
   {
-    main: "They answer, but can't understand.",
-    supporting: "Without perception, conversation becomes transaction."
+    main: "It can't read the room.",
+    supporting: "You wanted a conversation. You got a phone tree with better grammar."
   }
 ];
 
