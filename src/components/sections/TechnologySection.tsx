@@ -9,7 +9,7 @@ const capabilities = [
     subtitle: "You'd never know it's AI",
     description: "Facial expressions, natural movements, lips that actually match the words. It looks like a video call with a real person.",
     icon: Sparkles,
-    stat: "500ms",
+    stat: "<500ms",
     statLabel: "response time",
   },
   {
