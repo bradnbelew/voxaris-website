@@ -1,10 +1,11 @@
 import { motion } from "framer-motion";
 import { Sparkles, Eye, Zap } from "lucide-react";
+import VIcon from "@/components/ui/VIcon";
 
 const features = [
   {
-    id: "v-render",
-    label: "THE FACE",
+    id: "v-face",
+    label: "V·FACE",
     model: "Looks completely real",
     title: "You'd Swear It's a Real Person",
     description: "The face moves naturally. The lips match the words. It smiles, thinks, reacts—just like someone on a video call. No creepy robot vibes.",
@@ -15,7 +16,7 @@ const features = [
   },
   {
     id: "v-sense",
-    label: "THE EYES",
+    label: "V·SENSE",
     model: "Reads the room",
     title: "It Can Tell How You're Feeling",
     description: "Confused? It slows down. Interested? It dives deeper. Bored? It gets to the point. It picks up on the little things humans notice.",
@@ -26,7 +27,7 @@ const features = [
   },
   {
     id: "v-flow",
-    label: "THE RHYTHM",
+    label: "V·FLOW",
     model: "Talks like a human",
     title: "Conversations That Actually Flow",
     description: "No interrupting. No awkward pauses. It knows when to talk and when to listen. Feels like catching up with someone who gets you.",
@@ -52,12 +53,15 @@ export default function VSuiteSection() {
           transition={{ duration: 0.6 }}
           className="text-center mb-20"
         >
-          <span className="eyebrow mb-4 block">Under the Hood</span>
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <VIcon size="lg" variant="gradient" />
+            <span className="eyebrow">The V·Suite</span>
+          </div>
           <h2 className="headline-lg text-foreground mb-6">
             What makes Voxaris feel so real
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Three things working together so you forget you're talking to AI.
+            Three V-powered systems working together so you forget you're talking to AI.
           </p>
         </motion.div>
 

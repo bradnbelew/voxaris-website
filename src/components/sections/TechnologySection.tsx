@@ -1,10 +1,11 @@
 import { motion } from "framer-motion";
 import { Sparkles, Eye, Zap } from "lucide-react";
+import VIcon from "@/components/ui/VIcon";
 
 const capabilities = [
   {
-    id: "render",
-    label: "LOOKS REAL",
+    id: "v-face",
+    label: "V·FACE",
     subtitle: "You'd never know it's AI",
     description: "Facial expressions, natural movements, lips that actually match the words. It looks like a video call with a real person.",
     icon: Sparkles,
@@ -12,8 +13,8 @@ const capabilities = [
     statLabel: "response time",
   },
   {
-    id: "sense",
-    label: "SEES YOU",
+    id: "v-sense",
+    label: "V·SENSE",
     subtitle: "Picks up on how you're feeling",
     description: "Notices when you're confused, interested, or ready to move on—and adjusts in real time.",
     icon: Eye,
@@ -21,8 +22,8 @@ const capabilities = [
     statLabel: "reads your reactions",
   },
   {
-    id: "flow",
-    label: "TALKS NATURALLY",
+    id: "v-flow",
+    label: "V·FLOW",
     subtitle: "No interruptions or weird delays",
     description: "Knows when to talk, when to listen, when to give you a moment. Just like a real conversation.",
     icon: Zap,
@@ -43,14 +44,17 @@ export default function TechnologySection() {
           transition={{ duration: 0.5 }}
           className="text-center mb-16"
         >
-          <span className="text-xs font-semibold uppercase tracking-[0.15em] text-silver mb-4 block">
-            The Technology
-          </span>
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <VIcon size="lg" variant="outline" className="border-white/30 text-white" />
+            <span className="text-xs font-semibold uppercase tracking-[0.15em] text-silver">
+              The V·Suite
+            </span>
+          </div>
           <h2 className="headline-lg text-white mb-4">
             How it actually works
           </h2>
           <p className="text-lg text-silver max-w-xl mx-auto">
-            Three things that make it feel human.
+            Three V-powered systems that make it feel human.
           </p>
         </motion.div>
 
