@@ -16,7 +16,7 @@ const features: Feature[] = [
   { name: "Can see you", voiceAI: false, voxaris: true },
   { name: "Knows when you're confused", voiceAI: false, voxaris: true },
   { name: "Reacts to your expressions", voiceAI: false, voxaris: true },
-  { name: "Doesn't interrupt you", voiceAI: "partial", voxaris: true },
+  { name: "Doesn't interrupt you", voiceAI: true, voxaris: true },
   { name: "Books appointments for you", voiceAI: true, voxaris: true },
   { name: "Available anytime", voiceAI: true, voxaris: true },
   { name: "Works from a QR code", voiceAI: false, voxaris: true },
