@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowRight, Play, X } from "lucide-react";
+import { ArrowRight, X } from "lucide-react";
+import FaceTimeAvatar from "@/components/ui/FaceTimeAvatar";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -102,12 +103,14 @@ export default function HeroSection() {
                       <span className="text-xs font-medium text-ink">LIVE</span>
                     </div>
 
-                    {/* Play button */}
-                    <div className="w-24 h-24 rounded-full bg-white shadow-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-300 border border-frost">
+                    {/* Avatar with Olivia video */}
+                    <div className="group-hover:scale-105 transition-transform duration-300">
                       {isLoading ? (
-                        <div className="w-8 h-8 border-2 border-ink/30 border-t-ink rounded-full animate-spin" />
+                        <div className="w-32 h-32 rounded-full bg-white shadow-xl flex items-center justify-center border border-frost">
+                          <div className="w-8 h-8 border-2 border-ink/30 border-t-ink rounded-full animate-spin" />
+                        </div>
                       ) : (
-                        <Play className="w-10 h-10 text-ink ml-1" fill="currentColor" />
+                        <FaceTimeAvatar />
                       )}
                     </div>
                     
