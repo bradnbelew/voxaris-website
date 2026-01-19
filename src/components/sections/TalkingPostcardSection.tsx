@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Mail, QrCode, Video, CalendarCheck, ArrowRight } from "lucide-react";
+import { Mail, QrCode, Video, CalendarCheck, ArrowRight, Bell } from "lucide-react";
 import VIcon from "@/components/ui/VIcon";
 
 const steps = [
@@ -24,7 +24,7 @@ const steps = [
     description: "Appointment confirmed automatically",
   },
   {
-    icon: Mail,
+    icon: Bell,
     title: "Notify",
     description: "Real-time alert to your team",
   },
