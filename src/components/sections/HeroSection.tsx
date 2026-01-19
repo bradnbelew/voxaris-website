@@ -184,7 +184,7 @@ export default function HeroSection() {
               className="flex flex-wrap gap-8 lg:gap-12"
             >
               {[
-                { value: "500ms", label: "Response Time" },
+                { value: "<500ms", label: "Response Time" },
                 { value: "24/7", label: "Availability" },
                 { value: "0%", label: "Hallucinations" },
               ].map((stat) => (

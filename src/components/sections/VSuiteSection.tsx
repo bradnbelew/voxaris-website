@@ -21,7 +21,7 @@ const features = [
     title: "It Can Tell How You're Feeling",
     description: "Confused? It slows down. Interested? It dives deeper. Bored? It gets to the point. It picks up on the little things humans notice.",
     icon: Eye,
-    stat: "500ms",
+    stat: "<500ms",
     statLabel: "to read your reaction",
     gradient: "from-cyan-500/20 to-transparent",
   },
@@ -131,7 +131,7 @@ export default function VSuiteSection() {
         >
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
-              { value: "~500ms", label: "End-to-End Latency" },
+              { value: "<500ms", label: "End-to-End Latency" },
               { value: "30+", label: "Languages Supported" },
               { value: "2B+", label: "Interactions at Scale" },
               { value: "80%", label: "Higher Retention" },
