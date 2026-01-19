@@ -18,14 +18,14 @@ const products = [
     icon: Phone,
     name: "V·VOICE",
     tagline: "Voice AI Sales Agent",
-    description: "Instant phone calls that contact every lead in 22 seconds. Qualifies for budget, timeline, and trade-in, then books appointments directly into your CRM. Works 24/7/365.",
-    features: ["Calls leads in 22 seconds", "Qualifies and books automatically", "Integrates with your CRM"],
+    description: "Instant phone calls that contact every lead in under 5 seconds. Qualifies for budget, timeline, and trade-in, then books appointments directly into your CRM. Works 24/7/365.",
+    features: ["Calls leads in <5 seconds", "Qualifies and books automatically", "Integrates with your CRM"],
     cta: "Best for: High-volume lead response"
   }
 ];
 
 const benefits = [
-  { stat: "22s", label: "Response Time", description: "We call while interest is hottest" },
+  { stat: "<5s", label: "Response Time", description: "We call while interest is hottest" },
   { stat: "47%", label: "Appointment Rate", description: "On contacted leads" },
   { stat: "24/7", label: "Availability", description: "Never miss a lead again" }
 ];
