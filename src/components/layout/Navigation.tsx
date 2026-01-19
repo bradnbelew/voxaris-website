@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence, useScroll } from "framer-motion";
-import { Menu, X, Video, Phone, ChevronDown } from "lucide-react";
+import { Menu, X, Video, Phone, PhoneIncoming, PhoneOutgoing, Globe, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import voxarisLogo from "@/assets/voxaris-logo-dark.png";
 
@@ -14,17 +14,31 @@ const navLinks = [
 
 const products = [
   {
+    name: "V·INBOUND",
+    tagline: "Inbound Voice AI",
+    description: "Answer every call instantly, 24/7",
+    icon: PhoneIncoming,
+    href: "/solutions/dealerships"
+  },
+  {
+    name: "V·OUTBOUND",
+    tagline: "Outbound Voice AI", 
+    description: "Proactive calls for recalls & follow-ups",
+    icon: PhoneOutgoing,
+    href: "/solutions/dealerships"
+  },
+  {
     name: "V·CVI",
     tagline: "Video AI",
-    description: "Face-to-face AI that sees and responds to you",
+    description: "Face-to-face AI that sees and responds",
     icon: Video,
     href: "/technology"
   },
   {
-    name: "V·VOICE",
-    tagline: "Voice AI", 
-    description: "Instant phone calls that qualify and book",
-    icon: Phone,
+    name: "V·WEB",
+    tagline: "AI Website",
+    description: "Your website as an active sales agent",
+    icon: Globe,
     href: "/solutions/dealerships"
   }
 ];
@@ -103,7 +117,7 @@ export default function Navigation() {
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: 10 }}
                           transition={{ duration: 0.15 }}
-                          className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-[420px] bg-white rounded-2xl border border-frost shadow-xl p-6"
+                          className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-[520px] bg-white rounded-2xl border border-frost shadow-xl p-6"
                           onClick={(e) => e.stopPropagation()}
                         >
                           {/* Products */}
