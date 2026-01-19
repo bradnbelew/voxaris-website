@@ -47,8 +47,8 @@ const benefits = [
 ];
 
 const departments = [
-  { icon: Car, title: "Sales", description: "Qualify buyers on budget, timeline, trade-in, and financing. Book showroom appointments that actually show." },
-  { icon: Wrench, title: "Service", description: "Handle complex repair inquiries with deep mechanical awareness. Knows your shop hours, amenities, and booking logic." },
+  { icon: Car, title: "Sales", description: "Qualify buyers on budget, timeline, and trade-in. Book showroom appointments that actually show." },
+  { icon: Wrench, title: "Service", description: "Handle simple to complex repair inquiries with deep mechanical awareness. Knows your shop hours, amenities, and booking logic." },
   { icon: FileText, title: "Parts", description: "Route parts inquiries to the right counter, check availability, and schedule pickup or delivery." }
 ];
 
@@ -190,7 +190,7 @@ export default function SolutionsDealerships() {
               Handle every department
             </h2>
             <p className="text-lg text-charcoal max-w-2xl mx-auto">
-              Stop losing revenue to voicemail. Voxaris answers 24/7, intelligently routing across your entire dealership.
+              Stop losing revenue to voicemail or unanswered phone calls. Voxaris answers 24/7.
             </p>
           </motion.div>
 
