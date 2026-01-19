@@ -210,16 +210,6 @@ export default function Navigation() {
               >
                 Demo
               </Link>
-              <Link
-                to="/book-demo"
-                className={`text-sm font-medium transition-colors ${
-                  location.pathname === '/book-demo'
-                    ? "text-ink"
-                    : "text-slate hover:text-ink"
-                }`}
-              >
-                Contact
-              </Link>
             </div>
 
             {/* Desktop CTA */}
@@ -328,13 +318,6 @@ export default function Navigation() {
                     onClick={() => setMobileOpen(false)}
                   >
                     Demo
-                  </Link>
-                  <Link
-                    to="/book-demo"
-                    className="block text-base font-medium text-charcoal hover:text-ink transition-colors py-2"
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    Contact
                   </Link>
                 </div>
                 
