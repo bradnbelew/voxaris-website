@@ -28,10 +28,10 @@ export default function ProblemSection() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl font-bold text-ink mb-2">
-            Every AI promised connection.
+            You wanted to talk to someone.
           </h2>
           <h2 className="text-4xl font-bold text-slate">
-            They delivered automation.
+            You got a robot reading a script.
           </h2>
         </motion.div>
 
