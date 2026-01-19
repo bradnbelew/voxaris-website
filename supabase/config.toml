@@ -17,3 +17,9 @@ verify_jwt = false
 
 [functions.tavus-tool-handler]
 verify_jwt = false
+
+[functions.retell-voice-demo]
+verify_jwt = false
+
+[functions.retell-test-outbound]
+verify_jwt = false
