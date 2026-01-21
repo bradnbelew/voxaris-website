@@ -28,7 +28,7 @@ export default function Login() {
     e.preventDefault();
     setIsLoading(true);
 
-    const { error } = await signIn(email, password);
+    const { error, session } = await signIn(email, password);
 
     if (error) {
       toast({
@@ -40,19 +40,11 @@ export default function Login() {
       return;
     }
 
-    // If auth state hydration is slow (profile/roles), don't leave the UI spinning.
-    // Confirm session exists, then navigate.
-    const { data: { session } } = await supabase.auth.getSession();
+    // signIn now returns the session directly - navigate immediately
     setIsLoading(false);
     if (session?.user) {
       navigate('/dashboard', { replace: true });
-      return;
     }
-
-    toast({
-      title: 'Signed in, finishing setup…',
-      description: 'If this keeps spinning, refresh the page and try again.',
-    });
   };
 
   return (
