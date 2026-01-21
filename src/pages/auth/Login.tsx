@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -12,9 +12,16 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { signIn } = useAuthContext();
+  const { signIn, isAuthenticated, isLoading: authLoading } = useAuthContext();
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (!authLoading && isAuthenticated) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [isAuthenticated, authLoading, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,9 +36,8 @@ export default function Login() {
         variant: 'destructive',
       });
       setIsLoading(false);
-    } else {
-      navigate('/dashboard');
     }
+    // Navigation now handled by useEffect when isAuthenticated changes
   };
 
   return (
@@ -141,7 +147,7 @@ export default function Login() {
           {/* Back to home */}
           <div className="mt-8 pt-6 border-t border-frost text-center">
             <Link to="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              ← Back to Voxaris.ai
+              ← Back to Voxaris.io
             </Link>
           </div>
         </div>
