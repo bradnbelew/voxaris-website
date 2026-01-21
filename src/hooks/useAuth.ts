@@ -24,27 +24,47 @@ export function useAuth() {
 
   useEffect(() => {
     const hydrateUser = async (session: Session) => {
-      // Fetch profile and roles - use maybeSingle to avoid errors if no profile exists
-      const [profileResult, rolesResult] = await Promise.all([
-        supabase
-          .from('profiles')
-          .select('*')
-          .eq('user_id', session.user.id)
-          .maybeSingle(),
-        supabase
-          .from('user_roles')
-          .select('role')
-          .eq('user_id', session.user.id),
-      ]);
+      try {
+        // Fetch profile and roles - use maybeSingle to avoid errors if no profile exists
+        const [profileResult, rolesResult] = await Promise.all([
+          supabase
+            .from('profiles')
+            .select('*')
+            .eq('user_id', session.user.id)
+            .maybeSingle(),
+          supabase
+            .from('user_roles')
+            .select('role')
+            .eq('user_id', session.user.id),
+        ]);
 
-      setState({
-        user: session.user,
-        session,
-        profile: (profileResult.data as Profile | null) ?? null,
-        roles: (rolesResult.data?.map((r: { role: AppRole }) => r.role) || []) as AppRole[],
-        isLoading: false,
-        isAuthenticated: true,
-      });
+        // Even if profile/roles reads fail due to RLS/missing rows, the user is still authenticated.
+        if (profileResult.error || rolesResult.error) {
+          console.warn('[auth] hydrateUser partial failure', {
+            profileError: profileResult.error?.message,
+            rolesError: rolesResult.error?.message,
+          });
+        }
+
+        setState({
+          user: session.user,
+          session,
+          profile: (profileResult.data as Profile | null) ?? null,
+          roles: (rolesResult.data?.map((r: { role: AppRole }) => r.role) || []) as AppRole[],
+          isLoading: false,
+          isAuthenticated: true,
+        });
+      } catch (err) {
+        console.error('[auth] hydrateUser fatal error', err);
+        setState({
+          user: session.user,
+          session,
+          profile: null,
+          roles: [],
+          isLoading: false,
+          isAuthenticated: true,
+        });
+      }
     };
 
     // Set up auth state listener BEFORE getting session
