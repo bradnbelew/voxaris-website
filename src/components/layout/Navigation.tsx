@@ -93,7 +93,7 @@ export default function Navigation() {
             </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center gap-8">
+            <div className="hidden md:flex items-center gap-6 lg:gap-8">
               {/* V·Suite Dropdown */}
               <div className="relative">
                 <button
@@ -213,7 +213,7 @@ export default function Navigation() {
             </div>
 
             {/* Desktop CTA */}
-            <div className="hidden lg:flex items-center">
+            <div className="hidden md:flex items-center">
               <Link to="/demo">
                 <Button 
                   size="sm" 
@@ -226,7 +226,7 @@ export default function Navigation() {
 
             {/* Mobile Menu Button */}
             <button
-              className="lg:hidden p-2 rounded-lg hover:bg-mist transition-colors relative z-50"
+              className="md:hidden p-2 rounded-lg hover:bg-mist transition-colors relative z-50"
               onClick={() => setMobileOpen(!mobileOpen)}
               aria-label="Toggle menu"
               type="button"
@@ -247,7 +247,7 @@ export default function Navigation() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="fixed inset-0 bg-black/20 z-40 lg:hidden"
+              className="fixed inset-0 bg-black/20 z-40 md:hidden"
               onClick={() => setMobileOpen(false)}
             />
             
@@ -257,7 +257,7 @@ export default function Navigation() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
-              className="fixed top-16 left-0 right-0 z-50 lg:hidden bg-white border-b border-frost shadow-lg max-h-[80vh] overflow-y-auto"
+              className="fixed top-16 left-0 right-0 z-50 md:hidden bg-white border-b border-frost shadow-lg max-h-[80vh] overflow-y-auto"
             >
               <div className="py-8 px-6 space-y-8">
                 {/* V·Suite Section */}
