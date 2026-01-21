@@ -36,7 +36,7 @@ export function AgentShowcase() {
     toast.info(`Connecting to ${agentName}...`, {
       description: `Initializing ${type} Interface.`,
     });
-    startSession(agentName.toLowerCase());
+    startSession();
   };
 
   return (
