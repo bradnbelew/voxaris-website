@@ -4,10 +4,8 @@ import { useAuthContext } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { NeuralBackground } from '@/components/ui/NeuralBackground';
 import voxarisLogo from '@/assets/voxaris-logo-dark.png';
 
 export default function Login() {
@@ -37,34 +35,84 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 relative">
-      <NeuralBackground />
-      <Card className="w-full max-w-md bg-white/95 backdrop-blur-sm shadow-2xl border-0">
-        <CardHeader className="space-y-4 text-center">
-          <Link to="/" className="inline-block mx-auto">
-            <img src={voxarisLogo} alt="Voxaris" className="h-10" />
-          </Link>
-          <div>
-            <CardTitle className="text-2xl">Welcome back</CardTitle>
-            <CardDescription>Sign in to your V·Suite dashboard</CardDescription>
+    <div className="min-h-screen flex bg-background">
+      {/* Left side - Branding */}
+      <div className="hidden lg:flex lg:w-1/2 bg-ink items-center justify-center p-12 relative overflow-hidden">
+        {/* Subtle grid pattern */}
+        <div 
+          className="absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          }}
+        />
+        
+        <div className="relative z-10 max-w-md text-center">
+          <div className="mb-8">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/10 mb-6">
+              <span className="text-3xl font-bold text-white">V</span>
+            </div>
           </div>
-        </CardHeader>
-        <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-4">
+          <h1 className="text-4xl font-bold text-white mb-4">
+            V·Suite Enterprise Hub
+          </h1>
+          <p className="text-lg text-white/60">
+            Command your AI workforce. Deploy voice and video agents that work 24/7.
+          </p>
+          
+          {/* Stats */}
+          <div className="mt-12 grid grid-cols-3 gap-6">
+            <div>
+              <p className="text-2xl font-bold text-white">&lt;500ms</p>
+              <p className="text-sm text-white/40">Response Time</p>
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-white">24/7</p>
+              <p className="text-sm text-white/40">Availability</p>
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-white">99.9%</p>
+              <p className="text-sm text-white/40">Uptime</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Right side - Form */}
+      <div className="flex-1 flex items-center justify-center p-8">
+        <div className="w-full max-w-sm">
+          {/* Mobile logo */}
+          <div className="lg:hidden mb-8 text-center">
+            <Link to="/">
+              <img src={voxarisLogo} alt="Voxaris" className="h-10 mx-auto" />
+            </Link>
+          </div>
+
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold text-foreground">Welcome back</h2>
+            <p className="text-muted-foreground mt-1">Sign in to your V·Suite dashboard</p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="you@dealership.com"
+                placeholder="you@company.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 autoComplete="email"
+                className="h-11"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password">Password</Label>
+                <Link to="#" className="text-xs text-muted-foreground hover:text-foreground">
+                  Forgot password?
+                </Link>
+              </div>
               <Input
                 id="password"
                 type="password"
@@ -73,23 +121,31 @@ export default function Login() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 autoComplete="current-password"
+                className="h-11"
               />
             </div>
-          </CardContent>
-          <CardFooter className="flex flex-col gap-4">
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            
+            <Button type="submit" className="w-full h-11 bg-ink hover:bg-charcoal" disabled={isLoading}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Sign In
             </Button>
-            <p className="text-sm text-muted-foreground text-center">
-              Don't have an account?{' '}
-              <Link to="/auth/register" className="text-foreground font-medium hover:underline">
-                Request access
-              </Link>
-            </p>
-          </CardFooter>
-        </form>
-      </Card>
+          </form>
+
+          <p className="mt-6 text-sm text-muted-foreground text-center">
+            Don't have an account?{' '}
+            <Link to="/auth/register" className="text-foreground font-medium hover:underline">
+              Request access
+            </Link>
+          </p>
+
+          {/* Back to home */}
+          <div className="mt-8 pt-6 border-t border-frost text-center">
+            <Link to="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              ← Back to Voxaris.ai
+            </Link>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
