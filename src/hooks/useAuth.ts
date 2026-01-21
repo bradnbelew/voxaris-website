@@ -56,6 +56,7 @@ export function useAuth() {
         });
       } catch (err) {
         console.error('[auth] hydrateUser fatal error', err);
+        // Fallback: Authenticate anyway, but without profile data
         setState({
           user: session.user,
           session,
