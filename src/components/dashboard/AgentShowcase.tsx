@@ -59,7 +59,7 @@ export function AgentShowcase() {
               <div className="absolute -top-20 -right-20 w-60 h-60 bg-purple-500/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity" />
               
               <div className="relative z-10 flex flex-col items-center text-center space-y-4">
-                <FaceTimeAvatar videoUrl={agent.videoUrl} size="lg" />
+                <FaceTimeAvatar videoUrl={agent.videoUrl} />
                 
                 <h3 className="text-xl font-bold text-white">{agent.name}</h3>
                 <Badge variant="secondary" className="bg-purple-500/20 text-purple-300 border-purple-500/30">
