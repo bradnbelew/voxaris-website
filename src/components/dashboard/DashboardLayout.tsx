@@ -3,6 +3,7 @@ import { Navigate } from 'react-router-dom';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { SidebarProvider, SidebarTrigger, SidebarInset } from '@/components/ui/sidebar';
 import DashboardSidebar from './DashboardSidebar';
+import { VoxarisCopilot } from '@/components/ui/VoxarisCopilot';
 import { Loader2 } from 'lucide-react';
 
 interface DashboardLayoutProps {
@@ -37,6 +38,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             {children}
           </main>
         </SidebarInset>
+        
+        {/* Aizee Autonomous Copilot */}
+        <VoxarisCopilot />
       </div>
     </SidebarProvider>
   );
