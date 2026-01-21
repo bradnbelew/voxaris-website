@@ -28,22 +28,37 @@ export default function Login() {
     e.preventDefault();
     setIsLoading(true);
 
-    const { error, session } = await signIn(email, password);
+    try {
+      console.log('Starting sign in...');
+      toast({ title: 'Signing in...', description: 'Contacting Supabase Auth...' });
+      
+      const { error, session } = await signIn(email, password);
 
-    if (error) {
-      toast({
-        title: 'Login failed',
-        description: error.message,
-        variant: 'destructive',
-      });
+      if (error) {
+        console.error('Sign in error:', error);
+        toast({
+          title: 'Login failed',
+          description: error.message,
+          variant: 'destructive',
+        });
+        setIsLoading(false);
+        return;
+      }
+
+      console.log('Sign in success, session:', session);
+      toast({ title: 'Success!', description: 'Redirecting to dashboard...' });
+
+      // Force navigation immediately
       setIsLoading(false);
-      return;
-    }
-
-    // signIn now returns the session directly - navigate immediately
-    setIsLoading(false);
-    if (session?.user) {
-      navigate('/dashboard', { replace: true });
+      if (session?.user) {
+        navigate('/dashboard', { replace: true });
+      } else {
+        toast({ title: 'Warning', description: 'Session missing user object', variant: 'destructive' });
+      }
+    } catch (e: any) {
+      console.error('Login exception:', e);
+      toast({ title: 'Error', description: e.message || 'Unknown error', variant: 'destructive' });
+      setIsLoading(false);
     }
   };
 
