@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 import voxarisLogo from '@/assets/voxaris-logo-dark.png';
 
 export default function Login() {
@@ -36,8 +37,22 @@ export default function Login() {
         variant: 'destructive',
       });
       setIsLoading(false);
+      return;
     }
-    // Navigation now handled by useEffect when isAuthenticated changes
+
+    // If auth state hydration is slow (profile/roles), don't leave the UI spinning.
+    // Confirm session exists, then navigate.
+    const { data: { session } } = await supabase.auth.getSession();
+    setIsLoading(false);
+    if (session?.user) {
+      navigate('/dashboard', { replace: true });
+      return;
+    }
+
+    toast({
+      title: 'Signed in, finishing setup…',
+      description: 'If this keeps spinning, refresh the page and try again.',
+    });
   };
 
   return (
