@@ -12,9 +12,10 @@ interface DashboardLayoutProps {
 }
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
-  const { isAuthenticated, isLoading } = useAuthContext();
+  const { isAuthenticated, isLoading, profile } = useAuthContext();
 
-  if (isLoading) {
+  // Wait for auth AND profile to be ready before rendering dashboard
+  if (isLoading || (isAuthenticated && profile === null)) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-ink">
         <Loader2 className="h-8 w-8 animate-spin text-white/50" />
