@@ -103,7 +103,7 @@ export default function AgentEditor() {
         voice_id: voiceId,
         persona_id: personaId,
         status: isActive ? 'active' : 'paused',
-        objection_handling: objectionHandlers as unknown as Record<string, unknown>[],
+        objection_handling: JSON.parse(JSON.stringify(objectionHandlers)),
       })
       .eq('id', agent.id);
 
