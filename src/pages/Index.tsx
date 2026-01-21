@@ -1,5 +1,5 @@
 import Layout from "@/components/layout/Layout";
-import Hero3DSection from "@/components/sections/Hero3DSection";
+import HeroSection from "@/components/sections/HeroSection";
 import ProblemSection from "@/components/sections/ProblemSection";
 import TechnologySection from "@/components/sections/TechnologySection";
 import TalkingPostcardSection from "@/components/sections/TalkingPostcardSection";
@@ -9,17 +9,15 @@ import FinalCTASection from "@/components/sections/FinalCTASection";
 
 const Index = () => {
   return (
-    <>
-      <Hero3DSection />
-      <Layout>
-        <ProblemSection />
-        <TechnologySection />
-        <TalkingPostcardSection />
-        <ComparisonSection />
-        <LivingShowroomSection />
-        <FinalCTASection />
-      </Layout>
-    </>
+    <Layout>
+      <HeroSection />
+      <ProblemSection />
+      <TechnologySection />
+      <TalkingPostcardSection />
+      <ComparisonSection />
+      <LivingShowroomSection />
+      <FinalCTASection />
+    </Layout>
   );
 };
 
