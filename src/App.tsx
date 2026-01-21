@@ -24,6 +24,7 @@ import MyStaff from "./pages/dashboard/MyStaff";
 import AgentEditor from "./pages/dashboard/AgentEditor";
 import AgentsPage from "./pages/dashboard/AgentsPage";
 import AgentTest from "./pages/dashboard/AgentTest";
+import Developers from "./pages/dashboard/Developers";
 import Integrations from "./pages/dashboard/Integrations";
 import Settings from "./pages/dashboard/Settings";
 import NotFound from "./pages/NotFound";
@@ -61,6 +62,7 @@ const App = () => (
               <Route path="/dashboard/agents" element={<DashboardLayout><AgentsPage /></DashboardLayout>} />
               <Route path="/dashboard/agents/:id" element={<DashboardLayout><AgentEditor /></DashboardLayout>} />
               <Route path="/dashboard/agent-test" element={<DashboardLayout><AgentTest /></DashboardLayout>} />
+              <Route path="/dashboard/developers" element={<DashboardLayout><Developers /></DashboardLayout>} />
               <Route path="/dashboard/integrations" element={<DashboardLayout><Integrations /></DashboardLayout>} />
               <Route path="/dashboard/settings" element={<DashboardLayout><Settings /></DashboardLayout>} />
               

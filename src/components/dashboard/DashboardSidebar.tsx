@@ -6,7 +6,8 @@ import {
   Link2, 
   Settings,
   LogOut,
-  FlaskConical
+  FlaskConical,
+  Code
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -46,6 +47,11 @@ const menuItems = [
     title: 'Agent Test Lab',
     icon: FlaskConical,
     href: '/dashboard/agent-test',
+  },
+  {
+    title: 'Developers',
+    icon: Code,
+    href: '/dashboard/developers',
   },
   {
     title: 'Integrations',
