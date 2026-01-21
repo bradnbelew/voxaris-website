@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CVIProvider } from "@/components/cvi";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { VoiceProvider } from "@/components/voice/VoiceProvider";
 import Index from "./pages/Index";
 import HowItWorks from "./pages/HowItWorks";
 import WhyVoxaris from "./pages/WhyVoxaris";
@@ -34,8 +35,9 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
-      <CVIProvider>
-        <TooltipProvider>
+      <VoiceProvider>
+        <CVIProvider>
+          <TooltipProvider>
           <Toaster />
           <Sonner />
           <BrowserRouter>
@@ -71,6 +73,7 @@ const App = () => (
           </BrowserRouter>
         </TooltipProvider>
       </CVIProvider>
+      </VoiceProvider>
     </AuthProvider>
   </QueryClientProvider>
 );
