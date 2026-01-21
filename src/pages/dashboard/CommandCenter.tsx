@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { 
+import { Launchpad } from '@/components/dashboard/Launchpad';
+import {
   Phone, 
   Video, 
   UserPlus, 
@@ -134,6 +135,9 @@ export default function CommandCenter() {
 
   return (
     <div className="space-y-8">
+      {/* Launchpad Onboarding */}
+      <Launchpad agentCount={activeAgents.length} hasIntegration={false} />
+
       {/* Hero Banner */}
       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-ink via-charcoal to-ink p-8 lg:p-10">
         {/* Background pattern */}
