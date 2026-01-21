@@ -76,15 +76,15 @@ export default function DashboardSidebar() {
   };
 
   return (
-    <Sidebar collapsible="icon" className="border-r border-frost">
-      <SidebarHeader className="border-b border-frost p-4">
+    <Sidebar collapsible="icon" className="border-r border-white/10 bg-ink">
+      <SidebarHeader className="border-b border-white/10 p-4">
         <Link to="/dashboard" className="flex items-center gap-3">
           {isCollapsed ? (
-            <img src={voxarisIcon} alt="V" className="h-8 w-8" />
+            <img src={voxarisIcon} alt="V" className="h-8 w-8 invert" />
           ) : (
             <>
-              <img src={voxarisLogo} alt="Voxaris" className="h-8" />
-              <span className="text-xs font-semibold text-slate uppercase tracking-wider">Suite</span>
+              <img src={voxarisLogo} alt="Voxaris" className="h-8 invert" />
+              <span className="text-xs font-semibold text-white/50 uppercase tracking-wider">Suite</span>
             </>
           )}
         </Link>
@@ -110,8 +110,8 @@ export default function DashboardSidebar() {
                         className={cn(
                           'flex items-center gap-3 px-3 py-2 rounded-lg transition-colors',
                           isActive
-                            ? 'bg-foreground text-background'
-                            : 'text-charcoal hover:bg-mist hover:text-foreground'
+                            ? 'bg-white text-ink'
+                            : 'text-white/60 hover:bg-white/10 hover:text-white'
                         )}
                       >
                         <item.icon className="h-5 w-5 shrink-0" />
@@ -126,17 +126,17 @@ export default function DashboardSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-frost p-4">
+      <SidebarFooter className="border-t border-white/10 p-4">
         <div className={cn('flex items-center gap-3 mb-4', isCollapsed && 'justify-center')}>
-          <div className="h-9 w-9 rounded-full bg-mist flex items-center justify-center shrink-0">
-            <span className="text-sm font-medium text-charcoal">
+          <div className="h-9 w-9 rounded-full bg-white/10 flex items-center justify-center shrink-0">
+            <span className="text-sm font-medium text-white">
               {profile?.display_name?.charAt(0)?.toUpperCase() || 'U'}
             </span>
           </div>
           {!isCollapsed && (
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium truncate">{profile?.display_name || 'User'}</p>
-              <p className="text-xs text-slate truncate">Dashboard</p>
+              <p className="text-sm font-medium text-white truncate">{profile?.display_name || 'User'}</p>
+              <p className="text-xs text-white/50 truncate">Dashboard</p>
             </div>
           )}
         </div>
@@ -144,7 +144,7 @@ export default function DashboardSidebar() {
           variant="ghost"
           size={isCollapsed ? 'icon' : 'default'}
           onClick={handleSignOut}
-          className={cn('w-full text-slate hover:text-foreground', isCollapsed && 'w-10')}
+          className={cn('w-full text-white/60 hover:text-white hover:bg-white/10', isCollapsed && 'w-10')}
         >
           <LogOut className="h-4 w-4" />
           {!isCollapsed && <span className="ml-2">Sign Out</span>}
