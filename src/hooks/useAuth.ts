@@ -27,13 +27,13 @@ export function useAuth() {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         if (session?.user) {
-          // Fetch profile and roles
+          // Fetch profile and roles - use maybeSingle to avoid errors if no profile exists
           const [profileResult, rolesResult] = await Promise.all([
             supabase
               .from('profiles')
               .select('*')
               .eq('user_id', session.user.id)
-              .single(),
+              .maybeSingle(),
             supabase
               .from('user_roles')
               .select('role')
