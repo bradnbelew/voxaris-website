@@ -1,4 +1,5 @@
 
+import { useState, useEffect } from 'react'
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -33,13 +34,24 @@ const VOICE_AGENTS = [
 export function AgentShowcase() {
   const { startSession } = useVoice()
   const { toast } = useToast()
+  const [voiceAgents, setVoiceAgents] = useState<any[]>([])
+
+  useEffect(() => {
+    fetch('/api/voice/candidates')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setVoiceAgents(data.data)
+        }
+      })
+      .catch(err => console.error('Failed to fetch agents:', err))
+  }, [])
 
   const handleDemo = (agentName: string, type: "Video" | "Voice") => {
     toast({
       title: `Connecting to ${agentName}...`,
       description: `Initializing ${type} Interface.`,
     })
-    // In a real app, we'd pass the agent ID to startSession
     startSession()
   }
 
@@ -87,7 +99,7 @@ export function AgentShowcase() {
             <h2 className="text-xl font-bold tracking-tight">Voice Agents (Retell)</h2>
         </div>
         <div className="grid gap-6 md:grid-cols-3">
-            {VOICE_AGENTS.map((agent) => (
+            {voiceAgents.map((agent) => (
                 <Card key={agent.id} className="group relative overflow-hidden border-border/50 bg-card/50 p-6 transition-colors hover:border-primary/20 hover:bg-card">
                     <div className="flex items-start justify-between">
                         <div>

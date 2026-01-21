@@ -1,0 +1,35 @@
+services:
+  # 1. The Backend API (Node.js + Express)
+  - type: web
+    name: voxaris-server
+    env: node
+    region: oregon
+    plan: free
+    rootDir: server
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: RETELL_API_KEY
+        sync: false
+      - key: TAVUS_API_KEY
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+
+  # 2. The Frontend (Vite Static Site)
+  - type: static
+    name: voxaris-frontend
+    env: static
+    rootDir: .
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: voxaris-server
+          property: url
