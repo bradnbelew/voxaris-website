@@ -6,7 +6,7 @@ import {
   Link2, 
   Settings,
   LogOut,
-  ChevronLeft
+  FlaskConical
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -21,7 +21,6 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarTrigger,
   useSidebar,
 } from '@/components/ui/sidebar';
 import voxarisLogo from '@/assets/voxaris-logo-dark.png';
@@ -42,6 +41,11 @@ const menuItems = [
     title: 'My Staff',
     icon: Users,
     href: '/dashboard/my-staff',
+  },
+  {
+    title: 'Agent Test Lab',
+    icon: FlaskConical,
+    href: '/dashboard/agent-test',
   },
   {
     title: 'Integrations',

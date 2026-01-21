@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { NeuralBackground } from '@/components/ui/NeuralBackground';
 import voxarisLogo from '@/assets/voxaris-logo-dark.png';
 
 export default function Login() {
@@ -36,8 +37,9 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-mist px-4">
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center px-4 relative">
+      <NeuralBackground />
+      <Card className="w-full max-w-md bg-white/95 backdrop-blur-sm shadow-2xl border-0">
         <CardHeader className="space-y-4 text-center">
           <Link to="/" className="inline-block mx-auto">
             <img src={voxarisLogo} alt="Voxaris" className="h-10" />

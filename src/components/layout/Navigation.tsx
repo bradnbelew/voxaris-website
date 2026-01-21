@@ -214,12 +214,12 @@ export default function Navigation() {
 
             {/* Desktop CTA */}
             <div className="hidden md:flex items-center">
-              <Link to="/demo">
+              <Link to="/auth/login">
                 <Button 
                   size="sm" 
                   className="bg-ink hover:bg-charcoal text-white font-medium rounded-lg px-5 h-9 text-sm"
                 >
-                  Talk to Maria
+                  Sign In
                 </Button>
               </Link>
             </div>
@@ -322,9 +322,9 @@ export default function Navigation() {
                 </div>
                 
                 <div className="pt-4">
-                  <Link to="/demo" onClick={() => setMobileOpen(false)}>
+                  <Link to="/auth/login" onClick={() => setMobileOpen(false)}>
                     <Button className="w-full bg-ink hover:bg-charcoal text-white font-medium rounded-lg h-12">
-                      Talk to Maria
+                      Sign In
                     </Button>
                   </Link>
                 </div>

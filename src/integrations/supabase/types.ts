@@ -125,6 +125,7 @@ export type Database = {
           logo_url: string | null
           name: string
           updated_at: string
+          vsuite_org_key: string | null
           website_url: string | null
         }
         Insert: {
@@ -133,6 +134,7 @@ export type Database = {
           logo_url?: string | null
           name: string
           updated_at?: string
+          vsuite_org_key?: string | null
           website_url?: string | null
         }
         Update: {
@@ -141,6 +143,7 @@ export type Database = {
           logo_url?: string | null
           name?: string
           updated_at?: string
+          vsuite_org_key?: string | null
           website_url?: string | null
         }
         Relationships: []

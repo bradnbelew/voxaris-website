@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2, CheckCircle2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { NeuralBackground } from '@/components/ui/NeuralBackground';
 import voxarisLogo from '@/assets/voxaris-logo-dark.png';
 
 export default function Register() {
@@ -41,8 +42,9 @@ export default function Register() {
 
   if (isSuccess) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-mist px-4">
-        <Card className="w-full max-w-md text-center">
+      <div className="min-h-screen flex items-center justify-center px-4 relative">
+        <NeuralBackground />
+        <Card className="w-full max-w-md text-center bg-white/95 backdrop-blur-sm shadow-2xl border-0">
           <CardHeader className="space-y-4">
             <CheckCircle2 className="h-16 w-16 text-green-600 mx-auto" />
             <CardTitle className="text-2xl">Account Created!</CardTitle>
@@ -56,8 +58,9 @@ export default function Register() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-mist px-4">
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center px-4 relative">
+      <NeuralBackground />
+      <Card className="w-full max-w-md bg-white/95 backdrop-blur-sm shadow-2xl border-0">
         <CardHeader className="space-y-4 text-center">
           <Link to="/" className="inline-block mx-auto">
             <img src={voxarisLogo} alt="Voxaris" className="h-10" />
