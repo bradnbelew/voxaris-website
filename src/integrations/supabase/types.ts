@@ -14,16 +14,259 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      agent_templates: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          default_prompt: string | null
+          description: string | null
+          id: string
+          is_active: boolean
+          name: string
+          persona_id: string | null
+          role_title: string
+          type: Database["public"]["Enums"]["agent_type"]
+          voice_id: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          default_prompt?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          persona_id?: string | null
+          role_title: string
+          type: Database["public"]["Enums"]["agent_type"]
+          voice_id?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          default_prompt?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          persona_id?: string | null
+          role_title?: string
+          type?: Database["public"]["Enums"]["agent_type"]
+          voice_id?: string | null
+        }
+        Relationships: []
+      }
+      agents: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          dealership_id: string
+          id: string
+          knowledge_base: Json | null
+          name: string
+          objection_handling: Json | null
+          persona_id: string | null
+          role_title: string
+          status: Database["public"]["Enums"]["agent_status"]
+          system_prompt: string | null
+          type: Database["public"]["Enums"]["agent_type"]
+          updated_at: string
+          voice_id: string | null
+          webhook_url: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          dealership_id: string
+          id?: string
+          knowledge_base?: Json | null
+          name: string
+          objection_handling?: Json | null
+          persona_id?: string | null
+          role_title: string
+          status?: Database["public"]["Enums"]["agent_status"]
+          system_prompt?: string | null
+          type: Database["public"]["Enums"]["agent_type"]
+          updated_at?: string
+          voice_id?: string | null
+          webhook_url?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          dealership_id?: string
+          id?: string
+          knowledge_base?: Json | null
+          name?: string
+          objection_handling?: Json | null
+          persona_id?: string | null
+          role_title?: string
+          status?: Database["public"]["Enums"]["agent_status"]
+          system_prompt?: string | null
+          type?: Database["public"]["Enums"]["agent_type"]
+          updated_at?: string
+          voice_id?: string | null
+          webhook_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agents_dealership_id_fkey"
+            columns: ["dealership_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dealerships: {
+        Row: {
+          created_at: string
+          id: string
+          logo_url: string | null
+          name: string
+          updated_at: string
+          website_url: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          logo_url?: string | null
+          name: string
+          updated_at?: string
+          website_url?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          logo_url?: string | null
+          name?: string
+          updated_at?: string
+          website_url?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          dealership_id: string | null
+          display_name: string | null
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          dealership_id?: string | null
+          display_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          dealership_id?: string | null
+          display_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_dealership_id_fkey"
+            columns: ["dealership_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      usage_logs: {
+        Row: {
+          agent_id: string
+          appointments_booked: number
+          calls_made: number
+          created_at: string
+          dealership_id: string
+          id: string
+          log_date: string
+          minutes_used: number
+        }
+        Insert: {
+          agent_id: string
+          appointments_booked?: number
+          calls_made?: number
+          created_at?: string
+          dealership_id: string
+          id?: string
+          log_date?: string
+          minutes_used?: number
+        }
+        Update: {
+          agent_id?: string
+          appointments_booked?: number
+          calls_made?: number
+          created_at?: string
+          dealership_id?: string
+          id?: string
+          log_date?: string
+          minutes_used?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "usage_logs_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "usage_logs_dealership_id_fkey"
+            columns: ["dealership_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_dealership_id: { Args: { _user_id: string }; Returns: string }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      agent_status: "active" | "paused" | "draft"
+      agent_type: "voice" | "video"
+      app_role: "super_admin" | "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +393,10 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      agent_status: ["active", "paused", "draft"],
+      agent_type: ["voice", "video"],
+      app_role: ["super_admin", "admin", "user"],
+    },
   },
 } as const
