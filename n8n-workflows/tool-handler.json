@@ -1,0 +1,123 @@
+{
+  "name": "Voxaris Tool Handler - Book Appointments",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "tavus-tool-handler",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook - Tool Call",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.body.tool_name }}",
+              "operation": "equals",
+              "value2": "check_availability"
+            }
+          ]
+        }
+      },
+      "id": "switch-tool",
+      "name": "Route by Tool",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 2,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Check Availability Logic\nconst requestedDate = $input.first().json.body.arguments?.date || 'tomorrow';\n\n// Simulated availability (replace with Cal.com or Google Calendar API)\nconst availableSlots = ['2:15 PM', '4:45 PM'];\n\nreturn {\n  json: {\n    result: `I found availability on ${requestedDate}. We have openings at ${availableSlots.join(' and ')}.`,\n    available_slots: availableSlots,\n    date: requestedDate\n  }\n};"
+      },
+      "id": "check-availability",
+      "name": "Check Availability",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [650, 200]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Book Appointment Logic\nconst args = $input.first().json.body.arguments || {};\nconst { name, email, datetime, phone } = args;\n\n// TODO: Integrate with Cal.com or Google Calendar\n// For now, log the booking\nconsole.log(`Booking appointment for ${name} at ${datetime}`);\n\nreturn {\n  json: {\n    result: `I've booked the appointment for ${name} at ${datetime}. A confirmation will be sent to ${email || 'your phone'}.`,\n    booking: {\n      name,\n      email,\n      datetime,\n      phone,\n      status: 'confirmed'\n    }\n  }\n};"
+      },
+      "id": "book-appointment",
+      "name": "Book Appointment",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [650, 400]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "options": {}
+      },
+      "id": "respond-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [850, 300]
+    }
+  ],
+  "connections": {
+    "Webhook - Tool Call": {
+      "main": [
+        [
+          {
+            "node": "Route by Tool",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route by Tool": {
+      "main": [
+        [
+          {
+            "node": "Check Availability",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Book Appointment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Availability": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Book Appointment": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

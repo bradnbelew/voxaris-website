@@ -1,0 +1,160 @@
+{
+  "name": "Voxaris Daily Follow-up - Call Unengaged Leads",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 24,
+              "triggerAtHour": 10
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Daily 10 AM",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Query leads who haven't scanned QR code\n// Replace with your database query\n\nconst mockLeads = [\n  { id: 1, name: 'John Smith', phone: '+14075551234', car: '2022 Altima', mailer_sent: '2024-01-20', qr_scanned: false },\n  { id: 2, name: 'Sarah Johnson', phone: '+14075555678', car: '2021 Rogue', mailer_sent: '2024-01-20', qr_scanned: false },\n];\n\n// Filter: mailer sent > 24h ago AND not scanned\nreturn mockLeads.map(lead => ({ json: lead }));"
+      },
+      "id": "get-unengaged-leads",
+      "name": "Get Unengaged Leads",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {
+          "reset": false
+        }
+      },
+      "id": "loop-leads",
+      "name": "Loop Over Leads",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.retellai.com/v2/create-phone-call",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"from_number\": \"+14077594100\",\n  \"to_number\": \"{{ $json.phone }}\",\n  \"agent_id\": \"YOUR_RETELL_AGENT_ID\",\n  \"retell_llm_dynamic_variables\": {\n    \"customer_name\": \"{{ $json.name }}\",\n    \"car_model\": \"{{ $json.car }}\"\n  }\n}",
+        "options": {}
+      },
+      "id": "retell-call",
+      "name": "Trigger Retell Call",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [850, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "retell-api-key",
+          "name": "Retell API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Log the call attempt\nconst lead = $input.first().json;\nconsole.log(`Called ${lead.name} at ${lead.phone}`);\n\nreturn {\n  json: {\n    lead_id: lead.id,\n    name: lead.name,\n    phone: lead.phone,\n    call_status: 'initiated',\n    timestamp: new Date().toISOString()\n  }\n};"
+      },
+      "id": "log-call",
+      "name": "Log Call Attempt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1050, 300]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "wait-between-calls",
+      "name": "Wait 30s",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [1250, 300]
+    }
+  ],
+  "connections": {
+    "Daily 10 AM": {
+      "main": [
+        [
+          {
+            "node": "Get Unengaged Leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Unengaged Leads": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Leads": {
+      "main": [
+        [
+          {
+            "node": "Trigger Retell Call",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trigger Retell Call": {
+      "main": [
+        [
+          {
+            "node": "Log Call Attempt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Call Attempt": {
+      "main": [
+        [
+          {
+            "node": "Wait 30s",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 30s": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

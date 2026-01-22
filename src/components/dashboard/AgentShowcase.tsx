@@ -1,3 +1,5 @@
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -5,6 +7,7 @@ import { FaceTimeAvatar } from "@/components/ui/FaceTimeAvatar";
 import { Mic, Video, Phone, Activity } from "lucide-react";
 import { useVoice } from "@/components/voice/VoiceProvider";
 import { toast } from "sonner";
+import { useDaily } from "@daily-co/daily-react";
 
 const VIDEO_AGENTS = [
   {
@@ -31,12 +34,15 @@ const VOICE_AGENTS = [
 
 export function AgentShowcase() {
   const { startSession } = useVoice();
+  const [customerName, setCustomerName] = useState("");
+  const [carModel, setCarModel] = useState("");
 
   const handleDemo = (agentName: string, type: "Video" | "Voice") => {
     toast.info(`Connecting to ${agentName}...`, {
-      description: `Initializing ${type} Interface.`,
+      description: `Initializing ${type} Interface for ${customerName}.`,
     });
-    startSession();
+    // Pass context variables to startSession
+    startSession({ name: customerName, carModel: carModel });
   };
 
   return (
@@ -70,10 +76,34 @@ export function AgentShowcase() {
                   {agent.description}
                 </p>
 
+                <div className="w-full max-w-xs space-y-3 mb-4 mt-4">
+                  <div className="space-y-1 text-left">
+                    <label className="text-xs text-white/50 ml-1">Your Name</label>
+                    <Input 
+                      placeholder="e.g. Ethan" 
+                      className="bg-white/5 border-white/10 text-white placeholder:text-white/20"
+                      value={customerName}
+                      onChange={(e) => setCustomerName(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-1 text-left">
+                    <label className="text-xs text-white/50 ml-1">Car Model</label>
+                    <Input 
+                      placeholder="e.g. 2022 Altima" 
+                      className="bg-white/5 border-white/10 text-white placeholder:text-white/20"
+                      value={carModel}
+                      onChange={(e) => setCarModel(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+
+
                 <Button 
                   onClick={() => handleDemo(agent.name, "Video")} 
                   className="w-full max-w-xs gap-2 bg-purple-600 hover:bg-purple-700" 
                   size="lg"
+                  disabled={!customerName || !carModel}
                 >
                   <Video className="h-4 w-4" />
                   Demo Video Call

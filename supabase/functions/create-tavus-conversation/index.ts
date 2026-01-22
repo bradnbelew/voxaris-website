@@ -30,10 +30,10 @@ serve(async (req) => {
     }
 
     const body = await req.json().catch(() => ({}));
-    const { replica_id, persona_id, custom_greeting, conversational_context, conversation_name } = body;
+    const { replica_id, persona_id, custom_greeting, conversational_context, conversation_name, name, carModel } = body;
 
     // Use environment variable as fallback for persona_id
-    const finalPersonaId = persona_id || TAVUS_PERSONA_ID;
+    const finalPersonaId = persona_id || "p7aae9095144"; // Updated fallback to Olivia
 
     if (!replica_id && !finalPersonaId) {
       return new Response(
@@ -42,10 +42,17 @@ serve(async (req) => {
       );
     }
 
+    // Dynamic Context Injection
+    let finalContext = conversational_context || DEFAULT_SYSTEM_PROMPT;
+    
+    if (name || carModel) {
+        finalContext += `\n\n[USER CONTEXT]\nUser Name: ${name || "Unknown"}\nUser Vehicle: ${carModel || "Unknown Vehicle"}\n\nIMPORTANT: Use this context immediately in your greeting.`;
+    }
+
     // Build the conversation payload
     const conversationPayload: Record<string, unknown> = {
       conversation_name: conversation_name || "Voxaris Demo",
-      conversational_context: conversational_context || DEFAULT_SYSTEM_PROMPT,
+      conversational_context: finalContext,
     };
 
     // Add replica_id if provided
