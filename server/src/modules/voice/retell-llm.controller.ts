@@ -260,8 +260,8 @@ router.post('/retell-llm', async (req: Request, res: Response) => {
     // Return tool calls if present
     if (responseMessage.tool_calls && responseMessage.tool_calls.length > 0) {
       const toolCalls = responseMessage.tool_calls
-        .filter((tc): tc is OpenAI.Chat.Completions.ChatCompletionMessageToolCall => tc.type === 'function')
-        .map(tc => ({
+        .filter((tc: any) => tc.type === 'function')
+        .map((tc: any) => ({
           id: tc.id,
           type: "function" as const,
           function: { name: tc.function.name, arguments: tc.function.arguments }
