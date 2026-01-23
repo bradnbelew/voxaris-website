@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@retellai/n8n-nodes-retellai": "^0.2.3",
+    "@types/ws": "^8.18.1",
     "axios": "^1.13.2",
     "cors": "^2.8.5",
     "dotenv": "^16.6.1",
@@ -18,6 +19,7 @@
     "openai": "^6.16.0",
     "retell-sdk": "^4.66.0",
     "ts-node": "^10.9.2",
+    "ws": "^8.19.0",
     "zod": "^3.25.76"
   },
   "devDependencies": {
