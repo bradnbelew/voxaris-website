@@ -5,6 +5,8 @@
 create table if not exists public.perception_analytics (
   id uuid default gen_random_uuid() primary key,
   conversation_id text not null,
+  customer_name text,        -- New: Name of the person analyzed
+  contact_info jsonb,        -- New: Phone, Email, etc.
   user_appearance jsonb,
   setting jsonb,
   gaze_expressions jsonb,
@@ -22,6 +24,7 @@ create table if not exists public.call_logs (
   id uuid default gen_random_uuid() primary key,
   call_id text unique not null,
   agent_id text,
+  customer_name text,        -- New: Name of the caller
   user_phone text,
   direction text check (direction in ('inbound', 'outbound')),
   status text,

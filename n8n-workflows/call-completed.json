@@ -1,144 +1,46 @@
 {
-  "name": "Voxaris Call Completed - Log Outcomes",
+  "name": "V-Suite Voice Analytics",
   "nodes": [
     {
       "parameters": {
-        "httpMethod": "POST",
         "path": "call-completed",
-        "responseMode": "responseNode",
+        "responseMode": "lastNode",
         "options": {}
       },
-      "id": "webhook-call-end",
-      "name": "Retell Call Ended Webhook",
+      "name": "Retell Webhook",
       "type": "n8n-nodes-base.webhook",
-      "typeVersion": 1.1,
-      "position": [250, 300]
+      "typeVersion": 1,
+      "position": [ 100, 300 ]
     },
     {
       "parameters": {
-        "jsCode": "// Extract call data from Retell webhook\nconst callData = $input.first().json.body;\n\nconst outcome = {\n  call_id: callData.call_id,\n  agent_id: callData.agent_id,\n  from_number: callData.from_number,\n  to_number: callData.to_number,\n  duration_seconds: callData.call_duration_ms / 1000,\n  end_reason: callData.disconnection_reason,\n  transcript: callData.transcript,\n  summary: callData.call_analysis?.call_summary || 'No summary available',\n  sentiment: callData.call_analysis?.user_sentiment || 'neutral',\n  appointment_booked: callData.call_analysis?.call_successful || false,\n  timestamp: new Date().toISOString()\n};\n\nreturn { json: outcome };"
-      },
-      "id": "parse-call-data",
-      "name": "Parse Call Data",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [450, 300]
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "boolean": [
+        "method": "POST",
+        "url": "https://hill-nissan-backend.onrender.com/api/analytics/ingest",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
             {
-              "value1": "={{ $json.appointment_booked }}",
-              "value2": true
+              "name": "source",
+              "value": "retell"
+            },
+            {
+              "name": "call_id",
+              "value": "={{$json.body.call_id}}"
+            },
+            {
+              "name": "data",
+              "value": "={{$json.body.call_analysis}}"
             }
           ]
         }
       },
-      "id": "check-outcome",
-      "name": "Appointment Booked?",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2,
-      "position": [650, 300]
-    },
-    {
-      "parameters": {
-        "jsCode": "// Lead was successfully booked\nconst data = $input.first().json;\n\nconsole.log(`✅ BOOKED: ${data.to_number}`);\nconsole.log(`Summary: ${data.summary}`);\n\nreturn {\n  json: {\n    ...data,\n    lead_status: 'booked',\n    next_action: 'sales_followup'\n  }\n};"
-      },
-      "id": "handle-booked",
-      "name": "Handle Booked",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [850, 200]
-    },
-    {
-      "parameters": {
-        "jsCode": "// Lead not booked - nurture\nconst data = $input.first().json;\n\nconsole.log(`📋 NURTURE: ${data.to_number}`);\nconsole.log(`Reason: ${data.end_reason}`);\n\nreturn {\n  json: {\n    ...data,\n    lead_status: 'nurture',\n    next_action: 'followup_in_3_days'\n  }\n};"
-      },
-      "id": "handle-nurture",
-      "name": "Handle Nurture",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [850, 400]
-    },
-    {
-      "parameters": {
-        "respondWith": "json",
-        "responseBody": "={ \"status\": \"received\", \"processed\": true }",
-        "options": {}
-      },
-      "id": "respond",
-      "name": "Respond OK",
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1,
-      "position": [1050, 300]
+      "name": "Push to V-Suite",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [ 300, 300 ]
     }
   ],
   "connections": {
-    "Retell Call Ended Webhook": {
-      "main": [
-        [
-          {
-            "node": "Parse Call Data",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Parse Call Data": {
-      "main": [
-        [
-          {
-            "node": "Appointment Booked?",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Appointment Booked?": {
-      "main": [
-        [
-          {
-            "node": "Handle Booked",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Handle Nurture",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Handle Booked": {
-      "main": [
-        [
-          {
-            "node": "Respond OK",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Handle Nurture": {
-      "main": [
-        [
-          {
-            "node": "Respond OK",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    }
-  },
-  "settings": {
-    "executionOrder": "v1"
+    "Retell Webhook": { "main": [ [ { "node": "Push to V-Suite", "type": "main", "index": 0 } ] ] }
   }
 }

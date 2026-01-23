@@ -11,25 +11,31 @@ router.post('/ingest', async (req: Request, res: Response) => {
       source, // 'retell' | 'tavus'
       call_id,
       conversation_id, // Tavus uses conversation_id
-      data 
+      data,
+      contact_info // { name, phone, email, ... }
     } = req.body;
 
     console.log(`📊 Analytics Ingest [${source}]:`, call_id || conversation_id);
 
     if (source === 'retell') {
       // Ingest Retell Voice Analytics
-      const { summary, sentiment, transcript, user_sentiment, call_analysis } = data;
+      const { summary, sentiment, transcript, user_sentiment, call_analysis, retell_llm_dynamic_variables } = data;
+      
+      // Determine customer name from contact_info OR dynamic vars
+      const customer_name = contact_info?.name || retell_llm_dynamic_variables?.customer_name || 'Unknown';
 
       // Update call_logs
-      // We assume a row might already exist pending, or we insert new
       const { error } = await supabase
         .from('call_logs')
         .upsert({
           call_id,
+          customer_name,
+          user_phone: contact_info?.phone || null, // Priority to direct contact info
           summary,
           sentiment: user_sentiment || sentiment, // normalization
           transcript,
           analytics: call_analysis,
+          variables: retell_llm_dynamic_variables,
           status: 'completed',
           end_time: new Date().toISOString()
         }, { onConflict: 'call_id' });
@@ -38,7 +44,6 @@ router.post('/ingest', async (req: Request, res: Response) => {
 
     } else if (source === 'tavus') {
       // Ingest Tavus Video Perception
-      // Handle potential nesting from n8n (data.perception_analysis or root)
       const perception = data.perception_analysis || data;
       
       const { 
@@ -54,6 +59,8 @@ router.post('/ingest', async (req: Request, res: Response) => {
         .from('perception_analytics')
         .insert({
           conversation_id,
+          customer_name: contact_info?.name || 'Unknown User',
+          contact_info: contact_info || {},
           user_appearance,
           setting,
           gaze_expressions,
