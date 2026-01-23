@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import dotenv from 'dotenv';
 import voiceRoutes from './modules/voice/voice.controller';
 import retellLLMRoutes from './modules/voice/retell-llm.controller';
+import analyticsRoutes from './modules/analytics/analytics.controller';
 
 // Load env vars
 dotenv.config();
@@ -19,6 +20,7 @@ app.use(express.json());
 // Routes
 app.use('/api/voice', voiceRoutes);
 app.use('/api', retellLLMRoutes); // Retell Custom LLM at /api/retell-llm
+app.use('/api/analytics', analyticsRoutes); // V-Suite Analytics at /api/analytics/ingest
 
 // Health Check
 app.get('/api/health', (req, res) => {

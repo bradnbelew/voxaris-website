@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@retellai/n8n-nodes-retellai": "^0.2.3",
+    "@supabase/supabase-js": "^2.91.0",
     "@types/ws": "^8.18.1",
     "axios": "^1.13.2",
     "cors": "^2.8.5",
