@@ -196,7 +196,18 @@ const TOOLS: OpenAI.Chat.Completions.ChatCompletionTool[] = [
   }
 ];
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+// Lazy OpenAI initialization - won't crash if API key missing
+let openai: OpenAI | null = null;
+function getOpenAI(): OpenAI {
+  if (!openai) {
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey) {
+      throw new Error("OPENAI_API_KEY environment variable is required");
+    }
+    openai = new OpenAI({ apiKey });
+  }
+  return openai;
+}
 
 // Helper: Inject dynamic variables
 function injectContext(template: string, vars: Record<string, string | undefined>): string {
@@ -246,7 +257,7 @@ router.post('/retell-llm', async (req: Request, res: Response) => {
       }
     }
 
-    const completion = await openai.chat.completions.create({
+    const completion = await getOpenAI().chat.completions.create({
       model: "gpt-4o",  // Using full GPT-4o for best quality
       messages,
       tools: TOOLS,
