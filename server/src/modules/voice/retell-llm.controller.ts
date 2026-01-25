@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import OpenAI from 'openai';
+import { ghl } from '../../lib/ghl';
 
 const router = Router();
 
@@ -234,6 +235,28 @@ router.post('/retell-llm/tool-result', (req: Request, res: Response) => {
       break;
     case "book_appointment":
       result = `Appointment confirmed for ${args.name} at ${args.datetime}. Confirmation will be sent.`;
+      
+      // FIRE & FORGET SYNC TO GHL (V-Suite)
+      (async () => {
+        try {
+           console.log("🔄 Syncing Appointment to GHL...");
+           const contact = await ghl.createOrUpdateContact({
+             name: args.name,
+             phone: args.phone,
+             tags: ["AI_BOOKED", "VIP_BUYBACK_2026"]
+           });
+           
+           if (contact && contact.id) {
+             console.log(`✅ GHL Contact Synced: ${contact.id}`);
+             // Add note
+             await ghl.addNote(contact.id, `AI Booked Appointment for: ${args.vehicle} at ${args.datetime}`);
+             // Move Opportunity (Stage: Appointment Set)
+             // We need pipeline Id. For now, just logging contact is huge win.
+           }
+        } catch (err) {
+           console.error("❌ GHL Sync Warning:", err);
+        }
+      })();
       break;
     case "send_sms":
       result = `SMS sent to ${args.phone}: "${args.message}"`;
