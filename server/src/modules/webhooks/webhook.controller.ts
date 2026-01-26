@@ -119,4 +119,67 @@ router.post('/tavus', async (req: Request, res: Response) => {
 });
 
 
+
+// ==========================================
+// GHL INBOUND WEBHOOKS (SMS Bot)
+// ==========================================
+import OpenAI from 'openai';
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+const SMS_SYSTEM_PROMPT = `
+You are Maria, a Senior Acquisition Manager at Hill Nissan.
+You are chatting via SMS with a customer who received a "Payment Swap" mailer.
+GOAL: Get them to come to the showroom for a 10-minute appraisal.
+TONE: Professional, warm, concise (SMS style). Max 160 chars per text usually.
+KNOWLEDGE:
+- Offer: Up to $5,000 over KBB value.
+- Address: 123 Hill Nissan Dr.
+- Hours: 9am-8pm.
+RULES:
+- If they ask for price, say "I need to see it in person to give the max offer, but the mailer typically unlocks $3k-$5k over market."
+- If they want to book, ask: "Does 2:15 or 4:45 work better for you?"
+- If they agree to a time, say "Great, I'll lock that in."
+`;
+
+router.post('/ghl', async (req: Request, res: Response) => {
+    try {
+        // GHL Webhook payload structure varies by trigger type
+        // Assuming "Inbound Message" trigger sends: { type: "InboundMessage", contactId, message: { body: "..." } }
+        const { type, contactId, message } = req.body;
+        
+        console.log(`📩 GHL Event: ${type}`);
+
+        if (type !== "InboundMessage" || !message?.body) {
+             return res.json({ ignored: true });
+        }
+
+        if (message.direction === "outbound") {
+            return res.json({ ignored: true }); // Ignore our own messages
+        }
+
+        console.log(`💬 Incoming SMS from ${contactId}: "${message.body}"`);
+
+        // 1. Generate AI Response
+        const completion = await openai.chat.completions.create({
+            model: "gpt-4o",
+            messages: [
+                { role: "system", content: SMS_SYSTEM_PROMPT },
+                { role: "user", content: message.body }
+            ],
+            max_tokens: 150,
+        });
+
+        const aiReply = completion.choices[0].message.content || "Hey, this is Maria. Can you stop by today?";
+        
+        // 2. Send Reply via GHL
+        await ghl.sendSMS(contactId, aiReply);
+
+        res.json({ success: true });
+
+    } catch (error: any) {
+        console.error("❌ SMS Bot Error:", error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
 export default router;

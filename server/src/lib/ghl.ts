@@ -118,6 +118,32 @@ export class GHLService {
       console.error(`❌ GHL updatePipelineStage Error:`, error.response?.data || error.message);
     }
   }
+  /**
+   * Send SMS via GHL Conversations API
+   */
+  async sendSMS(contactId: string, message: string) {
+    try {
+      // GHL V2 Conversation API
+      // First, get or create conversation
+      // Actually, GHL V2 has /conversations/messages endpoint that takes contactId directly? 
+      // Documentation says: POST /conversations/messages
+      // Body: { contactId, type: "SMS", messageBody: "..." }
+      
+      const resp = await this.client.post('/conversations/messages', {
+        type: "SMS",
+        contactId,
+        messageBody: message
+        // providerType: "LeadConnector" (optional, defaults to default provider)
+      });
+      
+      console.log(`✅ SMS Sent to ${contactId}: "${message.substring(0, 20)}..."`);
+      return resp.data;
+    } catch (error: any) {
+      console.error(`❌ GHL sendSMS Error:`, error.response?.data || error.message);
+      // Fallback: If 400, maybe missing conversation? V2 usually handles this.
+      throw error;
+    }
+  }
 }
 
 export const ghl = new GHLService();
