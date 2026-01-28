@@ -1,9 +1,10 @@
 import { Router, Request, Response } from 'express';
 import { ghl } from '../../lib/ghl';
+import { logger } from '../../lib/logger';
+import { supabase } from '../../lib/supabase';
+import { clientsService } from '../clients/clients.service';
 
 const router = Router();
-
-// ==========================================
 // RETELL WEBHOOKS (Voice)
 // ==========================================
 router.post('/retell', async (req: Request, res: Response) => {
@@ -13,8 +14,38 @@ router.post('/retell', async (req: Request, res: Response) => {
             return res.json({ ignored: true });
         }
 
-        console.log(`📞 Retell Call Analyzed: ${event.call_id}`);
-        const { call_id, duration_seconds, post_call_analysis, recording_url } = event;
+        logger.info(`📞 Retell Call Analyzed: ${event.call_id}`);
+        const { call_id, duration_seconds, post_call_analysis, recording_url, agent_id } = event;
+        
+        // 0. VOXOS DB LOGGING (Section 0)
+        // We log to our own DB *before* GHL in case GHL fails.
+        // We need to find which client this is to link it.
+        const client = await clientsService.getClientByRetellAgentId(agent_id);
+        
+        if (client) {
+             const { error: dbError } = await supabase.from('calls').insert({
+                call_id: call_id,
+                client_id: client.id,
+                platform: 'retell',
+                direction: event.call?.direction || 'inbound',
+                started_at: new Date(event.call?.start_timestamp || Date.now()).toISOString(), // Retell timestamp
+                ended_at: new Date(event.call?.end_timestamp || Date.now()).toISOString(),
+                duration_seconds: duration_seconds,
+                transcript: post_call_analysis.transcript, 
+                summary: post_call_analysis.call_summary,
+                outcome: post_call_analysis.call_outcome,
+                sentiment_score: post_call_analysis.sentiment_score,
+                metadata: event,
+                flagged: duration_seconds < 10 // Auto-flag short calls
+            });
+            
+            if (dbError) logger.error("❌ Failed to log Call to DB:", dbError);
+            else logger.info("✅ Call Logged to Supabase 'calls' table");
+        } else {
+             logger.warn(`⚠️ Could not log call to DB: Client not found for Agent ${agent_id}`);
+        }
+
+        // ... existing GHL logic
         // Retell sends custom_data as flattened or nested? Checking docs: usually flattened in 'retell_llm_dynamic_variables' or 'metadata'.
         // Assuming we passed contact_id in metadata.
         // We need to look at 'metadata' or 'retell_llm_dynamic_variables'.
@@ -23,12 +54,29 @@ router.post('/retell', async (req: Request, res: Response) => {
         // Actually, Retell webhook often sends the 'call' object which has 'metadata'.
         
         // Safety check: where is metadata?
-        const metadata = event.call?.metadata || event.metadata || {};
-        const contactId = metadata.contact_id;
+        let contactId = event.call?.metadata?.contact_id || event.metadata?.contact_id;
+        
+        // FALLBACK: If no Contact ID, try to verify by Phone Number
+        if (!contactId) {
+             logger.warn("⚠️ No Contact ID in metadata. Attempting lookup by Phone...");
+             const call = event.call || event;
+             // Retell: Inbound (user=from), Outbound (user=to)
+             // We'll check 'to_number' if direction is outbound, else 'from_number'
+             const direction = call.direction || 'inbound';
+             const customerNumber = direction === 'outbound' ? call.to_number : call.from_number;
+
+             if (customerNumber) {
+                 const found = await ghl.findContact(customerNumber);
+                 if (found && found.id) {
+                     contactId = found.id;
+                     logger.info(`✅ Found Contact via Phone Lookup (${direction}): ${contactId}`);
+                 }
+             }
+        }
 
         if (!contactId) {
-            console.warn("⚠️ No Contact ID found in Retell Webhook");
-            return res.json({ error: "No Contact ID" });
+            logger.warn("❌ Failed to resolve Contact ID (Metadata missing & Phone lookup failed)");
+            return res.json({ error: "No Contact ID resolved" });
         }
 
         // 1. SYNC DATA TO GHL (Section 10: Post-Call Sync)
@@ -60,7 +108,7 @@ router.post('/retell', async (req: Request, res: Response) => {
 
         // 3. APPOINTMENT BOOKING HANDLER (Section 11)
         if (post_call_analysis.appointment_booked) {
-             console.log("📅 Appointment Detected! Logic Triggered.");
+             logger.info("📅 Appointment Detected! Logic Triggered.");
              // Ideally we parse "Next Tuesday at 2pm" -> Date Object.
              // For V1, we just Tag it "AI_BOOKED" and let the human scheduler finalize if precise time parsing is hard.
              // OR if Retell gives precise ISO timestamp in 'appointment_details', we use it.
@@ -79,7 +127,7 @@ router.post('/retell', async (req: Request, res: Response) => {
         res.json({ success: true });
 
     } catch (error: any) {
-        console.error("❌ Retell Webhook Error:", error);
+        logger.error("❌ Retell Webhook Error:", error);
         res.status(500).json({ error: error.message });
     }
 });
@@ -90,11 +138,57 @@ router.post('/retell', async (req: Request, res: Response) => {
 router.post('/tavus', async (req: Request, res: Response) => {
     try {
         const event = req.body;
-        console.log(`🎥 Tavus Event: ${event.event}`);
+        logger.info(`🎥 Tavus Event: ${event.event}`);
 
         if (event.event === 'conversation.ended') {
-            const { conversation_id, duration_seconds, summary, sentiment, metadata } = event;
-            const contactId = metadata?.contact_id;
+            const { conversation_id, duration_seconds, summary, sentiment, metadata, persona_id } = event;
+            
+            // 0. VOXOS DB LOGGING
+            const client = await clientsService.getClientByTavusPersonaId(persona_id);
+            if (client) {
+                const { error: dbError } = await supabase.from('calls').insert({
+                    call_id: conversation_id,
+                    client_id: client.id,
+                    platform: 'tavus',
+                    direction: 'outbound', // Contextually usually outbound for video sends? Or inbound. assume outbound/video gen for now.
+                    started_at: new Date(Date.now() - (duration_seconds * 1000)).toISOString(), // Approx start
+                    ended_at: new Date().toISOString(),
+                    duration_seconds: duration_seconds,
+                    summary: summary,
+                    sentiment_score: sentiment ? Math.round(sentiment.score * 100) : null,
+                    outcome: 'video_completed',
+                    metadata: event,
+                    flagged: false
+                });
+                if (dbError) logger.error("❌ Failed to log Tavus Call to DB:", dbError);
+                else logger.info("✅ Tavus Call Logged to Supabase");
+            }
+
+            let contactId = metadata?.contact_id;
+            // ... fallback logic
+            if (!contactId && req.query.contact_id) {
+                contactId = req.query.contact_id as string;
+            }
+
+            // Fallback 2: Check for email or phone in query params
+            if (!contactId) {
+                const email = req.query.email as string;
+                const phone = req.query.phone as string;
+                
+                if (email || phone) {
+                    logger.info(`🔍 Looking up Tavus contact by ${email ? 'Email' : 'Phone'}...`);
+                    const found = await ghl.findContact(email || phone);
+                    if (found && found.id) {
+                        contactId = found.id;
+                        logger.info(`✅ Found Contact via Lookup: ${contactId}`);
+                    }
+                }
+            }
+
+            if (!contactId) {
+                 logger.warn("❌ No Contact ID found for Tavus Event (and lookup failed)");
+                 return res.json({ error: "No Contact ID" });
+            }
 
             if (contactId) {
                 await ghl.createOrUpdateContact({
@@ -113,7 +207,7 @@ router.post('/tavus', async (req: Request, res: Response) => {
         }
         res.json({ success: true });
     } catch (error: any) {
-         console.error("❌ Tavus Webhook Error:", error);
+         logger.error("❌ Tavus Webhook Error:", error);
          res.status(500).json({ error: error.message });
     }
 });

@@ -42,7 +42,11 @@ serve(async (req) => {
       company, 
       industry,
       challenge,
-      agentId 
+      agentId,
+      car_year,
+      car_make,
+      car_model,
+      car_full // "2020 Honda Accord"
     } = body;
 
     if (!phone) {
@@ -62,6 +66,9 @@ serve(async (req) => {
 
     // Build the full caller name
     const callerName = `${firstName || ''} ${lastName || ''}`.trim() || 'there';
+    
+    // Determine Car Model string
+    const vehicleString = car_full || (car_year && car_make && car_model ? `${car_year} ${car_make} ${car_model}` : '2022 Nissan Altima');
 
     // Map challenge value to readable text
     const challengeMap: Record<string, string> = {
@@ -83,9 +90,18 @@ serve(async (req) => {
       caller_company: company || '',
       caller_industry: industry || '',
       caller_challenge: challengeText,
+      car_model: vehicleString,
     };
 
     console.log('Retell metadata:', metadata);
+
+    // Prepare Dynamic Variables for Custom LLM (if used)
+    const dynamicVariables = {
+      customer_name: firstName || 'Guest',
+      car_model: vehicleString, 
+      manager_name: 'Marcus',
+      offer_expiration: 'this Friday'
+    };
 
     // Create the outbound call via Retell API
     const retellPayload: Record<string, unknown> = {
@@ -93,6 +109,7 @@ serve(async (req) => {
       from_number: '+14072891565', // Voxaris outbound phone number
       to_number: formattedPhone,
       metadata: metadata,
+      retell_llm_dynamic_variables: dynamicVariables, // CRITICAL: Pass variables to LLM
     };
 
     console.log('Calling Retell API with payload:', JSON.stringify(retellPayload, null, 2));

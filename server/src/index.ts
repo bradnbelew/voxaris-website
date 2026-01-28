@@ -8,6 +8,7 @@ import analyticsRoutes from './modules/analytics/analytics.controller';
 import webhookRoutes from './modules/webhooks/webhook.controller';
 import landingRoutes from './modules/landing/landing.controller';
 import dashboardRoutes from './modules/analytics/dashboard.controller';
+import spawnRoutes from './modules/provisioning/spawn.controller';
 
 // Load env vars
 dotenv.config();
@@ -27,6 +28,7 @@ app.use('/api/analytics', analyticsRoutes); // V-Suite Analytics at /api/analyti
 app.use('/api/webhooks', webhookRoutes); // New Unified Webhooks
 app.use('/api/landing', landingRoutes);   // QR Scan API
 app.use('/api/analytics', dashboardRoutes); // V-Suite Dashboard API
+app.use('/api/provisioning', spawnRoutes); // VoxOS Factory (Spawn)
 
 // Health Check
 app.get('/api/health', (req, res) => {

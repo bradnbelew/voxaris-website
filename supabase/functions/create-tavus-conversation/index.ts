@@ -30,7 +30,7 @@ serve(async (req) => {
     }
 
     const body = await req.json().catch(() => ({}));
-    const { replica_id, persona_id, custom_greeting, conversational_context, conversation_name, name, carModel } = body;
+    const { replica_id, persona_id, custom_greeting, conversational_context, conversation_name, name, carModel, email, phone } = body;
 
     // Use environment variable as fallback for persona_id
     const finalPersonaId = persona_id || "p7aae9095144"; // Updated fallback to Olivia
@@ -59,6 +59,14 @@ serve(async (req) => {
     if (replica_id) {
       conversationPayload.replica_id = replica_id;
     }
+    
+    // CRITICAL: Set Callback URL for Webhooks with Identifiers
+    const baseUrl = "https://hill-nissan-backend.onrender.com/api/webhooks/tavus";
+    const params = new URLSearchParams();
+    if (email) params.append("email", email);
+    if (phone) params.append("phone", phone);
+    
+    conversationPayload.callback_url = `${baseUrl}?${params.toString()}`;
 
     // Add persona_id
     if (finalPersonaId) {
