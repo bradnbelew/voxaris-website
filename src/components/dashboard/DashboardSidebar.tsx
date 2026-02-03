@@ -1,13 +1,17 @@
 import { Link, useLocation } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  Users, 
-  UserPlus, 
-  Link2, 
+import {
+  LayoutDashboard,
+  Users,
+  UserPlus,
+  Link2,
   Settings,
   LogOut,
   FlaskConical,
-  Code
+  Code,
+  Shield,
+  Building2,
+  Activity,
+  AlertTriangle,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -65,6 +69,29 @@ const menuItems = [
   },
 ];
 
+const adminMenuItems = [
+  {
+    title: 'Admin Dashboard',
+    icon: Shield,
+    href: '/dashboard/admin',
+  },
+  {
+    title: 'Dealer Management',
+    icon: Building2,
+    href: '/dashboard/admin/dealers',
+  },
+  {
+    title: 'System Health',
+    icon: Activity,
+    href: '/dashboard/admin/health',
+  },
+  {
+    title: 'Failed Jobs',
+    icon: AlertTriangle,
+    href: '/dashboard/admin/dlq',
+  },
+];
+
 export default function DashboardSidebar() {
   const location = useLocation();
   const { signOut, profile } = useAuthContext();
@@ -95,9 +122,9 @@ export default function DashboardSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {menuItems.map((item) => {
-                const isActive = location.pathname === item.href || 
+                const isActive = location.pathname === item.href ||
                   (item.href !== '/dashboard' && location.pathname.startsWith(item.href));
-                
+
                 return (
                   <SidebarMenuItem key={item.href}>
                     <SidebarMenuButton
@@ -111,6 +138,46 @@ export default function DashboardSidebar() {
                           'flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-300',
                           isActive
                             ? 'bg-cyan-500/10 text-cyan-400 border-l-2 border-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.1)]'
+                            : 'text-gray-400 hover:bg-white/5 hover:text-white'
+                        )}
+                      >
+                        <item.icon className="h-5 w-5 shrink-0" />
+                        <span className="truncate">{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Admin Section */}
+        <SidebarGroup className="mt-4 pt-4 border-t border-white/10">
+          {!isCollapsed && (
+            <div className="px-3 mb-2">
+              <span className="text-xs font-semibold text-white/40 uppercase tracking-wider">Admin</span>
+            </div>
+          )}
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {adminMenuItems.map((item) => {
+                const isActive = location.pathname === item.href ||
+                  (item.href !== '/dashboard/admin' && location.pathname.startsWith(item.href));
+
+                return (
+                  <SidebarMenuItem key={item.href}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={isActive}
+                      tooltip={item.title}
+                    >
+                      <Link
+                        to={item.href}
+                        className={cn(
+                          'flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-300',
+                          isActive
+                            ? 'bg-purple-500/10 text-purple-400 border-l-2 border-purple-400 shadow-[0_0_15px_rgba(168,85,247,0.1)]'
                             : 'text-gray-400 hover:bg-white/5 hover:text-white'
                         )}
                       >

@@ -30,6 +30,9 @@ import Integrations from "./pages/dashboard/Integrations";
 import Settings from "./pages/dashboard/Settings";
 import NotFound from "./pages/NotFound";
 
+// Admin Dashboard Pages
+import { AdminDashboard, DealerManagement, SystemHealth, FailedJobs } from "./pages/admin";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -67,7 +70,13 @@ const App = () => (
               <Route path="/dashboard/developers" element={<DashboardLayout><Developers /></DashboardLayout>} />
               <Route path="/dashboard/integrations" element={<DashboardLayout><Integrations /></DashboardLayout>} />
               <Route path="/dashboard/settings" element={<DashboardLayout><Settings /></DashboardLayout>} />
-              
+
+              {/* Admin Routes */}
+              <Route path="/dashboard/admin" element={<DashboardLayout><AdminDashboard /></DashboardLayout>} />
+              <Route path="/dashboard/admin/dealers" element={<DashboardLayout><DealerManagement /></DashboardLayout>} />
+              <Route path="/dashboard/admin/health" element={<DashboardLayout><SystemHealth /></DashboardLayout>} />
+              <Route path="/dashboard/admin/dlq" element={<DashboardLayout><FailedJobs /></DashboardLayout>} />
+
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
