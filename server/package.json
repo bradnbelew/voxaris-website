@@ -1,23 +1,31 @@
 {
   "name": "voxaris-server",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Backend for V-Suite SaaS (Express + TypeScript)",
   "main": "dist/index.js",
   "scripts": {
     "start": "node dist/index.js",
+    "worker": "node dist/workers/worker.js",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
-    "build": "tsc -p ."
+    "dev:worker": "ts-node-dev --respawn --transpile-only src/workers/worker.ts",
+    "build": "tsc -p .",
+    "test": "jest",
+    "lint": "eslint src --ext .ts"
   },
   "dependencies": {
     "@retellai/n8n-nodes-retellai": "^0.2.3",
     "@supabase/supabase-js": "^2.91.0",
     "@types/ws": "^8.18.1",
     "axios": "^1.13.2",
+    "bullmq": "^5.34.0",
     "cors": "^2.8.5",
     "dotenv": "^16.6.1",
     "express": "^4.22.1",
+    "express-rate-limit": "^7.5.0",
     "helmet": "^7.2.0",
+    "ioredis": "^5.4.2",
     "openai": "^6.16.0",
+    "rate-limit-redis": "^4.2.0",
     "retell-sdk": "^4.66.0",
     "ts-node": "^10.9.2",
     "winston": "^3.19.0",
@@ -32,5 +40,8 @@
     "nodemon": "^3.1.11",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

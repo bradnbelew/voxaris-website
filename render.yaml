@@ -4,29 +4,110 @@ services:
     name: voxaris-server
     env: node
     region: oregon
-    plan: free
+    plan: starter # Upgraded from free for production stability
     rootDir: server
     buildCommand: npm install && npm run build
     startCommand: npm start
+    healthCheckPath: /api/health
     envVars:
       - key: PORT
         value: 10000
+      - key: NODE_ENV
+        value: production
+      # Platform API Keys
+      - key: RETELL_API_KEY
+        sync: false
+      - key: RETELL_WEBHOOK_SECRET
+        sync: false
+      - key: TAVUS_API_KEY
+        sync: false
+      - key: TAVUS_WEBHOOK_SECRET
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      # Database
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+      # Queue System (Redis)
+      - key: UPSTASH_REDIS_URL
+        sync: false
+      # Encryption
+      - key: ENCRYPTION_KEY
+        sync: false
+      # Legacy GHL (fallback)
+      - key: GHL_ACCESS_TOKEN
+        sync: false
+      - key: GHL_LOCATION_ID
+        sync: false
+      # Monitoring
+      - key: GRAFANA_LOKI_HOST
+        sync: false
+      - key: GRAFANA_LOKI_USER
+        sync: false
+      - key: GRAFANA_LOKI_PASSWORD
+        sync: false
+
+  # 2. Background Worker (Queue Processor)
+  - type: worker
+    name: voxaris-worker
+    env: node
+    region: oregon
+    plan: starter
+    rootDir: server
+    buildCommand: npm install && npm run build
+    startCommand: npm run worker
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: WORKER_PORT
+        value: 3001
+      # Same env vars as API server (need access to all services)
       - key: RETELL_API_KEY
         sync: false
       - key: TAVUS_API_KEY
         sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
       - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
         sync: false
       - key: SUPABASE_ANON_KEY
         sync: false
+      - key: UPSTASH_REDIS_URL
+        sync: false
+      - key: ENCRYPTION_KEY
+        sync: false
+      - key: GHL_ACCESS_TOKEN
+        sync: false
+      - key: GHL_LOCATION_ID
+        sync: false
+      - key: GRAFANA_LOKI_HOST
+        sync: false
+      - key: GRAFANA_LOKI_USER
+        sync: false
+      - key: GRAFANA_LOKI_PASSWORD
+        sync: false
 
-  # 2. The Frontend (Vite Static Site)
+  # 3. The Frontend (Vite Static Site)
   - type: static
     name: voxaris-frontend
     env: static
     rootDir: .
     buildCommand: npm install && npm run build
     staticPublishPath: ./dist
+    headers:
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
     envVars:
       - key: VITE_API_URL
         fromService:
