@@ -7,7 +7,7 @@ import path from 'path';
 // Load envs if not already loaded
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
-const { combinep, timestamp, json, colorize, printf } = winston.format;
+const { combine, timestamp, json, colorize, printf } = winston.format;
 
 const GRAFANA_HOST = process.env.GRAFANA_LOKI_HOST; // e.g. https://logs-prod-us-central1.grafana.net
 const GRAFANA_USER = process.env.GRAFANA_LOKI_USER; // e.g. 123456

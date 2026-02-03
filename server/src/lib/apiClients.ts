@@ -195,15 +195,20 @@ interface GHLContact {
 }
 
 /**
- * Get GHL client for a specific dealer
- * Uses cached credentials when available
+ * GHL Client return type
  */
-export async function getGHLClient(dealerId: string): Promise<{
+export interface GHLClientMethods {
   findContact: (query: string) => Promise<GHLContact | null>;
   createOrUpdateContact: (data: GHLContact) => Promise<GHLContact | null>;
   addNote: (contactId: string, content: string) => Promise<void>;
   sendSMS: (contactId: string, message: string) => Promise<void>;
-} | null> {
+}
+
+/**
+ * Get GHL client for a specific dealer
+ * Uses cached credentials when available
+ */
+export async function getGHLClient(dealerId: string): Promise<GHLClientMethods | null> {
   // Try to get cached credentials
   const cacheKey = `ghl:client:${dealerId}`;
   let credentials = await cacheGet<{ apiKey: string; locationId: string }>(cacheKey);
@@ -231,24 +236,27 @@ export async function getGHLClient(dealerId: string): Promise<{
     timeout: 15000,
   });
 
+  // Define findContact as standalone function to avoid 'this' context issues
+  const findContact = async (query: string): Promise<GHLContact | null> => {
+    try {
+      const resp = await client.get('/contacts/', {
+        params: { locationId, query, limit: 1 },
+      });
+      return resp.data.contacts?.[0] || null;
+    } catch (error: any) {
+      logger.error(`GHL findContact error:`, error.response?.data || error.message);
+      return null;
+    }
+  };
+
   return {
-    async findContact(query: string): Promise<GHLContact | null> {
-      try {
-        const resp = await client.get('/contacts/', {
-          params: { locationId, query, limit: 1 },
-        });
-        return resp.data.contacts?.[0] || null;
-      } catch (error: any) {
-        logger.error(`GHL findContact error:`, error.response?.data || error.message);
-        return null;
-      }
-    },
+    findContact,
 
     async createOrUpdateContact(data: GHLContact): Promise<GHLContact | null> {
       try {
         const existing = data.id
           ? { id: data.id }
-          : await this.findContact(data.email || data.phone || '');
+          : await findContact(data.email || data.phone || '');
 
         if (existing?.id) {
           const resp = await client.put(`/contacts/${existing.id}`, {
@@ -304,7 +312,7 @@ export async function getGHLClient(dealerId: string): Promise<{
  * Legacy GHL client using environment variables
  * Used when dealer_integrations table doesn't exist yet
  */
-export function getLegacyGHLClient(): ReturnType<typeof getGHLClient> extends Promise<infer T> ? NonNullable<T> : never {
+export function getLegacyGHLClient(): GHLClientMethods {
   const apiKey = process.env.GHL_ACCESS_TOKEN || '';
   const locationId = process.env.GHL_LOCATION_ID || '';
 
@@ -322,24 +330,27 @@ export function getLegacyGHLClient(): ReturnType<typeof getGHLClient> extends Pr
     timeout: 15000,
   });
 
+  // Define findContact as standalone function to avoid 'this' context issues
+  const findContact = async (query: string): Promise<GHLContact | null> => {
+    try {
+      const resp = await client.get('/contacts/', {
+        params: { locationId, query, limit: 1 },
+      });
+      return resp.data.contacts?.[0] || null;
+    } catch (error: any) {
+      logger.error(`GHL findContact error:`, error.response?.data || error.message);
+      return null;
+    }
+  };
+
   return {
-    async findContact(query: string): Promise<GHLContact | null> {
-      try {
-        const resp = await client.get('/contacts/', {
-          params: { locationId, query, limit: 1 },
-        });
-        return resp.data.contacts?.[0] || null;
-      } catch (error: any) {
-        logger.error(`GHL findContact error:`, error.response?.data || error.message);
-        return null;
-      }
-    },
+    findContact,
 
     async createOrUpdateContact(data: GHLContact): Promise<GHLContact | null> {
       try {
         const existing = data.id
           ? { id: data.id }
-          : await this.findContact(data.email || data.phone || '');
+          : await findContact(data.email || data.phone || '');
 
         if (existing?.id) {
           const resp = await client.put(`/contacts/${existing.id}`, {

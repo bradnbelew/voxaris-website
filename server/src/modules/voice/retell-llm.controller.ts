@@ -2,15 +2,23 @@ import { Router, Request, Response } from 'express';
 import OpenAI from 'openai';
 import { ghl } from '../../lib/ghl';
 import { logger } from '../../lib/logger';
-
-const router = Router();
-// ... (rest of imports)
-
-// ... (code)
-
 import { clientsService } from '../clients/clients.service';
 
-// ... imports
+const router = Router();
+
+/**
+ * Retell LLM Request type
+ */
+interface RetellLLMRequest {
+  call_id: string;
+  agent_id: string;
+  interaction_type?: 'call_details' | 'reminder_required' | 'response_required' | 'ping_pong';
+  transcript?: Array<{
+    role: 'agent' | 'user';
+    content: string;
+  }>;
+  [key: string]: any; // Allow additional fields
+}
 
 // Main Retell LLM Endpoint
 router.post('/retell-llm', async (req: Request, res: Response) => {

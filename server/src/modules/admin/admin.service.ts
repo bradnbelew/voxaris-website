@@ -784,7 +784,7 @@ export async function getFailedJobs(
 
   const { tavusQueue, retellQueue, ghlQueue } = getQueues();
   const jobs: DLQJob[] = [];
-  const counts: Record<string, number> = {};
+  const counts: { [key: string]: number; total: number } = { total: 0 };
 
   const queuesToCheck = [
     { queue: tavusQueue, name: QUEUE_NAMES.TAVUS_WEBHOOKS },
