@@ -1,6 +1,7 @@
 import {
   Navbar,
   Hero,
+  StatsSection,
   ProblemSolution,
   HowItWorks,
   TechnologyShowcase,
@@ -11,14 +12,15 @@ import {
 
 export function HomePage() {
   return (
-    <div className="min-h-screen bg-navy-900">
+    <div className="min-h-screen bg-cream-100">
       <Navbar />
       <main>
         <Hero />
+        <StatsSection />
+        <FeaturesSection />
+        <TechnologyShowcase />
         <ProblemSolution />
         <HowItWorks />
-        <TechnologyShowcase />
-        <FeaturesSection />
         <CTASection />
       </main>
       <Footer />

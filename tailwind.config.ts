@@ -95,6 +95,25 @@ export default {
           800: '#374151',
           900: '#1F2937',
         },
+        // Light theme - Dribbble inspired
+        cream: {
+          50: '#FDFCFB',
+          100: '#FAF9F6',
+          200: '#F8F7F4',
+          300: '#F5F4F1',
+          400: '#EEEDEA',
+          500: '#E5E4E1',
+        },
+        // Soft blue accent (Dribbble style)
+        accent: {
+          50: '#E3F2FD',
+          100: '#BBDEFB',
+          200: '#90CAF9',
+          300: '#64B5F6',
+          400: '#42A5F5',
+          500: '#2196F3',
+          600: '#1E88E5',
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -107,7 +126,8 @@ export default {
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-        display: ['Satoshi', 'system-ui', 'sans-serif'],
+        serif: ['Playfair Display', 'Georgia', 'serif'],
+        display: ['Playfair Display', 'Georgia', 'serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },
       fontSize: {

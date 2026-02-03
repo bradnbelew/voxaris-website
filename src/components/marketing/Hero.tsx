@@ -2,112 +2,144 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { ShootingStars } from './backgrounds/ShootingStars';
-import { GradientOrbs } from './backgrounds/GradientOrbs';
+
+const TAVUS_VIDEO_URL = "https://cdn.replica.tavus.io/20283/9de1f64e.mp4";
 
 export function Hero() {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-navy-900">
-      {/* Background */}
-      <ShootingStars />
-      <GradientOrbs />
+    <section className="relative min-h-screen flex items-center overflow-hidden bg-cream-200">
+      {/* Subtle decorative elements */}
+      <div className="absolute top-20 left-10 w-64 h-64 bg-accent-100 rounded-full blur-3xl opacity-40" />
+      <div className="absolute bottom-20 right-10 w-80 h-80 bg-accent-50 rounded-full blur-3xl opacity-30" />
 
       {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 text-center">
-        {/* Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8"
-        >
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
-          </span>
-          <span className="text-sm text-platinum-300">Now with Voxaris Video AI</span>
-        </motion.div>
-
-        {/* Headline */}
-        <motion.h1
-          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-        >
-          <span className="text-white">AI Agents That</span>
-          <br />
-          <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
-            Close Deals While You Sleep
-          </span>
-        </motion.h1>
-
-        {/* Subheadline */}
-        <motion.p
-          className="max-w-2xl mx-auto text-lg sm:text-xl text-platinum-400 mb-10"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          Deploy photorealistic video and voice AI agents that engage leads,
-          qualify prospects, and book appointments 24/7
-        </motion.p>
-
-        {/* CTAs */}
-        <motion.div
-          className="flex flex-col sm:flex-row items-center justify-center gap-4"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-        >
-          <Link to="/demo">
-            <Button
-              size="lg"
-              className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white border-0 px-8 h-12 text-base font-medium shadow-lg shadow-purple-500/25"
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          {/* Left side - Text content */}
+          <div className="text-center lg:text-left">
+            {/* Small Label */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent-50 border border-accent-200 mb-8"
             >
-              <Play className="w-4 h-4 mr-2 fill-current" />
-              Watch Demo
-            </Button>
-          </Link>
-          <Link to="/demo">
-            <Button
-              size="lg"
-              variant="outline"
-              className="border-white/20 text-white hover:bg-white/10 px-8 h-12 text-base font-medium"
-            >
-              Book a Call
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
-          </Link>
-        </motion.div>
+              <span className="text-xs font-medium tracking-widest uppercase text-navy-700">
+                New Standards for AI Automation
+              </span>
+            </motion.div>
 
-        {/* Stats Bar */}
-        <motion.div
-          className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
-        >
-          <StatItem value="< 3s" label="Response Time" />
-          <StatItem value="24/7" label="Availability" />
-          <StatItem value="3-4x" label="More Appointments" />
-          <StatItem value="70%" label="Show Rate" />
-        </motion.div>
+            {/* Headline - Serif style like Dribbble */}
+            <motion.h1
+              className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-medium tracking-tight mb-6 text-navy-900"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
+              <span className="block">AI agents that</span>
+              <span className="block italic text-navy-600">close deals</span>
+            </motion.h1>
+
+            {/* Subheadline */}
+            <motion.p
+              className="max-w-xl text-lg sm:text-xl text-platinum-600 mb-10 font-sans"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              Deploy photorealistic video and voice AI agents that engage leads,
+              qualify prospects, and book appointments 24/7
+            </motion.p>
+
+            {/* CTAs - Clean outlined style */}
+            <motion.div
+              className="flex flex-col sm:flex-row items-center lg:items-start justify-center lg:justify-start gap-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+            >
+              <Link to="/demo">
+                <Button
+                  size="lg"
+                  className="bg-navy-900 hover:bg-navy-800 text-white px-8 h-12 text-base font-medium rounded-full"
+                >
+                  Get Started
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </Link>
+              <Link to="/demo">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="border-navy-300 text-navy-700 hover:bg-navy-50 px-8 h-12 text-base font-medium rounded-full"
+                >
+                  <Play className="w-4 h-4 mr-2" />
+                  Watch Demo
+                </Button>
+              </Link>
+            </motion.div>
+          </div>
+
+          {/* Right side - Tavus Video Agent Showcase */}
+          <motion.div
+            className="relative flex justify-center lg:justify-end"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
+            <div className="relative">
+              {/* Video container with elegant frame */}
+              <div className="relative w-72 h-72 sm:w-80 sm:h-80 lg:w-96 lg:h-96">
+                {/* Decorative ring */}
+                <div className="absolute inset-0 rounded-full border-2 border-accent-200 animate-pulse" style={{ animationDuration: '3s' }} />
+                <div className="absolute inset-4 rounded-full border border-accent-300/50" />
+
+                {/* Video */}
+                <div className="absolute inset-8 rounded-full overflow-hidden shadow-2xl bg-white">
+                  <video
+                    src={TAVUS_VIDEO_URL}
+                    className="w-full h-full object-cover scale-110"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                  />
+                </div>
+
+                {/* Live indicator */}
+                <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-lg">
+                  <span className="relative flex h-3 w-3">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                  </span>
+                  <span className="text-sm font-medium text-navy-900">AI Agent Live</span>
+                </div>
+              </div>
+
+              {/* Floating stats cards */}
+              <motion.div
+                className="absolute -top-4 -left-4 bg-white rounded-xl shadow-lg px-4 py-3"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.7 }}
+              >
+                <div className="text-2xl font-serif font-semibold text-navy-900">&lt;3s</div>
+                <div className="text-xs text-platinum-500">Response</div>
+              </motion.div>
+
+              <motion.div
+                className="absolute -bottom-4 -right-4 bg-white rounded-xl shadow-lg px-4 py-3"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.8 }}
+              >
+                <div className="text-2xl font-serif font-semibold text-navy-900">24/7</div>
+                <div className="text-xs text-platinum-500">Available</div>
+              </motion.div>
+            </div>
+          </motion.div>
+        </div>
       </div>
-
-      {/* Bottom gradient fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-navy-900 to-transparent z-10" />
     </section>
-  );
-}
-
-function StatItem({ value, label }: { value: string; label: string }) {
-  return (
-    <div className="text-center">
-      <div className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-white to-platinum-300 bg-clip-text text-transparent">
-        {value}
-      </div>
-      <div className="text-sm text-platinum-500 mt-1">{label}</div>
-    </div>
   );
 }

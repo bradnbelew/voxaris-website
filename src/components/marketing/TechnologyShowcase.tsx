@@ -1,9 +1,11 @@
 import { motion } from 'framer-motion';
-import { Video, Phone, Mic, MessageSquare } from 'lucide-react';
+import { Video, Phone } from 'lucide-react';
+
+const TAVUS_VIDEO_URL = "https://cdn.replica.tavus.io/20283/9de1f64e.mp4";
 
 export function TechnologyShowcase() {
   return (
-    <section className="py-24 bg-gradient-to-b from-navy-900 to-navy-800 relative overflow-hidden">
+    <section className="py-24 bg-white relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section header */}
         <motion.div
@@ -12,10 +14,14 @@ export function TechnologyShowcase() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-            Proprietary AI Technology
+          <span className="text-xs font-medium tracking-widest uppercase text-accent-500 mb-4 block">
+            Technology
+          </span>
+          <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl text-navy-900 mb-4">
+            Proprietary AI
+            <span className="italic text-navy-600"> technology</span>
           </h2>
-          <p className="text-platinum-400 max-w-2xl mx-auto">
+          <p className="text-platinum-600 max-w-2xl mx-auto">
             Built from the ground up for enterprise scale. 100% Voxaris technology.
           </p>
         </motion.div>
@@ -24,25 +30,21 @@ export function TechnologyShowcase() {
         <div className="grid md:grid-cols-2 gap-8">
           {/* Video AI Card */}
           <motion.div
-            className="group relative rounded-3xl overflow-hidden"
+            className="group relative rounded-2xl overflow-hidden bg-cream-100 border border-platinum-200 shadow-card hover:shadow-card-hover transition-all duration-300"
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            {/* Gradient border effect */}
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-purple-700 rounded-3xl" />
-            <div className="absolute inset-[2px] bg-navy-800 rounded-3xl" />
-
             {/* Content */}
-            <div className="relative p-8 lg:p-10">
+            <div className="p-8 lg:p-10">
               {/* Icon badge */}
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 mb-6">
-                <Video className="w-4 h-4 text-purple-400" />
-                <span className="text-sm font-medium text-purple-400">Video AI</span>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent-50 border border-accent-200 mb-6">
+                <Video className="w-4 h-4 text-accent-500" />
+                <span className="text-sm font-medium text-navy-700">Video AI</span>
               </div>
 
-              <h3 className="text-2xl font-bold text-white mb-4">
+              <h3 className="font-serif text-2xl font-medium text-navy-900 mb-4">
                 Voxaris Video AI
               </h3>
 
@@ -53,46 +55,44 @@ export function TechnologyShowcase() {
                   'Custom personas per client',
                   'Perfect for web leads & landing pages',
                 ].map((item) => (
-                  <li key={item} className="flex items-center gap-3 text-platinum-300">
-                    <div className="w-1.5 h-1.5 rounded-full bg-purple-500" />
+                  <li key={item} className="flex items-center gap-3 text-platinum-600">
+                    <div className="w-1.5 h-1.5 rounded-full bg-accent-500" />
                     {item}
                   </li>
                 ))}
               </ul>
 
-              {/* Visual placeholder */}
-              <div className="aspect-video rounded-xl bg-navy-900/50 border border-white/5 flex items-center justify-center">
-                <div className="text-center">
-                  <div className="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center mb-4">
-                    <Video className="w-10 h-10 text-white" />
-                  </div>
-                  <p className="text-sm text-platinum-500">Live Video Agent Preview</p>
-                </div>
+              {/* Video preview */}
+              <div className="aspect-video rounded-xl overflow-hidden bg-white border border-platinum-200 shadow-sm">
+                <video
+                  src={TAVUS_VIDEO_URL}
+                  className="w-full h-full object-cover"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                />
               </div>
             </div>
           </motion.div>
 
           {/* Voice AI Card */}
           <motion.div
-            className="group relative rounded-3xl overflow-hidden"
+            className="group relative rounded-2xl overflow-hidden bg-cream-100 border border-platinum-200 shadow-card hover:shadow-card-hover transition-all duration-300"
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            {/* Gradient border effect */}
-            <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-pink-700 rounded-3xl" />
-            <div className="absolute inset-[2px] bg-navy-800 rounded-3xl" />
-
             {/* Content */}
-            <div className="relative p-8 lg:p-10">
+            <div className="p-8 lg:p-10">
               {/* Icon badge */}
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-pink-500/10 border border-pink-500/20 mb-6">
-                <Phone className="w-4 h-4 text-pink-400" />
-                <span className="text-sm font-medium text-pink-400">Voice AI</span>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent-50 border border-accent-200 mb-6">
+                <Phone className="w-4 h-4 text-accent-500" />
+                <span className="text-sm font-medium text-navy-700">Voice AI</span>
               </div>
 
-              <h3 className="text-2xl font-bold text-white mb-4">
+              <h3 className="font-serif text-2xl font-medium text-navy-900 mb-4">
                 Voxaris Voice AI
               </h3>
 
@@ -103,21 +103,21 @@ export function TechnologyShowcase() {
                   'Intelligent interruption handling',
                   'Perfect for phone leads & follow-ups',
                 ].map((item) => (
-                  <li key={item} className="flex items-center gap-3 text-platinum-300">
-                    <div className="w-1.5 h-1.5 rounded-full bg-pink-500" />
+                  <li key={item} className="flex items-center gap-3 text-platinum-600">
+                    <div className="w-1.5 h-1.5 rounded-full bg-accent-500" />
                     {item}
                   </li>
                 ))}
               </ul>
 
-              {/* Visual placeholder - voice waveform */}
-              <div className="aspect-video rounded-xl bg-navy-900/50 border border-white/5 flex items-center justify-center">
+              {/* Voice waveform visual */}
+              <div className="aspect-video rounded-xl bg-white border border-platinum-200 shadow-sm flex items-center justify-center">
                 <div className="text-center">
                   <div className="flex items-center justify-center gap-1 mb-4">
                     {[...Array(12)].map((_, i) => (
                       <motion.div
                         key={i}
-                        className="w-1.5 bg-gradient-to-t from-pink-500 to-pink-400 rounded-full"
+                        className="w-1.5 bg-gradient-to-t from-accent-500 to-accent-400 rounded-full"
                         animate={{
                           height: [20, 40 + Math.random() * 30, 20],
                         }}

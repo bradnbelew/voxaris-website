@@ -47,7 +47,7 @@ export function Navbar() {
         className={cn(
           'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
           isScrolled
-            ? 'bg-navy-900/80 backdrop-blur-xl border-b border-white/5'
+            ? 'bg-white/90 backdrop-blur-xl border-b border-platinum-200 shadow-sm'
             : 'bg-transparent'
         )}
         initial={{ y: -100 }}
@@ -58,7 +58,7 @@ export function Navbar() {
           <div className="flex items-center justify-between h-16 lg:h-20">
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2">
-              <span className="text-2xl font-bold bg-gradient-to-r from-white to-platinum-300 bg-clip-text text-transparent">
+              <span className="text-2xl font-bold text-navy-900">
                 VOXARIS
               </span>
             </Link>
@@ -70,7 +70,7 @@ export function Navbar() {
                   {link.dropdown ? (
                     <button
                       className={cn(
-                        'flex items-center gap-1 px-4 py-2 text-sm font-medium text-platinum-300 hover:text-white transition-colors rounded-lg hover:bg-white/5'
+                        'flex items-center gap-1 px-4 py-2 text-sm font-medium text-navy-600 hover:text-navy-900 transition-colors rounded-lg hover:bg-navy-50'
                       )}
                       onMouseEnter={() => setOpenDropdown(link.label)}
                       onMouseLeave={() => setOpenDropdown(null)}
@@ -81,7 +81,7 @@ export function Navbar() {
                   ) : (
                     <Link
                       to={link.href}
-                      className="px-4 py-2 text-sm font-medium text-platinum-300 hover:text-white transition-colors rounded-lg hover:bg-white/5"
+                      className="px-4 py-2 text-sm font-medium text-navy-600 hover:text-navy-900 transition-colors rounded-lg hover:bg-navy-50"
                     >
                       {link.label}
                     </Link>
@@ -92,7 +92,7 @@ export function Navbar() {
                     <AnimatePresence>
                       {openDropdown === link.label && (
                         <motion.div
-                          className="absolute top-full left-0 mt-2 w-48 py-2 bg-navy-800/95 backdrop-blur-xl rounded-xl border border-white/10 shadow-xl"
+                          className="absolute top-full left-0 mt-2 w-48 py-2 bg-white rounded-xl border border-platinum-200 shadow-lg"
                           initial={{ opacity: 0, y: -10 }}
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: -10 }}
@@ -103,7 +103,7 @@ export function Navbar() {
                             <Link
                               key={item.label}
                               to={item.href}
-                              className="block px-4 py-2 text-sm text-platinum-300 hover:text-white hover:bg-white/5 transition-colors"
+                              className="block px-4 py-2 text-sm text-navy-600 hover:text-navy-900 hover:bg-cream-100 transition-colors"
                             >
                               {item.label}
                             </Link>
@@ -119,12 +119,12 @@ export function Navbar() {
             {/* Desktop CTAs */}
             <div className="hidden lg:flex items-center gap-3">
               <Link to="/dashboard">
-                <Button variant="ghost" className="text-platinum-300 hover:text-white hover:bg-white/5">
+                <Button variant="ghost" className="text-navy-600 hover:text-navy-900 hover:bg-navy-50">
                   Login
                 </Button>
               </Link>
               <Link to="/demo">
-                <Button className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white border-0">
+                <Button className="bg-navy-900 hover:bg-navy-800 text-white rounded-full px-6">
                   Book Demo
                 </Button>
               </Link>
@@ -132,7 +132,7 @@ export function Navbar() {
 
             {/* Mobile Menu Button */}
             <button
-              className="lg:hidden p-2 text-platinum-300 hover:text-white"
+              className="lg:hidden p-2 text-navy-600 hover:text-navy-900"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
               {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -150,7 +150,7 @@ export function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <div className="absolute inset-0 bg-navy-900/98 backdrop-blur-xl" />
+            <div className="absolute inset-0 bg-cream-100" />
             <motion.div
               className="relative h-full flex flex-col items-center justify-center gap-6 p-8"
               initial={{ opacity: 0, y: 20 }}
@@ -161,13 +161,13 @@ export function Navbar() {
                 <div key={link.label} className="text-center">
                   {link.dropdown ? (
                     <div className="space-y-2">
-                      <span className="text-xl font-medium text-platinum-400">{link.label}</span>
+                      <span className="text-xl font-medium text-navy-400">{link.label}</span>
                       <div className="flex flex-col gap-1">
                         {link.dropdown.map((item) => (
                           <Link
                             key={item.label}
                             to={item.href}
-                            className="text-lg text-platinum-300 hover:text-white transition-colors"
+                            className="text-lg text-navy-600 hover:text-navy-900 transition-colors"
                           >
                             {item.label}
                           </Link>
@@ -177,7 +177,7 @@ export function Navbar() {
                   ) : (
                     <Link
                       to={link.href}
-                      className="text-2xl font-medium text-white hover:text-purple-400 transition-colors"
+                      className="text-2xl font-medium text-navy-900 hover:text-accent-500 transition-colors"
                     >
                       {link.label}
                     </Link>
@@ -187,12 +187,12 @@ export function Navbar() {
 
               <div className="flex flex-col gap-3 mt-6 w-full max-w-xs">
                 <Link to="/dashboard" className="w-full">
-                  <Button variant="outline" className="w-full border-white/20 text-white hover:bg-white/10">
+                  <Button variant="outline" className="w-full border-navy-300 text-navy-900 hover:bg-navy-50">
                     Login
                   </Button>
                 </Link>
                 <Link to="/demo" className="w-full">
-                  <Button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white">
+                  <Button className="w-full bg-navy-900 hover:bg-navy-800 text-white">
                     Book Demo
                   </Button>
                 </Link>
