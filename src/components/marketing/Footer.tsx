@@ -1,12 +1,13 @@
 import { Link } from 'react-router-dom';
 import { Twitter, Linkedin, Youtube } from 'lucide-react';
+import { VoxarisLogo } from './VoxarisLogo';
 
 const footerLinks = {
   product: [
-    { label: 'Features', href: '/#features' },
+    { label: 'VVideo', href: '/technology' },
+    { label: 'VVoice', href: '/technology' },
     { label: 'Pricing', href: '/pricing' },
     { label: 'Demo', href: '/demo' },
-    { label: 'API', href: '/technology' },
   ],
   solutions: [
     { label: 'Dealerships', href: '/solutions/dealerships' },
@@ -30,27 +31,25 @@ const footerLinks = {
 
 export function Footer() {
   return (
-    <footer className="bg-cream-200 border-t border-platinum-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
+    <footer className="bg-white border-t border-frost">
+      <div className="container-wide py-16">
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-8 lg:gap-12">
           {/* Brand column */}
-          <div className="col-span-2 md:col-span-1">
+          <div className="col-span-2">
             <Link to="/" className="inline-block mb-4">
-              <span className="text-2xl font-bold text-navy-900">
-                VOXARIS
-              </span>
+              <VoxarisLogo size="md" showTagline />
             </Link>
-            <p className="text-sm text-platinum-600 mb-4">
-              Personalizing Your Outreach
+            <p className="text-sm text-slate mb-6 max-w-xs">
+              AI-powered sales automation that works 24/7 to convert your leads into customers.
             </p>
             <div className="flex gap-4">
-              <a href="#" className="text-platinum-500 hover:text-navy-900 transition-colors">
+              <a href="#" className="text-slate hover:text-ink transition-colors">
                 <Twitter className="w-5 h-5" />
               </a>
-              <a href="#" className="text-platinum-500 hover:text-navy-900 transition-colors">
+              <a href="#" className="text-slate hover:text-ink transition-colors">
                 <Linkedin className="w-5 h-5" />
               </a>
-              <a href="#" className="text-platinum-500 hover:text-navy-900 transition-colors">
+              <a href="#" className="text-slate hover:text-ink transition-colors">
                 <Youtube className="w-5 h-5" />
               </a>
             </div>
@@ -58,11 +57,11 @@ export function Footer() {
 
           {/* Product */}
           <div>
-            <h4 className="text-sm font-semibold text-navy-900 mb-4">Product</h4>
+            <h4 className="text-sm font-semibold text-ink mb-4">Product</h4>
             <ul className="space-y-3">
               {footerLinks.product.map((link) => (
                 <li key={link.label}>
-                  <Link to={link.href} className="text-sm text-platinum-600 hover:text-navy-900 transition-colors">
+                  <Link to={link.href} className="text-sm text-slate hover:text-ink transition-colors">
                     {link.label}
                   </Link>
                 </li>
@@ -72,11 +71,11 @@ export function Footer() {
 
           {/* Solutions */}
           <div>
-            <h4 className="text-sm font-semibold text-navy-900 mb-4">Solutions</h4>
+            <h4 className="text-sm font-semibold text-ink mb-4">Solutions</h4>
             <ul className="space-y-3">
               {footerLinks.solutions.map((link) => (
                 <li key={link.label}>
-                  <Link to={link.href} className="text-sm text-platinum-600 hover:text-navy-900 transition-colors">
+                  <Link to={link.href} className="text-sm text-slate hover:text-ink transition-colors">
                     {link.label}
                   </Link>
                 </li>
@@ -86,11 +85,11 @@ export function Footer() {
 
           {/* Resources */}
           <div>
-            <h4 className="text-sm font-semibold text-navy-900 mb-4">Resources</h4>
+            <h4 className="text-sm font-semibold text-ink mb-4">Resources</h4>
             <ul className="space-y-3">
               {footerLinks.resources.map((link) => (
                 <li key={link.label}>
-                  <Link to={link.href} className="text-sm text-platinum-600 hover:text-navy-900 transition-colors">
+                  <Link to={link.href} className="text-sm text-slate hover:text-ink transition-colors">
                     {link.label}
                   </Link>
                 </li>
@@ -100,11 +99,11 @@ export function Footer() {
 
           {/* Company */}
           <div>
-            <h4 className="text-sm font-semibold text-navy-900 mb-4">Company</h4>
+            <h4 className="text-sm font-semibold text-ink mb-4">Company</h4>
             <ul className="space-y-3">
               {footerLinks.company.map((link) => (
                 <li key={link.label}>
-                  <Link to={link.href} className="text-sm text-platinum-600 hover:text-navy-900 transition-colors">
+                  <Link to={link.href} className="text-sm text-slate hover:text-ink transition-colors">
                     {link.label}
                   </Link>
                 </li>
@@ -114,18 +113,18 @@ export function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-12 pt-8 border-t border-platinum-200 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-platinum-600">
+        <div className="mt-12 pt-8 border-t border-frost flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-sm text-slate">
             &copy; {new Date().getFullYear()} Voxaris. All rights reserved.
           </p>
           <div className="flex gap-6">
-            <Link to="#" className="text-sm text-platinum-600 hover:text-navy-900 transition-colors">
+            <Link to="#" className="text-sm text-slate hover:text-ink transition-colors">
               Privacy Policy
             </Link>
-            <Link to="#" className="text-sm text-platinum-600 hover:text-navy-900 transition-colors">
+            <Link to="#" className="text-sm text-slate hover:text-ink transition-colors">
               Terms of Service
             </Link>
-            <Link to="#" className="text-sm text-platinum-600 hover:text-navy-900 transition-colors">
+            <Link to="#" className="text-sm text-slate hover:text-ink transition-colors">
               Cookies
             </Link>
           </div>

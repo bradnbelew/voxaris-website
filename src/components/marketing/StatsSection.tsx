@@ -1,70 +1,42 @@
 import { motion } from 'framer-motion';
 
 const stats = [
-  { label: 'SPEED', value: '<3s', description: 'Response Time' },
-  { label: 'RELIABILITY', value: '24/7', description: 'Available' },
-  { label: 'RESULTS', value: '3-4x', description: 'More Bookings' },
-  { label: 'EFFICIENCY', value: '70%', description: 'Show Rate' },
+  { value: '<3s', label: 'Response time', vLabel: 'VSpeed' },
+  { value: '24/7', label: 'Availability', vLabel: 'VReliable' },
+  { value: '3-4x', label: 'More bookings', vLabel: 'VResults' },
+  { value: '70%', label: 'Show rate', vLabel: 'VEfficient' },
 ];
 
 export function StatsSection() {
   return (
-    <section className="py-24 bg-navy-900">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section header */}
-        <motion.div
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-        >
-          <span className="text-xs font-medium tracking-widest uppercase text-accent-300 mb-4 block">
-            Performance Metrics
-          </span>
-          <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl text-white">
-            Proven results across
-            <span className="italic text-accent-300"> industries</span>
-          </h2>
-        </motion.div>
+    <section className="section-padding bg-white border-y border-frost">
+      <div className="container-wide">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16">
+          {stats.map((stat, index) => (
+            <motion.div
+              key={stat.label}
+              className="text-center"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+            >
+              {/* V-branded label */}
+              <div className="inline-flex items-center px-3 py-1.5 rounded-lg bg-mist mb-5">
+                <span className="text-xs font-bold tracking-wide text-ink">{stat.vLabel}</span>
+              </div>
 
-        {/* Stats grid with connecting lines */}
-        <div className="relative">
-          {/* Horizontal connecting line */}
-          <div className="absolute top-1/2 left-0 right-0 h-px bg-white/10 hidden md:block" />
+              {/* Large number */}
+              <div className="text-5xl sm:text-6xl lg:text-7xl font-bold text-ink tracking-tight mb-3">
+                {stat.value}
+              </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-0">
-            {stats.map((stat, index) => (
-              <motion.div
-                key={stat.label}
-                className="relative text-center"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-              >
-                {/* Vertical line connector on md+ */}
-                <div className="hidden md:block absolute top-1/2 left-1/2 w-px h-8 bg-white/10 -translate-x-1/2 -translate-y-full" />
-
-                {/* Label tag */}
-                <div className="inline-block px-3 py-1 rounded bg-accent-50 mb-6">
-                  <span className="text-[10px] font-semibold tracking-widest uppercase text-navy-800">
-                    {stat.label}
-                  </span>
-                </div>
-
-                {/* Large number - serif font */}
-                <div className="font-serif text-6xl sm:text-7xl md:text-8xl font-light text-white mb-2">
-                  {stat.value}
-                </div>
-
-                {/* Description */}
-                <div className="text-sm text-white/60">
-                  {stat.description}
-                </div>
-              </motion.div>
-            ))}
-          </div>
+              {/* Label */}
+              <div className="text-sm text-slate">
+                {stat.label}
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>

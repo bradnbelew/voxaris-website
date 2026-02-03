@@ -1,12 +1,12 @@
 import { motion } from 'framer-motion';
-import { Video, Phone } from 'lucide-react';
+import { Video, Phone, Check } from 'lucide-react';
 
 const TAVUS_VIDEO_URL = "https://cdn.replica.tavus.io/20283/9de1f64e.mp4";
 
 export function TechnologyShowcase() {
   return (
-    <section className="py-24 bg-white relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="section-padding-lg bg-white">
+      <div className="container-wide">
         {/* Section header */}
         <motion.div
           className="text-center mb-16"
@@ -14,124 +14,129 @@ export function TechnologyShowcase() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <span className="text-xs font-medium tracking-widest uppercase text-accent-500 mb-4 block">
-            Technology
-          </span>
-          <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl text-navy-900 mb-4">
-            Proprietary AI
-            <span className="italic text-navy-600"> technology</span>
+          <span className="eyebrow mb-4 block">Proprietary Technology</span>
+          <h2 className="headline-lg text-ink mb-4">
+            Two powerful AI agents, one platform
           </h2>
-          <p className="text-platinum-600 max-w-2xl mx-auto">
+          <p className="text-slate max-w-2xl mx-auto text-lg">
             Built from the ground up for enterprise scale. 100% Voxaris technology.
           </p>
         </motion.div>
 
         {/* Two cards side by side */}
-        <div className="grid md:grid-cols-2 gap-8">
-          {/* Video AI Card */}
+        <div className="grid lg:grid-cols-2 gap-8">
+          {/* VVideo AI Card */}
           <motion.div
-            className="group relative rounded-2xl overflow-hidden bg-cream-100 border border-platinum-200 shadow-card hover:shadow-card-hover transition-all duration-300"
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            className="glass-card overflow-hidden"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
+            {/* Video preview - top */}
+            <div className="aspect-video bg-mist overflow-hidden">
+              <video
+                src={TAVUS_VIDEO_URL}
+                className="w-full h-full object-cover"
+                autoPlay
+                loop
+                muted
+                playsInline
+              />
+            </div>
+
             {/* Content */}
-            <div className="p-8 lg:p-10">
-              {/* Icon badge */}
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent-50 border border-accent-200 mb-6">
-                <Video className="w-4 h-4 text-accent-500" />
-                <span className="text-sm font-medium text-navy-700">Video AI</span>
+            <div className="p-8">
+              {/* Tag */}
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-mist mb-5">
+                <Video className="w-4 h-4 text-ink" />
+                <span className="text-sm font-medium text-ink">Video AI</span>
               </div>
 
-              <h3 className="font-serif text-2xl font-medium text-navy-900 mb-4">
-                Voxaris Video AI
+              <h3 className="text-2xl font-bold text-ink mb-3">
+                VVideo
               </h3>
 
-              <ul className="space-y-3 mb-8">
+              <p className="text-slate mb-6">
+                Photorealistic AI video agents that have real conversations with your leads on web and landing pages.
+              </p>
+
+              <ul className="space-y-3">
                 {[
                   'Photorealistic video avatars',
                   'Real-time lip sync & expressions',
                   'Custom personas per client',
-                  'Perfect for web leads & landing pages',
+                  'Perfect for web leads',
                 ].map((item) => (
-                  <li key={item} className="flex items-center gap-3 text-platinum-600">
-                    <div className="w-1.5 h-1.5 rounded-full bg-accent-500" />
-                    {item}
+                  <li key={item} className="flex items-center gap-3 text-charcoal">
+                    <Check className="w-4 h-4 text-ink flex-shrink-0" />
+                    <span className="text-sm">{item}</span>
                   </li>
                 ))}
               </ul>
-
-              {/* Video preview */}
-              <div className="aspect-video rounded-xl overflow-hidden bg-white border border-platinum-200 shadow-sm">
-                <video
-                  src={TAVUS_VIDEO_URL}
-                  className="w-full h-full object-cover"
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                />
-              </div>
             </div>
           </motion.div>
 
-          {/* Voice AI Card */}
+          {/* VVoice AI Card */}
           <motion.div
-            className="group relative rounded-2xl overflow-hidden bg-cream-100 border border-platinum-200 shadow-card hover:shadow-card-hover transition-all duration-300"
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            className="glass-card overflow-hidden"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
+            {/* Voice waveform visual - top */}
+            <div className="aspect-video bg-ink flex items-center justify-center">
+              <div className="text-center">
+                <div className="flex items-center justify-center gap-1.5 mb-4">
+                  {[...Array(16)].map((_, i) => (
+                    <motion.div
+                      key={i}
+                      className="w-1 bg-white rounded-full"
+                      animate={{
+                        height: [16, 32 + Math.random() * 24, 16],
+                      }}
+                      transition={{
+                        duration: 0.6 + Math.random() * 0.4,
+                        repeat: Infinity,
+                        delay: i * 0.05,
+                      }}
+                    />
+                  ))}
+                </div>
+                <span className="text-xs font-medium text-white/60 uppercase tracking-wider">VVoice Active</span>
+              </div>
+            </div>
+
             {/* Content */}
-            <div className="p-8 lg:p-10">
-              {/* Icon badge */}
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent-50 border border-accent-200 mb-6">
-                <Phone className="w-4 h-4 text-accent-500" />
-                <span className="text-sm font-medium text-navy-700">Voice AI</span>
+            <div className="p-8">
+              {/* Tag */}
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-mist mb-5">
+                <Phone className="w-4 h-4 text-ink" />
+                <span className="text-sm font-medium text-ink">Voice AI</span>
               </div>
 
-              <h3 className="font-serif text-2xl font-medium text-navy-900 mb-4">
-                Voxaris Voice AI
+              <h3 className="text-2xl font-bold text-ink mb-3">
+                VVoice
               </h3>
 
-              <ul className="space-y-3 mb-8">
+              <p className="text-slate mb-6">
+                Natural voice AI agents that handle phone calls, qualify leads, and book appointments automatically.
+              </p>
+
+              <ul className="space-y-3">
                 {[
                   'Natural voice conversations',
-                  'Handles inbound & outbound calls',
+                  'Inbound & outbound calls',
                   'Intelligent interruption handling',
-                  'Perfect for phone leads & follow-ups',
+                  'Perfect for phone leads',
                 ].map((item) => (
-                  <li key={item} className="flex items-center gap-3 text-platinum-600">
-                    <div className="w-1.5 h-1.5 rounded-full bg-accent-500" />
-                    {item}
+                  <li key={item} className="flex items-center gap-3 text-charcoal">
+                    <Check className="w-4 h-4 text-ink flex-shrink-0" />
+                    <span className="text-sm">{item}</span>
                   </li>
                 ))}
               </ul>
-
-              {/* Voice waveform visual */}
-              <div className="aspect-video rounded-xl bg-white border border-platinum-200 shadow-sm flex items-center justify-center">
-                <div className="text-center">
-                  <div className="flex items-center justify-center gap-1 mb-4">
-                    {[...Array(12)].map((_, i) => (
-                      <motion.div
-                        key={i}
-                        className="w-1.5 bg-gradient-to-t from-accent-500 to-accent-400 rounded-full"
-                        animate={{
-                          height: [20, 40 + Math.random() * 30, 20],
-                        }}
-                        transition={{
-                          duration: 0.8,
-                          repeat: Infinity,
-                          delay: i * 0.1,
-                        }}
-                      />
-                    ))}
-                  </div>
-                  <p className="text-sm text-platinum-500">Voice AI Active</p>
-                </div>
-              </div>
             </div>
           </motion.div>
         </div>

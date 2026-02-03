@@ -2,23 +2,23 @@ import {
   Navbar,
   Hero,
   StatsSection,
+  FeaturesSection,
+  TechnologyShowcase,
   ProblemSolution,
   HowItWorks,
-  TechnologyShowcase,
-  FeaturesSection,
   CTASection,
   Footer,
 } from '@/components/marketing';
 
 export function HomePage() {
   return (
-    <div className="min-h-screen bg-cream-100">
+    <div className="min-h-screen bg-white">
       <Navbar />
       <main>
         <Hero />
         <StatsSection />
-        <FeaturesSection />
         <TechnologyShowcase />
+        <FeaturesSection />
         <ProblemSolution />
         <HowItWorks />
         <CTASection />

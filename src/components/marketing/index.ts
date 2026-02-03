@@ -8,5 +8,6 @@ export { HowItWorks } from './HowItWorks';
 export { CTASection } from './CTASection';
 export { Footer } from './Footer';
 export { StatsSection } from './StatsSection';
+export { VoxarisLogo } from './VoxarisLogo';
 export { ShootingStars } from './backgrounds/ShootingStars';
 export { GradientOrbs } from './backgrounds/GradientOrbs';

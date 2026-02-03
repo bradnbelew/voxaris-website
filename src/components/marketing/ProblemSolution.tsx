@@ -1,22 +1,29 @@
 import { motion } from 'framer-motion';
-import { AlertTriangle, CheckCircle2, ArrowRight } from 'lucide-react';
+import { X, Check } from 'lucide-react';
 
-const problems = [
-  { text: '87% of leads go cold within 5 minutes', stat: '87%' },
-  { text: "Sales teams can't respond after hours", stat: '40%' },
-  { text: "Manual follow-up doesn't scale", stat: '3x' },
-];
-
-const solutions = [
-  { text: 'Voxaris responds in under 3 seconds', stat: '<3s' },
-  { text: 'AI works 24/7, never takes breaks', stat: '24/7' },
-  { text: 'Handle 1000+ conversations simultaneously', stat: '1000+' },
+const comparisons = [
+  {
+    without: 'Leads go cold in 5+ minutes',
+    with: 'VInstant responds in under 3 seconds',
+  },
+  {
+    without: 'Sales team unavailable after hours',
+    with: 'VAlways works 24/7, never sleeps',
+  },
+  {
+    without: 'Manual follow-up that doesn\'t scale',
+    with: 'VScale handles 1000+ conversations',
+  },
+  {
+    without: 'Lost opportunities every day',
+    with: 'VCapture catches every single lead',
+  },
 ];
 
 export function ProblemSolution() {
   return (
-    <section className="py-24 bg-cream-200 relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="section-padding-lg bg-mist">
+      <div className="container-editorial">
         {/* Section header */}
         <motion.div
           className="text-center mb-16"
@@ -24,88 +31,56 @@ export function ProblemSolution() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <span className="text-xs font-medium tracking-widest uppercase text-accent-500 mb-4 block">
-            The Challenge
-          </span>
-          <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl text-navy-900 mb-4">
-            Your leads are
-            <span className="italic text-red-500"> going cold</span>
+          <span className="eyebrow mb-4 block">The Problem</span>
+          <h2 className="headline-lg text-ink mb-4">
+            You're losing leads while you sleep
           </h2>
-          <p className="text-platinum-600 max-w-2xl mx-auto">
-            The average business loses thousands in revenue every month from slow response times.
+          <p className="text-slate max-w-2xl mx-auto text-lg">
+            The average business loses thousands in revenue every month from slow response times. Here's how Voxaris changes that.
           </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-3 gap-8 items-center">
-          {/* Problems */}
-          <motion.div
-            className="space-y-4"
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-          >
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-50 border border-red-200 mb-4">
-              <AlertTriangle className="w-4 h-4 text-red-500" />
-              <span className="text-sm font-medium text-red-600">The Problem</span>
+        {/* Comparison table */}
+        <div className="max-w-3xl mx-auto">
+          {/* Header row */}
+          <div className="grid grid-cols-2 gap-4 mb-6">
+            <div className="text-center">
+              <span className="text-sm font-medium text-slate">Without Voxaris</span>
             </div>
-
-            {problems.map((problem, index) => (
-              <motion.div
-                key={problem.text}
-                className="flex items-center gap-4 p-4 rounded-xl bg-white border border-red-100 shadow-sm"
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <div className="flex-shrink-0 w-14 h-14 rounded-xl bg-red-50 flex items-center justify-center">
-                  <span className="text-lg font-bold text-red-500">{problem.stat}</span>
-                </div>
-                <p className="text-navy-700">{problem.text}</p>
-              </motion.div>
-            ))}
-          </motion.div>
-
-          {/* Arrow (desktop only) */}
-          <div className="hidden lg:flex items-center justify-center">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.5 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              className="w-16 h-16 rounded-full bg-navy-900 flex items-center justify-center shadow-lg"
-            >
-              <ArrowRight className="w-8 h-8 text-white" />
-            </motion.div>
+            <div className="text-center">
+              <span className="text-sm font-medium text-ink">With Voxaris</span>
+            </div>
           </div>
 
-          {/* Solutions */}
-          <motion.div
-            className="space-y-4"
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-          >
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 mb-4">
-              <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-              <span className="text-sm font-medium text-emerald-600">The Voxaris Solution</span>
-            </div>
-
-            {solutions.map((solution, index) => (
+          {/* Comparison rows */}
+          <div className="space-y-4">
+            {comparisons.map((item, index) => (
               <motion.div
-                key={solution.text}
-                className="flex items-center gap-4 p-4 rounded-xl bg-white border border-emerald-100 shadow-sm"
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                key={item.without}
+                className="grid grid-cols-2 gap-4"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
+                transition={{ duration: 0.4, delay: index * 0.1 }}
               >
-                <div className="flex-shrink-0 w-14 h-14 rounded-xl bg-emerald-50 flex items-center justify-center">
-                  <span className="text-lg font-bold text-emerald-500">{solution.stat}</span>
+                {/* Without */}
+                <div className="flex items-center gap-3 p-4 rounded-xl bg-white border border-frost">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center">
+                    <X className="w-4 h-4 text-red-500" />
+                  </div>
+                  <span className="text-sm text-charcoal">{item.without}</span>
                 </div>
-                <p className="text-navy-700">{solution.text}</p>
+
+                {/* With */}
+                <div className="flex items-center gap-3 p-4 rounded-xl bg-ink text-white">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
+                    <Check className="w-4 h-4 text-emerald-400" />
+                  </div>
+                  <span className="text-sm">{item.with}</span>
+                </div>
               </motion.div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

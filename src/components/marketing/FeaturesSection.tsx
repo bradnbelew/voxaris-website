@@ -4,54 +4,61 @@ import {
   Clock,
   Brain,
   Database,
-  Split,
+  MessageSquare,
   Layers,
+  LucideIcon,
 } from 'lucide-react';
-import { FeatureCard } from './FeatureCard';
 
-const features = [
+interface Feature {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+  vTag: string;
+}
+
+const features: Feature[] = [
   {
     icon: Zap,
-    title: 'Instant Response',
-    description: 'Sub-3-second engagement on every lead. Never miss an opportunity.',
-    tag: 'Speed',
+    title: 'VInstant',
+    description: 'Sub-3-second engagement on every lead. Never let an opportunity slip away.',
+    vTag: 'Speed',
   },
   {
     icon: Clock,
-    title: '24/7 Availability',
-    description: 'AI never sleeps. Capture leads day and night, weekends and holidays.',
-    tag: 'Reliability',
+    title: 'VAlways',
+    description: 'Your AI never sleeps. Capture and qualify leads 24/7, weekends included.',
+    vTag: 'Availability',
   },
   {
     icon: Brain,
-    title: 'Intelligent Conversations',
-    description: 'Context-aware AI that remembers, adapts, and qualifies naturally.',
-    tag: 'AI Powered',
+    title: 'VIntelligent',
+    description: 'Context-aware AI that remembers, adapts, and qualifies prospects naturally.',
+    vTag: 'AI-Powered',
   },
   {
     icon: Database,
-    title: 'CRM Integration',
-    description: 'Auto-sync to GoHighLevel. No manual data entry, no missed follow-ups.',
-    tag: 'Integration',
+    title: 'VSync',
+    description: 'Auto-sync to GoHighLevel and major CRMs. Zero manual data entry.',
+    vTag: 'Integration',
   },
   {
-    icon: Split,
-    title: 'Multi-Channel',
-    description: 'Video, voice, and SMS in one platform. Meet leads where they are.',
-    tag: 'Omnichannel',
+    icon: MessageSquare,
+    title: 'VOmni',
+    description: 'Video, voice, and SMS unified in one platform. Meet leads where they are.',
+    vTag: 'Multi-Channel',
   },
   {
     icon: Layers,
-    title: 'White-Label Ready',
-    description: 'Fully rebrandable for agency partners. Your brand, our technology.',
-    tag: 'Scalable',
+    title: 'VLabel',
+    description: 'Fully rebrandable for agencies. Your brand, powered by Voxaris.',
+    vTag: 'White-Label',
   },
 ];
 
 export function FeaturesSection() {
   return (
-    <section className="py-24 bg-cream-100 relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="section-padding-lg bg-mist">
+      <div className="container-wide">
         {/* Section header */}
         <motion.div
           className="text-center mb-16"
@@ -59,14 +66,11 @@ export function FeaturesSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <span className="text-xs font-medium tracking-widest uppercase text-accent-500 mb-4 block">
-            Capabilities
-          </span>
-          <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl text-navy-900 mb-4">
-            Everything you need to
-            <span className="italic text-navy-600"> convert more leads</span>
+          <span className="eyebrow mb-4 block">Platform Capabilities</span>
+          <h2 className="headline-lg text-ink mb-4">
+            Everything you need to convert more leads
           </h2>
-          <p className="text-platinum-600 max-w-2xl mx-auto">
+          <p className="text-slate max-w-2xl mx-auto text-lg">
             Enterprise-grade AI automation built for businesses that want to scale without sacrificing quality.
           </p>
         </motion.div>
@@ -74,14 +78,34 @@ export function FeaturesSection() {
         {/* Features grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((feature, index) => (
-            <FeatureCard
+            <motion.div
               key={feature.title}
-              icon={feature.icon}
-              title={feature.title}
-              description={feature.description}
-              tag={feature.tag}
-              index={index}
-            />
+              className="glass-card p-8 card-hover"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: index * 0.08 }}
+            >
+              {/* V-branded tag */}
+              <div className="inline-flex items-center px-2.5 py-1 rounded-md bg-mist text-xs font-medium text-charcoal mb-5">
+                {feature.vTag}
+              </div>
+
+              {/* Icon */}
+              <div className="w-12 h-12 rounded-xl bg-ink flex items-center justify-center mb-5">
+                <feature.icon className="w-6 h-6 text-white" />
+              </div>
+
+              {/* Title - V-branded */}
+              <h3 className="text-xl font-bold text-ink mb-3">
+                {feature.title}
+              </h3>
+
+              {/* Description */}
+              <p className="text-slate leading-relaxed">
+                {feature.description}
+              </p>
+            </motion.div>
           ))}
         </div>
       </div>
