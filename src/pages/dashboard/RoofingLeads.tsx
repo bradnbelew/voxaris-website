@@ -282,7 +282,16 @@ const LeadCard = ({ lead, expanded, onToggle }: { lead: RoofingLead; expanded: b
                       <span>Scheduled</span>
                     </div>
                     {lead.appointment_date && (
-                      <div className="text-zinc-400">{lead.appointment_date}</div>
+                      <div className="text-zinc-400">
+                        <span className="text-zinc-500">Date/Time:</span>{' '}
+                        {new Date(lead.appointment_date).toLocaleString('en-US', {
+                          weekday: 'short',
+                          month: 'short',
+                          day: 'numeric',
+                          hour: 'numeric',
+                          minute: '2-digit'
+                        })}
+                      </div>
                     )}
                   </>
                 ) : (
@@ -299,6 +308,19 @@ const LeadCard = ({ lead, expanded, onToggle }: { lead: RoofingLead; expanded: b
                 {lead.urgency_level && (
                   <div className="text-zinc-400">
                     <span className="text-zinc-500">Urgency:</span> {lead.urgency_level}
+                  </div>
+                )}
+                {lead.call_outcome && (
+                  <div className="text-zinc-400">
+                    <span className="text-zinc-500">Outcome:</span>{' '}
+                    <span className={
+                      lead.call_outcome === 'appointment_booked' ? 'text-emerald-400 font-medium' :
+                      lead.call_outcome === 'callback_needed' ? 'text-yellow-400' :
+                      lead.call_outcome === 'voicemail' ? 'text-orange-400' :
+                      'text-zinc-400'
+                    }>
+                      {lead.call_outcome.replace(/_/g, ' ')}
+                    </span>
                   </div>
                 )}
               </div>
@@ -336,6 +358,30 @@ const LeadCard = ({ lead, expanded, onToggle }: { lead: RoofingLead; expanded: b
                 <Phone className="w-4 h-4" />
                 Call Back
               </a>
+            )}
+          </div>
+
+          {/* Status Indicators */}
+          <div className="mt-4 pt-4 border-t border-zinc-800 flex items-center gap-6 text-xs">
+            {lead.email_sent !== undefined && (
+              <div className="flex items-center gap-1.5">
+                <Mail className="w-3.5 h-3.5" />
+                <span className={lead.email_sent ? 'text-emerald-400' : 'text-zinc-500'}>
+                  Email {lead.email_sent ? 'Sent ✓' : 'Not Sent'}
+                </span>
+              </div>
+            )}
+            {lead.direction && (
+              <div className="flex items-center gap-1.5 text-zinc-500">
+                <Phone className="w-3.5 h-3.5" />
+                <span className="capitalize">{lead.direction} Call</span>
+              </div>
+            )}
+            {lead.duration_ms && (
+              <div className="flex items-center gap-1.5 text-zinc-500">
+                <Clock className="w-3.5 h-3.5" />
+                <span>{Math.floor(lead.duration_ms / 60000)}:{String(Math.floor((lead.duration_ms % 60000) / 1000)).padStart(2, '0')} duration</span>
+              </div>
             )}
           </div>
         </div>
