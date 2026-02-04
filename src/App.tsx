@@ -32,6 +32,7 @@ import AgentTest from "./pages/dashboard/AgentTest";
 import Developers from "./pages/dashboard/Developers";
 import Integrations from "./pages/dashboard/Integrations";
 import Settings from "./pages/dashboard/Settings";
+import RoofingLeads from "./pages/dashboard/RoofingLeads";
 import NotFound from "./pages/NotFound";
 
 // Admin Dashboard Pages
@@ -59,13 +60,16 @@ const App = () => (
               <Route path="/solutions/dealerships" element={<SolutionDealerships />} />
               <Route path="/solutions/contractors" element={<SolutionContractors />} />
               <Route path="/solutions/law-firms" element={<SolutionLawFirms />} />
-              
+
+              {/* Public Roofing Leads Dashboard (no auth required) */}
+              <Route path="/roofing-leads" element={<RoofingLeads />} />
+
               {/* Auth Routes */}
               <Route path="/auth/login" element={<Login />} />
               <Route path="/auth/register" element={<Register />} />
               
-              {/* Dashboard Routes */}
-              <Route path="/dashboard" element={<DashboardLayout><CommandCenter /></DashboardLayout>} />
+              {/* Dashboard Routes - Roofing Leads is the default dashboard */}
+              <Route path="/dashboard" element={<DashboardLayout><RoofingLeads /></DashboardLayout>} />
               <Route path="/dashboard/hiring-hall" element={<DashboardLayout><HiringHall /></DashboardLayout>} />
               <Route path="/dashboard/my-staff" element={<DashboardLayout><MyStaff /></DashboardLayout>} />
               <Route path="/dashboard/agents" element={<DashboardLayout><AgentsPage /></DashboardLayout>} />
@@ -74,6 +78,9 @@ const App = () => (
               <Route path="/dashboard/developers" element={<DashboardLayout><Developers /></DashboardLayout>} />
               <Route path="/dashboard/integrations" element={<DashboardLayout><Integrations /></DashboardLayout>} />
               <Route path="/dashboard/settings" element={<DashboardLayout><Settings /></DashboardLayout>} />
+
+              {/* Roofing Leads Dashboard */}
+              <Route path="/dashboard/roofing-leads" element={<DashboardLayout><RoofingLeads /></DashboardLayout>} />
 
               {/* Admin Routes */}
               <Route path="/dashboard/admin" element={<DashboardLayout><AdminDashboard /></DashboardLayout>} />
