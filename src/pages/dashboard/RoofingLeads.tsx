@@ -72,6 +72,29 @@ const GlowingCard = ({ children, className = "", onClick }: { children: React.Re
   </li>
 );
 
+// Lead card with GlowingEffect - the actual leads shown in the list
+const GlowingLeadCard = ({ children, className = "", onClick }: { children: React.ReactNode; className?: string; onClick?: () => void }) => (
+  <div className={`relative mb-4 ${className}`}>
+    <div
+      onClick={onClick}
+      className={`relative rounded-[1.25rem] border-[0.75px] border-zinc-700/50 p-2 md:rounded-[1.5rem] md:p-3 ${onClick ? 'cursor-pointer' : ''}`}
+    >
+      <GlowingEffect
+        spread={60}
+        glow={true}
+        disabled={false}
+        proximity={100}
+        inactiveZone={0.01}
+        borderWidth={2}
+        variant="roofing"
+      />
+      <div className="relative overflow-hidden rounded-xl border-[0.75px] border-zinc-800 bg-zinc-900/90 p-6 shadow-sm transition-all duration-300 hover:border-amber-500/30">
+        {children}
+      </div>
+    </div>
+  </div>
+);
+
 const CyberCard = ({ children, className = "", onClick }: { children: React.ReactNode; className?: string; onClick?: () => void }) => (
   <div
     onClick={onClick}
@@ -146,7 +169,7 @@ const LeadCard = ({ lead, expanded, onToggle }: { lead: RoofingLead; expanded: b
   };
 
   return (
-    <CyberCard className="mb-4" onClick={onToggle}>
+    <GlowingLeadCard onClick={onToggle}>
       {/* Header Row */}
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-4">
@@ -386,7 +409,7 @@ const LeadCard = ({ lead, expanded, onToggle }: { lead: RoofingLead; expanded: b
           </div>
         </div>
       )}
-    </CyberCard>
+    </GlowingLeadCard>
   );
 };
 
