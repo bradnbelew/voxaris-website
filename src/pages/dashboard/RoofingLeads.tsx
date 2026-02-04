@@ -18,6 +18,9 @@ import {
   Snowflake
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { GlowingEffect } from "@/components/ui/glowing-effect";
+import { ChatInput, ChatInputTextArea, ChatInputSubmit } from "@/components/ui/chat-input";
+import { MessageSquare, Bot, User, TrendingUp, Sparkles } from "lucide-react";
 
 // Types
 interface RoofingLead {
@@ -46,28 +49,48 @@ interface RoofingLead {
   duration_ms?: number;
 }
 
-// Components
+// Components with GlowingEffect
+const GlowingCard = ({ children, className = "", onClick }: { children: React.ReactNode; className?: string; onClick?: () => void }) => (
+  <div
+    onClick={onClick}
+    className={`relative rounded-xl ${onClick ? 'cursor-pointer' : ''} ${className}`}
+  >
+    <GlowingEffect
+      spread={40}
+      glow={true}
+      disabled={false}
+      proximity={64}
+      inactiveZone={0.01}
+      variant="roofing"
+    />
+    <div className="relative bg-zinc-900/90 backdrop-blur-md border border-zinc-800/50 rounded-xl p-6 h-full">
+      {children}
+    </div>
+  </div>
+);
+
 const CyberCard = ({ children, className = "", onClick }: { children: React.ReactNode; className?: string; onClick?: () => void }) => (
   <div
     onClick={onClick}
-    className={`relative bg-zinc-900/80 backdrop-blur-md border border-zinc-800 rounded-xl p-6 transition-all duration-300 hover:border-zinc-700 hover:shadow-lg hover:shadow-blue-500/5 ${onClick ? 'cursor-pointer' : ''} ${className}`}
+    className={`relative bg-zinc-900/80 backdrop-blur-md border border-zinc-800 rounded-xl p-6 transition-all duration-300 hover:border-amber-600/30 hover:shadow-lg hover:shadow-amber-500/5 ${onClick ? 'cursor-pointer' : ''} ${className}`}
   >
     {children}
   </div>
 );
 
-const StatCard = ({ label, value, icon: Icon, color }: { label: string; value: string | number; icon: any; color: string }) => (
-  <CyberCard>
+const StatCard = ({ label, value, icon: Icon, color, description }: { label: string; value: string | number; icon: any; color: string; description?: string }) => (
+  <GlowingCard>
     <div className="flex items-center gap-4">
-      <div className={`p-3 rounded-lg bg-zinc-950 border border-zinc-800 ${color}`}>
-        <Icon className="w-5 h-5" />
+      <div className={`p-3 rounded-lg bg-zinc-950/80 border border-zinc-800/50 ${color}`}>
+        <Icon className="w-6 h-6" />
       </div>
-      <div>
-        <div className="text-2xl font-bold text-white font-mono">{value}</div>
-        <div className="text-sm text-zinc-400">{label}</div>
+      <div className="flex-1">
+        <div className="text-3xl font-bold text-white font-mono tracking-tight">{value}</div>
+        <div className="text-sm font-medium text-zinc-400">{label}</div>
+        {description && <div className="text-xs text-zinc-500 mt-1">{description}</div>}
       </div>
     </div>
-  </CyberCard>
+  </GlowingCard>
 );
 
 const LeadQualityBadge = ({ quality }: { quality: string | null }) => {
@@ -325,6 +348,12 @@ const RoofingLeads = () => {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [lastRefresh, setLastRefresh] = useState(new Date());
 
+  // AI Chatbot state
+  const [chatOpen, setChatOpen] = useState(false);
+  const [chatInput, setChatInput] = useState("");
+  const [chatMessages, setChatMessages] = useState<{ role: 'user' | 'assistant'; content: string }[]>([]);
+  const [chatLoading, setChatLoading] = useState(false);
+
   const fetchLeads = async () => {
     try {
       setLoading(true);
@@ -370,6 +399,109 @@ const RoofingLeads = () => {
   const hotLeads = leads.filter(l => l.lead_quality?.toLowerCase() === 'hot').length;
   const stormDamageLeads = leads.filter(l => l.storm_damage).length;
 
+  // AI Chat - Analyze leads data
+  const analyzeLeads = (question: string): string => {
+    const q = question.toLowerCase();
+
+    // Calculate detailed stats
+    const conversionRate = totalLeads > 0 ? Math.round((appointmentsBooked / totalLeads) * 100) : 0;
+    const stormDamageRate = totalLeads > 0 ? Math.round((stormDamageLeads / totalLeads) * 100) : 0;
+    const hotLeadRate = totalLeads > 0 ? Math.round((hotLeads / totalLeads) * 100) : 0;
+    const wantsInsuranceHelp = leads.filter(l => l.wants_insurance_help).length;
+    const insuranceFiledCount = leads.filter(l => l.insurance_claim_filed).length;
+    const homeowners = leads.filter(l => l.is_homeowner).length;
+
+    // Group by office
+    const officeBreakdown: Record<string, number> = {};
+    leads.forEach(l => {
+      if (l.office_location) {
+        officeBreakdown[l.office_location] = (officeBreakdown[l.office_location] || 0) + 1;
+      }
+    });
+
+    // Group by roof issue
+    const issueBreakdown: Record<string, number> = {};
+    leads.forEach(l => {
+      if (l.roof_issue) {
+        const issue = l.roof_issue.toLowerCase();
+        if (issue.includes('leak')) issueBreakdown['Leaks'] = (issueBreakdown['Leaks'] || 0) + 1;
+        else if (issue.includes('storm') || issue.includes('damage')) issueBreakdown['Storm Damage'] = (issueBreakdown['Storm Damage'] || 0) + 1;
+        else if (issue.includes('shingle')) issueBreakdown['Shingle Issues'] = (issueBreakdown['Shingle Issues'] || 0) + 1;
+        else if (issue.includes('age') || issue.includes('old')) issueBreakdown['Age/Wear'] = (issueBreakdown['Age/Wear'] || 0) + 1;
+        else issueBreakdown['Other'] = (issueBreakdown['Other'] || 0) + 1;
+      }
+    });
+
+    // Urgency breakdown
+    const highUrgency = leads.filter(l => l.urgency_level?.toLowerCase() === 'high' || l.urgency_level?.toLowerCase() === 'emergency').length;
+    const mediumUrgency = leads.filter(l => l.urgency_level?.toLowerCase() === 'medium').length;
+
+    // Respond based on question
+    if (q.includes('trend') || q.includes('pattern') || q.includes('insight')) {
+      const insights = [];
+      if (stormDamageRate > 40) insights.push(`Storm damage is high (${stormDamageRate}%) - great time for insurance claim assistance.`);
+      if (conversionRate > 50) insights.push(`Strong conversion rate at ${conversionRate}% - AI agent is performing well.`);
+      if (conversionRate < 30) insights.push(`Conversion rate is ${conversionRate}% - consider refining the scheduling script.`);
+      if (wantsInsuranceHelp > totalLeads / 2) insights.push(`${Math.round((wantsInsuranceHelp / totalLeads) * 100)}% want insurance help - big opportunity.`);
+      if (highUrgency > totalLeads / 3) insights.push(`${highUrgency} leads are high urgency - prioritize these for fast follow-up.`);
+
+      return insights.length > 0
+        ? `Here are the key trends I see:\n\n${insights.map(i => `• ${i}`).join('\n')}`
+        : `With ${totalLeads} leads, I'm seeing a ${conversionRate}% conversion rate. ${stormDamageLeads} involve storm damage.`;
+    }
+
+    if (q.includes('storm') || q.includes('insurance')) {
+      return `Storm Damage Analysis:\n\n• ${stormDamageLeads} leads (${stormDamageRate}%) reported storm damage\n• ${insuranceFiledCount} have already filed insurance claims\n• ${wantsInsuranceHelp} want help with insurance claims\n\nThis is a great opportunity for insurance-related roof replacements.`;
+    }
+
+    if (q.includes('conversion') || q.includes('appointment') || q.includes('book')) {
+      return `Conversion Analysis:\n\n• ${appointmentsBooked} of ${totalLeads} leads booked appointments\n• That's a ${conversionRate}% conversion rate\n• ${totalLeads - appointmentsBooked} leads didn't book - consider follow-up outbound calls`;
+    }
+
+    if (q.includes('hot') || q.includes('quality') || q.includes('best')) {
+      return `Lead Quality Breakdown:\n\n• ${hotLeads} hot leads (${hotLeadRate}%) - ready to close\n• ${highUrgency} high urgency leads need immediate attention\n• ${homeowners} confirmed homeowners (decision makers)`;
+    }
+
+    if (q.includes('office') || q.includes('location') || q.includes('area')) {
+      const officeList = Object.entries(officeBreakdown)
+        .sort((a, b) => b[1] - a[1])
+        .map(([office, count]) => `• ${office}: ${count} leads`)
+        .join('\n');
+      return `Leads by Office Location:\n\n${officeList || '• No location data yet'}`;
+    }
+
+    if (q.includes('issue') || q.includes('problem') || q.includes('roof')) {
+      const issueList = Object.entries(issueBreakdown)
+        .sort((a, b) => b[1] - a[1])
+        .map(([issue, count]) => `• ${issue}: ${count} leads`)
+        .join('\n');
+      return `Top Roof Issues:\n\n${issueList || '• No issue data yet'}`;
+    }
+
+    if (q.includes('summary') || q.includes('overview') || q.includes('report')) {
+      return `Lead Dashboard Summary:\n\n📊 Total Leads: ${totalLeads}\n📅 Appointments: ${appointmentsBooked} (${conversionRate}%)\n🔥 Hot Leads: ${hotLeads}\n⛈️ Storm Damage: ${stormDamageLeads}\n🤝 Want Insurance Help: ${wantsInsuranceHelp}\n🏠 Confirmed Homeowners: ${homeowners}`;
+    }
+
+    // Default response
+    return `I can help you analyze your roofing leads! Try asking:\n\n• "What trends do you see?"\n• "Tell me about storm damage leads"\n• "What's our conversion rate?"\n• "Show me hot leads"\n• "Break down by office location"\n• "What are the top roof issues?"\n• "Give me a summary"`;
+  };
+
+  const handleChatSubmit = () => {
+    if (!chatInput.trim()) return;
+
+    const userMessage = chatInput.trim();
+    setChatMessages(prev => [...prev, { role: 'user', content: userMessage }]);
+    setChatInput("");
+    setChatLoading(true);
+
+    // Simulate AI thinking delay
+    setTimeout(() => {
+      const response = analyzeLeads(userMessage);
+      setChatMessages(prev => [...prev, { role: 'assistant', content: response }]);
+      setChatLoading(false);
+    }, 500);
+  };
+
   return (
     <div className="min-h-screen bg-zinc-950 text-white p-6 lg:p-10 font-sans">
 
@@ -403,33 +535,110 @@ const RoofingLeads = () => {
         </button>
       </header>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      {/* Stats Grid - Roofing Pros Themed */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <StatCard
           label="Total Leads"
           value={totalLeads}
           icon={Phone}
-          color="text-blue-400"
+          color="text-amber-400"
+          description="All incoming calls"
         />
         <StatCard
           label="Appointments Booked"
           value={appointmentsBooked}
           icon={Calendar}
           color="text-emerald-400"
+          description="Inspections scheduled"
         />
         <StatCard
           label="Hot Leads"
           value={hotLeads}
           icon={Flame}
           color="text-red-400"
+          description="Ready to close"
         />
         <StatCard
           label="Storm Damage"
           value={stormDamageLeads}
           icon={AlertTriangle}
           color="text-orange-400"
+          description="Insurance eligible"
         />
       </div>
+
+      {/* Post-Call Data Extraction Preview - Glowing Boxes */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <GlowingCard>
+          <div className="flex items-start gap-3">
+            <div className="p-2 rounded-lg bg-amber-500/10 border border-amber-500/20">
+              <Home className="w-5 h-5 text-amber-400" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-white mb-1">Property Info</h3>
+              <p className="text-sm text-zinc-400">AI extracts address, property type, and homeowner status from every call</p>
+            </div>
+          </div>
+        </GlowingCard>
+
+        <GlowingCard>
+          <div className="flex items-start gap-3">
+            <div className="p-2 rounded-lg bg-orange-500/10 border border-orange-500/20">
+              <AlertTriangle className="w-5 h-5 text-orange-400" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-white mb-1">Roof Assessment</h3>
+              <p className="text-sm text-zinc-400">Storm damage detection, insurance claim status, and urgency scoring</p>
+            </div>
+          </div>
+        </GlowingCard>
+
+        <GlowingCard>
+          <div className="flex items-start gap-3">
+            <div className="p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+              <Calendar className="w-5 h-5 text-emerald-400" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-white mb-1">Smart Scheduling</h3>
+              <p className="text-sm text-zinc-400">Automatic appointment booking with office routing by zip code</p>
+            </div>
+          </div>
+        </GlowingCard>
+      </div>
+
+      {/* 16 Post-Call Extraction Fields - Feature Showcase */}
+      {leads.length === 0 && (
+        <div className="mb-10">
+          <h2 className="text-xl font-bold text-zinc-200 mb-4 flex items-center gap-2">
+            <span className="text-amber-400">16</span> Data Points Extracted Per Call
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3">
+            {[
+              { label: "Name", icon: "👤" },
+              { label: "Phone", icon: "📱" },
+              { label: "Email", icon: "📧" },
+              { label: "Address", icon: "🏠" },
+              { label: "Roof Issue", icon: "🔧" },
+              { label: "Storm Damage", icon: "⛈️" },
+              { label: "Insurance Filed", icon: "📋" },
+              { label: "Insurance Help", icon: "🤝" },
+              { label: "Homeowner", icon: "🔑" },
+              { label: "Urgency", icon: "⚡" },
+              { label: "Appt Scheduled", icon: "📅" },
+              { label: "Appt Date", icon: "🗓️" },
+              { label: "Office", icon: "📍" },
+              { label: "Call Outcome", icon: "✅" },
+              { label: "Lead Quality", icon: "🔥" },
+              { label: "Summary", icon: "📝" },
+            ].map((field, i) => (
+              <div key={i} className="bg-zinc-900/60 border border-zinc-800/50 rounded-lg p-3 text-center hover:border-amber-500/30 transition-colors">
+                <div className="text-lg mb-1">{field.icon}</div>
+                <div className="text-xs text-zinc-400">{field.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Leads List */}
       <div>
@@ -461,6 +670,124 @@ const RoofingLeads = () => {
           </div>
         )}
       </div>
+
+      {/* AI Insights Chatbot - Floating Button */}
+      <button
+        onClick={() => setChatOpen(!chatOpen)}
+        className="fixed bottom-6 right-6 z-50 p-4 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 rounded-full shadow-lg shadow-amber-500/25 transition-all duration-300 hover:scale-105"
+      >
+        {chatOpen ? (
+          <span className="text-white font-bold text-lg">&times;</span>
+        ) : (
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-5 h-5 text-white" />
+          </div>
+        )}
+      </button>
+
+      {/* AI Chatbot Panel */}
+      {chatOpen && (
+        <div className="fixed bottom-24 right-6 z-50 w-96 max-h-[500px] bg-zinc-900/95 backdrop-blur-lg border border-zinc-700 rounded-2xl shadow-2xl shadow-black/50 flex flex-col overflow-hidden">
+          {/* Header */}
+          <div className="p-4 border-b border-zinc-700 bg-gradient-to-r from-amber-500/10 to-orange-500/10">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600">
+                <TrendingUp className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h3 className="font-bold text-white">Lead Insights AI</h3>
+                <p className="text-xs text-zinc-400">Ask about trends, conversions & more</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Messages */}
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 max-h-[300px]">
+            {chatMessages.length === 0 && (
+              <div className="text-center py-8">
+                <Bot className="w-10 h-10 text-zinc-600 mx-auto mb-3" />
+                <p className="text-sm text-zinc-500 mb-4">Ask me about your roofing leads!</p>
+                <div className="space-y-2">
+                  {["What trends do you see?", "Show conversion rate", "Storm damage analysis"].map((suggestion, i) => (
+                    <button
+                      key={i}
+                      onClick={() => {
+                        setChatInput(suggestion);
+                        setTimeout(() => {
+                          setChatMessages([{ role: 'user', content: suggestion }]);
+                          setChatLoading(true);
+                          setTimeout(() => {
+                            setChatMessages(prev => [...prev, { role: 'assistant', content: analyzeLeads(suggestion) }]);
+                            setChatLoading(false);
+                          }, 500);
+                        }, 100);
+                      }}
+                      className="block w-full text-left px-3 py-2 text-sm text-zinc-400 hover:text-white bg-zinc-800/50 hover:bg-zinc-800 rounded-lg transition-colors"
+                    >
+                      {suggestion}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {chatMessages.map((msg, i) => (
+              <div key={i} className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : ''}`}>
+                {msg.role === 'assistant' && (
+                  <div className="p-1.5 rounded-lg bg-amber-500/20 h-fit">
+                    <Bot className="w-4 h-4 text-amber-400" />
+                  </div>
+                )}
+                <div className={`max-w-[85%] p-3 rounded-xl text-sm whitespace-pre-wrap ${
+                  msg.role === 'user'
+                    ? 'bg-amber-500/20 text-amber-100'
+                    : 'bg-zinc-800 text-zinc-200'
+                }`}>
+                  {msg.content}
+                </div>
+                {msg.role === 'user' && (
+                  <div className="p-1.5 rounded-lg bg-zinc-700 h-fit">
+                    <User className="w-4 h-4 text-zinc-300" />
+                  </div>
+                )}
+              </div>
+            ))}
+
+            {chatLoading && (
+              <div className="flex gap-3">
+                <div className="p-1.5 rounded-lg bg-amber-500/20 h-fit">
+                  <Bot className="w-4 h-4 text-amber-400" />
+                </div>
+                <div className="bg-zinc-800 px-4 py-3 rounded-xl">
+                  <div className="flex gap-1">
+                    <span className="w-2 h-2 bg-zinc-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                    <span className="w-2 h-2 bg-zinc-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                    <span className="w-2 h-2 bg-zinc-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Input */}
+          <div className="p-4 border-t border-zinc-700">
+            <ChatInput
+              value={chatInput}
+              onChange={(e) => setChatInput(e.target.value)}
+              onSubmit={handleChatSubmit}
+              loading={chatLoading}
+              variant="default"
+              className="bg-zinc-800/50 border-zinc-700"
+            >
+              <ChatInputTextArea
+                placeholder="Ask about trends, conversions..."
+                className="text-white placeholder:text-zinc-500 bg-transparent"
+              />
+              <ChatInputSubmit className="bg-amber-500 hover:bg-amber-600 border-none" />
+            </ChatInput>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
