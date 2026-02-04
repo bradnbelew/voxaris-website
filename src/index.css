@@ -355,3 +355,63 @@
 .animate-pulse-soft {
   animation: pulse-soft 2s ease-in-out infinite;
 }
+
+/* GlowingEffect Component Styles - 21st.dev */
+.glow {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.glow::before,
+.glow::after {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--glowingeffect-border-width, 1px));
+  border-radius: inherit;
+}
+
+.glow::before {
+  background: var(--gradient);
+  background-attachment: fixed;
+  mask-image:
+    linear-gradient(#000 0 0),
+    conic-gradient(
+      from calc((var(--start, 0) - var(--spread, 20)) * 1deg),
+      transparent 0deg,
+      #fff calc(var(--spread, 20) * 1deg),
+      #fff calc(var(--spread, 20) * 2deg),
+      transparent calc(var(--spread, 20) * 3deg)
+    );
+  mask-clip: padding-box, border-box;
+  mask-composite: exclude;
+  -webkit-mask-image:
+    linear-gradient(#000 0 0),
+    conic-gradient(
+      from calc((var(--start, 0) - var(--spread, 20)) * 1deg),
+      transparent 0deg,
+      #fff calc(var(--spread, 20) * 1deg),
+      #fff calc(var(--spread, 20) * 2deg),
+      transparent calc(var(--spread, 20) * 3deg)
+    );
+  -webkit-mask-clip: padding-box, border-box;
+  -webkit-mask-composite: destination-out;
+  opacity: var(--active, 0);
+  transition: opacity 0.3s ease;
+}
+
+/* Roofing-themed glow animation */
+@keyframes glowPulse {
+  0%, 100% {
+    opacity: 0.6;
+    filter: blur(0px);
+  }
+  50% {
+    opacity: 1;
+    filter: blur(2px);
+  }
+}
+
+.glow-roofing::before {
+  animation: glowPulse 3s ease-in-out infinite;
+}
