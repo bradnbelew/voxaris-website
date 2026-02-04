@@ -57,7 +57,7 @@ const features: Feature[] = [
 
 export function FeaturesSection() {
   return (
-    <section className="section-padding-lg bg-mist">
+    <section className="section-padding-lg bg-white">
       <div className="container-wide">
         {/* Section header */}
         <motion.div
@@ -66,11 +66,13 @@ export function FeaturesSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <span className="eyebrow mb-4 block">Platform Capabilities</span>
-          <h2 className="headline-lg text-ink mb-4">
+          <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-navy-50 border border-navy-100 text-xs font-semibold text-navy-700 uppercase tracking-wider mb-4">
+            Platform Capabilities
+          </span>
+          <h2 className="headline-lg text-navy-900 mb-4">
             Everything you need to convert more leads
           </h2>
-          <p className="text-slate max-w-2xl mx-auto text-lg">
+          <p className="text-platinum-600 max-w-2xl mx-auto text-lg">
             Enterprise-grade AI automation built for businesses that want to scale without sacrificing quality.
           </p>
         </motion.div>
@@ -80,29 +82,29 @@ export function FeaturesSection() {
           {features.map((feature, index) => (
             <motion.div
               key={feature.title}
-              className="glass-card p-8 card-hover"
+              className="card-modern p-8"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: index * 0.08 }}
             >
               {/* V-branded tag */}
-              <div className="inline-flex items-center px-2.5 py-1 rounded-md bg-mist text-xs font-medium text-charcoal mb-5">
+              <div className="inline-flex items-center px-2.5 py-1 rounded-md bg-platinum-100 text-xs font-medium text-platinum-600 mb-5">
                 {feature.vTag}
               </div>
 
               {/* Icon */}
-              <div className="w-12 h-12 rounded-xl bg-ink flex items-center justify-center mb-5">
+              <div className="w-12 h-12 rounded-xl bg-navy-900 flex items-center justify-center mb-5">
                 <feature.icon className="w-6 h-6 text-white" />
               </div>
 
               {/* Title - V-branded */}
-              <h3 className="text-xl font-bold text-ink mb-3">
+              <h3 className="text-xl font-bold text-navy-900 mb-3">
                 {feature.title}
               </h3>
 
               {/* Description */}
-              <p className="text-slate leading-relaxed">
+              <p className="text-platinum-600 leading-relaxed">
                 {feature.description}
               </p>
             </motion.div>

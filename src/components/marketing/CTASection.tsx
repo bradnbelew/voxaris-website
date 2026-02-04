@@ -2,11 +2,10 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { VoxarisLogo } from './VoxarisLogo';
 
 export function CTASection() {
   return (
-    <section className="section-padding-lg section-dark">
+    <section className="section-padding-lg bg-navy-900">
       <div className="container-editorial text-center">
         {/* Logo mark */}
         <motion.div
@@ -15,7 +14,9 @@ export function CTASection() {
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
         >
-          <VoxarisLogo variant="icon" size="lg" dark />
+          <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center">
+            <span className="text-3xl font-bold text-white">V</span>
+          </div>
         </motion.div>
 
         {/* Headline */}
@@ -32,7 +33,7 @@ export function CTASection() {
 
         {/* Subheadline */}
         <motion.p
-          className="text-lg text-silver mb-10 max-w-xl mx-auto"
+          className="text-lg text-platinum-400 mb-10 max-w-xl mx-auto"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -52,7 +53,7 @@ export function CTASection() {
           <Link to="/demo">
             <Button
               size="lg"
-              className="bg-white hover:bg-snow text-ink h-14 px-8 text-base font-medium rounded-lg group"
+              className="bg-white hover:bg-platinum-100 text-navy-900 h-14 px-8 text-base font-medium rounded-xl group shadow-elevated"
             >
               Get Started
               <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -62,7 +63,7 @@ export function CTASection() {
             <Button
               size="lg"
               variant="ghost"
-              className="text-white hover:bg-white/10 h-14 px-8 text-base font-medium rounded-lg"
+              className="text-white hover:bg-white/10 h-14 px-8 text-base font-medium rounded-xl border border-white/20"
             >
               Talk to Sales
             </Button>
@@ -71,7 +72,7 @@ export function CTASection() {
 
         {/* Trust indicators */}
         <motion.div
-          className="flex flex-wrap items-center justify-center gap-8 text-sm text-silver"
+          className="flex flex-wrap items-center justify-center gap-8 text-sm text-platinum-400"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
