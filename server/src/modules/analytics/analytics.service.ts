@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { supabase } from '../../lib/supabase';
 
 // Interface for Call Data
 export interface CallData {
@@ -265,5 +266,334 @@ export class AnalyticsService {
               screen_activities: "None detected."
           }
       };
+  }
+
+  /* -------------------------------------------------------------------------- */
+  /*                         MED SPA ANALYTICS (Supabase)                       */
+  /* -------------------------------------------------------------------------- */
+
+  /**
+   * Get comprehensive analytics for a med spa client
+   * Fetches from Supabase `calls` table where platform = 'tavus'
+   */
+  async getMedSpaAnalytics(clientId: string, days: number = 30) {
+    try {
+      const horizon = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
+
+      const { data: calls, error } = await supabase
+        .from('calls')
+        .select('*')
+        .eq('client_id', clientId)
+        .eq('platform', 'tavus')
+        .gte('started_at', horizon)
+        .order('started_at', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching med spa analytics:', error);
+        return this.getEmptyMedSpaAnalytics();
+      }
+
+      if (!calls || calls.length === 0) {
+        return this.getEmptyMedSpaAnalytics();
+      }
+
+      // Calculate metrics
+      const totalCalls = calls.length;
+      const totalDuration = calls.reduce((sum, c) => sum + (c.duration_seconds || 0), 0);
+      const avgDuration = totalCalls > 0 ? Math.round(totalDuration / totalCalls) : 0;
+      const totalMinutes = Math.round(totalDuration / 60);
+      const totalHours = Math.round((totalDuration / 3600) * 10) / 10; // 1 decimal place
+
+      // Sentiment breakdown
+      const sentimentBreakdown = { positive: 0, neutral: 0, negative: 0 };
+      calls.forEach(c => {
+        const score = c.sentiment_score || 50;
+        if (score >= 70) sentimentBreakdown.positive++;
+        else if (score >= 40) sentimentBreakdown.neutral++;
+        else sentimentBreakdown.negative++;
+      });
+
+      // Booking conversion rate
+      const bookingsRequested = calls.filter(c =>
+        c.metadata?.booking_requested || c.metadata?.consultation_booked
+      ).length;
+      const bookingRate = totalCalls > 0 ? Math.round((bookingsRequested / totalCalls) * 100) : 0;
+
+      // Extract top concerns from metadata
+      const concernCounts: Record<string, number> = {};
+      calls.forEach(c => {
+        const concerns = c.metadata?.concerns || [];
+        concerns.forEach((concern: string) => {
+          concernCounts[concern] = (concernCounts[concern] || 0) + 1;
+        });
+      });
+      const topConcerns = Object.entries(concernCounts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5)
+        .map(([concern, count]) => ({ concern, count }));
+
+      // Daily volume for chart
+      const dailyVolume: Record<string, number> = {};
+      calls.forEach(c => {
+        const date = new Date(c.started_at).toISOString().split('T')[0];
+        dailyVolume[date] = (dailyVolume[date] || 0) + 1;
+      });
+      const dailySeries = Object.entries(dailyVolume)
+        .sort((a, b) => a[0].localeCompare(b[0]))
+        .map(([date, count]) => ({ date, count }));
+
+      // Peak hours
+      const hourCounts: Record<number, number> = {};
+      calls.forEach(c => {
+        const hour = new Date(c.started_at).getHours();
+        hourCounts[hour] = (hourCounts[hour] || 0) + 1;
+      });
+      const peakHours = Object.entries(hourCounts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 3)
+        .map(([hour, count]) => ({
+          hour: parseInt(hour),
+          count,
+          label: `${parseInt(hour) > 12 ? parseInt(hour) - 12 : parseInt(hour)}${parseInt(hour) >= 12 ? 'PM' : 'AM'}`
+        }));
+
+      // Recent calls for list view
+      const recentCalls = calls.slice(0, 10).map(c => ({
+        id: c.call_id,
+        date: c.started_at,
+        duration: c.duration_seconds,
+        summary: c.summary,
+        sentiment: c.sentiment_score >= 70 ? 'positive' : c.sentiment_score >= 40 ? 'neutral' : 'negative',
+        sentimentScore: c.sentiment_score,
+        bookingRequested: c.metadata?.booking_requested || false,
+        visitorName: c.metadata?.visitor_name,
+        concerns: c.metadata?.concerns || []
+      }));
+
+      return {
+        summary: {
+          totalCalls,
+          totalMinutes,
+          totalHours,
+          avgDurationSeconds: avgDuration,
+          bookingRate,
+          bookingsRequested,
+          sentimentBreakdown
+        },
+        topConcerns,
+        peakHours,
+        charts: {
+          dailyVolume: dailySeries
+        },
+        recentCalls
+      };
+
+    } catch (error) {
+      console.error('Error computing med spa analytics:', error);
+      return this.getEmptyMedSpaAnalytics();
+    }
+  }
+
+  /**
+   * Get a single call detail from Supabase
+   */
+  async getMedSpaCallDetail(callId: string) {
+    try {
+      const { data, error } = await supabase
+        .from('calls')
+        .select('*')
+        .eq('call_id', callId)
+        .eq('platform', 'tavus')
+        .single();
+
+      if (error || !data) {
+        console.error('Error fetching call detail:', error);
+        return null;
+      }
+
+      return {
+        id: data.call_id,
+        clientId: data.client_id,
+        startedAt: data.started_at,
+        endedAt: data.ended_at,
+        duration: data.duration_seconds,
+        summary: data.summary,
+        sentiment: data.sentiment_score >= 70 ? 'positive' : data.sentiment_score >= 40 ? 'neutral' : 'negative',
+        sentimentScore: data.sentiment_score,
+        transcript: data.transcript,
+        metadata: data.metadata,
+        visitorName: data.metadata?.visitor_name,
+        visitorPhone: data.metadata?.visitor_phone,
+        visitorEmail: data.metadata?.visitor_email,
+        bookingRequested: data.metadata?.booking_requested,
+        concerns: data.metadata?.concerns || [],
+        recordingUrl: data.metadata?.recording_url
+      };
+
+    } catch (error) {
+      console.error('Error fetching med spa call detail:', error);
+      return null;
+    }
+  }
+
+  /**
+   * List all calls for a client (paginated)
+   */
+  async listMedSpaCalls(clientId: string, page: number = 1, limit: number = 20) {
+    try {
+      const offset = (page - 1) * limit;
+
+      const { data: calls, error, count } = await supabase
+        .from('calls')
+        .select('*', { count: 'exact' })
+        .eq('client_id', clientId)
+        .eq('platform', 'tavus')
+        .order('started_at', { ascending: false })
+        .range(offset, offset + limit - 1);
+
+      if (error) {
+        console.error('Error listing med spa calls:', error);
+        return { calls: [], total: 0, page, limit };
+      }
+
+      const formattedCalls = (calls || []).map(c => ({
+        id: c.call_id,
+        date: c.started_at,
+        duration: c.duration_seconds,
+        summary: c.summary,
+        sentiment: c.sentiment_score >= 70 ? 'positive' : c.sentiment_score >= 40 ? 'neutral' : 'negative',
+        sentimentScore: c.sentiment_score,
+        bookingRequested: c.metadata?.booking_requested || false,
+        visitorName: c.metadata?.visitor_name,
+        concerns: c.metadata?.concerns || []
+      }));
+
+      return {
+        calls: formattedCalls,
+        total: count || 0,
+        page,
+        limit,
+        totalPages: Math.ceil((count || 0) / limit)
+      };
+
+    } catch (error) {
+      console.error('Error listing med spa calls:', error);
+      return { calls: [], total: 0, page, limit };
+    }
+  }
+
+  private getEmptyMedSpaAnalytics() {
+    return {
+      summary: {
+        totalCalls: 0,
+        totalMinutes: 0,
+        totalHours: 0,
+        avgDurationSeconds: 0,
+        bookingRate: 0,
+        bookingsRequested: 0,
+        sentimentBreakdown: { positive: 0, neutral: 0, negative: 0 }
+      },
+      topConcerns: [],
+      peakHours: [],
+      charts: {
+        dailyVolume: []
+      },
+      recentCalls: []
+    };
+  }
+
+  /**
+   * Get usage/billing metrics for a client
+   * Useful for tracking minutes consumed for billing purposes
+   */
+  async getUsageMetrics(clientId: string, startDate?: Date, endDate?: Date) {
+    try {
+      const start = startDate || new Date(new Date().getFullYear(), new Date().getMonth(), 1); // First of current month
+      const end = endDate || new Date();
+
+      const { data: calls, error } = await supabase
+        .from('calls')
+        .select('duration_seconds, started_at, platform')
+        .eq('client_id', clientId)
+        .gte('started_at', start.toISOString())
+        .lte('started_at', end.toISOString());
+
+      if (error || !calls) {
+        console.error('Error fetching usage metrics:', error);
+        return this.getEmptyUsageMetrics();
+      }
+
+      // Separate by platform
+      const tavusCalls = calls.filter(c => c.platform === 'tavus');
+      const retellCalls = calls.filter(c => c.platform === 'retell');
+
+      const tavusSeconds = tavusCalls.reduce((sum, c) => sum + (c.duration_seconds || 0), 0);
+      const retellSeconds = retellCalls.reduce((sum, c) => sum + (c.duration_seconds || 0), 0);
+      const totalSeconds = tavusSeconds + retellSeconds;
+
+      // Calculate daily breakdown for the period
+      const dailyMinutes: Record<string, { tavus: number; retell: number; total: number }> = {};
+      calls.forEach(c => {
+        const date = new Date(c.started_at).toISOString().split('T')[0];
+        if (!dailyMinutes[date]) {
+          dailyMinutes[date] = { tavus: 0, retell: 0, total: 0 };
+        }
+        const mins = Math.round((c.duration_seconds || 0) / 60);
+        if (c.platform === 'tavus') {
+          dailyMinutes[date].tavus += mins;
+        } else {
+          dailyMinutes[date].retell += mins;
+        }
+        dailyMinutes[date].total += mins;
+      });
+
+      const dailyUsage = Object.entries(dailyMinutes)
+        .sort((a, b) => a[0].localeCompare(b[0]))
+        .map(([date, usage]) => ({ date, ...usage }));
+
+      return {
+        period: {
+          start: start.toISOString(),
+          end: end.toISOString()
+        },
+        totals: {
+          calls: calls.length,
+          seconds: totalSeconds,
+          minutes: Math.round(totalSeconds / 60),
+          hours: Math.round((totalSeconds / 3600) * 10) / 10
+        },
+        byPlatform: {
+          tavus: {
+            calls: tavusCalls.length,
+            seconds: tavusSeconds,
+            minutes: Math.round(tavusSeconds / 60),
+            hours: Math.round((tavusSeconds / 3600) * 10) / 10
+          },
+          retell: {
+            calls: retellCalls.length,
+            seconds: retellSeconds,
+            minutes: Math.round(retellSeconds / 60),
+            hours: Math.round((retellSeconds / 3600) * 10) / 10
+          }
+        },
+        dailyUsage
+      };
+
+    } catch (error) {
+      console.error('Error computing usage metrics:', error);
+      return this.getEmptyUsageMetrics();
+    }
+  }
+
+  private getEmptyUsageMetrics() {
+    return {
+      period: { start: '', end: '' },
+      totals: { calls: 0, seconds: 0, minutes: 0, hours: 0 },
+      byPlatform: {
+        tavus: { calls: 0, seconds: 0, minutes: 0, hours: 0 },
+        retell: { calls: 0, seconds: 0, minutes: 0, hours: 0 }
+      },
+      dailyUsage: []
+    };
   }
 }

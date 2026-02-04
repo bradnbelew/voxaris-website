@@ -7,6 +7,7 @@ import { QUEUE_NAMES, closeQueues } from '../queues';
 import { tavusProcessor } from '../queues/tavus.processor';
 import { retellProcessor } from '../queues/retell.processor';
 import { ghlProcessor } from '../queues/ghl.processor';
+import { emailProcessor } from '../queues/email.processor';
 
 dotenv.config();
 
@@ -70,11 +71,25 @@ async function startWorkers() {
     }
   );
 
+  const emailWorker = new Worker(
+    QUEUE_NAMES.EMAIL,
+    emailProcessor,
+    {
+      connection,
+      concurrency: 5, // Email sending is fast
+      limiter: {
+        max: 10, // Resend has generous rate limits
+        duration: 1000,
+      },
+    }
+  );
+
   // Track worker metrics
   const metrics = {
     tavus: { completed: 0, failed: 0, active: 0 },
     retell: { completed: 0, failed: 0, active: 0 },
     ghl: { completed: 0, failed: 0, active: 0 },
+    email: { completed: 0, failed: 0, active: 0 },
   };
 
   // Set up event listeners for each worker
@@ -106,6 +121,7 @@ async function startWorkers() {
   setupWorkerEvents(tavusWorker, 'tavus');
   setupWorkerEvents(retellWorker, 'retell');
   setupWorkerEvents(ghlWorker, 'ghl');
+  setupWorkerEvents(emailWorker, 'email');
 
   logger.info('✅ All workers started');
 
@@ -115,10 +131,11 @@ async function startWorkers() {
   healthApp.get('/health', async (req, res) => {
     try {
       // Get queue counts
-      const [tavusQueue, retellQueue, ghlQueue] = await Promise.all([
+      const [tavusQueue, retellQueue, ghlQueue, emailQueueCount] = await Promise.all([
         tavusWorker.client.then(c => c.llen(`bull:${QUEUE_NAMES.TAVUS_WEBHOOKS}:wait`)),
         retellWorker.client.then(c => c.llen(`bull:${QUEUE_NAMES.RETELL_WEBHOOKS}:wait`)),
         ghlWorker.client.then(c => c.llen(`bull:${QUEUE_NAMES.GHL_SYNC}:wait`)),
+        emailWorker.client.then(c => c.llen(`bull:${QUEUE_NAMES.EMAIL}:wait`)),
       ]);
 
       res.json({
@@ -140,6 +157,11 @@ async function startWorkers() {
             ...metrics.ghl,
             waiting: ghlQueue,
           },
+          email: {
+            running: emailWorker.isRunning(),
+            ...metrics.email,
+            waiting: emailQueueCount,
+          },
         },
       });
     } catch (error: any) {
@@ -154,10 +176,11 @@ async function startWorkers() {
   healthApp.get('/dlq', async (req, res) => {
     try {
       const client = await tavusWorker.client;
-      const [tavusFailed, retellFailed, ghlFailed] = await Promise.all([
+      const [tavusFailed, retellFailed, ghlFailed, emailFailed] = await Promise.all([
         client.llen(`bull:${QUEUE_NAMES.TAVUS_WEBHOOKS}:failed`),
         client.llen(`bull:${QUEUE_NAMES.RETELL_WEBHOOKS}:failed`),
         client.llen(`bull:${QUEUE_NAMES.GHL_SYNC}:failed`),
+        client.llen(`bull:${QUEUE_NAMES.EMAIL}:failed`),
       ]);
 
       res.json({
@@ -165,7 +188,8 @@ async function startWorkers() {
           tavus: tavusFailed,
           retell: retellFailed,
           ghl: ghlFailed,
-          total: tavusFailed + retellFailed + ghlFailed,
+          email: emailFailed,
+          total: tavusFailed + retellFailed + ghlFailed + emailFailed,
         },
         timestamp: new Date().toISOString(),
       });
@@ -186,6 +210,7 @@ async function startWorkers() {
     await tavusWorker.close();
     await retellWorker.close();
     await ghlWorker.close();
+    await emailWorker.close();
     logger.info('✅ Workers stopped accepting jobs');
 
     // Wait for in-flight jobs (max 30 seconds)

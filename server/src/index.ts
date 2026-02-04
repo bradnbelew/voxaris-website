@@ -8,8 +8,10 @@ import analyticsRoutes from './modules/analytics/analytics.controller';
 import webhookRoutes from './modules/webhooks/webhook.controller';
 import landingRoutes from './modules/landing/landing.controller';
 import dashboardRoutes from './modules/analytics/dashboard.controller';
+import medspaRoutes from './modules/analytics/medspa.controller';
 import spawnRoutes from './modules/provisioning/spawn.controller';
 import adminRoutes from './modules/admin/admin.controller';
+import roofingRoutes from './modules/roofing/roofing.controller';
 import { initializeQueues } from './queues';
 import { warmClientCache } from './lib/cache';
 import { logger } from './lib/logger';
@@ -47,8 +49,10 @@ app.use('/api/analytics', analyticsRoutes); // V-Suite Analytics at /api/analyti
 app.use('/api/webhooks', webhookRoutes); // Unified Webhooks (Tavus, Retell, GHL)
 app.use('/api/landing', landingRoutes);   // QR Scan API
 app.use('/api/analytics', dashboardRoutes); // V-Suite Dashboard API
+app.use('/api/analytics', medspaRoutes); // Med Spa Analytics API
 app.use('/api/provisioning', spawnRoutes); // VoxOS Factory (Spawn)
 app.use('/api/admin', adminRoutes); // Admin API (dealer management)
+app.use('/api/roofing', roofingRoutes); // Roofing Pros USA API
 
 // Health Check
 app.get('/api/health', (req, res) => {

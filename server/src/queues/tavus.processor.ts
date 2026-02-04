@@ -3,7 +3,7 @@ import { ghl } from '../lib/ghl';
 import { logger } from '../lib/logger';
 import { supabase } from '../lib/supabase';
 import { clientsService } from '../modules/clients/clients.service';
-import { TavusWebhookJob, addGHLJob } from './index';
+import { TavusWebhookJob, addGHLJob, addEmailJob } from './index';
 
 /**
  * Tavus Webhook Processor
@@ -149,4 +149,45 @@ async function processConversationEnded(
   }
 
   logger.info(`✅ GHL sync jobs queued for contact: ${contactId}`);
+
+  // Step 4: Queue email notification to practice owner
+  const notificationEmail = process.env.MEDSPA_NOTIFICATION_EMAIL || client?.notification_email;
+
+  if (notificationEmail) {
+    // Extract visitor info and concerns from metadata/transcript
+    const visitorName = metadata?.visitor_name || metadata?.first_name;
+    const visitorPhone = metadata?.visitor_phone || metadata?.phone || queryParams?.phone;
+    const visitorEmail = metadata?.visitor_email || queryParams?.email;
+    const bookingRequested = metadata?.booking_requested || metadata?.consultation_booked || false;
+    const concerns = metadata?.concerns || [];
+    const preferredDay = metadata?.preferred_day;
+    const preferredTime = metadata?.preferred_time;
+
+    await addEmailJob({
+      type: 'medspa_call_summary',
+      to: notificationEmail,
+      data: {
+        practiceName: client?.name || 'Your Practice',
+        visitorName,
+        visitorPhone,
+        visitorEmail,
+        duration: duration_seconds,
+        summary,
+        sentiment: sentiment?.label,
+        sentimentScore: sentiment ? Math.round(sentiment.score * 100) : undefined,
+        bookingRequested,
+        preferredDay,
+        preferredTime,
+        concerns,
+        conversationId: conversation_id,
+        timestamp: new Date(),
+        dashboardUrl: process.env.DASHBOARD_URL ? `${process.env.DASHBOARD_URL}/calls/${conversation_id}` : undefined
+      },
+      source: 'tavus'
+    });
+
+    logger.info(`📧 Email notification queued for: ${notificationEmail}`);
+  } else {
+    logger.warn('⚠️ No notification email configured. Skipping email.');
+  }
 }

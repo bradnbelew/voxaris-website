@@ -4,6 +4,7 @@ import { logger } from '../../lib/logger';
 
 export interface ClientConfig {
   id: string;
+  name?: string;
   business_name: string;
   retell_agent_id: string;
   tavus_persona_id: string;
@@ -11,6 +12,7 @@ export interface ClientConfig {
   system_prompt: string;
   objection_map: Record<string, string>;
   ghl_location_id?: string;
+  notification_email?: string;
 }
 
 export const clientsService = {

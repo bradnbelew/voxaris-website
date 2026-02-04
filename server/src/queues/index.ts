@@ -24,19 +24,21 @@ export const QUEUE_NAMES = {
   TAVUS_WEBHOOKS: 'tavus-webhooks',
   RETELL_WEBHOOKS: 'retell-webhooks',
   GHL_SYNC: 'ghl-sync',
+  EMAIL: 'email',
 } as const;
 
 // Initialize queues only if Redis is available
 let tavusQueue: Queue | null = null;
 let retellQueue: Queue | null = null;
 let ghlQueue: Queue | null = null;
+let emailQueue: Queue | null = null;
 
 export const initializeQueues = () => {
   const connection = getQueueConnection();
 
   if (!connection) {
     logger.warn('⚠️ Redis not available. Running in synchronous mode (no queues).');
-    return { tavusQueue: null, retellQueue: null, ghlQueue: null };
+    return { tavusQueue: null, retellQueue: null, ghlQueue: null, emailQueue: null };
   }
 
   const queueOptions: QueueOptions = {
@@ -58,17 +60,19 @@ export const initializeQueues = () => {
     },
   });
 
+  emailQueue = new Queue(QUEUE_NAMES.EMAIL, queueOptions);
+
   logger.info('✅ BullMQ Queues Initialized');
 
-  return { tavusQueue, retellQueue, ghlQueue };
+  return { tavusQueue, retellQueue, ghlQueue, emailQueue };
 };
 
 // Getters for accessing queues
 export const getQueues = () => {
-  if (!tavusQueue || !retellQueue || !ghlQueue) {
+  if (!tavusQueue || !retellQueue || !ghlQueue || !emailQueue) {
     return initializeQueues();
   }
-  return { tavusQueue, retellQueue, ghlQueue };
+  return { tavusQueue, retellQueue, ghlQueue, emailQueue };
 };
 
 // Job types for type safety
@@ -90,6 +94,13 @@ export interface GHLSyncJob {
   contactId: string;
   data: any;
   source: 'tavus' | 'retell';
+}
+
+export interface EmailJob {
+  type: 'medspa_call_summary' | 'booking_confirmation' | 'follow_up';
+  to: string;
+  data: any;
+  source: 'tavus' | 'retell' | 'system';
 }
 
 // Helper functions to add jobs with proper typing
@@ -133,9 +144,25 @@ export const addGHLJob = async (job: GHLSyncJob) => {
   });
 };
 
+export const addEmailJob = async (job: EmailJob) => {
+  const { emailQueue } = getQueues();
+  if (!emailQueue) {
+    logger.warn('⚠️ Email queue not available. Email will not be sent.');
+    return null;
+  }
+
+  // High priority for booking confirmations
+  const priority = job.type === 'booking_confirmation' ? 1 : 2;
+
+  return emailQueue.add(job.type, job, {
+    priority,
+    jobId: `email-${job.type}-${Date.now()}`,
+  });
+};
+
 // Graceful shutdown
 export const closeQueues = async () => {
-  const queues = [tavusQueue, retellQueue, ghlQueue].filter(Boolean) as Queue[];
+  const queues = [tavusQueue, retellQueue, ghlQueue, emailQueue].filter(Boolean) as Queue[];
   await Promise.all(queues.map(q => q.close()));
   logger.info('✅ All queues closed');
 };

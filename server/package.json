@@ -26,6 +26,7 @@
     "ioredis": "^5.9.2",
     "openai": "^6.16.0",
     "rate-limit-redis": "^4.2.0",
+    "resend": "^6.9.1",
     "retell-sdk": "^4.66.0",
     "ts-node": "^10.9.2",
     "winston": "^3.19.0",

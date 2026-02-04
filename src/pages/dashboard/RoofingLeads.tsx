@@ -49,24 +49,27 @@ interface RoofingLead {
   duration_ms?: number;
 }
 
-// Components with GlowingEffect
+// Components with GlowingEffect - 21st.dev style
 const GlowingCard = ({ children, className = "", onClick }: { children: React.ReactNode; className?: string; onClick?: () => void }) => (
-  <div
-    onClick={onClick}
-    className={`relative rounded-xl ${onClick ? 'cursor-pointer' : ''} ${className}`}
-  >
-    <GlowingEffect
-      spread={40}
-      glow={true}
-      disabled={false}
-      proximity={64}
-      inactiveZone={0.01}
-      variant="roofing"
-    />
-    <div className="relative bg-zinc-900/90 backdrop-blur-md border border-zinc-800/50 rounded-xl p-6 h-full">
-      {children}
+  <li className={`min-h-[8rem] list-none ${className}`}>
+    <div
+      onClick={onClick}
+      className={`relative h-full rounded-[1.25rem] border-[0.75px] border-zinc-700/50 p-2 md:rounded-[1.5rem] md:p-3 ${onClick ? 'cursor-pointer' : ''}`}
+    >
+      <GlowingEffect
+        spread={40}
+        glow={true}
+        disabled={false}
+        proximity={64}
+        inactiveZone={0.01}
+        borderWidth={3}
+        variant="roofing"
+      />
+      <div className="relative flex h-full flex-col justify-between gap-4 overflow-hidden rounded-xl border-[0.75px] border-zinc-800 bg-zinc-900/90 p-6 shadow-sm">
+        {children}
+      </div>
     </div>
-  </div>
+  </li>
 );
 
 const CyberCard = ({ children, className = "", onClick }: { children: React.ReactNode; className?: string; onClick?: () => void }) => (
