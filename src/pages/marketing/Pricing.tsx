@@ -2,7 +2,8 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Check, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Navbar, Footer, GradientOrbs } from '@/components/marketing';
+import { Navbar, Footer } from '@/components/marketing';
+import { GradientMesh } from '@/components/marketing/backgrounds/GradientMesh';
 import { cn } from '@/lib/utils';
 
 const plans = [
@@ -83,22 +84,22 @@ const faqs = [
 
 export function Pricing() {
   return (
-    <div className="min-h-screen bg-navy-900">
+    <div className="min-h-screen bg-white">
       <Navbar />
 
       {/* Hero */}
       <section className="relative pt-32 pb-20 overflow-hidden">
-        <GradientOrbs />
+        <GradientMesh />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.h1
-            className="text-4xl sm:text-5xl font-bold text-white mb-6"
+            className="text-4xl sm:text-5xl font-bold text-navy-900 mb-6"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
             Simple, Transparent Pricing
           </motion.h1>
           <motion.p
-            className="max-w-2xl mx-auto text-lg text-platinum-400"
+            className="max-w-2xl mx-auto text-lg text-platinum-600"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
@@ -109,42 +110,42 @@ export function Pricing() {
       </section>
 
       {/* Pricing Cards */}
-      <section className="pb-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="pb-20 bg-platinum-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8">
           <div className="grid md:grid-cols-3 gap-8">
             {plans.map((plan, index) => (
               <motion.div
                 key={plan.name}
                 className={cn(
-                  'relative rounded-2xl p-8',
+                  'relative rounded-2xl p-8 bg-white shadow-card',
                   plan.popular
-                    ? 'bg-gradient-to-b from-purple-500/10 to-transparent border-2 border-purple-500/50'
-                    : 'bg-navy-800/50 border border-white/5'
+                    ? 'border-2 border-navy-500 ring-4 ring-navy-100'
+                    : 'border border-platinum-200'
                 )}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
                 {plan.popular && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white text-sm font-medium">
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-navy-900 text-white text-sm font-medium">
                     Most Popular
                   </div>
                 )}
 
                 <div className="text-center mb-8">
-                  <h3 className="text-xl font-semibold text-white mb-2">{plan.name}</h3>
+                  <h3 className="text-xl font-semibold text-navy-900 mb-2">{plan.name}</h3>
                   <div className="flex items-baseline justify-center gap-1">
-                    <span className="text-4xl font-bold text-white">{plan.price}</span>
-                    <span className="text-platinum-400">{plan.period}</span>
+                    <span className="text-4xl font-bold text-navy-900">{plan.price}</span>
+                    <span className="text-platinum-500">{plan.period}</span>
                   </div>
-                  <p className="text-sm text-platinum-500 mt-2">{plan.description}</p>
+                  <p className="text-sm text-platinum-600 mt-2">{plan.description}</p>
                 </div>
 
                 <ul className="space-y-4 mb-8">
                   {plan.features.map((feature) => (
                     <li key={feature} className="flex items-start gap-3">
-                      <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="text-platinum-300 text-sm">{feature}</span>
+                      <Check className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
+                      <span className="text-platinum-600 text-sm">{feature}</span>
                     </li>
                   ))}
                 </ul>
@@ -152,10 +153,10 @@ export function Pricing() {
                 <Link to="/demo" className="block">
                   <Button
                     className={cn(
-                      'w-full h-12',
+                      'w-full h-12 rounded-xl',
                       plan.popular
-                        ? 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white border-0'
-                        : 'bg-white/5 hover:bg-white/10 text-white border border-white/10'
+                        ? 'bg-navy-900 hover:bg-navy-800 text-white shadow-glow-navy hover:shadow-glow-navy-lg'
+                        : 'bg-platinum-100 hover:bg-platinum-200 text-navy-900'
                     )}
                   >
                     {plan.cta}
@@ -169,10 +170,10 @@ export function Pricing() {
       </section>
 
       {/* FAQ */}
-      <section className="py-20 bg-navy-800/50">
+      <section className="py-20 bg-white">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.h2
-            className="text-3xl font-bold text-white text-center mb-12"
+            className="text-3xl font-bold text-navy-900 text-center mb-12"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -184,14 +185,14 @@ export function Pricing() {
             {faqs.map((faq, index) => (
               <motion.div
                 key={faq.question}
-                className="p-6 rounded-xl bg-navy-800 border border-white/5"
+                className="p-6 rounded-xl bg-platinum-50 border border-platinum-200"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
               >
-                <h3 className="text-lg font-semibold text-white mb-2">{faq.question}</h3>
-                <p className="text-platinum-400">{faq.answer}</p>
+                <h3 className="text-lg font-semibold text-navy-900 mb-2">{faq.question}</h3>
+                <p className="text-platinum-600">{faq.answer}</p>
               </motion.div>
             ))}
           </div>

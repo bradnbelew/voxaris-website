@@ -18,7 +18,6 @@ import {
   SolutionContractors,
   SolutionAgencies,
   Technology,
-  Pricing,
   Demo,
 } from "./pages/marketing";
 import Login from "./pages/auth/Login";
@@ -54,7 +53,6 @@ const App = () => (
               <Route path="/how-it-works" element={<HowItWorks />} />
               <Route path="/why-voxaris" element={<WhyVoxaris />} />
               <Route path="/technology" element={<Technology />} />
-              <Route path="/pricing" element={<Pricing />} />
               <Route path="/demo" element={<Demo />} />
               <Route path="/book-demo" element={<BookDemo />} />
               <Route path="/solutions/agencies" element={<SolutionAgencies />} />

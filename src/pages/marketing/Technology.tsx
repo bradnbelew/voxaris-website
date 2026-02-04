@@ -2,7 +2,8 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Shield, Zap, Server, Lock, Globe, Code, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Navbar, Footer, GradientOrbs } from '@/components/marketing';
+import { Navbar, Footer } from '@/components/marketing';
+import { GradientMesh } from '@/components/marketing/backgrounds/GradientMesh';
 
 const techFeatures = [
   {
@@ -48,23 +49,23 @@ const integrations = [
 
 export function Technology() {
   return (
-    <div className="min-h-screen bg-navy-900">
+    <div className="min-h-screen bg-white">
       <Navbar />
 
       {/* Hero */}
       <section className="relative pt-32 pb-20 overflow-hidden">
-        <GradientOrbs />
+        <GradientMesh />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-6"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-navy-50 border border-navy-100 mb-6"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <span className="text-sm text-purple-400">100% Proprietary Technology</span>
+            <span className="text-sm font-medium text-navy-700">100% Proprietary Technology</span>
           </motion.div>
 
           <motion.h1
-            className="text-4xl sm:text-5xl font-bold text-white mb-6"
+            className="text-4xl sm:text-5xl font-bold text-navy-900 mb-6"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
@@ -73,7 +74,7 @@ export function Technology() {
           </motion.h1>
 
           <motion.p
-            className="max-w-2xl mx-auto text-lg text-platinum-400"
+            className="max-w-2xl mx-auto text-lg text-platinum-600"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
@@ -83,16 +84,16 @@ export function Technology() {
         </div>
       </section>
 
-      {/* Architecture Diagram Placeholder */}
+      {/* Architecture Diagram */}
       <section className="pb-20">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
-            className="rounded-2xl bg-navy-800/50 border border-white/5 p-8 lg:p-12"
+            className="rounded-2xl bg-white border border-platinum-200 shadow-card p-8 lg:p-12"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-2xl font-bold text-white text-center mb-8">
+            <h2 className="text-2xl font-bold text-navy-900 text-center mb-8">
               Voxaris Architecture
             </h2>
 
@@ -100,23 +101,23 @@ export function Technology() {
             <div className="grid grid-cols-3 gap-4 mb-8">
               {['Lead Sources', 'Voxaris AI Engine', 'Your CRM'].map((label, i) => (
                 <div key={label} className="text-center">
-                  <div className={`h-24 rounded-xl flex items-center justify-center text-white font-medium ${
+                  <div className={`h-24 rounded-xl flex items-center justify-center font-medium ${
                     i === 1
-                      ? 'bg-gradient-to-br from-purple-500 to-pink-500'
-                      : 'bg-navy-700 border border-white/10'
+                      ? 'bg-navy-900 text-white'
+                      : 'bg-platinum-100 border border-platinum-200 text-navy-900'
                   }`}>
                     {label}
                   </div>
                   {i < 2 && (
                     <div className="flex justify-end -mr-8 mt-2">
-                      <ArrowRight className="w-6 h-6 text-platinum-500" />
+                      <ArrowRight className="w-6 h-6 text-platinum-400" />
                     </div>
                   )}
                 </div>
               ))}
             </div>
 
-            <div className="grid sm:grid-cols-3 gap-4 text-center text-sm text-platinum-400">
+            <div className="grid sm:grid-cols-3 gap-4 text-center text-sm text-platinum-600">
               <div>Web Forms, Phone, Chat</div>
               <div>Video AI + Voice AI + Orchestration</div>
               <div>Leads, Appointments, Analytics</div>
@@ -126,10 +127,10 @@ export function Technology() {
       </section>
 
       {/* Tech Features */}
-      <section className="py-20 bg-navy-800/50">
+      <section className="py-20 bg-platinum-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.h2
-            className="text-3xl font-bold text-white text-center mb-12"
+            className="text-3xl font-bold text-navy-900 text-center mb-12"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -141,15 +142,17 @@ export function Technology() {
             {techFeatures.map((feature, index) => (
               <motion.div
                 key={feature.title}
-                className="p-6 rounded-xl bg-navy-800 border border-white/5"
+                className="card-modern p-6"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
               >
-                <feature.icon className="w-10 h-10 text-purple-400 mb-4" />
-                <h3 className="text-lg font-semibold text-white mb-2">{feature.title}</h3>
-                <p className="text-platinum-400 text-sm">{feature.description}</p>
+                <div className="w-12 h-12 rounded-xl bg-navy-900 flex items-center justify-center mb-4">
+                  <feature.icon className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-lg font-semibold text-navy-900 mb-2">{feature.title}</h3>
+                <p className="text-platinum-600 text-sm">{feature.description}</p>
               </motion.div>
             ))}
           </div>
@@ -157,10 +160,10 @@ export function Technology() {
       </section>
 
       {/* Integrations */}
-      <section className="py-20">
+      <section className="py-20 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.h2
-            className="text-3xl font-bold text-white mb-4"
+            className="text-3xl font-bold text-navy-900 mb-4"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -169,7 +172,7 @@ export function Technology() {
           </motion.h2>
 
           <motion.p
-            className="text-platinum-400 mb-12"
+            className="text-platinum-600 mb-12"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -188,10 +191,10 @@ export function Technology() {
             {integrations.map((integration) => (
               <div
                 key={integration}
-                className="flex items-center gap-2 px-4 py-2 rounded-full bg-navy-800 border border-white/10"
+                className="flex items-center gap-2 px-4 py-2 rounded-full bg-platinum-50 border border-platinum-200"
               >
-                <CheckCircle2 className="w-4 h-4 text-green-500" />
-                <span className="text-platinum-300">{integration}</span>
+                <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                <span className="text-navy-800">{integration}</span>
               </div>
             ))}
           </motion.div>
@@ -199,7 +202,7 @@ export function Technology() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-gradient-to-br from-purple-900/20 via-navy-900 to-pink-900/20">
+      <section className="py-20 bg-navy-900">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.h2
             className="text-3xl font-bold text-white mb-6"
@@ -213,7 +216,7 @@ export function Technology() {
           <Link to="/demo">
             <Button
               size="lg"
-              className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white border-0 px-8 h-12"
+              className="bg-white hover:bg-platinum-100 text-navy-900 px-8 h-12 rounded-xl shadow-elevated"
             >
               Book a Demo
               <ArrowRight className="w-4 h-4 ml-2" />

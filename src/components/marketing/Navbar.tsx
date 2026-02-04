@@ -18,7 +18,6 @@ const navLinks = [
     ],
   },
   { label: 'Technology', href: '/technology' },
-  { label: 'Pricing', href: '/pricing' },
 ];
 
 export function Navbar() {
