@@ -12,6 +12,7 @@ import medspaRoutes from './modules/analytics/medspa.controller';
 import spawnRoutes from './modules/provisioning/spawn.controller';
 import adminRoutes from './modules/admin/admin.controller';
 import roofingRoutes from './modules/roofing/roofing.controller';
+import estimaiteRoutes from './modules/estimaite/estimaite.controller';
 import { initializeQueues } from './queues';
 import { initializeFollowupQueue, closeFollowupQueue } from './queues/roofing-followup.processor';
 import { warmClientCache } from './lib/cache';
@@ -54,6 +55,7 @@ app.use('/api/analytics', medspaRoutes); // Med Spa Analytics API
 app.use('/api/provisioning', spawnRoutes); // VoxOS Factory (Spawn)
 app.use('/api/admin', adminRoutes); // Admin API (dealer management)
 app.use('/api/roofing', roofingRoutes); // Roofing Pros USA API
+app.use('/api/estimaite', estimaiteRoutes); // EstimAIte - AI Estimate Generation
 
 // Health Check
 app.get('/api/health', (req, res) => {
