@@ -176,4 +176,80 @@ router.get('/candidates', async (_req: Request, res: Response) => {
 // POST /api/voice/provision-agent
 router.post('/provision-agent', provisionAgentHandler);
 
+// ============================================================
+// VOXARIS WEB CALL - For website demo
+// ============================================================
+const VOXARIS_VOICE_AGENT_ID = process.env.VOXARIS_VOICE_AGENT_ID || 'agent_696226322fb18bfca2e43d5111';
+
+// POST /api/voice/web-call - Create a web call for the Voxaris demo
+router.post('/web-call', async (req: Request, res: Response) => {
+  try {
+    const { agent_id } = req.body;
+    const targetAgentId = agent_id || VOXARIS_VOICE_AGENT_ID;
+
+    if (!process.env.RETELL_API_KEY) {
+      console.error('Missing RETELL_API_KEY');
+      return res.status(500).json({ success: false, error: 'Retell not configured' });
+    }
+
+    console.log(`🎙️ Creating Voxaris web call for agent: ${targetAgentId}`);
+
+    const webCall = await retell.call.createWebCall({
+      agent_id: targetAgentId,
+      metadata: {
+        source: 'voxaris_website',
+        page: 'demo'
+      }
+    });
+
+    console.log(`✅ Web call created: ${webCall.call_id}`);
+
+    return res.json({
+      success: true,
+      call_id: webCall.call_id,
+      access_token: webCall.access_token
+    });
+
+  } catch (error: any) {
+    console.error('❌ Web call error:', error.message || error);
+    return res.status(500).json({
+      success: false,
+      error: error.message || 'Failed to create web call'
+    });
+  }
+});
+
+// POST /api/retell/web-call - Alternative route for frontend compatibility
+router.post('/retell/web-call', async (req: Request, res: Response) => {
+  try {
+    const { agent_id } = req.body;
+    const targetAgentId = agent_id || VOXARIS_VOICE_AGENT_ID;
+
+    if (!process.env.RETELL_API_KEY) {
+      return res.status(500).json({ success: false, error: 'Retell not configured' });
+    }
+
+    const webCall = await retell.call.createWebCall({
+      agent_id: targetAgentId,
+      metadata: {
+        source: 'voxaris_website',
+        page: 'demo'
+      }
+    });
+
+    return res.json({
+      success: true,
+      call_id: webCall.call_id,
+      access_token: webCall.access_token
+    });
+
+  } catch (error: any) {
+    console.error('❌ Web call error:', error.message || error);
+    return res.status(500).json({
+      success: false,
+      error: error.message || 'Failed to create web call'
+    });
+  }
+});
+
 export default router;

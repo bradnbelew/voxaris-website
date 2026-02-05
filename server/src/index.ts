@@ -46,6 +46,7 @@ app.use((req, res, next) => {
 
 // Routes
 app.use('/api/voice', voiceRoutes);
+app.use('/api/retell', voiceRoutes);  // Also mount at /api/retell for web-call endpoint
 app.use('/api', retellLLMRoutes); // Retell Custom LLM at /api/retell-llm
 app.use('/api/analytics', analyticsRoutes); // V-Suite Analytics at /api/analytics/ingest
 app.use('/api/webhooks', webhookRoutes); // Unified Webhooks (Tavus, Retell, GHL)
