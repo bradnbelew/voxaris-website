@@ -55,10 +55,21 @@ export function Navbar() {
         <div className="container-wide">
           <div className="flex items-center justify-between h-16 lg:h-20">
             {/* Logo */}
-            <Link to="/" className="flex items-center gap-2">
-              <span className="text-2xl font-bold text-navy-900 tracking-tight">
-                VOXARIS
-              </span>
+            <Link to="/" className="flex items-center">
+              <div className="flex items-baseline">
+                <span
+                  className="text-2xl font-light tracking-[0.12em] text-navy-900"
+                  style={{ fontFamily: "'Inter', -apple-system, sans-serif" }}
+                >
+                  VOXARIS
+                </span>
+                <span
+                  className="text-lg font-extralight tracking-[0.15em] text-navy-700 ml-1.5"
+                  style={{ fontFamily: "'Inter', -apple-system, sans-serif" }}
+                >
+                  AI
+                </span>
+              </div>
             </Link>
 
             {/* Desktop Navigation - Centered */}

@@ -36,9 +36,22 @@ export function Footer() {
           {/* Brand column */}
           <div className="col-span-2">
             <Link to="/" className="inline-block mb-4">
-              <span className="text-2xl font-bold text-navy-900 tracking-tight">VOXARIS</span>
+              <div className="flex items-baseline">
+                <span
+                  className="text-2xl font-light tracking-[0.12em] text-navy-900"
+                  style={{ fontFamily: "'Inter', -apple-system, sans-serif" }}
+                >
+                  VOXARIS
+                </span>
+                <span
+                  className="text-lg font-extralight tracking-[0.15em] text-navy-700 ml-1.5"
+                  style={{ fontFamily: "'Inter', -apple-system, sans-serif" }}
+                >
+                  AI
+                </span>
+              </div>
             </Link>
-            <p className="text-sm text-platinum-600 mb-2">
+            <p className="text-sm text-platinum-600 mb-2 font-light tracking-wide">
               Personalizing Your Outreach
             </p>
             <p className="text-sm text-platinum-500 mb-6 max-w-xs">
