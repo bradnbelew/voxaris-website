@@ -1,9 +1,8 @@
 /**
  * Roofing Pros USA - Unified Mobile-First App
  *
- * Combines EstimAIte estimate generation with the leads dashboard
- * Tab-based navigation: Dashboard, Leads, Estimates, Calls
- * Mobile/iPad first design
+ * Brand Style: Dark navy (#141B38), Green accent (#199f1a), White backgrounds
+ * Matches roofingprosusa-fl.com design language
  */
 
 import { useState, useEffect, useRef } from "react";
@@ -13,10 +12,8 @@ import {
   FileText,
   Phone,
   Settings,
-  Menu,
   X,
   Plus,
-  Search,
   Bell,
   ChevronDown,
   ChevronUp,
@@ -24,7 +21,6 @@ import {
   Clock,
   AlertTriangle,
   CheckCircle,
-  XCircle,
   RefreshCw,
   Headphones,
   Home,
@@ -35,21 +31,46 @@ import {
   Mail,
   TrendingUp,
   TrendingDown,
-  DollarSign,
   Loader2,
   Send,
   Sparkles,
   Bot,
   User,
-  FileCheck,
   Zap,
   Brain,
   Play,
   Building2,
-  ArrowRight
+  ArrowRight,
+  ExternalLink
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { GlowingEffect } from "@/components/ui/glowing-effect";
+
+// ============================================================================
+// BRAND COLORS - Roofing Pros USA
+// ============================================================================
+const COLORS = {
+  navy: '#141B38',
+  navyLight: '#1e2747',
+  green: '#199f1a',
+  greenHover: '#32d74b',
+  greenLight: '#e8f7e8',
+  white: '#ffffff',
+  gray50: '#f9fafb',
+  gray100: '#f3f4f6',
+  gray200: '#e5e7eb',
+  gray300: '#d1d5db',
+  gray400: '#9ca3af',
+  gray500: '#6b7280',
+  gray600: '#4b5563',
+  gray700: '#374151',
+  gray800: '#1f2937',
+  red: '#dc2626',
+  redLight: '#fef2f2',
+  orange: '#ea580c',
+  orangeLight: '#fff7ed',
+  blue: '#2563eb',
+  blueLight: '#eff6ff'
+};
 
 // ============================================================================
 // TYPES
@@ -100,38 +121,27 @@ interface Estimate {
 type TabType = 'dashboard' | 'leads' | 'estimates' | 'calls' | 'settings';
 
 // ============================================================================
-// GLOWING CARD COMPONENTS
+// CARD COMPONENTS - Clean Professional Style
 // ============================================================================
 
-const GlowingCard = ({
+const Card = ({
   children,
   className = "",
   onClick,
-  variant = "default"
+  hover = false
 }: {
   children: React.ReactNode;
   className?: string;
   onClick?: () => void;
-  variant?: "default" | "stat" | "lead"
+  hover?: boolean;
 }) => (
-  <div className={`relative ${className}`}>
-    <div
-      onClick={onClick}
-      className={`relative rounded-2xl border border-zinc-700/50 p-2 ${onClick ? 'cursor-pointer' : ''}`}
-    >
-      <GlowingEffect
-        spread={40}
-        glow={true}
-        disabled={false}
-        proximity={64}
-        inactiveZone={0.01}
-        borderWidth={2}
-        variant="roofing"
-      />
-      <div className="relative flex flex-col gap-4 overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/90 p-4 md:p-5 shadow-sm">
-        {children}
-      </div>
-    </div>
+  <div
+    onClick={onClick}
+    className={`bg-white rounded-2xl border border-gray-200 shadow-sm ${
+      hover ? 'hover:shadow-md hover:border-gray-300 transition-all cursor-pointer' : ''
+    } ${onClick ? 'cursor-pointer' : ''} ${className}`}
+  >
+    {children}
   </div>
 );
 
@@ -143,25 +153,27 @@ const StatCard = ({
   label,
   value,
   icon: Icon,
-  color,
+  iconBg,
+  iconColor,
   trend,
   trendValue
 }: {
   label: string;
   value: string | number;
   icon: any;
-  color: string;
+  iconBg: string;
+  iconColor: string;
   trend?: 'up' | 'down' | 'neutral';
   trendValue?: string;
 }) => (
-  <GlowingCard variant="stat">
-    <div className="flex items-center justify-between">
-      <div className={`p-2.5 rounded-xl bg-zinc-950/80 border border-zinc-800/50 ${color}`}>
-        <Icon className="w-5 h-5" />
+  <Card className="p-4" hover>
+    <div className="flex items-center justify-between mb-3">
+      <div className={`p-2.5 rounded-xl ${iconBg}`}>
+        <Icon className={`w-5 h-5 ${iconColor}`} />
       </div>
       {trend && (
         <div className={`flex items-center gap-1 text-xs font-medium ${
-          trend === 'up' ? 'text-emerald-400' : trend === 'down' ? 'text-red-400' : 'text-zinc-500'
+          trend === 'up' ? 'text-green-600' : trend === 'down' ? 'text-red-600' : 'text-gray-500'
         }`}>
           {trend === 'up' ? <TrendingUp className="w-3 h-3" /> :
            trend === 'down' ? <TrendingDown className="w-3 h-3" /> : null}
@@ -169,11 +181,9 @@ const StatCard = ({
         </div>
       )}
     </div>
-    <div>
-      <div className="text-2xl md:text-3xl font-bold text-white font-mono tracking-tight">{value}</div>
-      <div className="text-xs md:text-sm font-medium text-zinc-400 mt-0.5">{label}</div>
-    </div>
-  </GlowingCard>
+    <div className="text-2xl md:text-3xl font-bold text-[#141B38]">{value}</div>
+    <div className="text-sm text-gray-500 mt-0.5">{label}</div>
+  </Card>
 );
 
 // ============================================================================
@@ -183,33 +193,32 @@ const StatCard = ({
 const LeadQualityBadge = ({ quality }: { quality: string | null }) => {
   if (!quality) return null;
   const q = quality.toLowerCase();
-  let bgColor = 'bg-zinc-800';
-  let textColor = 'text-zinc-400';
-  let icon = null;
 
   if (q === 'hot' || q === 'high') {
-    bgColor = 'bg-red-500/20';
-    textColor = 'text-red-400';
-    icon = <Flame className="w-3 h-3" />;
+    return (
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-700">
+        <Flame className="w-3 h-3" />
+        Hot
+      </span>
+    );
   } else if (q === 'warm' || q === 'medium') {
-    bgColor = 'bg-yellow-500/20';
-    textColor = 'text-yellow-400';
-  } else if (q === 'cold' || q === 'low') {
-    bgColor = 'bg-blue-500/20';
-    textColor = 'text-blue-400';
-    icon = <Snowflake className="w-3 h-3" />;
+    return (
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-700">
+        Warm
+      </span>
+    );
+  } else {
+    return (
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">
+        <Snowflake className="w-3 h-3" />
+        Cold
+      </span>
+    );
   }
-
-  return (
-    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${bgColor} ${textColor}`}>
-      {icon}
-      {quality}
-    </span>
-  );
 };
 
 // ============================================================================
-// LEAD CARD (Mobile Optimized)
+// LEAD CARD
 // ============================================================================
 
 const LeadCard = ({
@@ -219,7 +228,7 @@ const LeadCard = ({
 }: {
   lead: RoofingLead;
   expanded: boolean;
-  onToggle: () => void
+  onToggle: () => void;
 }) => {
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
@@ -232,141 +241,135 @@ const LeadCard = ({
     });
   };
 
-  const formatDuration = (ms: number | undefined) => {
-    if (!ms) return '-';
-    const seconds = Math.floor(ms / 1000);
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
-
   return (
-    <GlowingCard className="mb-3" onClick={onToggle} variant="lead">
-      {/* Header */}
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex items-center gap-3 flex-1 min-w-0">
-          <div className={`p-2.5 rounded-xl border flex-shrink-0 ${
-            lead.appointment_scheduled
-              ? 'bg-emerald-500/10 border-emerald-500/30'
-              : 'bg-zinc-800 border-zinc-700'
-          }`}>
-            {lead.appointment_scheduled ? (
-              <CheckCircle className="w-5 h-5 text-emerald-400" />
+    <Card className="mb-3 overflow-hidden" hover onClick={onToggle}>
+      <div className="p-4">
+        {/* Header */}
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex items-center gap-3 flex-1 min-w-0">
+            <div className={`p-2.5 rounded-xl flex-shrink-0 ${
+              lead.appointment_scheduled
+                ? 'bg-green-100'
+                : 'bg-gray-100'
+            }`}>
+              {lead.appointment_scheduled ? (
+                <CheckCircle className="w-5 h-5 text-green-600" />
+              ) : (
+                <Phone className="w-5 h-5 text-gray-500" />
+              )}
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h3 className="text-base font-semibold text-[#141B38] truncate">
+                  {lead.customer_name || 'Unknown Caller'}
+                </h3>
+                <LeadQualityBadge quality={lead.lead_quality} />
+              </div>
+              <div className="flex items-center gap-2 mt-0.5 text-xs text-gray-500">
+                <span>{formatDate(lead.created_at)}</span>
+                {lead.storm_damage && (
+                  <span className="flex items-center gap-1 text-orange-600 font-medium">
+                    <AlertTriangle className="w-3 h-3" />
+                    Storm
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+          <div className="flex-shrink-0">
+            {expanded ? (
+              <ChevronUp className="w-5 h-5 text-gray-400" />
             ) : (
-              <Phone className="w-5 h-5 text-zinc-400" />
+              <ChevronDown className="w-5 h-5 text-gray-400" />
             )}
           </div>
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2 flex-wrap">
-              <h3 className="text-base font-semibold text-white truncate">
-                {lead.customer_name || 'Unknown Caller'}
-              </h3>
-              <LeadQualityBadge quality={lead.lead_quality} />
+        </div>
+
+        {/* Expanded Details */}
+        {expanded && (
+          <div className="pt-4 border-t border-gray-100 mt-4 space-y-4" onClick={(e) => e.stopPropagation()}>
+            {/* Contact Info */}
+            <div className="grid grid-cols-1 gap-2">
+              {lead.customer_phone && (
+                <a href={`tel:${lead.customer_phone}`} className="flex items-center gap-2 text-sm text-[#199f1a] font-medium">
+                  <Phone className="w-4 h-4" />
+                  {lead.customer_phone}
+                </a>
+              )}
+              {lead.customer_email && (
+                <a href={`mailto:${lead.customer_email}`} className="flex items-center gap-2 text-sm text-[#199f1a] font-medium">
+                  <Mail className="w-4 h-4" />
+                  {lead.customer_email}
+                </a>
+              )}
+              {lead.property_address && (
+                <div className="flex items-start gap-2 text-sm text-gray-600">
+                  <MapPin className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                  <span>{lead.property_address}</span>
+                </div>
+              )}
             </div>
-            <div className="flex items-center gap-2 mt-0.5 text-xs text-zinc-500">
-              <span>{formatDate(lead.created_at)}</span>
-              {lead.storm_damage && (
-                <span className="flex items-center gap-1 text-orange-400">
-                  <AlertTriangle className="w-3 h-3" />
-                  Storm
-                </span>
+
+            {/* Issue & Status */}
+            <div className="grid grid-cols-2 gap-3">
+              {lead.roof_issue && (
+                <div className="bg-gray-50 rounded-xl p-3">
+                  <div className="text-xs text-gray-500 mb-1">Issue</div>
+                  <div className="text-sm text-[#141B38] font-medium">{lead.roof_issue}</div>
+                </div>
+              )}
+              {lead.urgency_level && (
+                <div className="bg-gray-50 rounded-xl p-3">
+                  <div className="text-xs text-gray-500 mb-1">Urgency</div>
+                  <div className={`text-sm font-semibold ${
+                    lead.urgency_level.toLowerCase() === 'high' ? 'text-red-600' :
+                    lead.urgency_level.toLowerCase() === 'medium' ? 'text-orange-600' :
+                    'text-gray-600'
+                  }`}>{lead.urgency_level}</div>
+                </div>
+              )}
+            </div>
+
+            {/* Call Summary */}
+            {lead.call_summary && (
+              <div className="bg-gray-50 rounded-xl p-3">
+                <div className="text-xs text-gray-500 mb-1">Call Summary</div>
+                <p className="text-sm text-gray-700">{lead.call_summary}</p>
+              </div>
+            )}
+
+            {/* Actions */}
+            <div className="flex items-center gap-2">
+              {lead.recording_url && (
+                <a
+                  href={lead.recording_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-100 active:bg-gray-200 rounded-full text-sm text-[#141B38] font-medium transition-colors"
+                >
+                  <Headphones className="w-4 h-4" />
+                  Listen
+                </a>
+              )}
+              {lead.customer_phone && (
+                <a
+                  href={`tel:${lead.customer_phone}`}
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-[#199f1a] active:bg-[#32d74b] rounded-full text-sm text-white font-medium transition-colors"
+                >
+                  <Phone className="w-4 h-4" />
+                  Call Back
+                </a>
               )}
             </div>
           </div>
-        </div>
-        <div className="flex-shrink-0">
-          {expanded ? (
-            <ChevronUp className="w-5 h-5 text-zinc-500" />
-          ) : (
-            <ChevronDown className="w-5 h-5 text-zinc-500" />
-          )}
-        </div>
+        )}
       </div>
-
-      {/* Expanded Details */}
-      {expanded && (
-        <div className="pt-4 border-t border-zinc-800 mt-4 space-y-4" onClick={(e) => e.stopPropagation()}>
-          {/* Contact Info */}
-          <div className="grid grid-cols-1 gap-2">
-            {lead.customer_phone && (
-              <a href={`tel:${lead.customer_phone}`} className="flex items-center gap-2 text-sm text-blue-400 active:text-blue-300">
-                <Phone className="w-4 h-4" />
-                {lead.customer_phone}
-              </a>
-            )}
-            {lead.customer_email && (
-              <a href={`mailto:${lead.customer_email}`} className="flex items-center gap-2 text-sm text-blue-400 active:text-blue-300">
-                <Mail className="w-4 h-4" />
-                {lead.customer_email}
-              </a>
-            )}
-            {lead.property_address && (
-              <div className="flex items-start gap-2 text-sm text-zinc-400">
-                <MapPin className="w-4 h-4 flex-shrink-0 mt-0.5" />
-                <span>{lead.property_address}</span>
-              </div>
-            )}
-          </div>
-
-          {/* Issue & Status */}
-          <div className="grid grid-cols-2 gap-3">
-            {lead.roof_issue && (
-              <div className="bg-zinc-800/50 rounded-lg p-3">
-                <div className="text-xs text-zinc-500 mb-1">Issue</div>
-                <div className="text-sm text-zinc-300">{lead.roof_issue}</div>
-              </div>
-            )}
-            {lead.urgency_level && (
-              <div className="bg-zinc-800/50 rounded-lg p-3">
-                <div className="text-xs text-zinc-500 mb-1">Urgency</div>
-                <div className={`text-sm font-medium ${
-                  lead.urgency_level.toLowerCase() === 'high' ? 'text-red-400' :
-                  lead.urgency_level.toLowerCase() === 'medium' ? 'text-yellow-400' :
-                  'text-zinc-300'
-                }`}>{lead.urgency_level}</div>
-              </div>
-            )}
-          </div>
-
-          {/* Call Summary */}
-          {lead.call_summary && (
-            <div className="bg-zinc-800/50 rounded-lg p-3">
-              <div className="text-xs text-zinc-500 mb-1">Call Summary</div>
-              <p className="text-sm text-zinc-300">{lead.call_summary}</p>
-            </div>
-          )}
-
-          {/* Actions */}
-          <div className="flex items-center gap-2">
-            {lead.recording_url && (
-              <a
-                href={lead.recording_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-zinc-800 active:bg-zinc-700 border border-zinc-700 rounded-xl text-sm text-zinc-300 transition-colors"
-              >
-                <Headphones className="w-4 h-4" />
-                Listen
-              </a>
-            )}
-            {lead.customer_phone && (
-              <a
-                href={`tel:${lead.customer_phone}`}
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-amber-600 active:bg-amber-500 rounded-xl text-sm text-white font-medium transition-colors"
-              >
-                <Phone className="w-4 h-4" />
-                Call Back
-              </a>
-            )}
-          </div>
-        </div>
-      )}
-    </GlowingCard>
+    </Card>
   );
 };
 
 // ============================================================================
-// ESTIMATE CARD (Mobile Optimized)
+// ESTIMATE CARD
 // ============================================================================
 
 const EstimateCard = ({ estimate }: { estimate: Estimate }) => {
@@ -379,53 +382,53 @@ const EstimateCard = ({ estimate }: { estimate: Estimate }) => {
     }).format(amount);
   };
 
-  const getStatusColor = (status: string) => {
+  const getStatusStyle = (status: string) => {
     switch (status) {
-      case 'accepted': return 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30';
-      case 'sent': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
-      case 'viewed': return 'bg-purple-500/20 text-purple-400 border-purple-500/30';
-      case 'rejected': return 'bg-red-500/20 text-red-400 border-red-500/30';
-      case 'expired': return 'bg-zinc-500/20 text-zinc-400 border-zinc-500/30';
-      default: return 'bg-amber-500/20 text-amber-400 border-amber-500/30';
+      case 'accepted': return 'bg-green-100 text-green-700';
+      case 'sent': return 'bg-blue-100 text-blue-700';
+      case 'viewed': return 'bg-purple-100 text-purple-700';
+      case 'rejected': return 'bg-red-100 text-red-700';
+      case 'expired': return 'bg-gray-100 text-gray-600';
+      default: return 'bg-orange-100 text-orange-700';
     }
   };
 
   return (
-    <GlowingCard className="mb-3">
+    <Card className="mb-3 p-4" hover>
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3 flex-1 min-w-0">
-          <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 flex-shrink-0">
-            <FileText className="w-5 h-5 text-amber-400" />
+          <div className="p-2.5 rounded-xl bg-[#141B38]/10 flex-shrink-0">
+            <FileText className="w-5 h-5 text-[#141B38]" />
           </div>
           <div className="min-w-0 flex-1">
-            <h3 className="text-base font-semibold text-white truncate">
+            <h3 className="text-base font-semibold text-[#141B38] truncate">
               {estimate.customer_name}
             </h3>
-            <div className="text-xs text-zinc-500 mt-0.5 truncate">
+            <div className="text-xs text-gray-500 mt-0.5 truncate">
               {estimate.property_address}
             </div>
           </div>
         </div>
-        <span className={`px-2 py-1 rounded-lg text-xs font-medium border ${getStatusColor(estimate.status)}`}>
+        <span className={`px-2.5 py-1 rounded-full text-xs font-semibold capitalize ${getStatusStyle(estimate.status)}`}>
           {estimate.status}
         </span>
       </div>
 
-      <div className="flex items-center justify-between pt-3 border-t border-zinc-800 mt-3">
+      <div className="flex items-center justify-between pt-3 border-t border-gray-100 mt-3">
         <div>
-          <div className="text-xs text-zinc-500">Estimate Range</div>
-          <div className="text-lg font-bold text-white">
+          <div className="text-xs text-gray-500">Estimate Range</div>
+          <div className="text-lg font-bold text-[#141B38]">
             {formatCurrency(estimate.total_min)} - {formatCurrency(estimate.total_max)}
           </div>
         </div>
         {estimate.ai_confidence && (
           <div className="text-right">
-            <div className="text-xs text-zinc-500">AI Confidence</div>
-            <div className="text-sm font-medium text-amber-400">{estimate.ai_confidence}%</div>
+            <div className="text-xs text-gray-500">AI Confidence</div>
+            <div className="text-sm font-semibold text-[#199f1a]">{estimate.ai_confidence}%</div>
           </div>
         )}
       </div>
-    </GlowingCard>
+    </Card>
   );
 };
 
@@ -487,48 +490,48 @@ const EstimateGenerator = ({ onClose }: { onClose: () => void }) => {
 
   if (generatedEstimate) {
     return (
-      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-end md:items-center justify-center p-4">
-        <div className="bg-zinc-900 rounded-t-3xl md:rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
-          <div className="sticky top-0 bg-zinc-900 p-4 border-b border-zinc-800 flex items-center justify-between">
-            <h2 className="text-lg font-bold text-white">Estimate Generated!</h2>
-            <button onClick={onClose} className="p-2 rounded-lg bg-zinc-800 text-zinc-400">
+      <div className="fixed inset-0 bg-black/50 z-50 flex items-end md:items-center justify-center p-4">
+        <div className="bg-white rounded-t-3xl md:rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+          <div className="sticky top-0 bg-white p-4 border-b border-gray-200 flex items-center justify-between">
+            <h2 className="text-lg font-bold text-[#141B38]">Estimate Generated!</h2>
+            <button onClick={onClose} className="p-2 rounded-lg bg-gray-100 text-gray-500 hover:bg-gray-200">
               <X className="w-5 h-5" />
             </button>
           </div>
 
           <div className="p-4 space-y-4">
             {/* Success State */}
-            <div className="flex items-center gap-3 p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-xl">
-              <CheckCircle className="w-8 h-8 text-emerald-400" />
+            <div className="flex items-center gap-3 p-4 bg-green-50 border border-green-200 rounded-xl">
+              <CheckCircle className="w-8 h-8 text-green-600" />
               <div>
-                <div className="text-sm font-medium text-emerald-400">AI Analysis Complete</div>
-                <div className="text-xs text-zinc-400">Confidence: {generatedEstimate.confidence}%</div>
+                <div className="text-sm font-semibold text-green-700">AI Analysis Complete</div>
+                <div className="text-xs text-green-600">Confidence: {generatedEstimate.confidence}%</div>
               </div>
             </div>
 
             {/* Customer Info */}
-            <div className="bg-zinc-800/50 rounded-xl p-4">
-              <h3 className="text-sm font-medium text-white mb-2">Customer</h3>
-              <div className="text-sm text-zinc-400">{generatedEstimate.customer?.name}</div>
-              <div className="text-sm text-zinc-500">{generatedEstimate.property?.address}</div>
+            <div className="bg-gray-50 rounded-xl p-4">
+              <h3 className="text-sm font-semibold text-[#141B38] mb-2">Customer</h3>
+              <div className="text-sm text-gray-700">{generatedEstimate.customer?.name}</div>
+              <div className="text-sm text-gray-500">{generatedEstimate.property?.address}</div>
             </div>
 
             {/* Analysis */}
-            <div className="bg-zinc-800/50 rounded-xl p-4">
-              <h3 className="text-sm font-medium text-white mb-2">AI Assessment</h3>
+            <div className="bg-gray-50 rounded-xl p-4">
+              <h3 className="text-sm font-semibold text-[#141B38] mb-2">AI Assessment</h3>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <div className="text-xs text-zinc-500">Condition</div>
-                  <div className={`text-sm font-medium ${
-                    generatedEstimate.analysis?.condition === 'critical' ? 'text-red-400' :
-                    generatedEstimate.analysis?.condition === 'poor' ? 'text-orange-400' :
-                    generatedEstimate.analysis?.condition === 'fair' ? 'text-yellow-400' :
-                    'text-emerald-400'
+                  <div className="text-xs text-gray-500">Condition</div>
+                  <div className={`text-sm font-semibold ${
+                    generatedEstimate.analysis?.condition === 'critical' ? 'text-red-600' :
+                    generatedEstimate.analysis?.condition === 'poor' ? 'text-orange-600' :
+                    generatedEstimate.analysis?.condition === 'fair' ? 'text-yellow-600' :
+                    'text-green-600'
                   }`}>{generatedEstimate.analysis?.condition?.toUpperCase()}</div>
                 </div>
                 <div>
-                  <div className="text-xs text-zinc-500">Recommendation</div>
-                  <div className="text-sm font-medium text-white">
+                  <div className="text-xs text-gray-500">Recommendation</div>
+                  <div className="text-sm font-semibold text-[#141B38]">
                     {generatedEstimate.analysis?.recommendation?.replace('_', ' ')}
                   </div>
                 </div>
@@ -537,30 +540,30 @@ const EstimateGenerator = ({ onClose }: { onClose: () => void }) => {
 
             {/* Options */}
             <div>
-              <h3 className="text-sm font-medium text-white mb-3">Estimate Options</h3>
+              <h3 className="text-sm font-semibold text-[#141B38] mb-3">Estimate Options</h3>
               <div className="space-y-2">
                 {generatedEstimate.options?.map((option: any) => (
                   <div
                     key={option.id}
-                    className={`p-3 rounded-xl border ${
+                    className={`p-4 rounded-xl border-2 ${
                       option.recommended
-                        ? 'bg-amber-500/10 border-amber-500/30'
-                        : 'bg-zinc-800/50 border-zinc-700'
+                        ? 'bg-green-50 border-green-500'
+                        : 'bg-gray-50 border-gray-200'
                     }`}
                   >
                     <div className="flex items-center justify-between">
                       <div>
-                        <div className="text-sm font-medium text-white flex items-center gap-2">
+                        <div className="text-sm font-semibold text-[#141B38] flex items-center gap-2">
                           {option.name}
                           {option.recommended && (
-                            <span className="px-1.5 py-0.5 bg-amber-500 text-white text-xs rounded">
+                            <span className="px-2 py-0.5 bg-[#199f1a] text-white text-xs font-bold rounded-full">
                               Recommended
                             </span>
                           )}
                         </div>
-                        <div className="text-xs text-zinc-500">{option.description}</div>
+                        <div className="text-xs text-gray-500 mt-0.5">{option.description}</div>
                       </div>
-                      <div className="text-lg font-bold text-white">
+                      <div className="text-xl font-bold text-[#141B38]">
                         ${option.total?.toLocaleString()}
                       </div>
                     </div>
@@ -573,13 +576,11 @@ const EstimateGenerator = ({ onClose }: { onClose: () => void }) => {
             <div className="flex gap-2">
               <button
                 onClick={onClose}
-                className="flex-1 py-3 bg-zinc-800 text-zinc-300 rounded-xl font-medium"
+                className="flex-1 py-3 bg-gray-100 text-gray-700 rounded-full font-semibold hover:bg-gray-200"
               >
                 Close
               </button>
-              <button
-                className="flex-1 py-3 bg-amber-600 text-white rounded-xl font-medium flex items-center justify-center gap-2"
-              >
+              <button className="flex-1 py-3 bg-[#199f1a] text-white rounded-full font-semibold flex items-center justify-center gap-2 hover:bg-[#32d74b]">
                 <Send className="w-4 h-4" />
                 Send to Customer
               </button>
@@ -591,82 +592,82 @@ const EstimateGenerator = ({ onClose }: { onClose: () => void }) => {
   }
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-end md:items-center justify-center p-4">
-      <div className="bg-zinc-900 rounded-t-3xl md:rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
-        <div className="sticky top-0 bg-zinc-900 p-4 border-b border-zinc-800 flex items-center justify-between">
+    <div className="fixed inset-0 bg-black/50 z-50 flex items-end md:items-center justify-center p-4">
+      <div className="bg-white rounded-t-3xl md:rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+        <div className="sticky top-0 bg-white p-4 border-b border-gray-200 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600">
+            <div className="p-2 rounded-xl bg-[#141B38]">
               <Sparkles className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-white">New Estimate</h2>
-              <p className="text-xs text-zinc-500">Powered by EstimAIte</p>
+              <h2 className="text-lg font-bold text-[#141B38]">New Estimate</h2>
+              <p className="text-xs text-gray-500">Powered by EstimAIte</p>
             </div>
           </div>
-          <button onClick={onClose} className="p-2 rounded-lg bg-zinc-800 text-zinc-400">
+          <button onClick={onClose} className="p-2 rounded-lg bg-gray-100 text-gray-500 hover:bg-gray-200">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-4 space-y-4">
           {error && (
-            <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-sm text-red-400">
+            <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-600">
               {error}
             </div>
           )}
 
           {/* Customer Info */}
           <div>
-            <label className="block text-sm font-medium text-zinc-300 mb-2">Customer Name *</label>
+            <label className="block text-sm font-semibold text-[#141B38] mb-2">Customer Name *</label>
             <input
               type="text"
               value={formData.customerName}
               onChange={(e) => setFormData({ ...formData, customerName: e.target.value })}
-              className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-amber-500"
+              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-[#141B38] placeholder-gray-400 focus:outline-none focus:border-[#199f1a] focus:ring-1 focus:ring-[#199f1a]"
               placeholder="John Smith"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm font-medium text-zinc-300 mb-2">Phone *</label>
+              <label className="block text-sm font-semibold text-[#141B38] mb-2">Phone *</label>
               <input
                 type="tel"
                 value={formData.customerPhone}
                 onChange={(e) => setFormData({ ...formData, customerPhone: e.target.value })}
-                className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-amber-500"
+                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-[#141B38] placeholder-gray-400 focus:outline-none focus:border-[#199f1a] focus:ring-1 focus:ring-[#199f1a]"
                 placeholder="(407) 555-1234"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-zinc-300 mb-2">Email</label>
+              <label className="block text-sm font-semibold text-[#141B38] mb-2">Email</label>
               <input
                 type="email"
                 value={formData.customerEmail}
                 onChange={(e) => setFormData({ ...formData, customerEmail: e.target.value })}
-                className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-amber-500"
+                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-[#141B38] placeholder-gray-400 focus:outline-none focus:border-[#199f1a] focus:ring-1 focus:ring-[#199f1a]"
                 placeholder="john@email.com"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-zinc-300 mb-2">Property Address *</label>
+            <label className="block text-sm font-semibold text-[#141B38] mb-2">Property Address *</label>
             <input
               type="text"
               value={formData.propertyAddress}
               onChange={(e) => setFormData({ ...formData, propertyAddress: e.target.value })}
-              className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-amber-500"
+              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-[#141B38] placeholder-gray-400 focus:outline-none focus:border-[#199f1a] focus:ring-1 focus:ring-[#199f1a]"
               placeholder="123 Main St, Orlando FL 32801"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-zinc-300 mb-2">Roof Issue</label>
+            <label className="block text-sm font-semibold text-[#141B38] mb-2">Roof Issue</label>
             <textarea
               value={formData.roofIssue}
               onChange={(e) => setFormData({ ...formData, roofIssue: e.target.value })}
-              className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-amber-500 resize-none"
+              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-[#141B38] placeholder-gray-400 focus:outline-none focus:border-[#199f1a] focus:ring-1 focus:ring-[#199f1a] resize-none"
               rows={3}
               placeholder="Describe the issue..."
             />
@@ -674,11 +675,11 @@ const EstimateGenerator = ({ onClose }: { onClose: () => void }) => {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm font-medium text-zinc-300 mb-2">Urgency</label>
+              <label className="block text-sm font-semibold text-[#141B38] mb-2">Urgency</label>
               <select
                 value={formData.urgency}
                 onChange={(e) => setFormData({ ...formData, urgency: e.target.value as any })}
-                className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white focus:outline-none focus:border-amber-500"
+                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-[#141B38] focus:outline-none focus:border-[#199f1a] focus:ring-1 focus:ring-[#199f1a]"
               >
                 <option value="low">Low</option>
                 <option value="medium">Medium</option>
@@ -687,38 +688,38 @@ const EstimateGenerator = ({ onClose }: { onClose: () => void }) => {
               </select>
             </div>
             <div className="flex items-end">
-              <label className="flex items-center gap-3 w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl cursor-pointer">
+              <label className="flex items-center gap-3 w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-100">
                 <input
                   type="checkbox"
                   checked={formData.stormDamage}
                   onChange={(e) => setFormData({ ...formData, stormDamage: e.target.checked })}
-                  className="w-4 h-4 rounded accent-amber-500"
+                  className="w-4 h-4 rounded accent-[#199f1a]"
                 />
-                <span className="text-sm text-zinc-300">Storm Damage</span>
+                <span className="text-sm text-[#141B38] font-medium">Storm Damage</span>
               </label>
             </div>
           </div>
 
-          <div className="flex items-center gap-3 p-3 bg-zinc-800/50 rounded-xl">
+          <div className="flex items-center gap-3 p-3 bg-gray-50 border border-gray-200 rounded-xl">
             <label className="flex items-center gap-3 cursor-pointer">
               <input
                 type="checkbox"
                 checked={formData.hasInsurance}
                 onChange={(e) => setFormData({ ...formData, hasInsurance: e.target.checked })}
-                className="w-4 h-4 rounded accent-amber-500"
+                className="w-4 h-4 rounded accent-[#199f1a]"
               />
-              <span className="text-sm text-zinc-300">Has Homeowner Insurance</span>
+              <span className="text-sm text-[#141B38] font-medium">Has Homeowner Insurance</span>
             </label>
           </div>
 
           {formData.hasInsurance && (
             <div>
-              <label className="block text-sm font-medium text-zinc-300 mb-2">Insurance Company</label>
+              <label className="block text-sm font-semibold text-[#141B38] mb-2">Insurance Company</label>
               <input
                 type="text"
                 value={formData.insuranceCompany}
                 onChange={(e) => setFormData({ ...formData, insuranceCompany: e.target.value })}
-                className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-amber-500"
+                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-[#141B38] placeholder-gray-400 focus:outline-none focus:border-[#199f1a] focus:ring-1 focus:ring-[#199f1a]"
                 placeholder="e.g., State Farm, Allstate"
               />
             </div>
@@ -727,7 +728,7 @@ const EstimateGenerator = ({ onClose }: { onClose: () => void }) => {
           <button
             type="submit"
             disabled={isGenerating}
-            className="w-full py-4 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 disabled:opacity-50"
+            className="w-full py-4 bg-[#199f1a] text-white rounded-full font-semibold flex items-center justify-center gap-2 disabled:opacity-50 hover:bg-[#32d74b] transition-colors"
           >
             {isGenerating ? (
               <>
@@ -742,7 +743,7 @@ const EstimateGenerator = ({ onClose }: { onClose: () => void }) => {
             )}
           </button>
 
-          <p className="text-xs text-zinc-500 text-center">
+          <p className="text-xs text-gray-500 text-center">
             AI will analyze property data and generate professional estimate options
           </p>
         </form>
@@ -805,28 +806,28 @@ const AIInsightsPanel = ({ leads, isOpen, onClose }: { leads: RoofingLead[]; isO
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-end justify-center">
-      <div className="bg-zinc-900 rounded-t-3xl w-full max-w-lg h-[80vh] flex flex-col">
-        <div className="p-4 border-b border-zinc-800 flex items-center justify-between flex-shrink-0">
+    <div className="fixed inset-0 bg-black/50 z-50 flex items-end justify-center">
+      <div className="bg-white rounded-t-3xl w-full max-w-lg h-[80vh] flex flex-col">
+        <div className="p-4 border-b border-gray-200 flex items-center justify-between flex-shrink-0">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600">
+            <div className="p-2 rounded-xl bg-[#141B38]">
               <Brain className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-white">AI Insights</h2>
-              <p className="text-xs text-zinc-500">Ask about your leads</p>
+              <h2 className="text-lg font-bold text-[#141B38]">AI Insights</h2>
+              <p className="text-xs text-gray-500">Ask about your leads</p>
             </div>
           </div>
-          <button onClick={onClose} className="p-2 rounded-lg bg-zinc-800 text-zinc-400">
+          <button onClick={onClose} className="p-2 rounded-lg bg-gray-100 text-gray-500 hover:bg-gray-200">
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
           {messages.length === 0 && (
             <div className="text-center py-8">
-              <Bot className="w-12 h-12 text-zinc-600 mx-auto mb-4" />
-              <p className="text-zinc-400 mb-4">Ask me about your leads!</p>
+              <Bot className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+              <p className="text-gray-500 mb-4">Ask me about your leads!</p>
               <div className="space-y-2">
                 {["What trends do you see?", "Give me a summary"].map((q, i) => (
                   <button
@@ -839,7 +840,7 @@ const AIInsightsPanel = ({ leads, isOpen, onClose }: { leads: RoofingLead[]; isO
                         setLoading(false);
                       }, 500);
                     }}
-                    className="block w-full text-left px-4 py-3 text-sm text-zinc-300 bg-zinc-800 rounded-xl active:bg-zinc-700"
+                    className="block w-full text-left px-4 py-3 text-sm text-[#141B38] bg-white border border-gray-200 rounded-xl hover:border-[#199f1a] transition-colors"
                   >
                     {q}
                   </button>
@@ -851,12 +852,12 @@ const AIInsightsPanel = ({ leads, isOpen, onClose }: { leads: RoofingLead[]; isO
           {messages.map((msg, i) => (
             <div key={i} className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : ''}`}>
               {msg.role === 'assistant' && (
-                <div className="p-2 rounded-xl bg-amber-500/20 h-fit">
-                  <Bot className="w-4 h-4 text-amber-400" />
+                <div className="p-2 rounded-xl bg-[#141B38] h-fit">
+                  <Bot className="w-4 h-4 text-white" />
                 </div>
               )}
               <div className={`max-w-[80%] p-3 rounded-2xl text-sm whitespace-pre-wrap ${
-                msg.role === 'user' ? 'bg-amber-500/20 text-white' : 'bg-zinc-800 text-zinc-200'
+                msg.role === 'user' ? 'bg-[#199f1a] text-white' : 'bg-white border border-gray-200 text-[#141B38]'
               }`}>
                 {msg.content}
               </div>
@@ -865,14 +866,14 @@ const AIInsightsPanel = ({ leads, isOpen, onClose }: { leads: RoofingLead[]; isO
 
           {loading && (
             <div className="flex gap-3">
-              <div className="p-2 rounded-xl bg-amber-500/20 h-fit">
-                <Bot className="w-4 h-4 text-amber-400" />
+              <div className="p-2 rounded-xl bg-[#141B38] h-fit">
+                <Bot className="w-4 h-4 text-white" />
               </div>
-              <div className="bg-zinc-800 px-4 py-3 rounded-2xl">
+              <div className="bg-white border border-gray-200 px-4 py-3 rounded-2xl">
                 <div className="flex gap-1">
-                  <span className="w-2 h-2 bg-zinc-500 rounded-full animate-bounce" />
-                  <span className="w-2 h-2 bg-zinc-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                  <span className="w-2 h-2 bg-zinc-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                  <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
+                  <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                  <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                 </div>
               </div>
             </div>
@@ -880,7 +881,7 @@ const AIInsightsPanel = ({ leads, isOpen, onClose }: { leads: RoofingLead[]; isO
           <div ref={messagesEndRef} />
         </div>
 
-        <div className="p-4 border-t border-zinc-800 flex-shrink-0">
+        <div className="p-4 border-t border-gray-200 flex-shrink-0 bg-white">
           <div className="flex gap-2">
             <input
               type="text"
@@ -888,12 +889,12 @@ const AIInsightsPanel = ({ leads, isOpen, onClose }: { leads: RoofingLead[]; isO
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
               placeholder="Ask about trends, conversions..."
-              className="flex-1 px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-amber-500"
+              className="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-[#141B38] placeholder-gray-400 focus:outline-none focus:border-[#199f1a]"
             />
             <button
               onClick={handleSubmit}
               disabled={!input.trim() || loading}
-              className="p-3 bg-amber-600 rounded-xl text-white disabled:opacity-50"
+              className="p-3 bg-[#199f1a] rounded-xl text-white disabled:opacity-50 hover:bg-[#32d74b]"
             >
               <Send className="w-5 h-5" />
             </button>
@@ -972,7 +973,6 @@ export default function RoofingApp() {
   const hotLeads = leads.filter(l => l.lead_quality?.toLowerCase() === 'hot').length;
   const stormDamageLeads = leads.filter(l => l.storm_damage).length;
   const totalEstimates = estimates.length;
-  const acceptedEstimates = estimates.filter(e => e.status === 'accepted').length;
 
   // Tab content
   const renderContent = () => {
@@ -982,47 +982,75 @@ export default function RoofingApp() {
           <div className="space-y-6">
             {/* Stats Grid */}
             <div className="grid grid-cols-2 gap-3">
-              <StatCard label="Total Leads" value={totalLeads} icon={Users} color="text-amber-400" trend="up" trendValue="+12%" />
-              <StatCard label="Appointments" value={appointmentsBooked} icon={Calendar} color="text-emerald-400" trend="up" trendValue="+8%" />
-              <StatCard label="Hot Leads" value={hotLeads} icon={Flame} color="text-red-400" />
-              <StatCard label="Estimates" value={totalEstimates} icon={FileText} color="text-blue-400" />
+              <StatCard
+                label="Total Leads"
+                value={totalLeads}
+                icon={Users}
+                iconBg="bg-[#141B38]/10"
+                iconColor="text-[#141B38]"
+                trend="up"
+                trendValue="+12%"
+              />
+              <StatCard
+                label="Appointments"
+                value={appointmentsBooked}
+                icon={Calendar}
+                iconBg="bg-green-100"
+                iconColor="text-green-600"
+                trend="up"
+                trendValue="+8%"
+              />
+              <StatCard
+                label="Hot Leads"
+                value={hotLeads}
+                icon={Flame}
+                iconBg="bg-red-100"
+                iconColor="text-red-600"
+              />
+              <StatCard
+                label="Estimates"
+                value={totalEstimates}
+                icon={FileText}
+                iconBg="bg-blue-100"
+                iconColor="text-blue-600"
+              />
             </div>
 
             {/* Quick Actions */}
             <div>
-              <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-wider mb-3">Quick Actions</h2>
+              <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">Quick Actions</h2>
               <div className="grid grid-cols-2 gap-3">
-                <GlowingCard onClick={() => setShowEstimateGenerator(true)}>
+                <Card className="p-4" hover onClick={() => setShowEstimateGenerator(true)}>
                   <div className="flex items-center gap-3">
-                    <div className="p-3 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600">
+                    <div className="p-3 rounded-xl bg-[#199f1a]">
                       <Sparkles className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <div className="text-base font-semibold text-white">New Estimate</div>
-                      <div className="text-xs text-zinc-500">AI-powered</div>
+                      <div className="text-base font-semibold text-[#141B38]">New Estimate</div>
+                      <div className="text-xs text-gray-500">AI-powered</div>
                     </div>
                   </div>
-                </GlowingCard>
+                </Card>
 
-                <GlowingCard onClick={() => setShowAIInsights(true)}>
+                <Card className="p-4" hover onClick={() => setShowAIInsights(true)}>
                   <div className="flex items-center gap-3">
-                    <div className="p-3 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600">
+                    <div className="p-3 rounded-xl bg-[#141B38]">
                       <Brain className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <div className="text-base font-semibold text-white">AI Insights</div>
-                      <div className="text-xs text-zinc-500">Analyze trends</div>
+                      <div className="text-base font-semibold text-[#141B38]">AI Insights</div>
+                      <div className="text-xs text-gray-500">Analyze trends</div>
                     </div>
                   </div>
-                </GlowingCard>
+                </Card>
               </div>
             </div>
 
             {/* Recent Activity */}
             <div>
               <div className="flex items-center justify-between mb-3">
-                <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-wider">Recent Leads</h2>
-                <button onClick={() => setActiveTab('leads')} className="text-xs text-amber-400">View All</button>
+                <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Recent Leads</h2>
+                <button onClick={() => setActiveTab('leads')} className="text-xs text-[#199f1a] font-semibold">View All</button>
               </div>
               {leads.slice(0, 3).map((lead) => (
                 <LeadCard
@@ -1040,13 +1068,13 @@ export default function RoofingApp() {
         return (
           <div>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-white">All Leads</h2>
-              <button onClick={fetchLeads} disabled={loading} className="p-2 rounded-lg bg-zinc-800 text-zinc-400">
+              <h2 className="text-lg font-bold text-[#141B38]">All Leads</h2>
+              <button onClick={fetchLeads} disabled={loading} className="p-2 rounded-lg bg-gray-100 text-gray-500 hover:bg-gray-200">
                 <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
               </button>
             </div>
             {leads.length === 0 ? (
-              <div className="text-center py-12 text-zinc-500">
+              <div className="text-center py-12 text-gray-400">
                 <Phone className="w-12 h-12 mx-auto mb-4 opacity-50" />
                 <p>No leads yet</p>
               </div>
@@ -1067,22 +1095,22 @@ export default function RoofingApp() {
         return (
           <div>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-white">Estimates</h2>
+              <h2 className="text-lg font-bold text-[#141B38]">Estimates</h2>
               <button
                 onClick={() => setShowEstimateGenerator(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-amber-600 rounded-xl text-white text-sm font-medium"
+                className="flex items-center gap-2 px-4 py-2 bg-[#199f1a] rounded-full text-white text-sm font-semibold hover:bg-[#32d74b]"
               >
                 <Plus className="w-4 h-4" />
                 New
               </button>
             </div>
             {estimates.length === 0 ? (
-              <div className="text-center py-12 text-zinc-500">
+              <div className="text-center py-12 text-gray-400">
                 <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
                 <p>No estimates yet</p>
                 <button
                   onClick={() => setShowEstimateGenerator(true)}
-                  className="mt-4 px-6 py-3 bg-amber-600 rounded-xl text-white font-medium"
+                  className="mt-4 px-6 py-3 bg-[#199f1a] rounded-full text-white font-semibold hover:bg-[#32d74b]"
                 >
                   Generate First Estimate
                 </button>
@@ -1098,18 +1126,18 @@ export default function RoofingApp() {
       case 'calls':
         return (
           <div>
-            <h2 className="text-lg font-bold text-white mb-4">Call Recordings</h2>
+            <h2 className="text-lg font-bold text-[#141B38] mb-4">Call Recordings</h2>
             <div className="space-y-3">
               {leads.filter(l => l.recording_url).slice(0, 10).map((lead) => (
-                <GlowingCard key={lead.id}>
+                <Card key={lead.id} className="p-4" hover>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="p-2.5 rounded-xl bg-zinc-800 border border-zinc-700">
-                        <Play className="w-5 h-5 text-zinc-400" />
+                      <div className="p-2.5 rounded-xl bg-gray-100">
+                        <Play className="w-5 h-5 text-gray-500" />
                       </div>
                       <div>
-                        <div className="text-sm font-medium text-white">{lead.customer_name || 'Unknown'}</div>
-                        <div className="text-xs text-zinc-500">
+                        <div className="text-sm font-semibold text-[#141B38]">{lead.customer_name || 'Unknown'}</div>
+                        <div className="text-xs text-gray-500">
                           {new Date(lead.created_at).toLocaleDateString()} • {Math.floor((lead.duration_ms || 0) / 60000)}:{String(Math.floor(((lead.duration_ms || 0) % 60000) / 1000)).padStart(2, '0')}
                         </div>
                       </div>
@@ -1118,15 +1146,15 @@ export default function RoofingApp() {
                       href={lead.recording_url!}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="p-2 rounded-lg bg-amber-600 text-white"
+                      className="p-2 rounded-lg bg-[#199f1a] text-white hover:bg-[#32d74b]"
                     >
                       <Headphones className="w-4 h-4" />
                     </a>
                   </div>
-                </GlowingCard>
+                </Card>
               ))}
               {leads.filter(l => l.recording_url).length === 0 && (
-                <div className="text-center py-12 text-zinc-500">
+                <div className="text-center py-12 text-gray-400">
                   <Headphones className="w-12 h-12 mx-auto mb-4 opacity-50" />
                   <p>No recordings yet</p>
                 </div>
@@ -1138,49 +1166,68 @@ export default function RoofingApp() {
       case 'settings':
         return (
           <div className="space-y-4">
-            <h2 className="text-lg font-bold text-white mb-4">Settings</h2>
-            <GlowingCard>
+            <h2 className="text-lg font-bold text-[#141B38] mb-4">Settings</h2>
+            <Card className="p-4" hover>
               <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-xl bg-zinc-800">
-                  <Building2 className="w-5 h-5 text-zinc-400" />
+                <div className="p-2.5 rounded-xl bg-gray-100">
+                  <Building2 className="w-5 h-5 text-gray-500" />
                 </div>
                 <div className="flex-1">
-                  <div className="text-sm font-medium text-white">Roofing Pros USA</div>
-                  <div className="text-xs text-zinc-500">Florida Statewide</div>
+                  <div className="text-sm font-semibold text-[#141B38]">Roofing Pros USA</div>
+                  <div className="text-xs text-gray-500">Florida Statewide</div>
                 </div>
               </div>
-            </GlowingCard>
-            <GlowingCard>
+            </Card>
+            <Card className="p-4" hover>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="p-2.5 rounded-xl bg-emerald-500/20 border border-emerald-500/30">
-                    <Zap className="w-5 h-5 text-emerald-400" />
+                  <div className="p-2.5 rounded-xl bg-green-100">
+                    <Zap className="w-5 h-5 text-green-600" />
                   </div>
                   <div>
-                    <div className="text-sm font-medium text-white">AI Voice Agent</div>
-                    <div className="text-xs text-emerald-400">Active</div>
+                    <div className="text-sm font-semibold text-[#141B38]">AI Voice Agent</div>
+                    <div className="text-xs text-green-600 font-medium">Active</div>
                   </div>
                 </div>
-                <ArrowRight className="w-5 h-5 text-zinc-500" />
+                <ArrowRight className="w-5 h-5 text-gray-400" />
               </div>
-            </GlowingCard>
+            </Card>
+            <Card className="p-4" hover>
+              <a
+                href="https://roofingprosusa-fl.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="p-2.5 rounded-xl bg-[#141B38]/10">
+                    <ExternalLink className="w-5 h-5 text-[#141B38]" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-semibold text-[#141B38]">Company Website</div>
+                    <div className="text-xs text-gray-500">roofingprosusa-fl.com</div>
+                  </div>
+                </div>
+                <ArrowRight className="w-5 h-5 text-gray-400" />
+              </a>
+            </Card>
           </div>
         );
     }
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="sticky top-0 z-40 bg-zinc-950/90 backdrop-blur-lg border-b border-zinc-800">
+      <header className="sticky top-0 z-40 bg-white border-b border-gray-200">
         <div className="px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl flex items-center justify-center">
+            <div className="w-10 h-10 bg-[#141B38] rounded-xl flex items-center justify-center">
               <Home className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h1 className="text-lg font-bold text-white">Roofing Pros</h1>
-              <p className="text-xs text-zinc-500">
+              <h1 className="text-lg font-bold text-[#141B38]">Roofing Pros</h1>
+              <p className="text-xs text-gray-500">
                 {lastRefresh.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </p>
             </div>
@@ -1188,14 +1235,14 @@ export default function RoofingApp() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowAIInsights(true)}
-              className="p-2.5 rounded-xl bg-zinc-800 text-zinc-400"
+              className="p-2.5 rounded-xl bg-gray-100 text-gray-500 hover:bg-gray-200"
             >
               <Sparkles className="w-5 h-5" />
             </button>
-            <button className="p-2.5 rounded-xl bg-zinc-800 text-zinc-400 relative">
+            <button className="p-2.5 rounded-xl bg-gray-100 text-gray-500 hover:bg-gray-200 relative">
               <Bell className="w-5 h-5" />
               {hotLeads > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-[10px] font-bold flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-[10px] font-bold text-white flex items-center justify-center">
                   {hotLeads}
                 </span>
               )}
@@ -1205,13 +1252,13 @@ export default function RoofingApp() {
       </header>
 
       {/* Main Content */}
-      <main className="px-4 py-6 pb-24">
+      <main className="px-4 py-6 pb-28">
         {renderContent()}
       </main>
 
       {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 z-40 bg-zinc-900/95 backdrop-blur-lg border-t border-zinc-800 safe-area-pb">
-        <div className="flex items-center justify-around px-2 py-2">
+      <nav className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-gray-200">
+        <div className="flex items-center justify-around px-2 py-2 pb-safe">
           {[
             { id: 'dashboard' as TabType, icon: LayoutDashboard, label: 'Home' },
             { id: 'leads' as TabType, icon: Users, label: 'Leads' },
@@ -1224,12 +1271,12 @@ export default function RoofingApp() {
               onClick={() => setActiveTab(tab.id)}
               className={`flex flex-col items-center gap-1 px-4 py-2 rounded-xl transition-colors ${
                 activeTab === tab.id
-                  ? 'text-amber-400 bg-amber-500/10'
-                  : 'text-zinc-500'
+                  ? 'text-[#199f1a]'
+                  : 'text-gray-400'
               }`}
             >
-              <tab.icon className="w-5 h-5" />
-              <span className="text-[10px] font-medium">{tab.label}</span>
+              <tab.icon className={`w-5 h-5 ${activeTab === tab.id ? 'stroke-[2.5]' : ''}`} />
+              <span className="text-[10px] font-semibold">{tab.label}</span>
             </button>
           ))}
         </div>
@@ -1239,7 +1286,7 @@ export default function RoofingApp() {
       {activeTab !== 'settings' && (
         <button
           onClick={() => setShowEstimateGenerator(true)}
-          className="fixed bottom-20 right-4 z-30 p-4 bg-gradient-to-r from-amber-500 to-orange-600 rounded-full shadow-lg shadow-amber-500/25"
+          className="fixed bottom-24 right-4 z-30 p-4 bg-[#199f1a] rounded-full shadow-lg shadow-green-500/25 hover:bg-[#32d74b] transition-colors"
         >
           <Plus className="w-6 h-6 text-white" />
         </button>
