@@ -74,13 +74,12 @@ serve(async (req) => {
 
       console.log(`📅 Checking availability: ${startTime} to ${endTime}`);
 
+      // Use v1 API for availability (more reliable)
       const response = await fetch(
-        `https://api.cal.com/v2/slots?eventTypeId=${CAL_EVENT_TYPE_ID}&startTime=${startTime}&endTime=${endTime}`,
+        `https://api.cal.com/v1/slots?apiKey=${CAL_API_KEY}&eventTypeId=${CAL_EVENT_TYPE_ID}&startTime=${startTime}&endTime=${endTime}`,
         {
           headers: {
-            "Authorization": `Bearer ${CAL_API_KEY}`,
             "Content-Type": "application/json",
-            "cal-api-version": "2024-08-13",
           },
         }
       );
@@ -97,7 +96,8 @@ serve(async (req) => {
       }
 
       const data = await response.json();
-      const slots = data.data?.slots || {};
+      // v1 API returns slots directly, v2 returns data.slots
+      const slots = data.slots || data.data?.slots || {};
 
       // Format slots for natural language
       const availableTimes: string[] = [];
@@ -151,24 +151,27 @@ serve(async (req) => {
 
       console.log(`📅 Booking meeting for ${name} at ${datetime}`);
 
-      const response = await fetch("https://api.cal.com/v2/bookings", {
+      // Use v1 API for booking (more reliable)
+      const response = await fetch(`https://api.cal.com/v1/bookings?apiKey=${CAL_API_KEY}`, {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${CAL_API_KEY}`,
           "Content-Type": "application/json",
-          "cal-api-version": "2024-08-13",
         },
         body: JSON.stringify({
           eventTypeId: parseInt(CAL_EVENT_TYPE_ID),
           start: datetime,
-          attendee: {
+          responses: {
             name,
             email,
-            timeZone: "America/New_York",
-            language: "en",
-          },
-          metadata: {
             notes: notes || "",
+            location: {
+              optionValue: "",
+              value: "integrations:google:meet"
+            }
+          },
+          timeZone: "America/New_York",
+          language: "en",
+          metadata: {
             source: "voxaris-ai-agent",
             agent_type: body.source === "retell" ? "voice" : "video"
           },
