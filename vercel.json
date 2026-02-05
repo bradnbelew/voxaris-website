@@ -3,6 +3,19 @@
   "outputDirectory": "dist",
   "installCommand": "npm install",
   "framework": "vite",
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/dashboard/leads",
+      "permanent": false,
+      "has": [
+        {
+          "type": "host",
+          "value": "roofing-pros-usa-dashboard.vercel.app"
+        }
+      ]
+    }
+  ],
   "rewrites": [
     { "source": "/(.*)", "destination": "/" }
   ]
