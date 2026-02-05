@@ -13,6 +13,7 @@ import spawnRoutes from './modules/provisioning/spawn.controller';
 import adminRoutes from './modules/admin/admin.controller';
 import roofingRoutes from './modules/roofing/roofing.controller';
 import { initializeQueues } from './queues';
+import { initializeFollowupQueue, closeFollowupQueue } from './queues/roofing-followup.processor';
 import { warmClientCache } from './lib/cache';
 import { logger } from './lib/logger';
 
@@ -98,6 +99,7 @@ async function startup() {
   // Initialize queue system
   try {
     initializeQueues();
+    initializeFollowupQueue(); // Roofing follow-up queue
     logger.info('✅ Queue system initialized');
   } catch (error: any) {
     logger.warn('⚠️ Queue system initialization failed (running without queues)', {
@@ -125,6 +127,13 @@ async function startup() {
     server.close(() => {
       logger.info('✅ HTTP server closed');
     });
+
+    // Close follow-up queue
+    try {
+      await closeFollowupQueue();
+    } catch (error: any) {
+      logger.warn('⚠️ Error closing follow-up queue:', error.message);
+    }
 
     // Wait for in-flight requests (max 30 seconds)
     setTimeout(() => {

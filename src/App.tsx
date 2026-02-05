@@ -26,6 +26,7 @@ import Register from "./pages/auth/Register";
 
 // Dashboard Pages
 import RoofingLeads from "./pages/dashboard/RoofingLeads";
+import RoofingDemo from "./pages/RoofingDemo";
 import AgentsPage from "./pages/dashboard/AgentsPage";
 import AgentEditor from "./pages/dashboard/AgentEditor";
 import AgentTest from "./pages/dashboard/AgentTest";
@@ -83,6 +84,9 @@ const App = () => (
           <Route path="/dashboard/integrations" element={<Integrations />} />
           <Route path="/dashboard/my-staff" element={<MyStaff />} />
           <Route path="/dashboard/settings" element={<Settings />} />
+
+          {/* Demo Routes */}
+          <Route path="/roofing-demo" element={<RoofingDemo />} />
 
           {/* Admin Routes */}
           <Route path="/admin" element={<AdminDashboard />} />

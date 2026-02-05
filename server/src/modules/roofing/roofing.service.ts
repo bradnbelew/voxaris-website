@@ -13,6 +13,8 @@ import { mem0 } from '../../lib/mem0';
 import { jobNimbus } from '../../lib/jobnimbus';
 import { sendRoofingLeadEmail } from '../../lib/resend';
 import { supabase } from '../../lib/supabase';
+import { retell } from '../../lib/retell';
+import { startFollowupSequence, cancelFollowupsForPhone } from '../../queues/roofing-followup.processor';
 
 // ============================================================================
 // TYPES
@@ -117,7 +119,7 @@ class RoofingService {
                 result.memoryStored = memoryResult.success;
             }
 
-            // Step 2: If appointment was scheduled, create in JobNimbus
+            // Step 2: If appointment was scheduled, create in JobNimbus and cancel follow-ups
             if (analysis.appointment_scheduled && analysis.customer_name) {
                 const crmResult = await this.createCRMRecords(data);
                 result.contactId = crmResult.contactId;
@@ -127,6 +129,10 @@ class RoofingService {
                 if (!crmResult.success) {
                     result.error = crmResult.error;
                 }
+
+                // Cancel any pending follow-up calls since appointment is booked
+                await cancelFollowupsForPhone(phone);
+                logger.info(`🗑️ Cancelled pending follow-ups for ${phone} - appointment scheduled`);
             }
 
             // Step 3: If call went to voicemail or was unsuccessful, schedule follow-up
@@ -415,28 +421,74 @@ class RoofingService {
                 logger.info(`🧠 Found existing memories for ${data.phone}`);
             }
 
-            // Step 2: Trigger outbound call via Retell
-            // TODO: Implement Retell outbound call
-            // const call = await retell.call.createPhoneCall({
-            //   from_number: process.env.ROOFING_OUTBOUND_PHONE,
-            //   to_number: data.phone,
-            //   agent_id: process.env.ROOFING_OUTBOUND_AGENT_ID,
-            //   retell_llm_dynamic_variables: {
-            //     customer_name: `${data.firstName} ${data.lastName}`,
-            //     form_source: data.source,
-            //     memory_context: memoryContext
-            //   }
-            // });
+            // Step 2: Start the follow-up sequence (6 attempts over 7 days)
+            // Cadence: Immediate → 15min → 2 hours → Next day → Day 3 → Day 7
+            const followupResult = await startFollowupSequence({
+                phone: data.phone,
+                customerName: `${data.firstName} ${data.lastName}`,
+                email: data.email,
+                address: data.address,
+                roofIssue: data.roofIssue || data.message,
+                source: data.source
+            });
 
-            logger.info(`📞 Outbound call queued for ${data.phone}`);
+            if (followupResult.success) {
+                logger.info(`🚀 Follow-up sequence started for ${data.phone}`);
+            } else {
+                logger.warn(`⚠️ Failed to start follow-up sequence: ${followupResult.error}`);
+            }
 
             return {
-                success: true,
-                // callId: call.call_id
+                success: followupResult.success,
+                error: followupResult.error
             };
 
         } catch (error: any) {
             logger.error('❌ Error handling form submission:', error.message);
+            return { success: false, error: error.message };
+        }
+    }
+
+    /**
+     * Make a direct outbound call (for testing/demo)
+     */
+    async makeOutboundCall(params: {
+        toNumber: string;
+        customerName?: string;
+        context?: string;
+    }): Promise<{ success: boolean; callId?: string; error?: string }> {
+        logger.info(`📞 Making direct outbound call to ${params.toNumber}`);
+
+        try {
+            // Check for existing customer memory
+            const memories = await mem0.getByPhone(params.toNumber);
+            let memoryContext = params.context || '';
+
+            if (memories.success && memories.memories && memories.memories.length > 0) {
+                memoryContext = mem0.formatMemoriesForAgent(memories.memories);
+                logger.info(`🧠 Found existing memories for ${params.toNumber}`);
+            }
+
+            const callResult = await retell.createOutboundCall({
+                fromNumber: process.env.ROOFING_OUTBOUND_PHONE || '+14072891565',
+                toNumber: params.toNumber,
+                agentId: process.env.ROOFING_OUTBOUND_AGENT_ID || process.env.ROOFING_RETELL_AGENT_ID || '',
+                dynamicVariables: {
+                    customer_name: params.customerName || 'Valued Customer',
+                    memory_context: memoryContext
+                }
+            });
+
+            if (callResult.success) {
+                logger.info(`✅ Outbound call initiated: ${callResult.callId}`);
+            } else {
+                logger.error(`❌ Failed to initiate call: ${callResult.error}`);
+            }
+
+            return callResult;
+
+        } catch (error: any) {
+            logger.error('❌ Error making outbound call:', error.message);
             return { success: false, error: error.message };
         }
     }

@@ -484,6 +484,78 @@ router.get('/leads/stats', async (req: Request, res: Response) => {
 });
 
 // ============================================================================
+// OUTBOUND CALL ENDPOINTS
+// ============================================================================
+
+/**
+ * POST /api/roofing/call
+ *
+ * Trigger an outbound call directly (for testing/demo)
+ */
+router.post('/call', async (req: Request, res: Response) => {
+    try {
+        const { toNumber, customerName, context } = req.body;
+
+        if (!toNumber) {
+            return res.status(400).json({
+                success: false,
+                error: 'toNumber is required'
+            });
+        }
+
+        logger.info(`📞 Direct outbound call requested to ${toNumber}`);
+
+        const result = await roofingService.makeOutboundCall({
+            toNumber,
+            customerName,
+            context
+        });
+
+        res.status(result.success ? 200 : 500).json(result);
+
+    } catch (error: any) {
+        logger.error('❌ Outbound call error:', error.message);
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
+    }
+});
+
+/**
+ * GET /api/roofing/call/:callId
+ *
+ * Get call status by call ID
+ */
+router.get('/call/:callId', async (req: Request, res: Response) => {
+    try {
+        const { callId } = req.params;
+        const { retell } = await import('../../lib/retell');
+
+        const callDetails = await retell.getCall(callId);
+
+        if (!callDetails) {
+            return res.status(404).json({
+                success: false,
+                error: 'Call not found'
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            call: callDetails
+        });
+
+    } catch (error: any) {
+        logger.error('❌ Get call error:', error.message);
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
+    }
+});
+
+// ============================================================================
 // HEALTH CHECK
 // ============================================================================
 
