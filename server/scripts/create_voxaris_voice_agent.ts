@@ -64,7 +64,7 @@ const TOOLS = [
         type: "custom",
         name: "check_availability",
         description: "Check available time slots for a demo meeting. Call this before booking.",
-        url: process.env.VOXARIS_TOOL_HANDLER_URL || "https://exteehwwpcbibttpvswx.supabase.co/functions/v1/voxaris-tool-handler",
+        url: process.env.VOXARIS_TOOL_HANDLER_URL || "https://lgvfqynbaxjsgbeudolh.supabase.co/functions/v1/voxaris-tool-handler",
         speak_during_execution: true,
         speak_after_execution: false,
         parameters: {
@@ -82,7 +82,7 @@ const TOOLS = [
         type: "custom",
         name: "book_meeting",
         description: "Book a demo meeting after confirming availability and collecting customer info.",
-        url: process.env.VOXARIS_TOOL_HANDLER_URL || "https://exteehwwpcbibttpvswx.supabase.co/functions/v1/voxaris-tool-handler",
+        url: process.env.VOXARIS_TOOL_HANDLER_URL || "https://lgvfqynbaxjsgbeudolh.supabase.co/functions/v1/voxaris-tool-handler",
         speak_during_execution: true,
         speak_after_execution: false,
         parameters: {
