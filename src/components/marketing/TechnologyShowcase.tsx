@@ -107,7 +107,8 @@ export function TechnologyShowcase() {
                       <img
                         src="/voice-ai.jpg"
                         alt="Voxaris Voice AI"
-                        className="w-full h-full object-cover object-top opacity-90 group-hover:opacity-100 group-hover:scale-[1.02] transition-all duration-700"
+                        className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-[1.02] transition-all duration-700"
+                        style={{ objectPosition: '50% 20%' }}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-carbon-50 via-carbon-50/20 to-transparent" />
                       <div className="absolute top-4 left-4">
