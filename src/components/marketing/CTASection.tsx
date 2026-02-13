@@ -6,24 +6,23 @@ import { Button } from '@/components/ui/button';
 export function CTASection() {
   return (
     <section className="relative py-32 lg:py-44 bg-black overflow-hidden">
-      {/* Background — massive radial glow */}
+      {/* Background glow */}
       <div className="absolute inset-0">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[600px]"
-          style={{ background: 'radial-gradient(ellipse at 50% 50%, rgba(255,255,255,0.02) 0%, transparent 60%)' }}
+          style={{ background: 'radial-gradient(ellipse at 50% 50%, rgba(255,255,255,0.015) 0%, transparent 55%)' }}
         />
       </div>
 
       <div className="container-narrow text-center relative z-10">
-        {/* Logo mark */}
+        {/* Logo + tagline */}
         <motion.div
-          className="flex justify-center mb-12"
+          className="flex flex-col items-center mb-14"
           initial={{ opacity: 0, scale: 0.9 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
         >
-          <div className="w-16 h-16 rounded-2xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-center">
-            <span className="text-3xl font-bold text-chrome font-display">V</span>
-          </div>
+          <img src="/voxaris-logo-white.png" alt="Voxaris" className="h-8 w-auto mb-4 opacity-50" />
+          <span className="text-[10px] font-medium text-white/15 uppercase tracking-[0.25em]">The Human Interface</span>
         </motion.div>
 
         {/* Headline */}
@@ -34,20 +33,21 @@ export function CTASection() {
           viewport={{ once: true }}
           transition={{ delay: 0.1, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
         >
-          Ready to stop losing
+          Your competitors are
           <br />
-          <span className="text-chrome">leads to slow follow-up?</span>
+          <span className="text-chrome">already losing leads to AI.</span>
         </motion.h2>
 
         {/* Sub */}
         <motion.p
-          className="text-lg text-white/25 mb-14 max-w-lg mx-auto"
+          className="text-lg text-white/20 mb-14 max-w-lg mx-auto"
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
         >
-          Join forward-thinking businesses using Voxaris AI to capture every opportunity. Get started in minutes, not months.
+          The question isn't whether AI will handle your sales conversations.
+          It's whether you'll be the one using it — or losing to it.
         </motion.p>
 
         {/* CTAs */}
@@ -71,7 +71,7 @@ export function CTASection() {
             <Button
               size="lg"
               variant="ghost"
-              className="text-white/40 hover:text-white hover:bg-white/[0.04] h-14 px-8 text-[15px] font-medium rounded-full border border-white/[0.06] hover:border-white/[0.12] transition-all duration-300"
+              className="text-white/35 hover:text-white hover:bg-white/[0.04] h-14 px-8 text-[15px] font-medium rounded-full border border-white/[0.06] hover:border-white/[0.12] transition-all duration-300"
             >
               Talk to Sales
             </Button>
@@ -80,15 +80,15 @@ export function CTASection() {
 
         {/* Trust signals */}
         <motion.div
-          className="flex flex-wrap items-center justify-center gap-8 text-[13px] text-white/20"
+          className="flex flex-wrap items-center justify-center gap-8 text-[13px] text-white/15"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 0.5 }}
         >
-          {['No credit card required', '14-day free trial', 'Cancel anytime'].map((item) => (
+          {['No credit card required', 'Setup in 5 minutes', 'Cancel anytime'].map((item) => (
             <span key={item} className="flex items-center gap-2">
-              <svg className="w-4 h-4 text-emerald-500/40" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="w-4 h-4 text-emerald-500/30" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
               {item}

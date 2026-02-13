@@ -4,6 +4,7 @@ import {
   StatsSection,
   FeaturesSection,
   TechnologyShowcase,
+  VSuiteSection,
   ProblemSolution,
   HowItWorks,
   CTASection,
@@ -18,6 +19,7 @@ export function HomePage() {
         <Hero />
         <StatsSection />
         <TechnologyShowcase />
+        <VSuiteSection />
         <FeaturesSection />
         <ProblemSolution />
         <HowItWorks />

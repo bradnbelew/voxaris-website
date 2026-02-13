@@ -8,22 +8,29 @@ const TAVUS_VIDEO_URL = "https://cdn.replica.tavus.io/20283/9de1f64e.mp4";
 export function Hero() {
   return (
     <section className="relative min-h-[100vh] flex items-center overflow-hidden bg-black">
-      {/* Background — cinematic radial glow */}
+      {/* Background — cinematic layered glow */}
       <div className="absolute inset-0">
+        {/* Primary ambient glow — warm silver */}
         <div
-          className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[1200px] h-[800px]"
+          className="absolute top-[-30%] left-1/2 -translate-x-1/2 w-[1400px] h-[900px]"
           style={{
-            background: 'radial-gradient(ellipse at 50% 30%, rgba(255,255,255,0.03) 0%, transparent 60%)',
+            background: 'radial-gradient(ellipse at 50% 40%, rgba(255,255,255,0.025) 0%, transparent 55%)',
           }}
         />
-        <div className="absolute inset-0 grid-pattern opacity-30" />
-        {/* Subtle top-down gradient to push content */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black/50" />
+        {/* Secondary glow — offset */}
+        <div
+          className="absolute top-[10%] right-[5%] w-[600px] h-[600px]"
+          style={{
+            background: 'radial-gradient(circle, rgba(192,192,192,0.015) 0%, transparent 50%)',
+          }}
+        />
+        <div className="absolute inset-0 grid-pattern opacity-20" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black/60" />
       </div>
 
       {/* Content */}
       <div className="relative z-10 container-hero w-full pt-32 pb-20 lg:pt-40 lg:pb-28">
-        <div className="grid lg:grid-cols-[1.2fr_0.8fr] gap-16 lg:gap-20 items-center">
+        <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-16 lg:gap-20 items-center">
 
           {/* Left — copy */}
           <div className="max-w-2xl">
@@ -34,12 +41,12 @@ export function Hero() {
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
               className="mb-10"
             >
-              <span className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-white/[0.06] bg-white/[0.02]">
+              <span className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full border border-white/[0.06] bg-white/[0.02]">
                 <span className="relative flex h-1.5 w-1.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white/60 opacity-60" />
-                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-white/80" />
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400/60 opacity-60" />
+                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400/80" />
                 </span>
-                <span className="text-[12px] font-medium text-white/50 tracking-wide">AI-Powered Sales Infrastructure</span>
+                <span className="text-[11px] font-semibold text-white/40 uppercase tracking-[0.2em]">The Human Interface</span>
               </span>
             </motion.div>
 
@@ -50,22 +57,23 @@ export function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
             >
-              Your AI workforce
+              Every lead gets
               <br />
-              <span className="text-chrome">that never</span>
+              <span className="text-chrome">a face, a voice,</span>
               <br />
-              <span className="text-chrome">clocks out.</span>
+              <span className="text-chrome">a conversation.</span>
             </motion.h1>
 
             {/* Sub — clean, understated */}
             <motion.p
-              className="text-lg sm:text-xl text-white/35 leading-relaxed mb-12 max-w-lg"
+              className="text-lg sm:text-xl text-white/30 leading-relaxed mb-12 max-w-lg"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
             >
-              Deploy photorealistic video and voice AI agents that engage every lead,
-              qualify every prospect, and book every appointment — around the clock.
+              Voxaris deploys photorealistic video and natural voice AI agents
+              that engage, qualify, and convert your leads — 24/7, at scale,
+              with zero human effort.
             </motion.p>
 
             {/* CTAs */}
@@ -88,10 +96,10 @@ export function Hero() {
                 <Button
                   size="lg"
                   variant="ghost"
-                  className="h-14 px-8 text-[15px] text-white/40 hover:text-white hover:bg-white/[0.04] rounded-full group border border-white/[0.06] hover:border-white/[0.12] transition-all duration-300"
+                  className="h-14 px-8 text-[15px] text-white/35 hover:text-white hover:bg-white/[0.04] rounded-full group border border-white/[0.06] hover:border-white/[0.12] transition-all duration-300"
                 >
                   <Play className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" />
-                  Watch Demo
+                  See It Live
                 </Button>
               </Link>
             </motion.div>
@@ -104,14 +112,14 @@ export function Hero() {
               transition={{ duration: 0.6, delay: 0.7 }}
             >
               {[
-                { value: '500+', label: 'Active agents' },
-                { value: '2M+', label: 'Conversations' },
-                { value: '98%', label: 'Satisfaction' },
+                { value: '<3s', label: 'Response time' },
+                { value: '24/7', label: 'Always on' },
+                { value: '3-4x', label: 'More bookings' },
               ].map((stat, i) => (
                 <div key={stat.label} className="flex items-center gap-12">
                   <div>
                     <div className="text-2xl font-bold text-white font-display tracking-tight">{stat.value}</div>
-                    <div className="text-[11px] text-white/25 mt-1 tracking-wide">{stat.label}</div>
+                    <div className="text-[11px] text-white/20 mt-1 tracking-wide">{stat.label}</div>
                   </div>
                   {i < 2 && <div className="w-px h-8 bg-white/[0.06]" />}
                 </div>
@@ -128,8 +136,8 @@ export function Hero() {
           >
             <div className="relative w-full max-w-md lg:max-w-[420px]">
               {/* Glow behind video */}
-              <div className="absolute -inset-8 opacity-20 blur-3xl"
-                style={{ background: 'radial-gradient(circle, rgba(192,192,192,0.15) 0%, transparent 70%)' }}
+              <div className="absolute -inset-12 opacity-15 blur-3xl"
+                style={{ background: 'radial-gradient(circle, rgba(192,192,192,0.2) 0%, transparent 65%)' }}
               />
 
               {/* Video container */}
@@ -143,8 +151,15 @@ export function Hero() {
                   playsInline
                 />
 
+                {/* Top badge */}
+                <div className="absolute top-5 left-5 right-5 flex justify-between items-start">
+                  <div className="bg-black/50 backdrop-blur-xl rounded-full px-4 py-1.5 border border-white/[0.06]">
+                    <span className="text-[10px] font-semibold text-white/70 uppercase tracking-[0.15em]">V·FACE</span>
+                  </div>
+                </div>
+
                 {/* Bottom gradient */}
-                <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 h-56 bg-gradient-to-t from-black/95 via-black/60 to-transparent" />
 
                 {/* Agent info overlay */}
                 <div className="absolute bottom-0 inset-x-0 p-7">
@@ -155,46 +170,46 @@ export function Hero() {
                           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                           <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400" />
                         </span>
-                        <span className="text-[10px] font-semibold text-white/60 uppercase tracking-[0.15em]">Live</span>
+                        <span className="text-[10px] font-semibold text-white/50 uppercase tracking-[0.15em]">Live Conversation</span>
                       </div>
-                      <div className="text-lg font-semibold text-white font-display">VAgent Maria</div>
-                      <div className="text-[13px] text-white/40">Sales Assistant</div>
+                      <div className="text-lg font-semibold text-white font-display">Talking Postcard</div>
+                      <div className="text-[12px] text-white/30 mt-0.5">Personalized video outreach</div>
                     </div>
                     <div className="text-right bg-white/[0.06] backdrop-blur-xl rounded-2xl px-5 py-3 border border-white/[0.06]">
                       <div className="text-2xl font-bold text-white font-display">&lt;3s</div>
-                      <div className="text-[10px] text-white/40 uppercase tracking-wider">Response</div>
+                      <div className="text-[10px] text-white/30 uppercase tracking-wider">Response</div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Floating metric — top left */}
+              {/* Floating tag — top left */}
               <motion.div
-                className="absolute -top-4 -left-4 lg:-left-8 bg-carbon-900/90 backdrop-blur-xl rounded-2xl px-5 py-4 border border-white/[0.06]"
+                className="absolute -top-3 -left-3 lg:-left-6 bg-carbon-900/95 backdrop-blur-xl rounded-2xl px-5 py-3.5 border border-white/[0.06] shadow-elevated"
                 initial={{ opacity: 0, x: -20, y: 10 }}
                 animate={{ opacity: 1, x: 0, y: 0 }}
                 transition={{ duration: 0.6, delay: 1 }}
               >
-                <div className="text-2xl font-bold text-white font-display">24/7</div>
-                <div className="text-[11px] text-white/30">Always on</div>
+                <div className="text-[10px] text-white/30 uppercase tracking-[0.15em] mb-1">Powered by</div>
+                <div className="text-lg font-bold text-white font-display">V·SENSE</div>
               </motion.div>
 
-              {/* Floating metric — bottom right */}
+              {/* Floating tag — bottom right */}
               <motion.div
-                className="absolute -bottom-4 -right-4 lg:-right-8 bg-carbon-900/90 backdrop-blur-xl rounded-2xl px-5 py-4 border border-white/[0.06]"
+                className="absolute -bottom-3 -right-3 lg:-right-6 bg-carbon-900/95 backdrop-blur-xl rounded-2xl px-5 py-3.5 border border-white/[0.06] shadow-elevated"
                 initial={{ opacity: 0, x: 20, y: -10 }}
                 animate={{ opacity: 1, x: 0, y: 0 }}
                 transition={{ duration: 0.6, delay: 1.1 }}
               >
-                <div className="text-2xl font-bold text-white font-display">3-4x</div>
-                <div className="text-[11px] text-white/30">More bookings</div>
+                <div className="text-[10px] text-white/30 uppercase tracking-[0.15em] mb-1">Conversion</div>
+                <div className="text-lg font-bold text-white font-display">3-4x</div>
               </motion.div>
             </div>
           </motion.div>
         </div>
       </div>
 
-      {/* Bottom fade into next section */}
+      {/* Bottom fade */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent to-black" />
     </section>
   );
