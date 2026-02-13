@@ -9,9 +9,8 @@ import Index from "./pages/Index";
 import {
   HomePage,
   SolutionDealerships,
-  SolutionLawFirms,
   SolutionContractors,
-  SolutionAgencies,
+  SolutionDirectMail,
   Technology,
   Demo as MarketingDemo
 } from "./pages/marketing";
@@ -62,9 +61,8 @@ const App = () => (
 
           {/* Solution Pages */}
           <Route path="/solutions/dealerships" element={<SolutionDealerships />} />
-          <Route path="/solutions/law-firms" element={<SolutionLawFirms />} />
           <Route path="/solutions/contractors" element={<SolutionContractors />} />
-          <Route path="/solutions/agencies" element={<SolutionAgencies />} />
+          <Route path="/solutions/direct-mail" element={<SolutionDirectMail />} />
 
           {/* Auth Routes */}
           <Route path="/login" element={<Login />} />

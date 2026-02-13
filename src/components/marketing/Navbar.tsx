@@ -11,9 +11,8 @@ const navLinks = [
     href: '#',
     dropdown: [
       { label: 'Auto Dealerships', href: '/solutions/dealerships', desc: 'AI sales agents for auto' },
-      { label: 'Law Firms', href: '/solutions/law-firms', desc: 'Intake automation' },
-      { label: 'Contractors', href: '/solutions/contractors', desc: 'Lead qualification' },
-      { label: 'Agencies', href: '/solutions/agencies', desc: 'White-label platform' },
+      { label: 'Direct Mail', href: '/solutions/direct-mail', desc: 'AI video postcards' },
+      { label: 'Roofing Contractors', href: '/solutions/contractors', desc: 'Storm-damage lead capture' },
     ],
   },
   { label: 'Technology', href: '/technology' },

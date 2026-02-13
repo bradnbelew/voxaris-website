@@ -10,9 +10,8 @@ const footerLinks = {
   ],
   solutions: [
     { label: 'Auto Dealerships', href: '/solutions/dealerships' },
-    { label: 'Law Firms', href: '/solutions/law-firms' },
-    { label: 'Contractors', href: '/solutions/contractors' },
-    { label: 'Agencies', href: '/solutions/agencies' },
+    { label: 'Direct Mail', href: '/solutions/direct-mail' },
+    { label: 'Roofing Contractors', href: '/solutions/contractors' },
   ],
   technology: [
     { label: 'V·FACE', href: '/technology' },

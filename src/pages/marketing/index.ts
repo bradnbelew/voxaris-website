@@ -1,7 +1,6 @@
 export { HomePage } from './HomePage';
 export { SolutionDealerships } from './SolutionDealerships';
-export { SolutionLawFirms } from './SolutionLawFirms';
 export { SolutionContractors } from './SolutionContractors';
-export { SolutionAgencies } from './SolutionAgencies';
+export { SolutionDirectMail } from './SolutionDirectMail';
 export { Technology } from './Technology';
 export { Demo } from './Demo';
