@@ -91,7 +91,7 @@ const VoxarisLivingInterface = () => {
         {/* Avatar Container */}
         <div className="relative w-32 h-32 rounded-full overflow-hidden ring-4 ring-purple-500/30 bg-black flex items-center justify-center shadow-2xl z-10 mb-6">
           <video
-            src="https://cdn.replica.tavus.io/20283/9de1f64e.mp4"
+            src="https://cdn.replica.tavus.io/40242/2fe8396c.mp4"
             className="w-full h-full object-cover scale-125"
             autoPlay
             loop

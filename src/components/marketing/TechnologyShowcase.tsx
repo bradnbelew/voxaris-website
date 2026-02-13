@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { Video, Phone, Mail, GraduationCap, ArrowUpRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const TAVUS_VIDEO_URL = "https://cdn.replica.tavus.io/20283/9de1f64e.mp4";
+const TAVUS_VIDEO_URL = "https://cdn.replica.tavus.io/40242/2fe8396c.mp4";
 
 const products = [
   {

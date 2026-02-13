@@ -7,7 +7,7 @@ interface FaceTimeAvatarProps {
 }
 
 export function FaceTimeAvatar({ 
-  videoUrl = "https://cdn.replica.tavus.io/20283/9de1f64e.mp4", 
+  videoUrl = "https://cdn.replica.tavus.io/40242/2fe8396c.mp4", 
   isActive = true,
   className 
 }: FaceTimeAvatarProps) {

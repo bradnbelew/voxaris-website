@@ -14,14 +14,14 @@ const VIDEO_AGENTS = [
     id: "maria",
     name: "Maria",
     role: "Sales Representative",
-    videoUrl: "https://cdn.replica.tavus.io/20283/9de1f64e.mp4",
+    videoUrl: "https://cdn.replica.tavus.io/40242/2fe8396c.mp4",
     description: "High-energy closer. Perfect for inbound lead qualification."
   },
   {
     id: "david",
     name: "David",
     role: "Service Advisor",
-    videoUrl: "https://cdn.replica.tavus.io/20283/9de1f64e.mp4",
+    videoUrl: "https://cdn.replica.tavus.io/40242/2fe8396c.mp4",
     description: "Calm, authoritative. Handles service bookings and status updates."
   }
 ];
