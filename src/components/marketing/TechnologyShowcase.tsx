@@ -103,18 +103,18 @@ export function TechnologyShowcase() {
                   />
 
                   {product.id === 'voice' && (
-                    <div className="text-center relative z-10">
-                      <div className="flex items-center justify-center gap-[3px] mb-4">
-                        {[...Array(20)].map((_, i) => (
-                          <motion.div
-                            key={i}
-                            className="w-[2px] bg-carbon-300 rounded-full"
-                            animate={{ height: [8, 20 + Math.random() * 20, 8] }}
-                            transition={{ duration: 0.8 + Math.random() * 0.6, repeat: Infinity, delay: i * 0.04, ease: 'easeInOut' }}
-                          />
-                        ))}
+                    <div className="absolute inset-0">
+                      <img
+                        src="/voice-ai.jpg"
+                        alt="Voxaris Voice AI"
+                        className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-[1.02] transition-all duration-700"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-carbon-50 via-carbon-50/20 to-transparent" />
+                      <div className="absolute top-4 left-4">
+                        <div className="bg-white/90 backdrop-blur-xl rounded-full px-3 py-1 border border-carbon-200">
+                          <span className="text-[9px] font-semibold text-carbon-700 uppercase tracking-[0.15em]">V·SENSE</span>
+                        </div>
                       </div>
-                      <span className="text-[10px] font-medium text-carbon-300 uppercase tracking-[0.25em]">Voice Active</span>
                     </div>
                   )}
 
