@@ -46,9 +46,9 @@ export function Navbar() {
         initial={{ y: -100 }} animate={{ y: 0 }} transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
       >
         <nav className="container-wide">
-          <div className="flex items-center justify-between h-[72px]">
+          <div className="flex items-center justify-between h-[80px]">
             <Link to="/" className="flex items-center shrink-0">
-              <img src="/voxaris-logo-white.png" alt="Voxaris AI" className="h-14 w-auto brightness-0" />
+              <img src="/voxaris-logo-white.png" alt="Voxaris AI" className="h-20 w-auto brightness-0" />
             </Link>
             <div className="hidden lg:flex items-center gap-1">
               {navLinks.map((link) => (
