@@ -3,6 +3,7 @@ import { Video, Phone, Mail, GraduationCap, ArrowUpRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const TAVUS_VIDEO_URL = "https://cdn.replica.tavus.io/40242/2fe8396c.mp4";
+const LUCAS_VIDEO_URL = "https://cdn.replica.tavus.io/40779/d5481d67.mp4";
 
 const products = [
   {
@@ -134,14 +135,19 @@ export function TechnologyShowcase() {
                   )}
 
                   {product.id === 'training' && (
-                    <div className="relative z-10 text-center">
-                      <div className="inline-flex items-center gap-3 bg-white border border-carbon-200 rounded-2xl px-6 py-4">
-                        <div className="w-8 h-8 rounded-full bg-carbon-100 flex items-center justify-center">
-                          <GraduationCap className="w-4 h-4 text-carbon-400" />
-                        </div>
-                        <div className="text-left">
-                          <div className="text-[11px] font-medium text-carbon-400">Score</div>
-                          <div className="text-lg font-bold text-carbon-700 font-display">94/100</div>
+                    <div className="absolute inset-0">
+                      <video
+                        src={LUCAS_VIDEO_URL}
+                        className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-[1.02] transition-all duration-700"
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-carbon-50 via-carbon-50/20 to-transparent" />
+                      <div className="absolute top-4 left-4">
+                        <div className="bg-white/90 backdrop-blur-xl rounded-full px-3 py-1 border border-carbon-200">
+                          <span className="text-[9px] font-semibold text-carbon-700 uppercase tracking-[0.15em]">AI Coach</span>
                         </div>
                       </div>
                     </div>
