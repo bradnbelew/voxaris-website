@@ -1,8 +1,6 @@
 import {
   Navbar,
   Hero,
-  StatsSection,
-  FeaturesSection,
   TechnologyShowcase,
   VSuiteSection,
   ProblemSolution,
@@ -10,6 +8,7 @@ import {
   CTASection,
   Footer,
 } from '@/components/marketing';
+import { LogoStrip } from '@/components/marketing/LogoStrip';
 
 export function HomePage() {
   return (
@@ -17,10 +16,9 @@ export function HomePage() {
       <Navbar />
       <main>
         <Hero />
-        <StatsSection />
+        <LogoStrip />
         <TechnologyShowcase />
         <VSuiteSection />
-        <FeaturesSection />
         <ProblemSolution />
         <HowItWorks />
         <CTASection />

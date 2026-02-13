@@ -7,7 +7,7 @@ const TAVUS_VIDEO_URL = "https://cdn.replica.tavus.io/40242/2fe8396c.mp4";
 
 export function Hero() {
   return (
-    <section className="relative min-h-[100vh] flex items-center overflow-hidden bg-white">
+    <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-white">
       {/* Background — subtle light texture */}
       <div className="absolute inset-0">
         {/* Primary ambient glow — warm grey */}
@@ -29,7 +29,7 @@ export function Hero() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 container-hero w-full pt-32 pb-20 lg:pt-40 lg:pb-28">
+      <div className="relative z-10 container-hero w-full pt-28 pb-12 lg:pt-36 lg:pb-16">
         <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-16 lg:gap-20 items-center">
 
           {/* Left — copy */}

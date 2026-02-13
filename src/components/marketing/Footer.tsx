@@ -36,11 +36,8 @@ export function Footer() {
           {/* Brand */}
           <div className="col-span-2">
             <Link to="/" className="inline-block mb-5">
-              <img src="/voxaris-logo-white.png" alt="Voxaris" className="h-6 w-auto opacity-60" />
+              <img src="/voxaris-logo-white.png" alt="Voxaris AI" className="h-10 w-auto opacity-60" />
             </Link>
-            <p className="text-[10px] text-white/30 mb-1.5 font-semibold tracking-[0.2em] uppercase">
-              The Human Interface
-            </p>
             <p className="text-[13px] text-white/20 mb-8 max-w-xs leading-relaxed">
               AI-powered video and voice agents that engage, qualify, and convert
               your leads — 24/7, at scale.

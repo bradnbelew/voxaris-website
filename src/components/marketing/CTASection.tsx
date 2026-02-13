@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 
 export function CTASection() {
   return (
-    <section className="relative py-32 lg:py-44 bg-carbon-900 overflow-hidden">
+    <section className="relative py-20 lg:py-28 bg-carbon-900 overflow-hidden">
       {/* Background glow */}
       <div className="absolute inset-0">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[600px]"
@@ -21,8 +21,7 @@ export function CTASection() {
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
         >
-          <img src="/voxaris-logo-white.png" alt="Voxaris" className="h-8 w-auto mb-4 opacity-50" />
-          <span className="text-[10px] font-medium text-white/30 uppercase tracking-[0.25em]">The Human Interface</span>
+          <img src="/voxaris-logo-white.png" alt="Voxaris AI" className="h-12 w-auto opacity-60" />
         </motion.div>
 
         {/* Headline */}

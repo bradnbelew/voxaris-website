@@ -20,7 +20,7 @@ const vSuite = [
 
 export function VSuiteSection() {
   return (
-    <section className="relative py-28 lg:py-36 bg-carbon-50 overflow-hidden">
+    <section className="relative py-16 lg:py-24 bg-carbon-50 overflow-hidden">
       {/* Background ambient */}
       <div className="absolute inset-0">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[500px]"
@@ -31,7 +31,7 @@ export function VSuiteSection() {
       <div className="container-editorial relative z-10">
         {/* Header */}
         <motion.div
-          className="text-center mb-20"
+          className="text-center mb-12"
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}

@@ -28,7 +28,7 @@ export function HowItWorks() {
       <div className="container-wide">
         {/* Header */}
         <motion.div
-          className="text-center mb-20 lg:mb-24"
+          className="text-center mb-12 lg:mb-14"
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
