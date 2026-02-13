@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import voxarisLogo from '@/assets/voxaris-logo-dark.png';
 
 const footerLinks = {
   product: [
@@ -30,18 +29,18 @@ const footerLinks = {
 
 export function Footer() {
   return (
-    <footer className="bg-white border-t border-neutral-100">
+    <footer className="bg-black border-t border-white/[0.04]">
       <div className="container-wide py-16 lg:py-20">
         <div className="grid grid-cols-2 md:grid-cols-6 gap-8 lg:gap-12">
           {/* Brand */}
           <div className="col-span-2">
-            <Link to="/" className="inline-block mb-5">
-              <img src={voxarisLogo} alt="Voxaris" className="h-8 w-auto" />
+            <Link to="/" className="inline-block mb-6">
+              <img src="/voxaris-logo-white.png" alt="Voxaris" className="h-6 w-auto opacity-70" />
             </Link>
-            <p className="text-sm text-platinum-400 mb-2 font-medium tracking-wide">
+            <p className="text-[11px] text-white/20 mb-2 font-medium tracking-[0.15em] uppercase">
               Personalizing Your Outreach
             </p>
-            <p className="text-sm text-platinum-400 mb-6 max-w-xs leading-relaxed">
+            <p className="text-[13px] text-white/20 mb-8 max-w-xs leading-relaxed">
               AI-powered sales automation that works 24/7 to convert your leads into customers.
             </p>
             <div className="flex gap-3">
@@ -52,10 +51,10 @@ export function Footer() {
                 <a
                   key={social.label}
                   href="#"
-                  className="w-9 h-9 rounded-lg bg-neutral-50 flex items-center justify-center text-platinum-400 hover:bg-navy-950 hover:text-white transition-all duration-200"
+                  className="w-8 h-8 rounded-lg bg-white/[0.03] border border-white/[0.04] flex items-center justify-center text-white/20 hover:text-white/50 hover:bg-white/[0.06] hover:border-white/[0.08] transition-all duration-200"
                   aria-label={social.label}
                 >
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
                     <path d={social.path} />
                   </svg>
                 </a>
@@ -66,11 +65,11 @@ export function Footer() {
           {/* Links */}
           {Object.entries(footerLinks).map(([category, links]) => (
             <div key={category}>
-              <h4 className="text-[13px] font-semibold text-navy-950 mb-4 capitalize">{category}</h4>
+              <h4 className="text-[11px] font-medium text-white/30 mb-5 uppercase tracking-[0.2em]">{category}</h4>
               <ul className="space-y-3">
                 {links.map((link) => (
                   <li key={link.label}>
-                    <Link to={link.href} className="text-sm text-platinum-400 hover:text-navy-900 transition-colors">
+                    <Link to={link.href} className="text-[13px] text-white/20 hover:text-white/50 transition-colors duration-200">
                       {link.label}
                     </Link>
                   </li>
@@ -81,13 +80,13 @@ export function Footer() {
         </div>
 
         {/* Bottom */}
-        <div className="mt-14 pt-8 border-t border-neutral-100 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-platinum-400">
+        <div className="mt-16 pt-8 border-t border-white/[0.04] flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-[12px] text-white/15">
             &copy; {new Date().getFullYear()} Voxaris. All rights reserved.
           </p>
           <div className="flex gap-6">
             {['Privacy Policy', 'Terms of Service', 'Cookies'].map((item) => (
-              <Link key={item} to="#" className="text-sm text-platinum-400 hover:text-navy-900 transition-colors">
+              <Link key={item} to="#" className="text-[12px] text-white/15 hover:text-white/30 transition-colors">
                 {item}
               </Link>
             ))}

@@ -7,65 +7,62 @@ const TAVUS_VIDEO_URL = "https://cdn.replica.tavus.io/20283/9de1f64e.mp4";
 
 export function Hero() {
   return (
-    <section className="relative min-h-[100vh] flex items-center overflow-hidden bg-[#fafbff]">
-      {/* Background elements */}
+    <section className="relative min-h-[100vh] flex items-center overflow-hidden bg-black">
+      {/* Background — cinematic radial glow */}
       <div className="absolute inset-0">
-        {/* Gradient mesh */}
-        <div className="absolute top-0 right-0 w-[70%] h-[80%] opacity-30"
+        <div
+          className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[1200px] h-[800px]"
           style={{
-            background: 'radial-gradient(ellipse at 70% 20%, rgba(59,108,245,0.12) 0%, transparent 60%)',
+            background: 'radial-gradient(ellipse at 50% 30%, rgba(255,255,255,0.03) 0%, transparent 60%)',
           }}
         />
-        <div className="absolute bottom-0 left-0 w-[50%] h-[60%] opacity-20"
-          style={{
-            background: 'radial-gradient(ellipse at 30% 80%, rgba(30,58,138,0.1) 0%, transparent 60%)',
-          }}
-        />
-        {/* Grid */}
-        <div className="absolute inset-0 grid-pattern opacity-40" />
+        <div className="absolute inset-0 grid-pattern opacity-30" />
+        {/* Subtle top-down gradient to push content */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black/50" />
       </div>
 
       {/* Content */}
-      <div className="relative z-10 container-hero w-full pt-28 pb-20 lg:pt-36 lg:pb-28">
-        <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-12 lg:gap-16 items-center">
+      <div className="relative z-10 container-hero w-full pt-32 pb-20 lg:pt-40 lg:pb-28">
+        <div className="grid lg:grid-cols-[1.2fr_0.8fr] gap-16 lg:gap-20 items-center">
 
           {/* Left — copy */}
           <div className="max-w-2xl">
-            {/* Badge */}
+            {/* Eyebrow badge */}
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="mb-8"
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              className="mb-10"
             >
-              <span className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-navy-950/[0.04] border border-navy-200/40">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-navy-500 opacity-60" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-navy-600" />
+              <span className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-white/[0.06] bg-white/[0.02]">
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white/60 opacity-60" />
+                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-white/80" />
                 </span>
-                <span className="text-[13px] font-medium text-navy-800 tracking-wide">AI-Powered Sales Infrastructure</span>
+                <span className="text-[12px] font-medium text-white/50 tracking-wide">AI-Powered Sales Infrastructure</span>
               </span>
             </motion.div>
 
-            {/* Headline */}
+            {/* Headline — massive, Apple-style */}
             <motion.h1
-              className="headline-xl text-navy-950 mb-7"
-              initial={{ opacity: 0, y: 24 }}
+              className="headline-hero text-white mb-8"
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
+              transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
             >
-              Your AI workforce{' '}
-              <span className="gradient-text-navy">that never</span>
+              Your AI workforce
               <br />
-              <span className="gradient-text-navy">clocks out</span>
+              <span className="text-chrome">that never</span>
+              <br />
+              <span className="text-chrome">clocks out.</span>
             </motion.h1>
 
-            {/* Sub */}
+            {/* Sub — clean, understated */}
             <motion.p
-              className="text-lg sm:text-xl text-platinum-500 leading-relaxed mb-10 max-w-xl"
-              initial={{ opacity: 0, y: 24 }}
+              className="text-lg sm:text-xl text-white/35 leading-relaxed mb-12 max-w-lg"
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
+              transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
             >
               Deploy photorealistic video and voice AI agents that engage every lead,
               qualify every prospect, and book every appointment — around the clock.
@@ -74,14 +71,14 @@ export function Hero() {
             {/* CTAs */}
             <motion.div
               className="flex flex-col sm:flex-row items-start gap-4"
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
+              transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
             >
               <Link to="/book-demo">
                 <Button
                   size="lg"
-                  className="bg-navy-900 hover:bg-navy-800 text-white h-14 px-8 text-[15px] font-medium rounded-xl group shadow-glow-navy hover:shadow-glow-navy-lg transition-all duration-300 hover:-translate-y-0.5"
+                  className="bg-white hover:bg-white/90 text-black h-14 px-10 text-[15px] font-semibold rounded-full group shadow-glow hover:shadow-glow-lg transition-all duration-500 hover:-translate-y-0.5"
                 >
                   Book a Demo
                   <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -91,7 +88,7 @@ export function Hero() {
                 <Button
                   size="lg"
                   variant="ghost"
-                  className="h-14 px-6 text-[15px] text-platinum-600 hover:text-navy-900 hover:bg-navy-50/50 rounded-xl group"
+                  className="h-14 px-8 text-[15px] text-white/40 hover:text-white hover:bg-white/[0.04] rounded-full group border border-white/[0.06] hover:border-white/[0.12] transition-all duration-300"
                 >
                   <Play className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" />
                   Watch Demo
@@ -99,24 +96,24 @@ export function Hero() {
               </Link>
             </motion.div>
 
-            {/* Social proof */}
+            {/* Metrics bar */}
             <motion.div
-              className="mt-14 flex items-center gap-10"
+              className="mt-16 pt-10 border-t border-white/[0.04] flex items-center gap-12"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.6 }}
+              transition={{ duration: 0.6, delay: 0.7 }}
             >
               {[
                 { value: '500+', label: 'Active agents' },
                 { value: '2M+', label: 'Conversations' },
                 { value: '98%', label: 'Satisfaction' },
               ].map((stat, i) => (
-                <div key={stat.label} className="flex items-center gap-10">
+                <div key={stat.label} className="flex items-center gap-12">
                   <div>
-                    <div className="text-2xl font-bold text-navy-900 font-display">{stat.value}</div>
-                    <div className="text-xs text-platinum-400 mt-0.5">{stat.label}</div>
+                    <div className="text-2xl font-bold text-white font-display tracking-tight">{stat.value}</div>
+                    <div className="text-[11px] text-white/25 mt-1 tracking-wide">{stat.label}</div>
                   </div>
-                  {i < 2 && <div className="w-px h-10 bg-platinum-200" />}
+                  {i < 2 && <div className="w-px h-8 bg-white/[0.06]" />}
                 </div>
               ))}
             </motion.div>
@@ -125,13 +122,18 @@ export function Hero() {
           {/* Right — Video showcase */}
           <motion.div
             className="relative flex justify-center lg:justify-end"
-            initial={{ opacity: 0, scale: 0.96, y: 20 }}
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 1, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className="relative w-full max-w-md lg:max-w-[440px]">
+            <div className="relative w-full max-w-md lg:max-w-[420px]">
+              {/* Glow behind video */}
+              <div className="absolute -inset-8 opacity-20 blur-3xl"
+                style={{ background: 'radial-gradient(circle, rgba(192,192,192,0.15) 0%, transparent 70%)' }}
+              />
+
               {/* Video container */}
-              <div className="relative aspect-[3/4] rounded-[28px] overflow-hidden bg-navy-950 shadow-hero">
+              <div className="relative aspect-[3/4] rounded-[32px] overflow-hidden bg-carbon-900 border border-white/[0.06] shadow-elevated">
                 <video
                   src={TAVUS_VIDEO_URL}
                   className="w-full h-full object-cover"
@@ -142,54 +144,58 @@ export function Hero() {
                 />
 
                 {/* Bottom gradient */}
-                <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-navy-950/90 via-navy-950/40 to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
 
-                {/* Agent info */}
+                {/* Agent info overlay */}
                 <div className="absolute bottom-0 inset-x-0 p-7">
                   <div className="flex items-end justify-between">
                     <div>
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="relative flex h-2 w-2">
+                        <span className="relative flex h-1.5 w-1.5">
                           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                          <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
+                          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400" />
                         </span>
-                        <span className="text-[10px] font-bold text-white/80 uppercase tracking-[0.15em]">Live</span>
+                        <span className="text-[10px] font-semibold text-white/60 uppercase tracking-[0.15em]">Live</span>
                       </div>
                       <div className="text-lg font-semibold text-white font-display">VAgent Maria</div>
-                      <div className="text-sm text-white/60">Sales Assistant</div>
+                      <div className="text-[13px] text-white/40">Sales Assistant</div>
                     </div>
-                    <div className="text-right bg-white/10 backdrop-blur-md rounded-xl px-4 py-3">
+                    <div className="text-right bg-white/[0.06] backdrop-blur-xl rounded-2xl px-5 py-3 border border-white/[0.06]">
                       <div className="text-2xl font-bold text-white font-display">&lt;3s</div>
-                      <div className="text-[10px] text-white/60 uppercase tracking-wider">Response</div>
+                      <div className="text-[10px] text-white/40 uppercase tracking-wider">Response</div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Floating cards */}
+              {/* Floating metric — top left */}
               <motion.div
-                className="absolute -top-5 -left-5 lg:-left-10 bg-white rounded-2xl px-5 py-4 shadow-elevated border border-neutral-100"
+                className="absolute -top-4 -left-4 lg:-left-8 bg-carbon-900/90 backdrop-blur-xl rounded-2xl px-5 py-4 border border-white/[0.06]"
                 initial={{ opacity: 0, x: -20, y: 10 }}
                 animate={{ opacity: 1, x: 0, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.8 }}
+                transition={{ duration: 0.6, delay: 1 }}
               >
-                <div className="text-2xl font-bold text-navy-900 font-display">24/7</div>
-                <div className="text-xs text-platinum-500">Always on</div>
+                <div className="text-2xl font-bold text-white font-display">24/7</div>
+                <div className="text-[11px] text-white/30">Always on</div>
               </motion.div>
 
+              {/* Floating metric — bottom right */}
               <motion.div
-                className="absolute -bottom-5 -right-5 lg:-right-10 bg-white rounded-2xl px-5 py-4 shadow-elevated border border-neutral-100"
+                className="absolute -bottom-4 -right-4 lg:-right-8 bg-carbon-900/90 backdrop-blur-xl rounded-2xl px-5 py-4 border border-white/[0.06]"
                 initial={{ opacity: 0, x: 20, y: -10 }}
                 animate={{ opacity: 1, x: 0, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.9 }}
+                transition={{ duration: 0.6, delay: 1.1 }}
               >
-                <div className="text-2xl font-bold text-navy-900 font-display">3-4x</div>
-                <div className="text-xs text-platinum-500">More bookings</div>
+                <div className="text-2xl font-bold text-white font-display">3-4x</div>
+                <div className="text-[11px] text-white/30">More bookings</div>
               </motion.div>
             </div>
           </motion.div>
         </div>
       </div>
+
+      {/* Bottom fade into next section */}
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent to-black" />
     </section>
   );
 }

@@ -22,20 +22,23 @@ const comparisons = [
 
 export function ProblemSolution() {
   return (
-    <section className="section-padding-lg bg-white">
+    <section className="section-padding-lg bg-black">
       <div className="container-editorial">
         {/* Header */}
         <motion.div
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 20 }}
+          className="text-center mb-16 lg:mb-20"
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
         >
-          <span className="eyebrow mb-5 block">The Problem</span>
-          <h2 className="headline-lg text-navy-950 mb-5">
-            You're losing revenue<br className="hidden sm:block" />while you sleep
+          <span className="eyebrow mb-6 block">The Problem</span>
+          <h2 className="headline-xl text-white mb-6">
+            You're losing revenue
+            <br className="hidden sm:block" />
+            <span className="text-chrome">while you sleep.</span>
           </h2>
-          <p className="text-platinum-500 max-w-2xl mx-auto text-lg">
+          <p className="text-white/30 max-w-xl mx-auto text-lg">
             The average business loses thousands every month from slow response times and missed calls.
           </p>
         </motion.div>
@@ -43,12 +46,12 @@ export function ProblemSolution() {
         {/* Comparison */}
         <div className="max-w-3xl mx-auto">
           {/* Column headers */}
-          <div className="grid grid-cols-2 gap-4 mb-8">
+          <div className="grid grid-cols-2 gap-3 mb-6">
             <div className="text-center">
-              <span className="text-[13px] font-medium text-platinum-400">Without Voxaris</span>
+              <span className="text-[11px] font-medium text-white/20 uppercase tracking-[0.2em]">Without Voxaris</span>
             </div>
             <div className="text-center">
-              <span className="text-[13px] font-semibold text-navy-900">With Voxaris</span>
+              <span className="text-[11px] font-medium text-white/50 uppercase tracking-[0.2em]">With Voxaris</span>
             </div>
           </div>
 
@@ -61,22 +64,22 @@ export function ProblemSolution() {
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: index * 0.08 }}
+                transition={{ duration: 0.5, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
               >
                 {/* Without */}
-                <div className="flex items-center gap-3 p-5 rounded-2xl bg-neutral-50 border border-neutral-200/40">
-                  <div className="flex-shrink-0 w-7 h-7 rounded-lg bg-red-50 flex items-center justify-center">
-                    <X className="w-3.5 h-3.5 text-red-400" />
+                <div className="flex items-center gap-3 p-5 rounded-2xl bg-white/[0.02] border border-white/[0.04]">
+                  <div className="flex-shrink-0 w-6 h-6 rounded-lg bg-red-500/10 flex items-center justify-center">
+                    <X className="w-3 h-3 text-red-400/60" />
                   </div>
-                  <span className="text-sm text-platinum-600">{item.without}</span>
+                  <span className="text-[13px] text-white/30">{item.without}</span>
                 </div>
 
                 {/* With */}
-                <div className="flex items-center gap-3 p-5 rounded-2xl bg-navy-950 border border-navy-800/50">
-                  <div className="flex-shrink-0 w-7 h-7 rounded-lg bg-emerald-500/20 flex items-center justify-center">
-                    <Check className="w-3.5 h-3.5 text-emerald-400" />
+                <div className="flex items-center gap-3 p-5 rounded-2xl bg-white/[0.04] border border-white/[0.08]">
+                  <div className="flex-shrink-0 w-6 h-6 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                    <Check className="w-3 h-3 text-emerald-400/70" />
                   </div>
-                  <span className="text-sm text-white/90">{item.with}</span>
+                  <span className="text-[13px] text-white/60">{item.with}</span>
                 </div>
               </motion.div>
             ))}

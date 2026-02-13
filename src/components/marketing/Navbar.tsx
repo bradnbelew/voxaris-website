@@ -3,7 +3,6 @@ import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, ChevronDown, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import voxarisLogo from '@/assets/voxaris-logo-dark.png';
 
 const navLinks = [
   { label: 'Product', href: '/#features' },
@@ -43,40 +42,40 @@ export function Navbar() {
       <motion.header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           isScrolled
-            ? 'bg-white/90 backdrop-blur-xl border-b border-neutral-200/50 shadow-subtle'
+            ? 'bg-black/80 backdrop-blur-2xl border-b border-white/[0.04]'
             : 'bg-transparent'
         }`}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
       >
         <nav className="container-wide">
           <div className="flex items-center justify-between h-[72px]">
             {/* Logo */}
             <Link to="/" className="flex items-center shrink-0">
-              <img src={voxarisLogo} alt="Voxaris" className="h-9 w-auto" />
+              <img src="/voxaris-logo-white.png" alt="Voxaris" className="h-7 w-auto" />
             </Link>
 
-            {/* Desktop nav — centered */}
+            {/* Desktop nav */}
             <div className="hidden lg:flex items-center gap-1">
               {navLinks.map((link) => (
                 <div key={link.label} className="relative">
                   {link.dropdown ? (
                     <button
-                      className={`flex items-center gap-1.5 px-4 py-2 text-[14px] font-medium transition-colors ${
-                        openDropdown === link.label ? 'text-navy-900' : 'text-platinum-500 hover:text-navy-900'
+                      className={`flex items-center gap-1.5 px-4 py-2 text-[13px] font-medium transition-all duration-200 ${
+                        openDropdown === link.label ? 'text-white' : 'text-white/40 hover:text-white/80'
                       }`}
                       onMouseEnter={() => setOpenDropdown(link.label)}
                       onMouseLeave={() => setOpenDropdown(null)}
                     >
                       {link.label}
-                      <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${openDropdown === link.label ? 'rotate-180' : ''}`} />
+                      <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${openDropdown === link.label ? 'rotate-180' : ''}`} />
                     </button>
                   ) : (
                     <Link
                       to={link.href}
-                      className={`px-4 py-2 text-[14px] font-medium transition-colors ${
-                        location.pathname === link.href ? 'text-navy-900' : 'text-platinum-500 hover:text-navy-900'
+                      className={`px-4 py-2 text-[13px] font-medium transition-all duration-200 ${
+                        location.pathname === link.href ? 'text-white' : 'text-white/40 hover:text-white/80'
                       }`}
                     >
                       {link.label}
@@ -88,7 +87,7 @@ export function Navbar() {
                     <AnimatePresence>
                       {openDropdown === link.label && (
                         <motion.div
-                          className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-64 p-2 bg-white rounded-2xl border border-neutral-200/60 shadow-elevated"
+                          className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-64 p-2 bg-carbon-900/95 backdrop-blur-2xl rounded-2xl border border-white/[0.06] shadow-elevated"
                           initial={{ opacity: 0, y: 8, scale: 0.97 }}
                           animate={{ opacity: 1, y: 0, scale: 1 }}
                           exit={{ opacity: 0, y: 8, scale: 0.97 }}
@@ -100,12 +99,12 @@ export function Navbar() {
                             <Link
                               key={item.label}
                               to={item.href}
-                              className="flex flex-col px-4 py-3 rounded-xl hover:bg-neutral-50 transition-colors group"
+                              className="flex flex-col px-4 py-3 rounded-xl hover:bg-white/[0.04] transition-colors group"
                             >
-                              <span className="text-[14px] font-medium text-navy-900 group-hover:text-navy-800">
+                              <span className="text-[13px] font-medium text-white/90 group-hover:text-white">
                                 {item.label}
                               </span>
-                              <span className="text-xs text-platinum-400">
+                              <span className="text-[11px] text-white/30">
                                 {item.desc}
                               </span>
                             </Link>
@@ -119,17 +118,17 @@ export function Navbar() {
             </div>
 
             {/* Desktop CTAs */}
-            <div className="hidden lg:flex items-center gap-3">
+            <div className="hidden lg:flex items-center gap-4">
               <Link to="/dashboard">
                 <Button
                   variant="ghost"
-                  className="text-platinum-500 hover:text-navy-900 hover:bg-transparent font-medium text-[14px]"
+                  className="text-white/40 hover:text-white hover:bg-transparent font-medium text-[13px] px-0"
                 >
                   Sign in
                 </Button>
               </Link>
               <Link to="/book-demo">
-                <Button className="bg-navy-900 hover:bg-navy-800 text-white rounded-xl px-6 h-10 font-medium text-[14px] shadow-glow-navy hover:shadow-glow-navy-lg transition-all duration-300 group">
+                <Button className="bg-white hover:bg-white/90 text-black rounded-full px-6 h-9 font-medium text-[13px] transition-all duration-300 hover:shadow-glow group">
                   Get Started
                   <ArrowRight className="w-3.5 h-3.5 ml-2 group-hover:translate-x-0.5 transition-transform" />
                 </Button>
@@ -138,11 +137,11 @@ export function Navbar() {
 
             {/* Mobile toggle */}
             <button
-              className="lg:hidden p-2 text-navy-900"
+              className="lg:hidden p-2 text-white/60"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle menu"
             >
-              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </nav>
@@ -152,7 +151,7 @@ export function Navbar() {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            className="fixed inset-0 z-40 lg:hidden bg-white"
+            className="fixed inset-0 z-40 lg:hidden bg-black"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -164,7 +163,7 @@ export function Navbar() {
                     <div key={link.label}>
                       {link.dropdown ? (
                         <div className="space-y-3">
-                          <span className="text-xs font-semibold text-platinum-400 uppercase tracking-[0.15em]">
+                          <span className="text-[11px] font-medium text-white/30 uppercase tracking-[0.2em]">
                             {link.label}
                           </span>
                           <div className="grid gap-2 pl-1">
@@ -172,7 +171,7 @@ export function Navbar() {
                               <Link
                                 key={item.label}
                                 to={item.href}
-                                className="block py-2 text-lg text-navy-900 hover:text-navy-700 transition-colors"
+                                className="block py-2 text-lg text-white/70 hover:text-white transition-colors"
                               >
                                 {item.label}
                               </Link>
@@ -182,7 +181,7 @@ export function Navbar() {
                       ) : (
                         <Link
                           to={link.href}
-                          className="block text-2xl font-medium text-navy-900"
+                          className="block text-2xl font-medium text-white/90"
                         >
                           {link.label}
                         </Link>
@@ -192,15 +191,15 @@ export function Navbar() {
                 </div>
               </div>
 
-              <div className="p-6 border-t border-neutral-100 space-y-3">
+              <div className="p-6 border-t border-white/[0.06] space-y-3">
                 <Link to="/book-demo" className="block">
-                  <Button className="w-full bg-navy-900 hover:bg-navy-800 text-white h-12 rounded-xl font-medium">
+                  <Button className="w-full bg-white hover:bg-white/90 text-black h-12 rounded-full font-medium">
                     Get Started
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </Button>
                 </Link>
                 <Link to="/dashboard" className="block">
-                  <Button variant="outline" className="w-full border-neutral-200 text-navy-900 h-12 rounded-xl font-medium">
+                  <Button variant="outline" className="w-full border-white/10 text-white/70 h-12 rounded-full font-medium bg-transparent hover:bg-white/[0.04]">
                     Sign in
                   </Button>
                 </Link>
