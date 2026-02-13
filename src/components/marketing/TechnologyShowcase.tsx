@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
-import { Video, Phone, Check } from 'lucide-react';
+import { Video, Phone, Check, ArrowUpRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const TAVUS_VIDEO_URL = "https://cdn.replica.tavus.io/20283/9de1f64e.mp4";
 
@@ -7,37 +8,36 @@ export function TechnologyShowcase() {
   return (
     <section className="section-padding-lg bg-white">
       <div className="container-wide">
-        {/* Section header */}
+        {/* Header */}
         <motion.div
-          className="text-center mb-16"
+          className="text-center mb-20"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <span className="eyebrow mb-4 block">Proprietary Technology</span>
-          <h2 className="headline-lg text-ink mb-4">
-            Two powerful AI agents, one platform
+          <span className="eyebrow mb-5 block">Proprietary Technology</span>
+          <h2 className="headline-lg text-navy-950 mb-5">
+            Two powerful AI agents.<br className="hidden sm:block" />One unified platform.
           </h2>
-          <p className="text-slate max-w-2xl mx-auto text-lg">
-            Built from the ground up for enterprise scale. 100% Voxaris technology.
+          <p className="text-platinum-500 max-w-2xl mx-auto text-lg">
+            Built from the ground up for enterprise-grade conversations. 100% Voxaris technology.
           </p>
         </motion.div>
 
-        {/* Two cards side by side */}
-        <div className="grid lg:grid-cols-2 gap-8">
-          {/* VVideo AI Card */}
+        {/* Cards */}
+        <div className="grid lg:grid-cols-2 gap-6">
+          {/* VVideo */}
           <motion.div
-            className="glass-card overflow-hidden"
-            initial={{ opacity: 0, y: 20 }}
+            className="group relative bg-white border border-neutral-200/60 rounded-3xl overflow-hidden transition-all duration-500 hover:shadow-hero hover:border-neutral-300/60"
+            initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            {/* Video preview - top */}
-            <div className="aspect-video bg-mist overflow-hidden">
+            <div className="aspect-[16/10] bg-neutral-50 overflow-hidden">
               <video
                 src={TAVUS_VIDEO_URL}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-700"
                 autoPlay
                 loop
                 muted
@@ -45,98 +45,113 @@ export function TechnologyShowcase() {
               />
             </div>
 
-            {/* Content */}
-            <div className="p-8">
-              {/* Tag */}
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-mist mb-5">
-                <Video className="w-4 h-4 text-ink" />
-                <span className="text-sm font-medium text-ink">Video AI</span>
+            <div className="p-8 lg:p-10">
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-10 h-10 rounded-xl bg-navy-950 flex items-center justify-center">
+                  <Video className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-navy-950 font-display">VVideo</h3>
+                  <p className="text-xs text-platinum-400">Photorealistic Video AI</p>
+                </div>
               </div>
 
-              <h3 className="text-2xl font-bold text-ink mb-3">
-                VVideo
-              </h3>
-
-              <p className="text-slate mb-6">
-                Photorealistic AI video agents that have real conversations with your leads on web and landing pages.
+              <p className="text-platinum-500 mb-7 leading-relaxed">
+                Deploy photorealistic AI video agents that have real, face-to-face conversations with your leads on any web page.
               </p>
 
-              <ul className="space-y-3">
+              <ul className="space-y-3 mb-8">
                 {[
                   'Photorealistic video avatars',
                   'Real-time lip sync & expressions',
                   'Custom personas per client',
-                  'Perfect for web leads',
+                  'Embeds on any webpage',
                 ].map((item) => (
-                  <li key={item} className="flex items-center gap-3 text-charcoal">
-                    <Check className="w-4 h-4 text-ink flex-shrink-0" />
-                    <span className="text-sm">{item}</span>
+                  <li key={item} className="flex items-center gap-3">
+                    <div className="w-5 h-5 rounded-full bg-emerald-50 flex items-center justify-center flex-shrink-0">
+                      <Check className="w-3 h-3 text-emerald-600" />
+                    </div>
+                    <span className="text-sm text-platinum-600">{item}</span>
                   </li>
                 ))}
               </ul>
+
+              <Link to="/technology" className="inline-flex items-center gap-1.5 text-sm font-medium text-navy-700 hover:text-navy-900 transition-colors group/link">
+                Learn more
+                <ArrowUpRight className="w-3.5 h-3.5 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform" />
+              </Link>
             </div>
           </motion.div>
 
-          {/* VVoice AI Card */}
+          {/* VVoice */}
           <motion.div
-            className="glass-card overflow-hidden"
-            initial={{ opacity: 0, y: 20 }}
+            className="group relative bg-white border border-neutral-200/60 rounded-3xl overflow-hidden transition-all duration-500 hover:shadow-hero hover:border-neutral-300/60"
+            initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            {/* Voice waveform visual - top */}
-            <div className="aspect-video bg-ink flex items-center justify-center">
-              <div className="text-center">
-                <div className="flex items-center justify-center gap-1.5 mb-4">
-                  {[...Array(16)].map((_, i) => (
+            <div className="aspect-[16/10] bg-navy-950 flex items-center justify-center relative overflow-hidden">
+              <div className="absolute inset-0 opacity-20"
+                style={{ background: 'radial-gradient(circle at 50% 50%, rgba(59,108,245,0.3) 0%, transparent 60%)' }}
+              />
+              <div className="text-center relative z-10">
+                <div className="flex items-center justify-center gap-[3px] mb-5">
+                  {[...Array(24)].map((_, i) => (
                     <motion.div
                       key={i}
-                      className="w-1 bg-white rounded-full"
+                      className="w-[3px] bg-white/80 rounded-full"
                       animate={{
-                        height: [16, 32 + Math.random() * 24, 16],
+                        height: [12, 28 + Math.random() * 28, 12],
                       }}
                       transition={{
-                        duration: 0.6 + Math.random() * 0.4,
+                        duration: 0.8 + Math.random() * 0.6,
                         repeat: Infinity,
-                        delay: i * 0.05,
+                        delay: i * 0.04,
+                        ease: 'easeInOut',
                       }}
                     />
                   ))}
                 </div>
-                <span className="text-xs font-medium text-white/60 uppercase tracking-wider">VVoice Active</span>
+                <span className="text-[11px] font-semibold text-white/50 uppercase tracking-[0.2em]">VVoice Active</span>
               </div>
             </div>
 
-            {/* Content */}
-            <div className="p-8">
-              {/* Tag */}
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-mist mb-5">
-                <Phone className="w-4 h-4 text-ink" />
-                <span className="text-sm font-medium text-ink">Voice AI</span>
+            <div className="p-8 lg:p-10">
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-10 h-10 rounded-xl bg-navy-950 flex items-center justify-center">
+                  <Phone className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-navy-950 font-display">VVoice</h3>
+                  <p className="text-xs text-platinum-400">Natural Voice AI</p>
+                </div>
               </div>
 
-              <h3 className="text-2xl font-bold text-ink mb-3">
-                VVoice
-              </h3>
-
-              <p className="text-slate mb-6">
-                Natural voice AI agents that handle phone calls, qualify leads, and book appointments automatically.
+              <p className="text-platinum-500 mb-7 leading-relaxed">
+                Natural-sounding voice AI that handles inbound and outbound calls, qualifies leads, and books appointments.
               </p>
 
-              <ul className="space-y-3">
+              <ul className="space-y-3 mb-8">
                 {[
-                  'Natural voice conversations',
-                  'Inbound & outbound calls',
+                  'Human-quality voice conversations',
+                  'Inbound & outbound calling',
                   'Intelligent interruption handling',
-                  'Perfect for phone leads',
+                  'CRM auto-sync on every call',
                 ].map((item) => (
-                  <li key={item} className="flex items-center gap-3 text-charcoal">
-                    <Check className="w-4 h-4 text-ink flex-shrink-0" />
-                    <span className="text-sm">{item}</span>
+                  <li key={item} className="flex items-center gap-3">
+                    <div className="w-5 h-5 rounded-full bg-emerald-50 flex items-center justify-center flex-shrink-0">
+                      <Check className="w-3 h-3 text-emerald-600" />
+                    </div>
+                    <span className="text-sm text-platinum-600">{item}</span>
                   </li>
                 ))}
               </ul>
+
+              <Link to="/technology" className="inline-flex items-center gap-1.5 text-sm font-medium text-navy-700 hover:text-navy-900 transition-colors group/link">
+                Learn more
+                <ArrowUpRight className="w-3.5 h-3.5 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform" />
+              </Link>
             </div>
           </motion.div>
         </div>

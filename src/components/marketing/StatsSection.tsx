@@ -1,38 +1,40 @@
 import { motion } from 'framer-motion';
 
 const stats = [
-  { value: '<3s', label: 'Response time', vLabel: 'VSpeed' },
-  { value: '24/7', label: 'Availability', vLabel: 'VReliable' },
-  { value: '3-4x', label: 'More bookings', vLabel: 'VResults' },
-  { value: '70%', label: 'Show rate', vLabel: 'VEfficient' },
+  { value: '<3s', label: 'Average response time', accent: 'Speed' },
+  { value: '24/7', label: 'Always-on availability', accent: 'Uptime' },
+  { value: '3-4x', label: 'More appointments booked', accent: 'Results' },
+  { value: '70%', label: 'Appointment show rate', accent: 'Efficiency' },
 ];
 
 export function StatsSection() {
   return (
-    <section className="section-padding bg-platinum-50 border-y border-platinum-200">
-      <div className="container-wide">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16">
+    <section className="relative py-20 lg:py-24 bg-navy-950 overflow-hidden">
+      {/* Subtle background glow */}
+      <div className="absolute inset-0 opacity-30"
+        style={{ background: 'radial-gradient(ellipse at 50% 50%, rgba(59,108,245,0.15) 0%, transparent 70%)' }}
+      />
+
+      <div className="container-wide relative z-10">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-0 lg:divide-x lg:divide-white/10">
           {stats.map((stat, index) => (
             <motion.div
               key={stat.label}
-              className="text-center"
+              className="text-center lg:px-8"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              {/* V-branded label */}
-              <div className="inline-flex items-center px-3 py-1.5 rounded-lg bg-navy-50 border border-navy-100 mb-5">
-                <span className="text-xs font-bold tracking-wide text-navy-700">{stat.vLabel}</span>
+              <div className="inline-block px-3 py-1 rounded-full bg-white/[0.06] border border-white/[0.08] mb-5">
+                <span className="text-[11px] font-semibold tracking-[0.15em] uppercase text-navy-300">{stat.accent}</span>
               </div>
 
-              {/* Large number */}
-              <div className="stat-number mb-3">
+              <div className="text-4xl md:text-5xl font-bold text-white font-display mb-3 tracking-tight">
                 {stat.value}
               </div>
 
-              {/* Label */}
-              <div className="text-sm text-platinum-600">
+              <div className="text-sm text-white/40">
                 {stat.label}
               </div>
             </motion.div>

@@ -57,21 +57,19 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
-        // Navy Blue Palette - Primary Brand Color
         navy: {
-          50: '#f0f4ff',
-          100: '#e0e9ff',
-          200: '#c7d5fe',
-          300: '#a4b8fc',
-          400: '#8093f8',
-          500: '#5e6ef1',
-          600: '#4a4de5',
-          700: '#3d3dca',
-          800: '#1e3a8a',  // Primary navy
-          900: '#172554',  // Deep navy
+          50: '#eff4ff',
+          100: '#dbe6fe',
+          200: '#bfd3fe',
+          300: '#93b4fd',
+          400: '#6090fa',
+          500: '#3b6cf5',
+          600: '#254cea',
+          700: '#1d3bd7',
+          800: '#1e3a8a',
+          900: '#172554',
           950: '#0f172a',
         },
-        // Platinum Silver Palette - Secondary Color
         platinum: {
           50: '#fafafa',
           100: '#f5f5f5',
@@ -84,6 +82,12 @@ export default {
           800: '#262626',
           900: '#171717',
         },
+        ink: '#0f172a',
+        charcoal: '#374151',
+        slate: '#64748b',
+        frost: '#e2e8f0',
+        snow: '#f8fafc',
+        mist: '#f1f5f9',
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -91,12 +95,10 @@ export default {
         sm: "calc(var(--radius) - 4px)",
         "2xl": "1rem",
         "3xl": "1.5rem",
-        card: "16px",
-        button: "8px",
       },
       fontFamily: {
-        sans: ['Outfit', 'system-ui', '-apple-system', 'sans-serif'],
-        display: ['Outfit', 'system-ui', 'sans-serif'],
+        sans: ['DM Sans', 'system-ui', '-apple-system', 'sans-serif'],
+        display: ['Sora', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },
       fontSize: {
@@ -106,13 +108,13 @@ export default {
         'subheading': ['1.25rem', { lineHeight: '1.6' }],
       },
       boxShadow: {
-        'card': '0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06)',
-        'card-hover': '0 4px 12px rgba(0,0,0,0.08), 0 12px 32px rgba(0,0,0,0.1)',
+        'card': '0 1px 3px rgba(0,0,0,0.04), 0 4px 20px rgba(0,0,0,0.04)',
+        'card-hover': '0 4px 12px rgba(0,0,0,0.06), 0 12px 36px rgba(0,0,0,0.08)',
         'subtle': '0 1px 2px 0 rgb(0 0 0 / 0.03)',
-        'video': '0 4px 24px rgba(0,0,0,0.06)',
-        'glow-navy': '0 0 20px rgba(30, 58, 138, 0.2)',
-        'glow-navy-lg': '0 0 40px rgba(30, 58, 138, 0.3)',
-        'elevated': '0 10px 40px rgba(0,0,0,0.12)',
+        'glow-navy': '0 0 20px rgba(30, 58, 138, 0.15)',
+        'glow-navy-lg': '0 0 40px rgba(30, 58, 138, 0.25)',
+        'elevated': '0 10px 40px rgba(0,0,0,0.1)',
+        'hero': '0 20px 60px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.06)',
       },
       keyframes: {
         "accordion-down": {
@@ -124,7 +126,7 @@ export default {
           to: { height: "0" },
         },
         "fade-up": {
-          from: { opacity: "0", transform: "translateY(20px)" },
+          from: { opacity: "0", transform: "translateY(24px)" },
           to: { opacity: "1", transform: "translateY(0)" },
         },
         "fade-in": {

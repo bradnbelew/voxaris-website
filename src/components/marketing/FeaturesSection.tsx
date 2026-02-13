@@ -13,98 +13,96 @@ interface Feature {
   icon: LucideIcon;
   title: string;
   description: string;
-  vTag: string;
+  tag: string;
 }
 
 const features: Feature[] = [
   {
     icon: Zap,
-    title: 'VInstant',
-    description: 'Sub-3-second engagement on every lead. Never let an opportunity slip away.',
-    vTag: 'Speed',
+    title: 'Instant Engagement',
+    description: 'Sub-3-second response on every lead. The speed gap between you and competitors disappears.',
+    tag: 'Speed',
   },
   {
     icon: Clock,
-    title: 'VAlways',
-    description: 'Your AI never sleeps. Capture and qualify leads 24/7, weekends included.',
-    vTag: 'Availability',
+    title: 'Always Available',
+    description: 'Your AI workforce never sleeps. Capture and qualify leads 24/7 — weekends, holidays, 3am.',
+    tag: 'Availability',
   },
   {
     icon: Brain,
-    title: 'VIntelligent',
-    description: 'Context-aware AI that remembers, adapts, and qualifies prospects naturally.',
-    vTag: 'AI-Powered',
+    title: 'Context-Aware AI',
+    description: 'Remembers past conversations, adapts to tone, and qualifies prospects with human-like intuition.',
+    tag: 'Intelligence',
   },
   {
     icon: Database,
-    title: 'VSync',
-    description: 'Auto-sync to GoHighLevel and major CRMs. Zero manual data entry.',
-    vTag: 'Integration',
+    title: 'CRM Auto-Sync',
+    description: 'Connects to GoHighLevel and every major CRM. Zero manual data entry, zero dropped leads.',
+    tag: 'Integration',
   },
   {
     icon: MessageSquare,
-    title: 'VOmni',
-    description: 'Video, voice, and SMS unified in one platform. Meet leads where they are.',
-    vTag: 'Multi-Channel',
+    title: 'Omnichannel',
+    description: 'Video, voice, and SMS unified in one platform. Meet every lead on their preferred channel.',
+    tag: 'Channels',
   },
   {
     icon: Layers,
-    title: 'VLabel',
-    description: 'Fully rebrandable for agencies. Your brand, powered by Voxaris.',
-    vTag: 'White-Label',
+    title: 'White-Label Ready',
+    description: 'Fully rebrandable for agencies. Your clients see your brand, powered by Voxaris under the hood.',
+    tag: 'Agencies',
   },
 ];
 
 export function FeaturesSection() {
   return (
-    <section className="section-padding-lg bg-white">
+    <section className="section-padding-lg bg-neutral-50/50">
       <div className="container-wide">
-        {/* Section header */}
+        {/* Header */}
         <motion.div
-          className="text-center mb-16"
+          className="text-center mb-20"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-navy-50 border border-navy-100 text-xs font-semibold text-navy-700 uppercase tracking-wider mb-4">
-            Platform Capabilities
-          </span>
-          <h2 className="headline-lg text-navy-900 mb-4">
-            Everything you need to convert more leads
+          <span className="eyebrow mb-5 block">Platform Capabilities</span>
+          <h2 className="headline-lg text-navy-950 mb-5">
+            Everything you need to<br className="hidden sm:block" />convert more leads
           </h2>
-          <p className="text-platinum-600 max-w-2xl mx-auto text-lg">
-            Enterprise-grade AI automation built for businesses that want to scale without sacrificing quality.
+          <p className="text-platinum-500 max-w-2xl mx-auto text-lg">
+            Enterprise-grade AI automation built for businesses that demand results, not excuses.
           </p>
         </motion.div>
 
-        {/* Features grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {features.map((feature, index) => (
             <motion.div
               key={feature.title}
-              className="card-modern p-8"
-              initial={{ opacity: 0, y: 20 }}
+              className="group relative bg-white border border-neutral-200/60 rounded-2xl p-8 transition-all duration-300 hover:shadow-card-hover hover:border-neutral-300/60 hover:-translate-y-1"
+              initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: index * 0.08 }}
+              transition={{ duration: 0.4, delay: index * 0.07 }}
             >
-              {/* V-branded tag */}
-              <div className="inline-flex items-center px-2.5 py-1 rounded-md bg-platinum-100 text-xs font-medium text-platinum-600 mb-5">
-                {feature.vTag}
+              {/* Tag */}
+              <div className="inline-block px-2.5 py-1 rounded-md bg-navy-50 mb-6">
+                <span className="text-[11px] font-semibold tracking-[0.1em] uppercase text-navy-600">{feature.tag}</span>
               </div>
 
               {/* Icon */}
-              <div className="w-12 h-12 rounded-xl bg-navy-900 flex items-center justify-center mb-5">
+              <div className="w-12 h-12 rounded-xl bg-navy-950 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform duration-300">
                 <feature.icon className="w-6 h-6 text-white" />
               </div>
 
-              {/* Title - V-branded */}
-              <h3 className="text-xl font-bold text-navy-900 mb-3">
+              {/* Title */}
+              <h3 className="text-lg font-bold text-navy-950 font-display mb-3">
                 {feature.title}
               </h3>
 
               {/* Description */}
-              <p className="text-platinum-600 leading-relaxed">
+              <p className="text-sm text-platinum-500 leading-relaxed">
                 {feature.description}
               </p>
             </motion.div>
