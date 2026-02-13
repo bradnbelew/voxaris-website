@@ -24,7 +24,7 @@ const steps = [
 
 export function HowItWorks() {
   return (
-    <section className="section-padding-lg bg-black relative">
+    <section className="section-padding-lg bg-white relative">
       <div className="container-wide">
         {/* Header */}
         <motion.div
@@ -35,12 +35,12 @@ export function HowItWorks() {
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
         >
           <span className="eyebrow mb-6 block">Getting Started</span>
-          <h2 className="headline-xl text-white mb-6">
+          <h2 className="headline-xl text-carbon-900 mb-6">
             Live in minutes.
             <br className="hidden sm:block" />
-            <span className="text-chrome">Not months.</span>
+            <span className="text-carbon-400">Not months.</span>
           </h2>
-          <p className="text-white/25 max-w-xl mx-auto text-lg">
+          <p className="text-carbon-400 max-w-xl mx-auto text-lg">
             From zero to a fully operational AI sales team in three steps.
           </p>
         </motion.div>
@@ -59,24 +59,24 @@ export function HowItWorks() {
               {/* Connector */}
               {index < steps.length - 1 && (
                 <div className="hidden md:block absolute top-20 left-[calc(50%+60px)] w-[calc(100%-120px)] h-px">
-                  <div className="w-full h-full bg-gradient-to-r from-white/[0.06] to-white/[0.02]" />
+                  <div className="w-full h-full bg-gradient-to-r from-carbon-200 to-carbon-100" />
                 </div>
               )}
 
-              <div className="h-full p-8 lg:p-10 rounded-[20px] bg-white/[0.02] border border-white/[0.04] transition-all duration-500 hover:bg-white/[0.04] hover:border-white/[0.08]">
+              <div className="h-full p-8 lg:p-10 rounded-[20px] bg-carbon-50 border border-carbon-200 transition-all duration-500 hover:bg-carbon-100 hover:border-carbon-300">
                 {/* Step number */}
                 <div className="mb-8">
-                  <span className="text-chrome text-[52px] font-bold font-display leading-none opacity-30">{step.number}</span>
+                  <span className="text-carbon-200 text-[52px] font-bold font-display leading-none">{step.number}</span>
                 </div>
 
                 {/* Icon */}
-                <div className="w-12 h-12 rounded-2xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center mb-7 group-hover:bg-white/[0.06] transition-colors duration-300">
-                  <step.icon className="w-5 h-5 text-white/40 group-hover:text-white/60 transition-colors" />
+                <div className="w-12 h-12 rounded-2xl bg-carbon-100 border border-carbon-200 flex items-center justify-center mb-7 group-hover:bg-carbon-200 transition-colors duration-300">
+                  <step.icon className="w-5 h-5 text-carbon-500 group-hover:text-carbon-600 transition-colors" />
                 </div>
 
                 {/* Content */}
-                <h3 className="text-xl font-bold text-white font-display mb-3 tracking-tight">{step.title}</h3>
-                <p className="text-[14px] text-white/25 leading-relaxed">{step.description}</p>
+                <h3 className="text-xl font-bold text-carbon-900 font-display mb-3 tracking-tight">{step.title}</h3>
+                <p className="text-[14px] text-carbon-400 leading-relaxed">{step.description}</p>
               </div>
             </motion.div>
           ))}

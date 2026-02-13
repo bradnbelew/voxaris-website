@@ -8,44 +8,44 @@
 
 @layer base {
   :root {
-    --background: 0 0% 4%;
-    --foreground: 0 0% 95%;
+    --background: 0 0% 100%;
+    --foreground: 0 0% 8%;
 
-    --card: 0 0% 6%;
-    --card-foreground: 0 0% 95%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 8%;
 
-    --popover: 0 0% 6%;
-    --popover-foreground: 0 0% 95%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 8%;
 
-    --primary: 0 0% 95%;
-    --primary-foreground: 0 0% 4%;
+    --primary: 0 0% 8%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 10%;
-    --secondary-foreground: 0 0% 95%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 8%;
 
-    --muted: 0 0% 10%;
+    --muted: 0 0% 96%;
     --muted-foreground: 0 0% 45%;
 
-    --accent: 0 0% 12%;
-    --accent-foreground: 0 0% 95%;
+    --accent: 0 0% 96%;
+    --accent-foreground: 0 0% 8%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 12%;
-    --input: 0 0% 12%;
-    --ring: 0 0% 75%;
+    --border: 0 0% 92%;
+    --input: 0 0% 92%;
+    --ring: 0 0% 30%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 0 0% 4%;
-    --sidebar-foreground: 0 0% 95%;
-    --sidebar-primary: 0 0% 95%;
-    --sidebar-primary-foreground: 0 0% 4%;
-    --sidebar-accent: 0 0% 10%;
-    --sidebar-accent-foreground: 0 0% 95%;
-    --sidebar-border: 0 0% 12%;
-    --sidebar-ring: 0 0% 75%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 0 0% 8%;
+    --sidebar-primary: 0 0% 8%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 96%;
+    --sidebar-accent-foreground: 0 0% 8%;
+    --sidebar-border: 0 0% 92%;
+    --sidebar-ring: 0 0% 30%;
   }
 }
 
@@ -61,7 +61,7 @@
   }
 
   body {
-    @apply bg-void text-white antialiased;
+    @apply bg-white text-carbon-900 antialiased;
     font-family: 'Satoshi', 'Inter', system-ui, -apple-system, sans-serif;
   }
 
@@ -75,8 +75,8 @@
   }
 
   ::selection {
-    background: rgba(192, 192, 192, 0.2);
-    color: white;
+    background: rgba(0, 0, 0, 0.08);
+    color: #111;
   }
 }
 
@@ -111,7 +111,7 @@
     @apply py-28 lg:py-40;
   }
 
-  /* Headlines — Satoshi */
+  /* Headlines */
   .headline-hero {
     font-family: 'Satoshi', 'Inter', system-ui, sans-serif;
     @apply text-hero font-bold;
@@ -132,78 +132,35 @@
     @apply text-heading font-bold;
   }
 
-  /* Eyebrow — subtle, luxurious */
+  /* Eyebrow */
   .eyebrow {
-    @apply text-[11px] font-medium uppercase tracking-[0.25em] text-silver-500;
+    @apply text-[11px] font-semibold uppercase tracking-[0.25em] text-carbon-400;
     font-family: 'Satoshi', 'Inter', sans-serif;
   }
 
-  /* Chrome/Silver gradient text */
-  .text-chrome {
-    @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(180deg, #e8e8e8 0%, #a0a0a0 50%, #c8c8c8 100%);
-  }
-
-  .text-silver-gradient {
-    @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(135deg, #f0f0f0 0%, #b0b0b0 40%, #d8d8d8 60%, #a0a0a0 100%);
-  }
-
-  /* Subtle border line */
-  .border-chrome {
-    border-color: rgba(255, 255, 255, 0.06);
-  }
-
-  /* Glass card — dark glass */
-  .glass-dark {
-    @apply bg-white/[0.03] border border-white/[0.06] backdrop-blur-xl;
-  }
-
-  .glass-dark:hover {
-    @apply bg-white/[0.05] border-white/[0.1];
-  }
-
-  /* Stat number — chrome gradient */
-  .stat-number {
-    @apply text-5xl md:text-6xl font-bold;
-    font-family: 'Satoshi', 'Inter', system-ui, sans-serif;
-    background: linear-gradient(180deg, #ffffff 0%, #a0a0a0 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  /* Grid pattern — subtle on dark */
-  .grid-pattern {
-    background-image:
-      linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-    background-size: 80px 80px;
-  }
-
-  /* Noise texture overlay */
-  .noise {
-    position: relative;
-  }
-  .noise::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.015'/%3E%3C/svg%3E");
-    background-repeat: repeat;
-    pointer-events: none;
-    z-index: 1;
-  }
-
-  /* Divider line */
+  /* Light divider */
   .divider {
     @apply h-px w-full;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06) 50%, transparent);
+    background: linear-gradient(90deg, transparent, rgba(0,0,0,0.06) 50%, transparent);
+  }
+
+  /* Stat number */
+  .stat-number {
+    @apply text-5xl md:text-6xl font-bold text-carbon-900;
+    font-family: 'Satoshi', 'Inter', system-ui, sans-serif;
+  }
+
+  /* Grid pattern — light */
+  .grid-pattern {
+    background-image:
+      linear-gradient(rgba(0, 0, 0, 0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 0, 0, 0.015) 1px, transparent 1px);
+    background-size: 80px 80px;
   }
 
   /* Shimmer effect */
   .shimmer {
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
+    background: linear-gradient(90deg, transparent, rgba(0,0,0,0.02), transparent);
     background-size: 200% 100%;
     animation: shimmer 3s linear infinite;
   }
@@ -216,31 +173,9 @@
 }
 
 /* Animations */
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.animate-fade-in-up {
-  animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-@keyframes pulse-soft {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
-
-.animate-pulse-soft {
-  animation: pulse-soft 3s ease-in-out infinite;
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
 
 /* GlowingEffect Component Styles */
@@ -293,14 +228,14 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #0a0a0a;
+  background: #fafafa;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #333;
+  background: #ddd;
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #444;
+  background: #bbb;
 }

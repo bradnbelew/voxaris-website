@@ -45,7 +45,7 @@ const products = [
 
 export function TechnologyShowcase() {
   return (
-    <section className="section-padding-lg bg-black">
+    <section className="section-padding-lg bg-white">
       <div className="container-wide">
         {/* Header */}
         <motion.div
@@ -56,12 +56,12 @@ export function TechnologyShowcase() {
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
         >
           <span className="eyebrow mb-6 block">Product Suite</span>
-          <h2 className="headline-xl text-white mb-6">
+          <h2 className="headline-xl text-carbon-900 mb-6">
             Four products.
             <br className="hidden sm:block" />
-            <span className="text-chrome">One AI platform.</span>
+            <span className="text-carbon-400">One AI platform.</span>
           </h2>
-          <p className="text-white/30 max-w-xl mx-auto text-lg">
+          <p className="text-carbon-400 max-w-xl mx-auto text-lg">
             A complete AI sales infrastructure — from first touch to closed deal.
           </p>
         </motion.div>
@@ -71,7 +71,7 @@ export function TechnologyShowcase() {
           {products.map((product, index) => (
             <motion.div
               key={product.id}
-              className="group relative bg-carbon-950 border border-white/[0.04] rounded-[24px] overflow-hidden transition-all duration-500 hover:border-white/[0.08]"
+              className="group relative bg-carbon-50 border border-carbon-200 rounded-[24px] overflow-hidden transition-all duration-500 hover:border-carbon-300"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -82,23 +82,23 @@ export function TechnologyShowcase() {
                 <div className="aspect-[16/9] overflow-hidden relative">
                   <video
                     src={TAVUS_VIDEO_URL}
-                    className="w-full h-full object-cover opacity-70 group-hover:opacity-90 group-hover:scale-[1.02] transition-all duration-700"
+                    className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-[1.02] transition-all duration-700"
                     autoPlay
                     loop
                     muted
                     playsInline
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-carbon-950 via-carbon-950/30 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-carbon-50 via-carbon-50/30 to-transparent" />
                   <div className="absolute top-4 left-4">
-                    <div className="bg-black/50 backdrop-blur-xl rounded-full px-3 py-1 border border-white/[0.06]">
-                      <span className="text-[9px] font-semibold text-white/60 uppercase tracking-[0.15em]">V·FACE</span>
+                    <div className="bg-white/90 backdrop-blur-xl rounded-full px-3 py-1 border border-carbon-200">
+                      <span className="text-[9px] font-semibold text-carbon-700 uppercase tracking-[0.15em]">V·FACE</span>
                     </div>
                   </div>
                 </div>
               ) : (
-                <div className="aspect-[16/9] flex items-center justify-center relative overflow-hidden bg-carbon-950">
-                  <div className="absolute inset-0 opacity-20"
-                    style={{ background: 'radial-gradient(circle at 50% 50%, rgba(192,192,192,0.06) 0%, transparent 55%)' }}
+                <div className="aspect-[16/9] flex items-center justify-center relative overflow-hidden bg-carbon-50">
+                  <div className="absolute inset-0 opacity-30"
+                    style={{ background: 'radial-gradient(circle at 50% 50%, rgba(0,0,0,0.02) 0%, transparent 55%)' }}
                   />
 
                   {product.id === 'voice' && (
@@ -107,23 +107,23 @@ export function TechnologyShowcase() {
                         {[...Array(20)].map((_, i) => (
                           <motion.div
                             key={i}
-                            className="w-[2px] bg-white/30 rounded-full"
+                            className="w-[2px] bg-carbon-300 rounded-full"
                             animate={{ height: [8, 20 + Math.random() * 20, 8] }}
                             transition={{ duration: 0.8 + Math.random() * 0.6, repeat: Infinity, delay: i * 0.04, ease: 'easeInOut' }}
                           />
                         ))}
                       </div>
-                      <span className="text-[10px] font-medium text-white/15 uppercase tracking-[0.25em]">Voice Active</span>
+                      <span className="text-[10px] font-medium text-carbon-300 uppercase tracking-[0.25em]">Voice Active</span>
                     </div>
                   )}
 
                   {product.id === 'postcard' && (
                     <div className="relative z-10 w-48 h-32">
-                      <div className="absolute inset-0 bg-white/[0.03] border border-white/[0.06] rounded-2xl transform rotate-[-3deg] translate-x-2" />
-                      <div className="absolute inset-0 bg-white/[0.05] border border-white/[0.08] rounded-2xl flex items-center justify-center">
+                      <div className="absolute inset-0 bg-carbon-100 border border-carbon-200 rounded-2xl transform rotate-[-3deg] translate-x-2" />
+                      <div className="absolute inset-0 bg-white border border-carbon-200 rounded-2xl flex items-center justify-center">
                         <div className="text-center">
-                          <Mail className="w-6 h-6 text-white/20 mx-auto mb-2" />
-                          <div className="text-[10px] text-white/25 uppercase tracking-[0.15em]">Personalized</div>
+                          <Mail className="w-6 h-6 text-carbon-300 mx-auto mb-2" />
+                          <div className="text-[10px] text-carbon-400 uppercase tracking-[0.15em]">Personalized</div>
                         </div>
                       </div>
                     </div>
@@ -131,13 +131,13 @@ export function TechnologyShowcase() {
 
                   {product.id === 'training' && (
                     <div className="relative z-10 text-center">
-                      <div className="inline-flex items-center gap-3 bg-white/[0.03] border border-white/[0.06] rounded-2xl px-6 py-4">
-                        <div className="w-8 h-8 rounded-full bg-white/[0.06] flex items-center justify-center">
-                          <GraduationCap className="w-4 h-4 text-white/30" />
+                      <div className="inline-flex items-center gap-3 bg-white border border-carbon-200 rounded-2xl px-6 py-4">
+                        <div className="w-8 h-8 rounded-full bg-carbon-100 flex items-center justify-center">
+                          <GraduationCap className="w-4 h-4 text-carbon-400" />
                         </div>
                         <div className="text-left">
-                          <div className="text-[11px] font-medium text-white/40">Score</div>
-                          <div className="text-lg font-bold text-white/60 font-display">94/100</div>
+                          <div className="text-[11px] font-medium text-carbon-400">Score</div>
+                          <div className="text-lg font-bold text-carbon-700 font-display">94/100</div>
                         </div>
                       </div>
                     </div>
@@ -148,29 +148,29 @@ export function TechnologyShowcase() {
               {/* Content */}
               <div className="p-7 lg:p-9">
                 <div className="flex items-center gap-3 mb-5">
-                  <div className="w-9 h-9 rounded-xl bg-white/[0.06] flex items-center justify-center border border-white/[0.06]">
-                    <product.icon className="w-4 h-4 text-white/60" />
+                  <div className="w-9 h-9 rounded-xl bg-carbon-100 flex items-center justify-center border border-carbon-200">
+                    <product.icon className="w-4 h-4 text-carbon-500" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-white font-display">{product.name}</h3>
-                    <p className="text-[10px] text-white/25 tracking-wide uppercase">{product.tagline}</p>
+                    <h3 className="text-lg font-bold text-carbon-900 font-display">{product.name}</h3>
+                    <p className="text-[10px] text-carbon-400 tracking-wide uppercase">{product.tagline}</p>
                   </div>
                 </div>
 
-                <p className="text-white/30 mb-6 leading-relaxed text-[14px]">
+                <p className="text-carbon-400 mb-6 leading-relaxed text-[14px]">
                   {product.description}
                 </p>
 
                 <div className="grid grid-cols-2 gap-x-4 gap-y-2 mb-6">
                   {product.features.map((feature) => (
                     <div key={feature} className="flex items-center gap-2">
-                      <div className="w-1 h-1 rounded-full bg-white/20 flex-shrink-0" />
-                      <span className="text-[12px] text-white/35">{feature}</span>
+                      <div className="w-1 h-1 rounded-full bg-carbon-300 flex-shrink-0" />
+                      <span className="text-[12px] text-carbon-400">{feature}</span>
                     </div>
                   ))}
                 </div>
 
-                <Link to="/technology" className="inline-flex items-center gap-1.5 text-[12px] font-medium text-white/30 hover:text-white/60 transition-colors group/link">
+                <Link to="/technology" className="inline-flex items-center gap-1.5 text-[12px] font-medium text-carbon-400 hover:text-carbon-700 transition-colors group/link">
                   Learn more
                   <ArrowUpRight className="w-3 h-3 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform" />
                 </Link>

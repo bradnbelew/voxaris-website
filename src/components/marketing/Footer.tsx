@@ -30,7 +30,7 @@ const footerLinks = {
 
 export function Footer() {
   return (
-    <footer className="bg-black border-t border-white/[0.04]">
+    <footer className="bg-carbon-950 border-t border-white/[0.04]">
       <div className="container-wide py-16 lg:py-20">
         <div className="grid grid-cols-2 md:grid-cols-6 gap-8 lg:gap-12">
           {/* Brand */}
@@ -38,10 +38,10 @@ export function Footer() {
             <Link to="/" className="inline-block mb-5">
               <img src="/voxaris-logo-white.png" alt="Voxaris" className="h-6 w-auto opacity-60" />
             </Link>
-            <p className="text-[10px] text-white/15 mb-1.5 font-semibold tracking-[0.2em] uppercase">
+            <p className="text-[10px] text-white/30 mb-1.5 font-semibold tracking-[0.2em] uppercase">
               The Human Interface
             </p>
-            <p className="text-[13px] text-white/15 mb-8 max-w-xs leading-relaxed">
+            <p className="text-[13px] text-white/20 mb-8 max-w-xs leading-relaxed">
               AI-powered video and voice agents that engage, qualify, and convert
               your leads — 24/7, at scale.
             </p>
@@ -53,7 +53,7 @@ export function Footer() {
                 <a
                   key={social.label}
                   href="#"
-                  className="w-8 h-8 rounded-lg bg-white/[0.03] border border-white/[0.04] flex items-center justify-center text-white/15 hover:text-white/40 hover:bg-white/[0.06] hover:border-white/[0.08] transition-all duration-200"
+                  className="w-8 h-8 rounded-lg bg-white/[0.04] border border-white/[0.06] flex items-center justify-center text-white/20 hover:text-white/40 hover:bg-white/[0.08] hover:border-white/[0.10] transition-all duration-200"
                   aria-label={social.label}
                 >
                   <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
@@ -67,11 +67,11 @@ export function Footer() {
           {/* Links */}
           {Object.entries(footerLinks).map(([category, links]) => (
             <div key={category}>
-              <h4 className="text-[10px] font-semibold text-white/25 mb-5 uppercase tracking-[0.2em]">{category}</h4>
+              <h4 className="text-[10px] font-semibold text-white/30 mb-5 uppercase tracking-[0.2em]">{category}</h4>
               <ul className="space-y-3">
                 {links.map((link) => (
                   <li key={link.label}>
-                    <Link to={link.href} className="text-[13px] text-white/15 hover:text-white/40 transition-colors duration-200">
+                    <Link to={link.href} className="text-[13px] text-white/20 hover:text-white/40 transition-colors duration-200">
                       {link.label}
                     </Link>
                   </li>

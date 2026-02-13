@@ -9,7 +9,7 @@ const stats = [
 
 export function StatsSection() {
   return (
-    <section className="relative py-24 lg:py-32 bg-black overflow-hidden">
+    <section className="relative py-24 lg:py-32 bg-white overflow-hidden">
       {/* Divider line */}
       <div className="divider mb-24" />
 
@@ -18,7 +18,7 @@ export function StatsSection() {
           {stats.map((stat, index) => (
             <motion.div
               key={stat.label}
-              className={`text-center ${index > 0 ? 'lg:border-l lg:border-white/[0.04]' : ''}`}
+              className={`text-center ${index > 0 ? 'lg:border-l lg:border-carbon-100' : ''}`}
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -27,7 +27,7 @@ export function StatsSection() {
               <div className="stat-number mb-3">
                 {stat.value}
               </div>
-              <div className="text-[13px] text-white/25 tracking-wide">
+              <div className="text-[13px] text-carbon-400 tracking-wide">
                 {stat.label}
               </div>
             </motion.div>
