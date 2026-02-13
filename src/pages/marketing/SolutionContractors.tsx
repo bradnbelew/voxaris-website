@@ -61,6 +61,24 @@ export function SolutionContractors() {
         </div>
       </section>
 
+      {/* Hero Image */}
+      <section className="relative">
+        <motion.div
+          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-10"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+        >
+          <div className="aspect-[21/9] rounded-2xl overflow-hidden shadow-elevated">
+            <img
+              src="/roofing-hero.png"
+              alt="Roofing crew on a residential roof at golden hour"
+              className="w-full h-full object-cover"
+            />
+          </div>
+        </motion.div>
+      </section>
+
       {/* The Problem */}
       <section className="py-20 bg-white">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
