@@ -118,12 +118,16 @@ export function TechnologyShowcase() {
                   )}
 
                   {product.id === 'postcard' && (
-                    <div className="relative z-10 w-48 h-32">
-                      <div className="absolute inset-0 bg-carbon-100 border border-carbon-200 rounded-2xl transform rotate-[-3deg] translate-x-2" />
-                      <div className="absolute inset-0 bg-white border border-carbon-200 rounded-2xl flex items-center justify-center">
-                        <div className="text-center">
-                          <Mail className="w-6 h-6 text-carbon-300 mx-auto mb-2" />
-                          <div className="text-[10px] text-carbon-400 uppercase tracking-[0.15em]">Personalized</div>
+                    <div className="absolute inset-0">
+                      <img
+                        src="/talking-postcard.png"
+                        alt="Voxaris Talking Postcard"
+                        className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-[1.02] transition-all duration-700"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-carbon-50 via-carbon-50/20 to-transparent" />
+                      <div className="absolute top-4 left-4">
+                        <div className="bg-white/90 backdrop-blur-xl rounded-full px-3 py-1 border border-carbon-200">
+                          <span className="text-[9px] font-semibold text-carbon-700 uppercase tracking-[0.15em]">Personalized</span>
                         </div>
                       </div>
                     </div>
