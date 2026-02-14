@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Phone, Video, PhoneCall, Zap, Brain, Database } from 'lucide-react';
+import { ArrowRight, Phone, Video, PhoneCall, Zap, Brain, Database, Volume2, VolumeX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Link } from 'react-router-dom';
 import { Navbar, Footer } from '@/components/marketing';
+
+const MARIA_VIDEO_URL = '/maria-avatar.mp4';
 
 export function Demo() {
   const [formData, setFormData] = useState({
@@ -13,6 +15,15 @@ export function Demo() {
     company: '',
   });
   const [callState, setCallState] = useState<'idle' | 'calling' | 'error'>('idle');
+  const [isMuted, setIsMuted] = useState(true);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const toggleMute = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !videoRef.current.muted;
+      setIsMuted(!isMuted);
+    }
+  };
 
   const handleCallMe = (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,6 +85,25 @@ export function Demo() {
                 <Video className="w-4 h-4 ml-2" />
               </Button>
             </a>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Maria Hero Image */}
+      <section className="bg-white pt-12 pb-0">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10">
+          <motion.div
+            className="aspect-[21/9] rounded-2xl overflow-hidden shadow-lg"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            <img
+              src="/maria-hero.png"
+              alt="Maria — your AI sales agent"
+              className="w-full h-full object-cover"
+              style={{ objectPosition: '50% 25%' }}
+            />
           </motion.div>
         </div>
       </section>
@@ -227,21 +257,36 @@ export function Demo() {
             Ask her about Voxaris. Ask her about your industry. Ask her something unexpected. She'll respond in real time with natural expressions, human cadence, and zero lag. And if you're ready, she'll book a meeting with Ethan on the spot.
           </p>
 
-          {/* Tavus Video Agent Embed Placeholder */}
+          {/* Maria Video Agent */}
           <div className="max-w-3xl mx-auto">
-            <div className="aspect-video rounded-2xl bg-carbon-950 border border-carbon-800 flex items-center justify-center shadow-lg overflow-hidden relative">
-              {/* This will be replaced with the Tavus embed/widget */}
-              <div className="text-center relative z-10">
-                <div className="w-20 h-20 mx-auto rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center mb-6 cursor-pointer hover:bg-white/20 hover:scale-105 transition-all">
-                  <Video className="w-9 h-9 text-white" />
-                </div>
+            <div className="aspect-video rounded-2xl bg-carbon-950 border border-carbon-800 shadow-lg overflow-hidden relative group">
+              <video
+                ref={videoRef}
+                src={MARIA_VIDEO_URL}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full h-full object-cover"
+              />
+              {/* Volume toggle */}
+              <button
+                onClick={toggleMute}
+                className="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 flex items-center justify-center hover:bg-black/70 transition-all cursor-pointer"
+              >
+                {isMuted ? (
+                  <VolumeX className="w-5 h-5 text-white" />
+                ) : (
+                  <Volume2 className="w-5 h-5 text-white" />
+                )}
+              </button>
+              {/* CTA overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-carbon-950/80 via-transparent to-transparent flex items-end justify-center pb-8">
                 <Button className="bg-white text-carbon-900 hover:bg-carbon-100 rounded-full px-8 py-6 text-base font-medium shadow-md hover:shadow-lg transition-all">
                   Start a Conversation with Maria
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </div>
-              {/* Subtle gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-b from-carbon-900/50 via-carbon-950/80 to-carbon-950" />
             </div>
             <p className="text-carbon-400 text-sm mt-4">
               Powered by V·FACE. This is what your website visitors experience.
