@@ -19,6 +19,7 @@ export const createQueueConnection = () => {
   return new Redis(REDIS_URL, {
     maxRetriesPerRequest: null, // Required by BullMQ
     enableReadyCheck: false,
+    tls: {}, // Upstash requires TLS
     retryStrategy: (times) => {
       if (times > 3) {
         console.error('❌ Redis connection failed after 3 retries');
@@ -35,6 +36,7 @@ export const createCacheConnection = () => {
 
   return new Redis(REDIS_URL, {
     enableReadyCheck: false,
+    tls: {}, // Upstash requires TLS
     retryStrategy: (times) => {
       if (times > 3) return null;
       return Math.min(times * 200, 2000);

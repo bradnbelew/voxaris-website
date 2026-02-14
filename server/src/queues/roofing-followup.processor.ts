@@ -214,11 +214,18 @@ async function checkIfShouldSkipFollowup(data: FollowupJob): Promise<{
   reason?: string;
 }> {
   try {
+    // PRIORITY CHECK: Check Mem0 for DO NOT CALL flag
+    const isDoNotCall = await mem0.isDoNotCall(data.phone);
+    if (isDoNotCall) {
+      logger.info(`🚫 DO NOT CALL flag found for ${data.phone} - skipping all follow-ups`);
+      return { skip: true, reason: 'DO NOT CALL - Customer flagged in memory' };
+    }
+
     // Check if there's a recent lead with an appointment scheduled
     const { data: recentLeads } = await supabase
       .from('roofing_leads')
       .select('appointment_scheduled, call_outcome')
-      .eq('customer_phone', data.phone)
+      .ilike('customer_phone', `%${data.phone.replace(/\D/g, '').slice(-10)}%`)
       .order('created_at', { ascending: false })
       .limit(1);
 
@@ -230,6 +237,8 @@ async function checkIfShouldSkipFollowup(data: FollowupJob): Promise<{
       }
 
       if (lead.call_outcome === 'not_interested' || lead.call_outcome === 'do_not_call') {
+        // Also flag in Mem0 for future reference
+        await mem0.flagDoNotCall(data.phone, lead.call_outcome);
         return { skip: true, reason: 'Customer opted out' };
       }
     }

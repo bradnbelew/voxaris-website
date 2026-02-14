@@ -1,3 +1,10 @@
+# Environment files - NEVER COMMIT
+.env
+.env.local
+.env*.local
+server/.env
+server/.env.local
+
 # Logs
 logs
 *.log
@@ -23,4 +30,3 @@ dist-ssr
 *.sln
 *.sw?
 .vercel
-.env*.local

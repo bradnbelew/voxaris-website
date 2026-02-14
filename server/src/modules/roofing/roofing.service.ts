@@ -164,7 +164,8 @@ class RoofingService {
     }
 
     /**
-     * Store call details in Mem0 for future reference
+     * Store FULL HISTORY call details in Mem0 for future reference
+     * Captures sentiment, objections, competitors, budget signals, etc.
      */
     private async storeCallMemory(
         phone: string,
@@ -173,20 +174,58 @@ class RoofingService {
         const analysis = data.call_analysis || {};
 
         try {
+            // Extract additional intelligence from transcript if available
+            const extractedData = this.extractIntelligenceFromTranscript(data.transcript || '');
+
+            // Check for do-not-call signals
+            const doNotCall = analysis.call_outcome === 'not_interested' ||
+                analysis.call_outcome === 'do_not_call' ||
+                extractedData.doNotCall;
+
             const result = await mem0.storeCallSummary(phone, {
+                // Basic info
                 name: analysis.customer_name,
                 address: analysis.property_address,
+                email: analysis.customer_email,
                 roofIssue: analysis.roof_issue,
+
+                // Insurance & damage
                 stormDamage: analysis.storm_damage,
                 insuranceClaim: analysis.insurance_claim_filed,
+                wantsInsuranceHelp: analysis.wants_insurance_help,
+
+                // Appointment
                 appointmentScheduled: analysis.appointment_scheduled,
                 appointmentDate: analysis.appointment_date,
+                officeLocation: analysis.office_location,
+
+                // Sales signals
+                urgencyLevel: analysis.urgency_level,
+                leadQuality: analysis.lead_quality,
                 outcome: analysis.call_outcome,
-                concerns: analysis.roof_issue ? [analysis.roof_issue] : []
+
+                // FULL HISTORY from transcript analysis
+                sentiment: extractedData.sentiment,
+                objections: extractedData.objections,
+                competitorsMentioned: extractedData.competitors,
+                budgetSignals: extractedData.budgetSignals,
+                decisionTimeline: extractedData.timeline,
+                concerns: extractedData.concerns,
+                keyQuotes: extractedData.keyQuotes,
+
+                // Do not call
+                doNotCall: doNotCall,
+                doNotCallReason: doNotCall ? (analysis.call_outcome || 'Customer not interested') : undefined
             });
 
             if (result.success) {
-                logger.info(`🧠 Mem0: Stored memory for ${phone}`);
+                logger.info(`🧠 Mem0: Stored FULL HISTORY for ${phone}`);
+            }
+
+            // If do not call, also flag explicitly
+            if (doNotCall) {
+                await mem0.flagDoNotCall(phone, analysis.call_outcome || 'Customer requested no contact');
+                logger.info(`🚫 Flagged ${phone} as DO NOT CALL`);
             }
 
             return result;
@@ -195,6 +234,93 @@ class RoofingService {
             logger.error('❌ Mem0 storage error:', error.message);
             return { success: false, error: error.message };
         }
+    }
+
+    /**
+     * Extract sales intelligence from call transcript
+     */
+    private extractIntelligenceFromTranscript(transcript: string): {
+        sentiment?: 'positive' | 'neutral' | 'negative' | 'hostile';
+        objections: string[];
+        competitors: string[];
+        budgetSignals?: string;
+        timeline?: string;
+        concerns: string[];
+        keyQuotes: string[];
+        doNotCall: boolean;
+    } {
+        const result = {
+            objections: [] as string[],
+            competitors: [] as string[],
+            concerns: [] as string[],
+            keyQuotes: [] as string[],
+            doNotCall: false
+        } as any;
+
+        if (!transcript) return result;
+
+        const lower = transcript.toLowerCase();
+
+        // Detect sentiment
+        if (lower.includes('thank you so much') || lower.includes('really appreciate') || lower.includes('sounds great')) {
+            result.sentiment = 'positive';
+        } else if (lower.includes('not interested') || lower.includes('stop calling') || lower.includes('don\'t call')) {
+            result.sentiment = 'negative';
+            result.doNotCall = true;
+        } else if (lower.includes('scam') || lower.includes('leave me alone') || lower.includes('harassment')) {
+            result.sentiment = 'hostile';
+            result.doNotCall = true;
+        } else {
+            result.sentiment = 'neutral';
+        }
+
+        // Detect objections
+        const objectionPatterns = [
+            { pattern: /too expensive|can't afford|too much money/i, objection: 'Price concern' },
+            { pattern: /need to think|talk to (spouse|wife|husband)/i, objection: 'Needs to consult decision maker' },
+            { pattern: /not right now|bad time|busy/i, objection: 'Timing not right' },
+            { pattern: /already have|got a quote|someone coming/i, objection: 'Already working with competitor' },
+            { pattern: /don't trust|heard bad things/i, objection: 'Trust concerns' },
+            { pattern: /insurance won't cover/i, objection: 'Insurance coverage concern' }
+        ];
+
+        objectionPatterns.forEach(({ pattern, objection }) => {
+            if (pattern.test(transcript)) {
+                result.objections.push(objection);
+            }
+        });
+
+        // Detect competitors
+        const competitors = ['ABC Roofing', 'Home Depot', 'Lowe\'s', 'local roofer', 'other company', 'another quote'];
+        competitors.forEach(comp => {
+            if (lower.includes(comp.toLowerCase())) {
+                result.competitors.push(comp);
+            }
+        });
+
+        // Detect budget signals
+        if (lower.includes('financing') || lower.includes('payment plan') || lower.includes('monthly')) {
+            result.budgetSignals = 'Interested in financing options';
+        } else if (lower.includes('cash') || lower.includes('pay upfront')) {
+            result.budgetSignals = 'Prefers to pay cash';
+        } else if (lower.includes('insurance') || lower.includes('claim')) {
+            result.budgetSignals = 'Relying on insurance claim';
+        }
+
+        // Detect timeline
+        if (lower.includes('emergency') || lower.includes('asap') || lower.includes('leaking now')) {
+            result.timeline = 'URGENT - needs immediate help';
+        } else if (lower.includes('this week') || lower.includes('soon as possible')) {
+            result.timeline = 'This week';
+        } else if (lower.includes('next week') || lower.includes('few days')) {
+            result.timeline = 'Next week';
+        } else if (lower.includes('next month') || lower.includes('few weeks')) {
+            result.timeline = 'Within a month';
+        } else if (lower.includes('just looking') || lower.includes('no rush')) {
+            result.timeline = 'Just researching - no urgency';
+        }
+
+        return result;
     }
 
     /**
@@ -408,10 +534,43 @@ class RoofingService {
         success: boolean;
         callId?: string;
         error?: string;
+        skipped?: boolean;
     }> {
         logger.info(`📝 Form submission from ${data.source}: ${data.firstName} ${data.lastName}`);
 
         try {
+            // DUPLICATE PROTECTION: Check for existing active sequence or recent lead
+            const normalizedPhone = this.normalizePhone(data.phone);
+            const cooldownHours = 24; // Don't start new sequence if lead submitted within 24 hours
+
+            // Check for recent leads with same phone
+            const { data: recentLeads, error: leadError } = await supabase
+                .from('roofing_leads')
+                .select('id, created_at, followup_status')
+                .ilike('customer_phone', `%${normalizedPhone.slice(-10)}%`)
+                .gte('created_at', new Date(Date.now() - cooldownHours * 60 * 60 * 1000).toISOString())
+                .limit(1);
+
+            if (!leadError && recentLeads && recentLeads.length > 0) {
+                const existingLead = recentLeads[0];
+                // If there's an active follow-up sequence, skip
+                if (existingLead.followup_status === 'in_progress' || existingLead.followup_status === 'pending') {
+                    logger.info(`⏭️ Skipping duplicate submission for ${data.phone} - active sequence exists`);
+                    return {
+                        success: true,
+                        skipped: true,
+                        error: 'Active follow-up sequence exists for this phone number'
+                    };
+                }
+                // If lead exists within cooldown period, skip
+                logger.info(`⏭️ Skipping duplicate submission for ${data.phone} - recent lead within ${cooldownHours}h cooldown`);
+                return {
+                    success: true,
+                    skipped: true,
+                    error: `Lead already submitted within last ${cooldownHours} hours`
+                };
+            }
+
             // Step 1: Check Mem0 for existing customer
             const memories = await mem0.getByPhone(data.phone);
             let memoryContext = '';
@@ -515,6 +674,27 @@ class RoofingService {
     // ========================================================================
     // UTILITY METHODS
     // ========================================================================
+
+    /**
+     * Normalize phone number to consistent format
+     */
+    private normalizePhone(phone: string): string {
+        // Remove all non-digit characters
+        const digits = phone.replace(/\D/g, '');
+
+        // If 10 digits, add US country code
+        if (digits.length === 10) {
+            return `+1${digits}`;
+        }
+
+        // If 11 digits starting with 1, add +
+        if (digits.length === 11 && digits.startsWith('1')) {
+            return `+${digits}`;
+        }
+
+        // Return as-is with + prefix
+        return digits.startsWith('+') ? digits : `+${digits}`;
+    }
 
     /**
      * Parse an address string into components

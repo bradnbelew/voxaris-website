@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Phone } from "lucide-react";
 import voxarisLogo from "@/assets/voxaris-logo-dark.png";
 
 export default function Footer() {
@@ -10,6 +11,15 @@ export default function Footer() {
           <Link to="/" className="shrink-0">
             <img src={voxarisLogo} alt="Voxaris" className="h-5 w-auto" />
           </Link>
+
+          {/* Phone Number */}
+          <a
+            href="tel:+14077594100"
+            className="flex items-center gap-2 text-sm font-medium text-ink hover:text-charcoal transition-colors"
+          >
+            <Phone className="w-4 h-4" />
+            (407) 759-4100
+          </a>
 
           {/* Links */}
           <div className="flex flex-wrap justify-center items-center gap-6">

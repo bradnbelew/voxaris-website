@@ -195,60 +195,205 @@ class Mem0Service {
             return '';
         }
 
-        const memoryLines = memories.map(m => `- ${m.memory}`).join('\n');
-        return `
-## Returning Caller - Previous Information
-This caller has interacted with us before. Here's what we know:
-${memoryLines}
+        // Check for do-not-call flag
+        const doNotCall = memories.some(m =>
+            m.memory.toLowerCase().includes('do not call') ||
+            m.metadata?.do_not_call === true
+        );
 
-Use this context naturally in the conversation. Don't explicitly mention "I see from our records" -
-just use the information to provide personalized service.
+        if (doNotCall) {
+            return `
+## ⚠️ WARNING - DO NOT CALL
+This caller has requested NO FURTHER CONTACT.
+DO NOT proceed with this call. End politely and remove from call queue.
 `.trim();
+        }
+
+        // Categorize memories for better agent context
+        const basicInfo: string[] = [];
+        const salesSignals: string[] = [];
+        const concerns: string[] = [];
+        const history: string[] = [];
+
+        memories.forEach(m => {
+            const lower = m.memory.toLowerCase();
+            if (lower.includes('name is') || lower.includes('address') || lower.includes('email')) {
+                basicInfo.push(`- ${m.memory}`);
+            } else if (lower.includes('budget') || lower.includes('quote') || lower.includes('competitor') || lower.includes('timeline')) {
+                salesSignals.push(`- ${m.memory}`);
+            } else if (lower.includes('concern') || lower.includes('objection') || lower.includes('worry')) {
+                concerns.push(`- ${m.memory}`);
+            } else {
+                history.push(`- ${m.memory}`);
+            }
+        });
+
+        let context = `## Returning Caller - Previous Information\n`;
+        context += `This caller has interacted with us before.\n\n`;
+
+        if (basicInfo.length > 0) {
+            context += `**Customer Info:**\n${basicInfo.join('\n')}\n\n`;
+        }
+        if (salesSignals.length > 0) {
+            context += `**Sales Intelligence:**\n${salesSignals.join('\n')}\n\n`;
+        }
+        if (concerns.length > 0) {
+            context += `**Address These Concerns:**\n${concerns.join('\n')}\n\n`;
+        }
+        if (history.length > 0) {
+            context += `**History:**\n${history.join('\n')}\n\n`;
+        }
+
+        context += `Use this context naturally. Personalize the conversation without saying "I see from our records."`;
+
+        return context.trim();
     }
 
     /**
-     * Extract and store key facts from a completed call
+     * Extract and store FULL HISTORY from a completed call
+     * Captures everything: sentiment, objections, competitors, budget signals, etc.
      */
     async storeCallSummary(
         phone: string,
         callData: {
+            // Basic info
             name?: string;
             address?: string;
+            email?: string;
             roofIssue?: string;
+            // Insurance & damage
             stormDamage?: boolean;
             insuranceClaim?: boolean;
+            wantsInsuranceHelp?: boolean;
+            insuranceCompany?: string;
+            // Appointment
             appointmentScheduled?: boolean;
             appointmentDate?: string;
+            officeLocation?: string;
+            // Sales signals
+            urgencyLevel?: string;
+            leadQuality?: string;
             outcome?: string;
+            // FULL HISTORY CAPTURE
+            sentiment?: 'positive' | 'neutral' | 'negative' | 'hostile';
+            objections?: string[];
+            competitorsMentioned?: string[];
+            previousQuotes?: string[];
+            budgetSignals?: string;
+            decisionTimeline?: string;
+            familySituation?: string;
             concerns?: string[];
+            // Transcript excerpt for context
+            keyQuotes?: string[];
+            // Do not call flag
+            doNotCall?: boolean;
+            doNotCallReason?: string;
         }
     ): Promise<{ success: boolean; error?: string }> {
         const facts: string[] = [];
         const timestamp = new Date().toISOString().split('T')[0];
+        const timeFormatted = new Date().toLocaleString('en-US', { timeZone: 'America/New_York' });
 
+        // === BASIC INFO ===
         if (callData.name) {
             facts.push(`Customer name is ${callData.name}`);
         }
         if (callData.address) {
             facts.push(`Property address is ${callData.address}`);
         }
+        if (callData.email) {
+            facts.push(`Email address is ${callData.email}`);
+        }
         if (callData.roofIssue) {
             facts.push(`Roof issue: ${callData.roofIssue}`);
         }
+
+        // === INSURANCE & DAMAGE ===
         if (callData.stormDamage) {
-            facts.push(`Property has storm damage (reported ${timestamp})`);
+            facts.push(`Property has STORM DAMAGE (reported ${timestamp})`);
         }
         if (callData.insuranceClaim) {
             facts.push(`Insurance claim has been filed`);
+            if (callData.insuranceCompany) {
+                facts.push(`Insurance company: ${callData.insuranceCompany}`);
+            }
         }
+        if (callData.wantsInsuranceHelp) {
+            facts.push(`Customer wants help with insurance claim process`);
+        }
+
+        // === APPOINTMENT ===
         if (callData.appointmentScheduled && callData.appointmentDate) {
-            facts.push(`Inspection scheduled for ${callData.appointmentDate}`);
+            facts.push(`Inspection scheduled for ${callData.appointmentDate} at ${callData.officeLocation || 'TBD'}`);
+        }
+
+        // === SALES SIGNALS ===
+        if (callData.urgencyLevel) {
+            facts.push(`Urgency level: ${callData.urgencyLevel}`);
+        }
+        if (callData.leadQuality) {
+            facts.push(`Lead quality: ${callData.leadQuality}`);
         }
         if (callData.outcome) {
-            facts.push(`Last call outcome: ${callData.outcome}`);
+            facts.push(`Call outcome on ${timeFormatted}: ${callData.outcome}`);
         }
+
+        // === FULL HISTORY - SENTIMENT ===
+        if (callData.sentiment) {
+            facts.push(`Customer sentiment: ${callData.sentiment}`);
+            if (callData.sentiment === 'hostile' || callData.sentiment === 'negative') {
+                facts.push(`⚠️ Customer was ${callData.sentiment} during call on ${timestamp}`);
+            }
+        }
+
+        // === FULL HISTORY - OBJECTIONS ===
+        if (callData.objections && callData.objections.length > 0) {
+            facts.push(`Objections raised: ${callData.objections.join('; ')}`);
+        }
+
+        // === FULL HISTORY - COMPETITORS ===
+        if (callData.competitorsMentioned && callData.competitorsMentioned.length > 0) {
+            facts.push(`Competitors mentioned: ${callData.competitorsMentioned.join(', ')}`);
+        }
+
+        // === FULL HISTORY - PREVIOUS QUOTES ===
+        if (callData.previousQuotes && callData.previousQuotes.length > 0) {
+            facts.push(`Previous quotes received: ${callData.previousQuotes.join('; ')}`);
+        }
+
+        // === FULL HISTORY - BUDGET ===
+        if (callData.budgetSignals) {
+            facts.push(`Budget signals: ${callData.budgetSignals}`);
+        }
+
+        // === FULL HISTORY - DECISION TIMELINE ===
+        if (callData.decisionTimeline) {
+            facts.push(`Decision timeline: ${callData.decisionTimeline}`);
+        }
+
+        // === FULL HISTORY - FAMILY SITUATION ===
+        if (callData.familySituation) {
+            facts.push(`Family situation: ${callData.familySituation}`);
+        }
+
+        // === CONCERNS ===
         if (callData.concerns && callData.concerns.length > 0) {
             facts.push(`Concerns mentioned: ${callData.concerns.join(', ')}`);
+        }
+
+        // === KEY QUOTES ===
+        if (callData.keyQuotes && callData.keyQuotes.length > 0) {
+            callData.keyQuotes.forEach((quote, i) => {
+                facts.push(`Customer said: "${quote}"`);
+            });
+        }
+
+        // === DO NOT CALL FLAG ===
+        if (callData.doNotCall) {
+            facts.push(`🚫 DO NOT CALL - Customer requested no further contact (${timestamp})`);
+            if (callData.doNotCallReason) {
+                facts.push(`Do not call reason: ${callData.doNotCallReason}`);
+            }
         }
 
         if (facts.length === 0) {
@@ -257,9 +402,50 @@ just use the information to provide personalized service.
 
         const result = await this.addByPhone(phone, facts, {
             call_date: timestamp,
-            call_type: 'roofing_inquiry'
+            call_type: 'roofing_inquiry',
+            sentiment: callData.sentiment,
+            do_not_call: callData.doNotCall || false,
+            lead_quality: callData.leadQuality
         });
 
+        return { success: result.success, error: result.error };
+    }
+
+    /**
+     * Check if a phone number is flagged as "do not call"
+     */
+    async isDoNotCall(phone: string): Promise<boolean> {
+        const normalizedPhone = this.normalizePhone(phone);
+        const memories = await this.getMemories({ user_id: normalizedPhone });
+
+        if (!memories.success || !memories.memories) {
+            return false;
+        }
+
+        // Check if any memory contains do not call flag
+        return memories.memories.some(m =>
+            m.memory.toLowerCase().includes('do not call') ||
+            m.memory.toLowerCase().includes('stop calling') ||
+            m.memory.toLowerCase().includes('never call') ||
+            m.metadata?.do_not_call === true
+        );
+    }
+
+    /**
+     * Flag a phone number as "do not call"
+     */
+    async flagDoNotCall(phone: string, reason?: string): Promise<{ success: boolean; error?: string }> {
+        const facts = [
+            `🚫 DO NOT CALL - Flagged on ${new Date().toISOString().split('T')[0]}`,
+            reason ? `Reason: ${reason}` : 'Reason: Customer requested no further contact'
+        ];
+
+        const result = await this.addByPhone(phone, facts, {
+            do_not_call: true,
+            flagged_date: new Date().toISOString()
+        });
+
+        logger.info(`🚫 Flagged ${phone} as DO NOT CALL`);
         return { success: result.success, error: result.error };
     }
 
