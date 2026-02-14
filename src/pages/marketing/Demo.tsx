@@ -1,184 +1,322 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Play, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, Phone, Video, PhoneCall, Zap, Brain, Database } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Link } from 'react-router-dom';
 import { Navbar, Footer } from '@/components/marketing';
-import { GradientMesh } from '@/components/marketing/backgrounds/GradientMesh';
-
-const benefits = [
-  'See AI video and voice agents in action',
-  'Learn how to 3x your appointment bookings',
-  'Get a custom implementation plan',
-  'No commitment required',
-];
 
 export function Demo() {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    company: '',
+    firstName: '',
     phone: '',
-    industry: '',
+    company: '',
   });
-  const [submitted, setSubmitted] = useState(false);
+  const [callState, setCallState] = useState<'idle' | 'calling' | 'error'>('idle');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleCallMe = (e: React.FormEvent) => {
     e.preventDefault();
-    // In production, this would send to your backend/CRM
-    console.log('Demo request:', formData);
-    setSubmitted(true);
+    // In production: POST to Retell API to trigger outbound call from Maria
+    // Pass first_name and company_name to Maria's prompt
+    console.log('Triggering outbound call:', formData);
+    setCallState('calling');
   };
 
   return (
     <div className="min-h-screen bg-white">
       <Navbar />
 
-      <section className="relative pt-32 pb-20 overflow-hidden">
-        <GradientMesh />
+      {/* Hero */}
+      <section className="relative pt-32 pb-20 overflow-hidden bg-carbon-50">
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <motion.div
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-carbon-200 mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <span className="text-[11px] font-semibold text-carbon-500 uppercase tracking-[0.15em]">Live Demo</span>
+          </motion.div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Left side - Content */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-            >
-              <h1 className="text-4xl sm:text-5xl font-bold text-navy-900 mb-6">
-                See Voxaris
-                <br />
-                <span className="gradient-text-navy">
-                  in Action
-                </span>
-              </h1>
+          <motion.h1
+            className="text-4xl sm:text-5xl lg:text-[3.5rem] font-bold text-carbon-900 mb-6 font-display leading-[1.05]"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            Don't take our word for it.{' '}
+            <span className="text-carbon-400">Talk to her.</span>
+          </motion.h1>
 
-              <p className="text-lg text-platinum-600 mb-8">
-                Book a personalized demo and discover how AI agents can transform your lead conversion.
+          <motion.p
+            className="max-w-2xl mx-auto text-lg text-carbon-400 mb-10 leading-relaxed"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            Meet Maria — your AI sales agent. She'll pick up the phone, greet you by name, qualify your needs, and book a meeting with our team. In real time. Right now. No scripts. No recordings. Just a live conversation with the technology your customers will experience.
+          </motion.p>
+
+          <motion.div
+            className="flex flex-col sm:flex-row gap-4 justify-center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <a href="#outbound">
+              <Button className="bg-carbon-900 hover:bg-carbon-800 text-white rounded-full px-8 py-6 text-base font-medium shadow-sm hover:shadow-md transition-all">
+                Get a Call from Maria
+                <Phone className="w-4 h-4 ml-2" />
+              </Button>
+            </a>
+            <a href="#video">
+              <Button variant="outline" className="border-carbon-300 text-carbon-900 hover:bg-carbon-100 rounded-full px-8 py-6 text-base font-medium transition-all">
+                Meet Her Face to Face
+                <Video className="w-4 h-4 ml-2" />
+              </Button>
+            </a>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Section 1 — Outbound Call Demo */}
+      <section id="outbound" className="py-24 bg-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-16 items-start">
+            <div>
+              <span className="text-[11px] font-semibold text-carbon-400 uppercase tracking-[0.2em]">Experience 1</span>
+              <h2 className="text-3xl sm:text-4xl font-bold text-carbon-900 mt-3 mb-6 font-display">
+                Get a call from Maria in under 60 seconds.
+              </h2>
+              <p className="text-carbon-500 text-lg leading-relaxed mb-6">
+                Fill in your name, phone number, and company — and Maria will call you immediately. Not in an hour. Not tomorrow. Right now.
               </p>
+              <p className="text-carbon-500 leading-relaxed">
+                She'll walk you through a live qualification conversation, answer your questions, and schedule a meeting with our founder, Ethan. This is exactly what your customers will experience — a real conversation with an AI agent that sounds human, responds instantly, and never drops the ball.
+              </p>
+            </div>
 
-              <ul className="space-y-4 mb-8">
-                {benefits.map((benefit) => (
-                  <li key={benefit} className="flex items-center gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-500" />
-                    <span className="text-platinum-700">{benefit}</span>
-                  </li>
-                ))}
-              </ul>
-
-              {/* Video placeholder */}
-              <div className="aspect-video rounded-xl bg-platinum-100 border border-platinum-200 flex items-center justify-center shadow-card">
-                <div className="text-center">
-                  <div className="w-16 h-16 mx-auto rounded-full bg-navy-900 flex items-center justify-center mb-4 cursor-pointer hover:scale-105 transition-transform shadow-glow-navy">
-                    <Play className="w-8 h-8 text-white ml-1" />
+            <div className="bg-carbon-50 rounded-2xl p-8 border border-carbon-100">
+              {callState === 'calling' ? (
+                <div className="text-center py-8">
+                  <div className="w-16 h-16 mx-auto rounded-full bg-carbon-900 flex items-center justify-center mb-6 animate-pulse">
+                    <Phone className="w-7 h-7 text-white" />
                   </div>
-                  <p className="text-platinum-600">Watch a 2-minute overview</p>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Right side - Form */}
-            <motion.div
-              className="bg-white rounded-2xl border border-platinum-200 shadow-elevated p-8"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.1 }}
-            >
-              {submitted ? (
-                <div className="text-center py-12">
-                  <div className="w-16 h-16 mx-auto rounded-full bg-emerald-100 flex items-center justify-center mb-6">
-                    <CheckCircle2 className="w-8 h-8 text-emerald-500" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-navy-900 mb-4">You're All Set!</h3>
-                  <p className="text-platinum-600 mb-6">
-                    We'll reach out within 24 hours to schedule your personalized demo.
-                  </p>
-                  <Button
-                    onClick={() => setSubmitted(false)}
-                    variant="outline"
-                    className="border-platinum-300 text-navy-900 hover:bg-platinum-50"
+                  <h3 className="text-xl font-bold text-carbon-900 mb-3">Maria is calling you now.</h3>
+                  <p className="text-carbon-500 mb-6">Pick up your phone — she'll greet you by name.</p>
+                  <button
+                    onClick={() => setCallState('idle')}
+                    className="text-sm text-carbon-400 underline underline-offset-2 hover:text-carbon-600 transition-colors"
                   >
-                    Submit Another Request
-                  </Button>
+                    Didn't get a call? Try again
+                  </button>
+                </div>
+              ) : callState === 'error' ? (
+                <div className="text-center py-8">
+                  <h3 className="text-xl font-bold text-carbon-900 mb-3">Something went wrong.</h3>
+                  <p className="text-carbon-500 mb-4">Maria is on another call — she'll reach out in 2 minutes.</p>
+                  <p className="text-carbon-500 mb-6">
+                    Or call her directly at{' '}
+                    <a href="tel:+1XXXXXXXXXX" className="font-semibold text-carbon-900 underline underline-offset-2">(XXX) XXX-XXXX</a>
+                  </p>
+                  <button
+                    onClick={() => setCallState('idle')}
+                    className="text-sm text-carbon-400 underline underline-offset-2 hover:text-carbon-600 transition-colors"
+                  >
+                    Try again
+                  </button>
                 </div>
               ) : (
-                <>
-                  <h2 className="text-2xl font-bold text-navy-900 mb-2">Book Your Demo</h2>
-                  <p className="text-platinum-600 mb-6">Fill out the form and we'll be in touch within 24 hours.</p>
+                <form onSubmit={handleCallMe} className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-carbon-700 mb-1.5">First Name</label>
+                    <Input
+                      placeholder="Your first name"
+                      value={formData.firstName}
+                      onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                      required
+                      className="bg-white border-carbon-200 text-carbon-900 placeholder:text-carbon-400 h-12 focus:border-carbon-500 focus:ring-carbon-500 rounded-xl"
+                    />
+                  </div>
 
-                  <form onSubmit={handleSubmit} className="space-y-4">
-                    <div>
-                      <Input
-                        placeholder="Full Name"
-                        value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        required
-                        className="bg-platinum-50 border-platinum-200 text-navy-900 placeholder:text-platinum-500 h-12 focus:border-navy-500 focus:ring-navy-500"
-                      />
-                    </div>
+                  <div>
+                    <label className="block text-sm font-medium text-carbon-700 mb-1.5">Phone Number</label>
+                    <Input
+                      type="tel"
+                      placeholder="(555) 555-5555"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      required
+                      className="bg-white border-carbon-200 text-carbon-900 placeholder:text-carbon-400 h-12 focus:border-carbon-500 focus:ring-carbon-500 rounded-xl"
+                    />
+                  </div>
 
-                    <div>
-                      <Input
-                        type="email"
-                        placeholder="Work Email"
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        required
-                        className="bg-platinum-50 border-platinum-200 text-navy-900 placeholder:text-platinum-500 h-12 focus:border-navy-500 focus:ring-navy-500"
-                      />
-                    </div>
+                  <div>
+                    <label className="block text-sm font-medium text-carbon-700 mb-1.5">Company Name</label>
+                    <Input
+                      placeholder="Your company"
+                      value={formData.company}
+                      onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                      required
+                      className="bg-white border-carbon-200 text-carbon-900 placeholder:text-carbon-400 h-12 focus:border-carbon-500 focus:ring-carbon-500 rounded-xl"
+                    />
+                  </div>
 
-                    <div>
-                      <Input
-                        placeholder="Company Name"
-                        value={formData.company}
-                        onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                        required
-                        className="bg-platinum-50 border-platinum-200 text-navy-900 placeholder:text-platinum-500 h-12 focus:border-navy-500 focus:ring-navy-500"
-                      />
-                    </div>
+                  <Button
+                    type="submit"
+                    className="w-full h-12 bg-carbon-900 hover:bg-carbon-800 text-white rounded-full shadow-sm hover:shadow-md transition-all text-base font-medium"
+                  >
+                    Call Me Now
+                    <Phone className="w-4 h-4 ml-2" />
+                  </Button>
 
-                    <div>
-                      <Input
-                        type="tel"
-                        placeholder="Phone Number"
-                        value={formData.phone}
-                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        className="bg-platinum-50 border-platinum-200 text-navy-900 placeholder:text-platinum-500 h-12 focus:border-navy-500 focus:ring-navy-500"
-                      />
-                    </div>
-
-                    <div>
-                      <select
-                        value={formData.industry}
-                        onChange={(e) => setFormData({ ...formData, industry: e.target.value })}
-                        required
-                        className="w-full h-12 px-3 rounded-md bg-platinum-50 border border-platinum-200 text-navy-900 appearance-none focus:border-navy-500 focus:ring-1 focus:ring-navy-500 focus:outline-none"
-                      >
-                        <option value="" className="bg-white text-platinum-500">Select your industry</option>
-                        <option value="dealership" className="bg-white text-navy-900">Auto Dealership</option>
-                        <option value="law-firm" className="bg-white text-navy-900">Law Firm</option>
-                        <option value="contractor" className="bg-white text-navy-900">Contractor / Home Services</option>
-                        <option value="agency" className="bg-white text-navy-900">Marketing Agency</option>
-                        <option value="other" className="bg-white text-navy-900">Other</option>
-                      </select>
-                    </div>
-
-                    <Button
-                      type="submit"
-                      className="w-full h-12 bg-navy-900 hover:bg-navy-800 text-white rounded-xl shadow-glow-navy hover:shadow-glow-navy-lg transition-all"
-                    >
-                      Book My Demo
-                      <ArrowRight className="w-4 h-4 ml-2" />
-                    </Button>
-
-                    <p className="text-xs text-platinum-500 text-center">
-                      By submitting, you agree to our Privacy Policy and Terms of Service.
-                    </p>
-                  </form>
-                </>
+                  <p className="text-xs text-carbon-400 text-center pt-1">
+                    Maria will call you within 60 seconds. Make sure your phone is nearby.
+                  </p>
+                </form>
               )}
-            </motion.div>
+            </div>
           </div>
+        </div>
+      </section>
+
+      {/* Section 2 — Inbound Call Demo */}
+      <section id="inbound" className="py-24 bg-carbon-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <span className="text-[11px] font-semibold text-carbon-400 uppercase tracking-[0.2em]">Experience 2</span>
+          <h2 className="text-3xl sm:text-4xl font-bold text-carbon-900 mt-3 mb-6 font-display">
+            Or call Maria yourself.
+          </h2>
+          <p className="max-w-2xl mx-auto text-carbon-500 text-lg leading-relaxed mb-4">
+            Want to test her on your terms? Call the number below and experience a live inbound conversation. Ask her anything — what Voxaris does, how the technology works, whether we serve your industry. She'll qualify you, answer your questions, and book a time to talk with Ethan if you're interested.
+          </p>
+          <p className="max-w-2xl mx-auto text-carbon-500 leading-relaxed mb-12">
+            This is what your customers hear when they call your business after hours, during a storm, or when your team is busy closing deals.
+          </p>
+
+          <div className="inline-block bg-white rounded-2xl border border-carbon-200 px-12 py-10 shadow-sm">
+            <div className="flex items-center justify-center gap-3 mb-3">
+              <div className="w-10 h-10 rounded-full bg-carbon-900 flex items-center justify-center">
+                <PhoneCall className="w-5 h-5 text-white" />
+              </div>
+              <span className="text-sm font-medium text-carbon-500 uppercase tracking-wider">Call Maria</span>
+            </div>
+            <a
+              href="tel:+1XXXXXXXXXX"
+              className="block text-4xl sm:text-5xl font-bold text-carbon-900 font-display hover:text-carbon-700 transition-colors mb-4"
+            >
+              (XXX) XXX-XXXX
+            </a>
+            <p className="text-carbon-400 text-sm">
+              Available 24/7 — Maria never takes a day off.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Section 3 — Video Agent Demo */}
+      <section id="video" className="py-24 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <span className="text-[11px] font-semibold text-carbon-400 uppercase tracking-[0.2em]">Experience 3</span>
+          <h2 className="text-3xl sm:text-4xl font-bold text-carbon-900 mt-3 mb-6 font-display">
+            Meet Maria face to face.
+          </h2>
+          <p className="max-w-2xl mx-auto text-carbon-500 text-lg leading-relaxed mb-4">
+            This is V·FACE in action. Click below to start a live video conversation with Maria — the same photorealistic AI agent that can sit on your website, greet your visitors by name, and convert them into booked appointments.
+          </p>
+          <p className="max-w-2xl mx-auto text-carbon-500 leading-relaxed mb-12">
+            Ask her about Voxaris. Ask her about your industry. Ask her something unexpected. She'll respond in real time with natural expressions, human cadence, and zero lag. And if you're ready, she'll book a meeting with Ethan on the spot.
+          </p>
+
+          {/* Tavus Video Agent Embed Placeholder */}
+          <div className="max-w-3xl mx-auto">
+            <div className="aspect-video rounded-2xl bg-carbon-950 border border-carbon-800 flex items-center justify-center shadow-lg overflow-hidden relative">
+              {/* This will be replaced with the Tavus embed/widget */}
+              <div className="text-center relative z-10">
+                <div className="w-20 h-20 mx-auto rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center mb-6 cursor-pointer hover:bg-white/20 hover:scale-105 transition-all">
+                  <Video className="w-9 h-9 text-white" />
+                </div>
+                <Button className="bg-white text-carbon-900 hover:bg-carbon-100 rounded-full px-8 py-6 text-base font-medium shadow-md hover:shadow-lg transition-all">
+                  Start a Conversation with Maria
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </div>
+              {/* Subtle gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-b from-carbon-900/50 via-carbon-950/80 to-carbon-950" />
+            </div>
+            <p className="text-carbon-400 text-sm mt-4">
+              Powered by V·FACE. This is what your website visitors experience.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Section 4 — What You Just Experienced */}
+      <section className="py-24 bg-carbon-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <span className="text-[11px] font-semibold text-carbon-400 uppercase tracking-[0.2em]">What Happened</span>
+            <h2 className="text-3xl sm:text-4xl font-bold text-carbon-900 mt-3 mb-6 font-display">
+              That's VoxEngine.
+            </h2>
+            <p className="max-w-2xl mx-auto text-carbon-500 text-lg leading-relaxed mb-4">
+              The voice call, the video conversation, the instant response time — all of it runs on VoxEngine, the same proprietary platform that powers every Voxaris deployment.
+            </p>
+            <p className="max-w-2xl mx-auto text-carbon-500 leading-relaxed mb-4">
+              What you just experienced is what your leads, customers, and prospects will experience — 24 hours a day, 7 days a week, with no hold time, no missed calls, and no forgotten follow-ups.
+            </p>
+            <p className="max-w-2xl mx-auto text-carbon-500 leading-relaxed">
+              Every conversation Maria just had with you? It was logged, transcribed, summarized, and ready to sync to your CRM. That's the product.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              {
+                icon: Zap,
+                title: 'Sub-1-Second Response',
+                body: 'Maria responded before you finished processing the question. That\'s not an accident. That\'s VoxEngine.',
+              },
+              {
+                icon: Brain,
+                title: 'Persistent Memory',
+                body: 'Call Maria again tomorrow. She\'ll remember your name, your company, and what you talked about today.',
+              },
+              {
+                icon: Database,
+                title: 'CRM-Ready',
+                body: 'Every data point from your conversation is captured, structured, and ready to push to JobNimbus, GoHighLevel, or your existing CRM.',
+              },
+            ].map((item) => (
+              <div key={item.title} className="bg-white rounded-2xl p-6 border border-carbon-100">
+                <div className="w-10 h-10 rounded-xl bg-carbon-900 flex items-center justify-center mb-4">
+                  <item.icon className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="text-lg font-bold text-carbon-900 mb-2">{item.title}</h3>
+                <p className="text-carbon-500 text-sm leading-relaxed">{item.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA */}
+      <section className="py-24 bg-carbon-950">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4 font-display">
+            Ready to put Maria to work for your business?
+          </h2>
+          <p className="text-carbon-400 text-lg mb-10 leading-relaxed">
+            Schedule a strategy call with Ethan. He'll walk you through exactly how Voxaris would deploy in your operation — your industry, your workflow, your customers.
+          </p>
+          <Link to="/demo">
+            <Button className="bg-white text-carbon-900 hover:bg-carbon-100 rounded-full px-10 py-6 text-base font-medium shadow-md hover:shadow-lg transition-all">
+              Book a Meeting with Ethan
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
+          </Link>
+          <p className="text-carbon-500 text-sm mt-4">
+            15 minutes. No pitch deck. Just a conversation about what this would look like for you.
+          </p>
         </div>
       </section>
 
