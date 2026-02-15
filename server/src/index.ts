@@ -24,6 +24,9 @@ import n8nWorkflowRoutes from './modules/roofing/n8n-workflows.controller';
 import calcomWebhookRoutes from './modules/roofing/calcom-webhooks.controller';
 import tavusCviRoutes from './modules/roofing/tavus-cvi.controller';
 import estimaiteRoutes from './modules/estimaite/estimaite.controller';
+import voxarisRoutes from './modules/voxaris/voxaris.controller';
+import voxarisTavusRoutes from './modules/voxaris/voxaris-tavus.controller';
+import voxarisWebhookRoutes from './modules/voxaris/voxaris-webhooks.controller';
 import { initializeQueues, getQueues } from './queues';
 import { initializeFollowupQueue, closeFollowupQueue } from './queues/roofing-followup.processor';
 import { warmClientCache } from './lib/cache';
@@ -71,6 +74,9 @@ app.use('/api/roofing/n8n', n8nWorkflowRoutes); // n8n Workflow Integration
 app.use('/api/roofing/webhooks/calcom', calcomWebhookRoutes); // Cal.com booking webhooks
 app.use('/api/roofing/tavus', tavusCviRoutes); // Tavus CVI video chat
 app.use('/api/estimaite', estimaiteRoutes); // EstimAIte - AI Estimate Generation
+app.use('/api/voxaris', voxarisRoutes); // Voxaris Demo API (outbound call, web call, config)
+app.use('/api/voxaris/tavus', voxarisTavusRoutes); // Voxaris Tavus CVI video chat
+app.use('/api/voxaris/webhooks', voxarisWebhookRoutes); // Voxaris Webhooks (Retell, Tavus, GHL→outbound)
 
 // Health Check (Enhanced per playbook)
 const startTime = Date.now();

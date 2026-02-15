@@ -1,22 +1,57 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Phone, Video, PhoneCall, Zap, Brain, Database, Volume2, VolumeX } from 'lucide-react';
+import { ArrowRight, Phone, Video, PhoneCall, PhoneOff, Zap, Brain, Database, Volume2, VolumeX, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Link } from 'react-router-dom';
 import { Navbar, Footer } from '@/components/marketing';
+import DailyIframe, { DailyCall } from '@daily-co/daily-js';
 
 const MARIA_VIDEO_URL = '/maria-avatar.mp4';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
 
 export function Demo() {
+  // Outbound call form state
   const [formData, setFormData] = useState({
     firstName: '',
     phone: '',
     company: '',
   });
   const [callState, setCallState] = useState<'idle' | 'calling' | 'error'>('idle');
+
+  // Inbound phone number
+  const [inboundNumber, setInboundNumber] = useState('');
+  const [inboundNumberFormatted, setInboundNumberFormatted] = useState('');
+
+  // Video agent state
+  const [videoState, setVideoState] = useState<'preview' | 'connecting' | 'active'>('preview');
   const [isMuted, setIsMuted] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const videoContainerRef = useRef<HTMLDivElement>(null);
+  const callObjectRef = useRef<DailyCall | null>(null);
+
+  // Fetch config on mount
+  useEffect(() => {
+    fetch(`${API_BASE}/api/voxaris/config`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.inboundNumber) {
+          setInboundNumber(data.inboundNumber);
+          setInboundNumberFormatted(formatPhoneDisplay(data.inboundNumber));
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  // Format phone for display: +14075551234 → (407) 555-1234
+  function formatPhoneDisplay(phone: string): string {
+    const digits = phone.replace(/\D/g, '');
+    const national = digits.startsWith('1') ? digits.slice(1) : digits;
+    if (national.length === 10) {
+      return `(${national.slice(0, 3)}) ${national.slice(3, 6)}-${national.slice(6)}`;
+    }
+    return phone;
+  }
 
   const toggleMute = () => {
     if (videoRef.current) {
@@ -25,12 +60,81 @@ export function Demo() {
     }
   };
 
-  const handleCallMe = (e: React.FormEvent) => {
+  // ── Outbound Call Handler ──────────────────────────────────────
+  const handleCallMe = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In production: POST to Retell API to trigger outbound call from Maria
-    // Pass first_name and company_name to Maria's prompt
-    console.log('Triggering outbound call:', formData);
     setCallState('calling');
+
+    try {
+      const res = await fetch(`${API_BASE}/api/voxaris/outbound-call`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          phone: formData.phone,
+          company: formData.company,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!data.success) {
+        setCallState('error');
+      }
+      // On success, stay in 'calling' state — user waits for phone to ring
+    } catch {
+      setCallState('error');
+    }
+  };
+
+  // ── Video Session Handler ──────────────────────────────────────
+  const startVideoSession = async () => {
+    setVideoState('connecting');
+
+    try {
+      const res = await fetch(`${API_BASE}/api/voxaris/tavus/create-session`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ page_url: window.location.href }),
+      });
+
+      const data = await res.json();
+
+      if (!data.success || !data.conversation_url) {
+        throw new Error('Failed to create video session');
+      }
+
+      setVideoState('active');
+
+      // Create DailyIframe
+      if (videoContainerRef.current && !callObjectRef.current) {
+        const callFrame = DailyIframe.createFrame(videoContainerRef.current, {
+          showLeaveButton: false,
+          showFullscreenButton: false,
+          showUserNameChangeUI: false,
+          iframeStyle: {
+            width: '100%',
+            height: '100%',
+            border: '0',
+            borderRadius: '16px',
+          },
+        });
+
+        callObjectRef.current = callFrame;
+        await callFrame.join({ url: data.conversation_url });
+      }
+    } catch {
+      setVideoState('preview');
+    }
+  };
+
+  const endVideoSession = () => {
+    if (callObjectRef.current) {
+      callObjectRef.current.leave();
+      callObjectRef.current.destroy();
+      callObjectRef.current = null;
+    }
+    setVideoState('preview');
   };
 
   return (
@@ -144,10 +248,14 @@ export function Demo() {
                 <div className="text-center py-8">
                   <h3 className="text-xl font-bold text-carbon-900 mb-3">Something went wrong.</h3>
                   <p className="text-carbon-500 mb-4">Maria is on another call — she'll reach out in 2 minutes.</p>
-                  <p className="text-carbon-500 mb-6">
-                    Or call her directly at{' '}
-                    <a href="tel:+1XXXXXXXXXX" className="font-semibold text-carbon-900 underline underline-offset-2">(XXX) XXX-XXXX</a>
-                  </p>
+                  {inboundNumber && (
+                    <p className="text-carbon-500 mb-6">
+                      Or call her directly at{' '}
+                      <a href={`tel:${inboundNumber}`} className="font-semibold text-carbon-900 underline underline-offset-2">
+                        {inboundNumberFormatted}
+                      </a>
+                    </p>
+                  )}
                   <button
                     onClick={() => setCallState('idle')}
                     className="text-sm text-carbon-400 underline underline-offset-2 hover:text-carbon-600 transition-colors"
@@ -230,12 +338,18 @@ export function Demo() {
               </div>
               <span className="text-sm font-medium text-carbon-500 uppercase tracking-wider">Call Maria</span>
             </div>
-            <a
-              href="tel:+1XXXXXXXXXX"
-              className="block text-4xl sm:text-5xl font-bold text-carbon-900 font-display hover:text-carbon-700 transition-colors mb-4"
-            >
-              (XXX) XXX-XXXX
-            </a>
+            {inboundNumber ? (
+              <a
+                href={`tel:${inboundNumber}`}
+                className="block text-4xl sm:text-5xl font-bold text-carbon-900 font-display hover:text-carbon-700 transition-colors mb-4"
+              >
+                {inboundNumberFormatted}
+              </a>
+            ) : (
+              <p className="text-4xl sm:text-5xl font-bold text-carbon-300 font-display mb-4">
+                Coming Soon
+              </p>
+            )}
             <p className="text-carbon-400 text-sm">
               Available 24/7 — Maria never takes a day off.
             </p>
@@ -259,35 +373,62 @@ export function Demo() {
 
           {/* Maria Video Agent */}
           <div className="max-w-3xl mx-auto">
-            <div className="aspect-video rounded-2xl bg-carbon-950 border border-carbon-800 shadow-lg overflow-hidden relative group">
-              <video
-                ref={videoRef}
-                src={MARIA_VIDEO_URL}
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="w-full h-full object-cover"
-              />
-              {/* Volume toggle */}
-              <button
-                onClick={toggleMute}
-                className="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 flex items-center justify-center hover:bg-black/70 transition-all cursor-pointer"
-              >
-                {isMuted ? (
-                  <VolumeX className="w-5 h-5 text-white" />
-                ) : (
-                  <Volume2 className="w-5 h-5 text-white" />
-                )}
-              </button>
-              {/* CTA overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-carbon-950/80 via-transparent to-transparent flex items-end justify-center pb-8">
-                <Button className="bg-white text-carbon-900 hover:bg-carbon-100 rounded-full px-8 py-6 text-base font-medium shadow-md hover:shadow-lg transition-all">
-                  Start a Conversation with Maria
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
+            {videoState === 'active' ? (
+              /* Live video session */
+              <div className="relative aspect-video rounded-2xl bg-carbon-950 border border-carbon-800 shadow-lg overflow-hidden">
+                <div ref={videoContainerRef} className="w-full h-full" />
+                <button
+                  onClick={endVideoSession}
+                  className="absolute bottom-6 left-1/2 -translate-x-1/2 w-14 h-14 bg-red-600 hover:bg-red-700 rounded-full flex items-center justify-center shadow-2xl transition-all z-20"
+                >
+                  <PhoneOff className="w-6 h-6 text-white" />
+                </button>
               </div>
-            </div>
+            ) : (
+              /* Preview with CTA */
+              <div className="aspect-video rounded-2xl bg-carbon-950 border border-carbon-800 shadow-lg overflow-hidden relative group">
+                <video
+                  ref={videoRef}
+                  src={MARIA_VIDEO_URL}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="w-full h-full object-cover"
+                />
+                {/* Volume toggle */}
+                <button
+                  onClick={toggleMute}
+                  className="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 flex items-center justify-center hover:bg-black/70 transition-all cursor-pointer"
+                >
+                  {isMuted ? (
+                    <VolumeX className="w-5 h-5 text-white" />
+                  ) : (
+                    <Volume2 className="w-5 h-5 text-white" />
+                  )}
+                </button>
+                {/* CTA overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-carbon-950/80 via-transparent to-transparent flex items-end justify-center pb-8">
+                  {videoState === 'connecting' ? (
+                    <Button
+                      disabled
+                      className="bg-white text-carbon-900 rounded-full px-8 py-6 text-base font-medium shadow-md opacity-90"
+                    >
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Connecting to Maria...
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={startVideoSession}
+                      className="bg-white text-carbon-900 hover:bg-carbon-100 rounded-full px-8 py-6 text-base font-medium shadow-md hover:shadow-lg transition-all"
+                    >
+                      Start a Conversation with Maria
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  )}
+                </div>
+              </div>
+            )}
             <p className="text-carbon-400 text-sm mt-4">
               Powered by V·FACE. This is what your website visitors experience.
             </p>
