@@ -12,7 +12,8 @@ import {
   SolutionContractors,
   SolutionDirectMail,
   Technology,
-  Demo as MarketingDemo
+  Demo as MarketingDemo,
+  TalkingPostcard
 } from "./pages/marketing";
 import HowItWorks from "./pages/HowItWorks";
 import WhyVoxaris from "./pages/WhyVoxaris";
@@ -58,6 +59,7 @@ const App = () => (
           <Route path="/technology" element={<Technology />} />
           <Route path="/demo" element={<MarketingDemo />} />
           <Route path="/book-demo" element={<BookDemo />} />
+          <Route path="/talking-postcard" element={<TalkingPostcard />} />
 
           {/* Solution Pages */}
           <Route path="/solutions/dealerships" element={<SolutionDealerships />} />
