@@ -23,8 +23,8 @@ const router = Router();
 // ============================================================================
 
 const TAVUS_API_KEY = process.env.TAVUS_API_KEY;
-const TAVUS_API_URL = process.env.TAVUS_API_URL || 'https://api.tavus.io';
-const VOXARIS_TAVUS_PERSONA_ID = process.env.VOXARIS_TAVUS_PERSONA_ID;
+const TAVUS_API_URL = process.env.TAVUS_API_URL || 'https://tavusapi.com';
+const VOXARIS_TAVUS_PERSONA_ID = process.env.VOXARIS_TAVUS_PERSONA_ID || 'p5827f44cc74';
 const VOXARIS_TAVUS_REPLICA_ID = process.env.VOXARIS_TAVUS_REPLICA_ID || 'r5dc7c7d0bcb';
 const VOXARIS_CAL_EVENT_TYPE_ID = process.env.VOXARIS_CAL_EVENT_TYPE_ID;
 

@@ -1,120 +1,59 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
-import { motion } from 'framer-motion';
-import { Link, useSearchParams } from 'react-router-dom';
-import { PhoneOff, Mic, MicOff, Video, VideoOff, Loader2 } from 'lucide-react';
-import DailyIframe, { DailyCall } from '@daily-co/daily-js';
+import { useState, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
+import {
+  Loader2,
+  ArrowRight,
+  CalendarCheck,
+  RotateCcw,
+  Shield,
+  Sparkles,
+} from 'lucide-react';
+import { CVIProvider, Conversation } from '@/components/cvi';
 
 /**
  * /talking-postcard/demo
  *
- * Static embed page for the Tavus CVI video agent.
+ * Polished embed page for the Tavus CVI video agent.
+ * Uses the proper Daily React SDK via CVIProvider + Conversation component
+ * instead of raw DailyIframe.createFrame().
+ *
  * Expects query params:
  *   ?url=<conversation_url>&dealership=<name>&name=<gm_name>
- *
- * The conversation_url is a Daily.co room URL returned by the Tavus API.
  */
+
 export function TalkingPostcardDemo() {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const conversationUrl = searchParams.get('url');
   const dealership = searchParams.get('dealership') || 'your dealership';
   const gmName = searchParams.get('name') || '';
 
-  const [state, setState] = useState<'connecting' | 'active' | 'ended' | 'error'>('connecting');
-  const [isMicMuted, setIsMicMuted] = useState(false);
-  const [isCamOff, setIsCamOff] = useState(true);
+  const [hasEnded, setHasEnded] = useState(false);
 
-  const videoContainerRef = useRef<HTMLDivElement>(null);
-  const callObjectRef = useRef<DailyCall | null>(null);
-
-  // Join the Daily.co call
-  useEffect(() => {
-    if (!conversationUrl || !videoContainerRef.current) return;
-
-    const joinCall = async () => {
-      try {
-        const callFrame = DailyIframe.createFrame(videoContainerRef.current!, {
-          showLeaveButton: false,
-          showFullscreenButton: false,
-          showUserNameChangeUI: false,
-          iframeStyle: {
-            width: '100%',
-            height: '100%',
-            border: '0',
-            borderRadius: '16px',
-          },
-        });
-
-        callObjectRef.current = callFrame;
-
-        // Listen for participant events
-        callFrame.on('joined-meeting', () => {
-          setState('active');
-        });
-
-        callFrame.on('left-meeting', () => {
-          setState('ended');
-        });
-
-        callFrame.on('error', () => {
-          setState('error');
-        });
-
-        await callFrame.join({ url: conversationUrl });
-      } catch (err) {
-        console.error('Failed to join video call:', err);
-        setState('error');
-      }
-    };
-
-    joinCall();
-
-    return () => {
-      if (callObjectRef.current) {
-        callObjectRef.current.leave().catch(console.error);
-        callObjectRef.current.destroy();
-        callObjectRef.current = null;
-      }
-    };
-  }, [conversationUrl]);
-
-  const handleLeave = useCallback(async () => {
-    if (callObjectRef.current) {
-      await callObjectRef.current.leave();
-      callObjectRef.current.destroy();
-      callObjectRef.current = null;
-    }
-    setState('ended');
+  const handleLeave = useCallback(() => {
+    setHasEnded(true);
   }, []);
-
-  const toggleMic = useCallback(() => {
-    if (callObjectRef.current) {
-      callObjectRef.current.setLocalAudio(isMicMuted);
-      setIsMicMuted(!isMicMuted);
-    }
-  }, [isMicMuted]);
-
-  const toggleCam = useCallback(() => {
-    if (callObjectRef.current) {
-      callObjectRef.current.setLocalVideo(isCamOff);
-      setIsCamOff(!isCamOff);
-    }
-  }, [isCamOff]);
 
   // No conversation URL — show error
   if (!conversationUrl) {
     return (
       <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center px-6">
         <div className="text-center max-w-md">
-          <h1 className="text-3xl font-bold text-white mb-4">Session Not Found</h1>
-          <p className="text-zinc-500 mb-8">
+          <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center">
+            <Shield className="w-7 h-7 text-zinc-600" />
+          </div>
+          <h1 className="text-3xl font-bold text-white mb-3 tracking-tight">Session Not Found</h1>
+          <p className="text-zinc-500 mb-8 leading-relaxed">
             This demo session has expired or the link is invalid.
             Generate a new demo to talk to your AI agent.
           </p>
           <Link
             to="/talking-postcard"
-            className="inline-flex items-center gap-2 bg-white hover:bg-zinc-100 text-black font-semibold text-lg py-4 px-8 rounded-2xl transition-all duration-300"
+            className="inline-flex items-center gap-2 bg-white hover:bg-zinc-100 text-black font-semibold text-lg py-4 px-8 rounded-2xl transition-all duration-300 hover:shadow-[0_8px_30px_rgba(255,255,255,0.1)] hover:-translate-y-0.5"
           >
             Generate New Demo
+            <ArrowRight className="w-5 h-5" />
           </Link>
         </div>
       </div>
@@ -122,150 +61,162 @@ export function TalkingPostcardDemo() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white flex flex-col" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
-      {/* Header bar */}
-      <header className="flex items-center justify-between px-6 py-4 border-b border-zinc-800">
+    <div
+      className="min-h-screen bg-[#0a0a0a] text-white flex flex-col"
+      style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
+    >
+      {/* ── Header ── */}
+      <header className="flex items-center justify-between px-6 py-4 border-b border-zinc-800/60">
         <div className="flex items-center gap-4">
-          <Link to="/" className="flex items-center gap-2">
-            <img src="/voxaris-logo-white.png" alt="Voxaris" className="h-6 w-auto opacity-60" />
+          <Link to="/" className="flex items-center gap-2 group">
+            <img
+              src="/voxaris-logo-white.png"
+              alt="Voxaris"
+              className="h-6 w-auto opacity-50 group-hover:opacity-70 transition-opacity"
+            />
           </Link>
           <div className="w-px h-5 bg-zinc-800" />
-          <span className="text-zinc-500 text-sm">Talking Postcard Demo</span>
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+            <span className="text-zinc-400 text-sm font-medium">Talking Postcard Demo</span>
+          </div>
         </div>
-        <div className="flex items-center gap-3">
-          {state === 'active' && (
-            <span className="flex items-center gap-2 text-emerald-400 text-sm">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+
+        {!hasEnded && (
+          <motion.div
+            className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.5 }}
+          >
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400/60 opacity-60" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
+            </span>
+            <span className="text-emerald-400 text-xs font-semibold uppercase tracking-wider">
               Live
             </span>
-          )}
-        </div>
+          </motion.div>
+        )}
       </header>
 
-      {/* Main content */}
-      <div className="flex-1 flex flex-col lg:flex-row">
-        {/* Video panel */}
-        <div className="flex-1 flex flex-col items-center justify-center p-6 lg:p-12">
-          {/* Context bar */}
-          <motion.div
-            className="w-full max-w-3xl mb-6"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <div className="flex items-center justify-between px-5 py-3 rounded-2xl bg-zinc-900 border border-zinc-800">
-              <div>
-                <span className="text-zinc-500 text-xs uppercase tracking-wider">Demo for</span>
-                <p className="text-white font-semibold text-sm">{dealership}</p>
-              </div>
-              {gmName && (
-                <div className="text-right">
-                  <span className="text-zinc-500 text-xs uppercase tracking-wider">Requested by</span>
-                  <p className="text-white font-semibold text-sm">{gmName}</p>
-                </div>
-              )}
+      {/* ── Main content ── */}
+      <div className="flex-1 flex flex-col items-center justify-center p-6 lg:p-10">
+        {/* Context bar */}
+        <motion.div
+          className="w-full max-w-4xl mb-5"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="flex items-center justify-between px-5 py-3 rounded-2xl bg-zinc-900/60 border border-zinc-800/60">
+            <div>
+              <span className="text-zinc-600 text-[10px] uppercase tracking-[0.2em] font-semibold">
+                Demo for
+              </span>
+              <p className="text-white font-semibold text-sm mt-0.5">{dealership}</p>
             </div>
-          </motion.div>
-
-          {/* Video container */}
-          <div className="w-full max-w-3xl aspect-video relative rounded-2xl overflow-hidden bg-zinc-900 border border-zinc-800">
-            {state === 'connecting' && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center z-10 bg-zinc-900">
-                <Loader2 className="w-12 h-12 text-zinc-500 animate-spin mb-4" />
-                <p className="text-zinc-400 text-lg font-medium">Connecting to your AI agent...</p>
-                <p className="text-zinc-600 text-sm mt-1">This usually takes a few seconds</p>
+            {gmName && (
+              <div className="text-right">
+                <span className="text-zinc-600 text-[10px] uppercase tracking-[0.2em] font-semibold">
+                  Requested by
+                </span>
+                <p className="text-white font-semibold text-sm mt-0.5">{gmName}</p>
               </div>
             )}
-
-            {state === 'error' && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center z-10 bg-zinc-900">
-                <p className="text-zinc-400 text-lg font-medium mb-4">Connection failed</p>
-                <Link
-                  to="/talking-postcard"
-                  className="bg-white hover:bg-zinc-100 text-black font-semibold py-3 px-6 rounded-xl transition-colors"
-                >
-                  Try Again
-                </Link>
-              </div>
-            )}
-
-            {state === 'ended' && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center z-10 bg-zinc-900">
-                <p className="text-white text-2xl font-bold mb-2">Thanks for watching.</p>
-                <p className="text-zinc-500 mb-6 max-w-md text-center">
-                  That was your personalized AI agent for {dealership}.
-                  Ready to deploy it for real?
-                </p>
-                <div className="flex items-center gap-3">
-                  <Link
-                    to="/book-demo"
-                    className="bg-white hover:bg-zinc-100 text-black font-semibold py-3 px-8 rounded-xl transition-colors"
-                  >
-                    Book a Strategy Call
-                  </Link>
-                  <Link
-                    to="/talking-postcard"
-                    className="text-zinc-500 hover:text-white border border-zinc-700 hover:border-zinc-500 py-3 px-6 rounded-xl transition-colors"
-                  >
-                    Generate Another
-                  </Link>
-                </div>
-              </div>
-            )}
-
-            {/* Daily.co iframe mounts here */}
-            <div ref={videoContainerRef} className="w-full h-full" />
           </div>
+        </motion.div>
 
-          {/* Controls */}
-          {state === 'active' && (
-            <motion.div
-              className="flex items-center gap-3 mt-6"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.3 }}
-            >
-              <button
-                onClick={toggleMic}
-                className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors ${
-                  isMicMuted
-                    ? 'bg-red-500/20 border border-red-500/30 text-red-400'
-                    : 'bg-zinc-800 border border-zinc-700 text-zinc-300 hover:bg-zinc-700'
-                }`}
-                title={isMicMuted ? 'Unmute' : 'Mute'}
+        {/* Video / End-state container */}
+        <div className="w-full max-w-4xl aspect-video relative rounded-2xl overflow-hidden bg-zinc-900 border border-zinc-800/60 shadow-2xl shadow-black/40">
+          <AnimatePresence mode="wait">
+            {hasEnded ? (
+              /* ── Ended state ── */
+              <motion.div
+                key="ended"
+                className="absolute inset-0 flex flex-col items-center justify-center z-10 bg-[#0a0a0a]"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
               >
-                {isMicMuted ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
-              </button>
-
-              <button
-                onClick={toggleCam}
-                className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors ${
-                  isCamOff
-                    ? 'bg-zinc-800 border border-zinc-700 text-zinc-500'
-                    : 'bg-zinc-800 border border-zinc-700 text-zinc-300 hover:bg-zinc-700'
-                }`}
-                title={isCamOff ? 'Turn camera on' : 'Turn camera off'}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9, y: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{ delay: 0.2, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                  className="text-center max-w-lg"
+                >
+                  <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                    <CalendarCheck className="w-7 h-7 text-emerald-400" />
+                  </div>
+                  <h2 className="text-3xl font-bold text-white mb-3 tracking-tight">
+                    That was your AI agent.
+                  </h2>
+                  <p className="text-zinc-500 mb-8 leading-relaxed">
+                    Imagine that running 24/7 for every lead that contacts{' '}
+                    <span className="text-zinc-300 font-medium">{dealership}</span>.
+                    No missed calls. No slow follow-ups. Just booked appointments.
+                  </p>
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+                    <Link
+                      to="/book-demo"
+                      className="bg-white hover:bg-zinc-100 text-black font-semibold py-4 px-8 rounded-2xl inline-flex items-center gap-2 transition-all duration-300 hover:shadow-[0_8px_30px_rgba(255,255,255,0.1)] hover:-translate-y-0.5"
+                    >
+                      <CalendarCheck className="w-4 h-4" />
+                      Book a Strategy Call
+                    </Link>
+                    <button
+                      onClick={() => navigate('/talking-postcard')}
+                      className="text-zinc-500 hover:text-white border border-zinc-700 hover:border-zinc-500 font-medium py-4 px-6 rounded-2xl transition-all duration-300 inline-flex items-center gap-2"
+                    >
+                      <RotateCcw className="w-4 h-4" />
+                      Generate Another
+                    </button>
+                  </div>
+                </motion.div>
+              </motion.div>
+            ) : (
+              /* ── Live CVI conversation ── */
+              <motion.div
+                key="conversation"
+                className="w-full h-full"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.4 }}
               >
-                {isCamOff ? <VideoOff className="w-5 h-5" /> : <Video className="w-5 h-5" />}
-              </button>
-
-              <button
-                onClick={handleLeave}
-                className="w-12 h-12 rounded-xl bg-red-500/20 border border-red-500/30 text-red-400 hover:bg-red-500/30 flex items-center justify-center transition-colors"
-                title="End call"
-              >
-                <PhoneOff className="w-5 h-5" />
-              </button>
-            </motion.div>
-          )}
+                <CVIProvider>
+                  <Conversation
+                    conversationUrl={conversationUrl}
+                    onLeave={handleLeave}
+                    className="w-full h-full rounded-2xl"
+                  />
+                </CVIProvider>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
+
+        {/* Tip bar */}
+        {!hasEnded && (
+          <motion.p
+            className="mt-5 text-zinc-600 text-xs text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1 }}
+          >
+            Speak naturally — the agent hears you and responds in real time.
+            Your mic is on by default.
+          </motion.p>
+        )}
       </div>
 
-      {/* Footer */}
-      <footer className="px-6 py-4 border-t border-zinc-800 text-center">
-        <p className="text-zinc-600 text-xs">
+      {/* ── Footer ── */}
+      <footer className="px-6 py-4 border-t border-zinc-800/40 text-center">
+        <p className="text-zinc-700 text-xs">
           Powered by <span className="text-zinc-500">Voxaris AI</span> &bull;{' '}
-          <Link to="/talking-postcard" className="text-zinc-500 hover:text-zinc-400 transition-colors">
+          <Link
+            to="/talking-postcard"
+            className="text-zinc-500 hover:text-zinc-400 transition-colors"
+          >
             Generate another demo
           </Link>
         </p>
