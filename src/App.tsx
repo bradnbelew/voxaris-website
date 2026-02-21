@@ -13,7 +13,8 @@ import {
   SolutionDirectMail,
   Technology,
   Demo as MarketingDemo,
-  TalkingPostcard
+  TalkingPostcard,
+  TalkingPostcardDemo
 } from "./pages/marketing";
 import HowItWorks from "./pages/HowItWorks";
 import WhyVoxaris from "./pages/WhyVoxaris";
@@ -60,6 +61,7 @@ const App = () => (
           <Route path="/demo" element={<MarketingDemo />} />
           <Route path="/book-demo" element={<BookDemo />} />
           <Route path="/talking-postcard" element={<TalkingPostcard />} />
+          <Route path="/talking-postcard/demo" element={<TalkingPostcardDemo />} />
 
           {/* Solution Pages */}
           <Route path="/solutions/dealerships" element={<SolutionDealerships />} />

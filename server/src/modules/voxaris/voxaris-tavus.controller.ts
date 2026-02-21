@@ -262,6 +262,142 @@ router.post('/create-session', async (req: Request, res: Response) => {
 });
 
 /**
+ * POST /api/voxaris/tavus/talking-postcard
+ *
+ * Creates a Tavus CVI session for the Talking Postcard demo.
+ * Injects form data as dynamic conversational context so the agent
+ * knows the dealership name, GM name, and their pain point / highlight.
+ * Also pushes the lead into GHL as a contact.
+ */
+router.post('/talking-postcard', async (req: Request, res: Response) => {
+  try {
+    const { dealership, gm_name, highlight } = req.body;
+
+    if (!dealership || !highlight) {
+      return res.status(400).json({
+        success: false,
+        error: 'Missing required fields: dealership, highlight',
+      });
+    }
+
+    logger.info(`📮 Talking Postcard demo request: ${dealership} (${gm_name || 'no name'})`);
+
+    if (!TAVUS_API_KEY) {
+      return res.status(500).json({
+        success: false,
+        error: 'Tavus API not configured',
+      });
+    }
+
+    // 1. Push lead to GHL
+    try {
+      const contact = await ghl.createOrUpdateContact({
+        name: gm_name || dealership,
+        tags: ['talking-postcard', 'demo-requested', 'voxaris-lead'],
+        customFields: {
+          source: 'Talking Postcard Landing Page',
+          dealership_name: dealership,
+          gm_name: gm_name || '',
+          inventory_highlight: highlight,
+          demo_requested_at: new Date().toISOString(),
+        },
+      });
+
+      if (contact?.id) {
+        await ghl.addNote(
+          contact.id,
+          `## Talking Postcard Demo Requested\n\n` +
+          `**Dealership:** ${dealership}\n` +
+          `**Name:** ${gm_name || 'Not provided'}\n` +
+          `**Highlight/Pain Point:** ${highlight}\n` +
+          `**Requested at:** ${new Date().toLocaleString('en-US')}\n` +
+          `**Source:** voxaris.io/talking-postcard`,
+        );
+      }
+
+      logger.info(`✅ GHL contact created for Talking Postcard: ${contact?.id || 'unknown'}`);
+    } catch (ghlError: any) {
+      // Don't fail the whole request if GHL fails — still create the demo
+      logger.warn(`⚠️ GHL push failed for Talking Postcard: ${ghlError.message}`);
+    }
+
+    // 2. Create Tavus session with dynamic context from the form
+    const dynamicContext = [
+      `This is a Talking Postcard demo for ${dealership}.`,
+      gm_name ? `The person watching is ${gm_name}, a decision-maker at the dealership.` : '',
+      `Their biggest concern or inventory highlight: "${highlight}".`,
+      `Tailor your conversation to this dealership. Reference their name and their specific highlight/pain point.`,
+      `Your goal: Show them the power of AI agents for their dealership, then offer to book a strategy call with Ethan.`,
+    ].filter(Boolean).join(' ');
+
+    const customGreeting = gm_name
+      ? `Hey ${gm_name}! I'm Maria from Voxaris. I just got your info from ${dealership} — love that you're looking into AI agents. So tell me, what's the biggest challenge you're facing with leads right now?`
+      : `Hey there! I'm Maria from Voxaris. I see you're with ${dealership} — that's awesome. I'd love to show you how our AI agents can help. What's the biggest challenge you're facing with leads right now?`;
+
+    const response = await fetch(`${TAVUS_API_URL}/v2/conversations`, {
+      method: 'POST',
+      headers: {
+        'x-api-key': TAVUS_API_KEY,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        replica_id: VOXARIS_TAVUS_REPLICA_ID,
+        persona_id: VOXARIS_TAVUS_PERSONA_ID,
+        conversation_name: `Talking Postcard - ${dealership} - ${new Date().toISOString()}`,
+        conversational_context: dynamicContext,
+        custom_greeting: customGreeting,
+        properties: MARIA_PERSONA.properties,
+        callback_url: `${process.env.BASE_URL}/api/voxaris/webhooks/tavus`,
+        metadata: {
+          dealership,
+          gm_name: gm_name || '',
+          highlight,
+          source: 'talking-postcard',
+          created_at: new Date().toISOString(),
+        },
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      logger.error(`Tavus Talking Postcard session failed: ${error}`);
+      throw new Error('Failed to create video session');
+    }
+
+    const session = await response.json();
+
+    // Log in Supabase
+    try {
+      await supabase.from('video_sessions').insert({
+        session_id: session.conversation_id,
+        platform: 'tavus',
+        visitor_id: `tp-${Date.now()}`,
+        page_url: 'https://voxaris.io/talking-postcard',
+        status: 'created',
+        created_at: new Date().toISOString(),
+      });
+    } catch (dbError: any) {
+      logger.warn(`⚠️ Failed to log Talking Postcard session: ${dbError.message}`);
+    }
+
+    logger.info(`✅ Talking Postcard session created: ${session.conversation_id} for ${dealership}`);
+
+    res.json({
+      success: true,
+      conversation_id: session.conversation_id,
+      conversation_url: session.conversation_url,
+    });
+
+  } catch (error: any) {
+    logger.error(`❌ Talking Postcard session error: ${error.message}`);
+    res.status(500).json({
+      success: false,
+      error: error.message,
+    });
+  }
+});
+
+/**
  * POST /api/voxaris/tavus/tool-call
  *
  * Handles tool calls from the Tavus CVI agent.

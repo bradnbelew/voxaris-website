@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   ArrowRight,
   Clock,
@@ -17,7 +17,6 @@ import {
   Shield,
   Check,
   X,
-  Video,
   Loader2,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -66,9 +65,9 @@ const faqs = [
 ];
 
 export function TalkingPostcard() {
+  const navigate = useNavigate();
   const [form, setForm] = useState({ dealership: '', gm: '', highlight: '' });
   const [formState, setFormState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-  const [conversationUrl, setConversationUrl] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
@@ -78,18 +77,13 @@ export function TalkingPostcard() {
     setErrorMsg('');
 
     try {
-      const res = await fetch(`${API_BASE}/api/voxaris/tavus/create-session`, {
+      const res = await fetch(`${API_BASE}/api/voxaris/tavus/talking-postcard`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          page_url: window.location.href,
-          visitor_id: `tp-${Date.now()}`,
-          metadata: {
-            dealership: form.dealership,
-            gm_name: form.gm,
-            highlight: form.highlight,
-            source: 'talking-postcard-demo',
-          },
+          dealership: form.dealership,
+          gm_name: form.gm,
+          highlight: form.highlight,
         }),
       });
 
@@ -97,8 +91,13 @@ export function TalkingPostcard() {
       const data = await res.json();
 
       if (data.success && data.conversation_url) {
-        setConversationUrl(data.conversation_url);
-        setFormState('success');
+        // Redirect to the embed page with session data
+        const params = new URLSearchParams({
+          url: data.conversation_url,
+          dealership: form.dealership,
+          name: form.gm,
+        });
+        navigate(`/talking-postcard/demo?${params.toString()}`);
       } else {
         throw new Error(data.error || 'Could not generate demo');
       }
@@ -282,7 +281,7 @@ export function TalkingPostcard() {
                       Takes 45 seconds &bull; No credit card &bull; Instant video
                     </p>
                   </>
-                ) : formState === 'loading' ? (
+                ) : (
                   <div className="text-center py-12">
                     <div className="w-16 h-16 mx-auto rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center mb-5">
                       <Loader2 className="w-8 h-8 text-zinc-400 animate-spin" />
@@ -291,31 +290,12 @@ export function TalkingPostcard() {
                     <p className="text-zinc-500 mb-6 max-w-sm mx-auto">
                       Creating a personalized AI agent for{' '}
                       <span className="text-white font-medium">{form.dealership}</span>.
+                      You'll be redirected automatically.
                     </p>
                     <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-zinc-800 border border-zinc-700 text-sm text-zinc-400">
                       <Sparkles className="w-4 h-4 text-emerald-400 animate-pulse" />
                       Configuring V&middot;FACE agent...
                     </span>
-                  </div>
-                ) : (
-                  <div className="text-center py-8">
-                    <div className="w-16 h-16 mx-auto rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-5">
-                      <CheckCircle2 className="w-8 h-8 text-emerald-400" />
-                    </div>
-                    <h3 className="text-2xl font-bold text-white mb-3">Your agent is ready.</h3>
-                    <p className="text-zinc-500 mb-8 max-w-sm mx-auto">
-                      Meet your personalized AI agent for{' '}
-                      <span className="text-white font-medium">{form.dealership}</span>.
-                    </p>
-                    {conversationUrl && (
-                      <a href={conversationUrl} target="_blank" rel="noopener noreferrer">
-                        <button className="bg-white hover:bg-zinc-100 text-black font-semibold text-lg py-5 px-10 rounded-2xl inline-flex items-center gap-3 transition-all duration-300 hover:shadow-[0_8px_30px_rgba(255,255,255,0.1)] hover:-translate-y-0.5">
-                          <Video className="w-5 h-5" />
-                          Talk to Your AI Agent Now
-                          <ArrowRight className="w-5 h-5" />
-                        </button>
-                      </a>
-                    )}
                   </div>
                 )}
               </div>
