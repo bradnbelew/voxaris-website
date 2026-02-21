@@ -11,18 +11,20 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 // ── Config ──
 const TAVUS_API_KEY = process.env.TAVUS_API_KEY || '';
-const TAVUS_API_URL = process.env.TAVUS_API_URL || 'https://tavusapi.com';
 const PERSONA_ID = process.env.VOXARIS_TAVUS_PERSONA_ID || 'p5827f44cc74';
 const REPLICA_ID = process.env.VOXARIS_TAVUS_REPLICA_ID || 'r5dc7c7d0bcb';
 
 const GHL_TOKEN = process.env.GHL_ACCESS_TOKEN || '';
 const GHL_LOCATION_ID = process.env.GHL_LOCATION_ID || '';
 
-// ── GHL helpers (inline, no external deps) ──
+// Tavus has two domains — try both for resilience
+const TAVUS_URLS = ['https://tavusapi.com', 'https://api.tavus.io'];
+
+// ── GHL helper (inline, zero external deps) ──
 async function pushToGHL(dealership: string, gmName: string, highlight: string) {
   if (!GHL_TOKEN || !GHL_LOCATION_ID) {
     console.warn('⚠️ GHL credentials not set, skipping CRM push');
-    return null;
+    return;
   }
 
   const headers = {
@@ -32,7 +34,6 @@ async function pushToGHL(dealership: string, gmName: string, highlight: string) 
   };
 
   try {
-    // Create contact
     const contactRes = await fetch('https://services.leadconnectorhq.com/contacts/', {
       method: 'POST',
       headers,
@@ -50,39 +51,65 @@ async function pushToGHL(dealership: string, gmName: string, highlight: string) 
       }),
     });
 
-    if (!contactRes.ok) {
-      const errText = await contactRes.text();
-      console.warn(`⚠️ GHL contact creation failed: ${contactRes.status} ${errText}`);
-      return null;
+    if (contactRes.ok) {
+      const data = await contactRes.json();
+      const contactId = data?.contact?.id;
+      if (contactId) {
+        await fetch(`https://services.leadconnectorhq.com/contacts/${contactId}/notes`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({
+            body:
+              `## Talking Postcard Demo Requested\n\n` +
+              `**Dealership:** ${dealership}\n` +
+              `**Name:** ${gmName || 'Not provided'}\n` +
+              `**Highlight/Pain Point:** ${highlight}\n` +
+              `**Requested at:** ${new Date().toLocaleString('en-US')}\n` +
+              `**Source:** voxaris.io/talking-postcard`,
+            userId: null,
+          }),
+        }).catch(() => {});
+      }
+      console.log(`✅ GHL contact: ${contactId}`);
     }
-
-    const contactData = await contactRes.json();
-    const contactId = contactData?.contact?.id;
-
-    // Add note
-    if (contactId) {
-      await fetch(`https://services.leadconnectorhq.com/contacts/${contactId}/notes`, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({
-          body:
-            `## Talking Postcard Demo Requested\n\n` +
-            `**Dealership:** ${dealership}\n` +
-            `**Name:** ${gmName || 'Not provided'}\n` +
-            `**Highlight/Pain Point:** ${highlight}\n` +
-            `**Requested at:** ${new Date().toLocaleString('en-US')}\n` +
-            `**Source:** voxaris.io/talking-postcard`,
-          userId: null,
-        }),
-      }).catch((e) => console.warn(`⚠️ GHL note failed: ${e.message}`));
-    }
-
-    console.log(`✅ GHL contact created: ${contactId}`);
-    return contactId;
   } catch (err: any) {
     console.warn(`⚠️ GHL push failed: ${err.message}`);
-    return null;
   }
+}
+
+// ── Tavus helper with domain fallback ──
+async function createTavusSession(body: Record<string, any>): Promise<any> {
+  for (const baseUrl of TAVUS_URLS) {
+    try {
+      const resp = await fetch(`${baseUrl}/v2/conversations`, {
+        method: 'POST',
+        headers: {
+          'x-api-key': TAVUS_API_KEY,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      });
+
+      if (resp.ok) {
+        const data = await resp.json();
+        console.log(`✅ Tavus session via ${baseUrl}: ${data.conversation_id}`);
+        return { success: true, data };
+      }
+
+      const errText = await resp.text();
+      console.warn(`⚠️ Tavus ${baseUrl} returned ${resp.status}: ${errText}`);
+      // If it's a 4xx, don't retry — the request itself is bad
+      if (resp.status >= 400 && resp.status < 500) {
+        return { success: false, error: errText, status: resp.status, url: baseUrl };
+      }
+      // 5xx — try next URL
+    } catch (err: any) {
+      console.warn(`⚠️ Tavus ${baseUrl} network error: ${err.message}`);
+      // Network error — try next URL
+    }
+  }
+
+  return { success: false, error: 'All Tavus endpoints failed' };
 }
 
 // ── Main handler ──
@@ -92,21 +119,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-
-  if (req.method !== 'POST') {
-    return res.status(405).json({ success: false, error: 'Method not allowed' });
-  }
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST') return res.status(405).json({ success: false, error: 'Method not allowed' });
 
   const { dealership, gm_name, highlight } = req.body || {};
 
   if (!dealership || !highlight) {
-    return res.status(400).json({
-      success: false,
-      error: 'Missing required fields: dealership, highlight',
-    });
+    return res.status(400).json({ success: false, error: 'Missing required fields: dealership, highlight' });
   }
 
   if (!TAVUS_API_KEY) {
@@ -115,10 +134,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   console.log(`📮 Talking Postcard demo: ${dealership} (${gm_name || 'no name'})`);
 
-  // 1. Push lead to GHL (non-blocking — don't await, fire and forget)
+  // 1. Push lead to GHL (fire-and-forget)
   pushToGHL(dealership, gm_name || '', highlight).catch(() => {});
 
-  // 2. Create Tavus CVI session with dynamic context
+  // 2. Build dynamic context
   const dynamicContext = [
     `This is a Talking Postcard demo for ${dealership}.`,
     gm_name ? `The person watching is ${gm_name}, a decision-maker at the dealership.` : '',
@@ -133,54 +152,41 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     ? `Hey ${gm_name}! I'm Maria from Voxaris. I just got your info from ${dealership} — love that you're looking into AI agents. So tell me, what's the biggest challenge you're facing with leads right now?`
     : `Hey there! I'm Maria from Voxaris. I see you're with ${dealership} — that's awesome. I'd love to show you how our AI agents can help. What's the biggest challenge you're facing with leads right now?`;
 
-  try {
-    const tavusRes = await fetch(`${TAVUS_API_URL}/v2/conversations`, {
-      method: 'POST',
-      headers: {
-        'x-api-key': TAVUS_API_KEY,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        replica_id: REPLICA_ID,
-        persona_id: PERSONA_ID,
-        conversation_name: `Talking Postcard - ${dealership} - ${new Date().toISOString()}`,
-        conversational_context: dynamicContext,
-        custom_greeting: customGreeting,
-        properties: {
-          max_call_duration: 900,
-          participant_left_timeout: 30,
-          participant_absent_timeout: 120,
-          enable_recording: true,
-          enable_transcription: true,
-          language: 'english',
-        },
-        metadata: {
-          dealership,
-          gm_name: gm_name || '',
-          highlight,
-          source: 'talking-postcard',
-          created_at: new Date().toISOString(),
-        },
-      }),
+  // 3. Create Tavus session (with domain fallback)
+  const result = await createTavusSession({
+    replica_id: REPLICA_ID,
+    persona_id: PERSONA_ID,
+    conversation_name: `Talking Postcard - ${dealership} - ${new Date().toISOString()}`,
+    conversational_context: dynamicContext,
+    custom_greeting: customGreeting,
+    properties: {
+      max_call_duration: 900,
+      participant_left_timeout: 30,
+      participant_absent_timeout: 120,
+      enable_recording: true,
+      enable_transcription: true,
+      language: 'english',
+    },
+    metadata: {
+      dealership,
+      gm_name: gm_name || '',
+      highlight,
+      source: 'talking-postcard',
+      created_at: new Date().toISOString(),
+    },
+  });
+
+  if (!result.success) {
+    return res.status(500).json({
+      success: false,
+      error: 'Failed to create video session',
+      debug: result,
     });
-
-    if (!tavusRes.ok) {
-      const errText = await tavusRes.text();
-      console.error(`❌ Tavus session failed: ${tavusRes.status} ${errText}`);
-      return res.status(500).json({ success: false, error: 'Failed to create video session' });
-    }
-
-    const session = await tavusRes.json();
-
-    console.log(`✅ Tavus session created: ${session.conversation_id} for ${dealership}`);
-
-    return res.status(200).json({
-      success: true,
-      conversation_id: session.conversation_id,
-      conversation_url: session.conversation_url,
-    });
-  } catch (err: any) {
-    console.error(`❌ Talking Postcard error: ${err.message}`);
-    return res.status(500).json({ success: false, error: err.message });
   }
+
+  return res.status(200).json({
+    success: true,
+    conversation_id: result.data.conversation_id,
+    conversation_url: result.data.conversation_url,
+  });
 }
