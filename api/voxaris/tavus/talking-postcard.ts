@@ -167,13 +167,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       enable_transcription: true,
       language: 'english',
     },
-    metadata: {
-      dealership,
-      gm_name: gm_name || '',
-      highlight,
-      source: 'talking-postcard',
-      created_at: new Date().toISOString(),
-    },
   });
 
   if (!result.success) {
