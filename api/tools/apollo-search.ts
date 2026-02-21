@@ -24,17 +24,36 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const { endpoint = 'mixed_people/search', ...searchParams } = req.body || {};
 
+  // Remove api_key and endpoint from searchParams before forwarding
+  const { api_key: _ak, ...cleanParams } = searchParams;
+
   try {
     const resp = await fetch(`https://api.apollo.io/api/v1/${endpoint}`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...searchParams, api_key: apiKey }),
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Api-Key': apiKey,
+        'Cache-Control': 'no-cache',
+      },
+      body: JSON.stringify({ ...cleanParams, api_key: apiKey }),
     });
 
-    const data = await resp.json();
+    const text = await resp.text();
+
+    // Try to parse as JSON
+    let data: any;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      return res.status(resp.status).json({
+        error: 'Apollo returned non-JSON response',
+        status: resp.status,
+        body: text.slice(0, 500),
+      });
+    }
 
     if (!resp.ok) {
-      return res.status(resp.status).json({ error: 'Apollo API error', detail: data });
+      return res.status(resp.status).json({ error: 'Apollo API error', status: resp.status, detail: data });
     }
 
     return res.status(200).json(data);
