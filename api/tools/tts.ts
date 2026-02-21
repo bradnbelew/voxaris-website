@@ -19,10 +19,28 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { text, voice_id } = req.body || {};
+  const { text, voice_id, speed, emotions } = req.body || {};
 
   if (!text) return res.status(400).json({ error: 'Missing text field' });
   if (!CARTESIA_API_KEY) return res.status(500).json({ error: 'Cartesia API not configured' });
+
+  // Build voice config with optional emotion controls
+  const voiceConfig: Record<string, any> = {
+    mode: 'id',
+    id: voice_id || DEFAULT_VOICE_ID,
+  };
+
+  // Cartesia __experimental_controls for emotion/speed
+  if (emotions || speed) {
+    voiceConfig.__experimental_controls = {};
+    if (speed) {
+      voiceConfig.__experimental_controls.speed = speed; // "slowest" | "slow" | "normal" | "fast" | "fastest"
+    }
+    if (emotions && Array.isArray(emotions)) {
+      // e.g. [{ name: "positivity", level: "high" }, { name: "surprise", level: "high" }]
+      voiceConfig.__experimental_controls.emotion = emotions;
+    }
+  }
 
   try {
     const ttsRes = await fetch('https://api.cartesia.ai/tts/bytes', {
@@ -35,10 +53,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       body: JSON.stringify({
         model_id: 'sonic-2',
         transcript: text,
-        voice: {
-          mode: 'id',
-          id: voice_id || DEFAULT_VOICE_ID,
-        },
+        voice: voiceConfig,
         output_format: {
           container: 'mp3',
           encoding: 'mp3',
