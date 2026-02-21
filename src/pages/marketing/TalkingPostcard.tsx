@@ -22,7 +22,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
-const API_BASE = import.meta.env.VITE_API_URL || '';
+// Use the Vercel serverless function on the same domain (not the Render backend)
+const API_BASE = '';
 
 /* ─── animation presets ─── */
 const fadeUp = {
