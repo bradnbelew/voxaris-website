@@ -15,7 +15,7 @@ export async function optionalAuth(): Promise<{
   const { auth } = await import("@clerk/nextjs/server");
   const result = await auth();
   return {
-    userId: result.userId,
-    orgId: result.orgId,
+    userId: result.userId ?? null,
+    orgId: result.orgId ?? null,
   };
 }
