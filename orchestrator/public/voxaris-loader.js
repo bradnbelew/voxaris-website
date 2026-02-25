@@ -175,10 +175,44 @@
     "@keyframes vxr-fadeIn{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}",
     ".vxr-panel.open{animation:vxr-fadeIn .3s cubic-bezier(.16,1,.3,1)}",
 
-    /* Mobile responsive */
-    "@media(max-width:440px){" +
-      ".vxr-panel{width:calc(100vw - 24px);left:12px!important;right:12px!important;bottom:12px;height:70vh;max-height:560px}" +
-      ".vxr-trigger{bottom:16px;" + (posRight ? "right" : "left") + ":16px}" +
+    /* ── Mobile: compact bottom card ── */
+    "@media(max-width:480px){" +
+      /* Panel: small card anchored at bottom */
+      ".vxr-panel{" +
+        "width:calc(100vw - 16px)!important;left:8px!important;right:8px!important;bottom:8px!important;" +
+        "height:280px!important;max-height:40vh!important;" +
+        "border-radius:14px}" +
+      /* Compact header */
+      ".vxr-header{padding:8px 12px}" +
+      ".vxr-header-avatar{width:26px;height:26px}" +
+      ".vxr-header-name{font-size:12px}" +
+      ".vxr-header-live{font-size:9px}" +
+      ".vxr-header-dot{width:5px;height:5px}" +
+      ".vxr-close{padding:4px}" +
+      /* Hide captions on mobile — saves space */
+      ".vxr-captions{display:none!important}" +
+      /* Compact footer */
+      ".vxr-footer{padding:4px 12px}" +
+      ".vxr-powered{font-size:8px}" +
+      /* Trigger: smaller on mobile */
+      ".vxr-trigger{bottom:12px;" + (posRight ? "right" : "left") + ":12px;" +
+        "padding:5px 14px 5px 5px;gap:8px}" +
+      ".vxr-trigger-avatar{width:36px;height:36px}" +
+      ".vxr-trigger-name{font-size:12px}" +
+      ".vxr-trigger-sub{font-size:10px}" +
+    "}",
+
+    /* ── Tablet / small desktop ── */
+    "@media(min-width:481px) and (max-width:768px){" +
+      ".vxr-panel{width:340px;height:460px}" +
+    "}",
+
+    /* ── Landscape mobile ── */
+    "@media(max-width:480px) and (orientation:landscape){" +
+      ".vxr-panel{" +
+        "height:calc(100vh - 16px)!important;max-height:none!important;" +
+        "width:260px!important;left:auto!important;right:8px!important;" +
+        "bottom:8px!important;top:8px!important}" +
     "}"
   ].join("\n");
   document.head.appendChild(css);
