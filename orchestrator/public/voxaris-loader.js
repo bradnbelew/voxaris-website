@@ -175,44 +175,33 @@
     "@keyframes vxr-fadeIn{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}",
     ".vxr-panel.open{animation:vxr-fadeIn .3s cubic-bezier(.16,1,.3,1)}",
 
-    /* ── Mobile: compact bottom card ── */
+    /* ── Mobile: full-screen takeover (like opening an app) ── */
     "@media(max-width:480px){" +
-      /* Panel: small card anchored at bottom */
       ".vxr-panel{" +
-        "width:calc(100vw - 16px)!important;left:8px!important;right:8px!important;bottom:8px!important;" +
-        "height:280px!important;max-height:40vh!important;" +
-        "border-radius:14px}" +
-      /* Compact header */
-      ".vxr-header{padding:8px 12px}" +
-      ".vxr-header-avatar{width:26px;height:26px}" +
-      ".vxr-header-name{font-size:12px}" +
-      ".vxr-header-live{font-size:9px}" +
-      ".vxr-header-dot{width:5px;height:5px}" +
-      ".vxr-close{padding:4px}" +
-      /* Hide captions on mobile — saves space */
+        "position:fixed!important;top:0!important;left:0!important;right:0!important;bottom:0!important;" +
+        "width:100%!important;height:100%!important;max-height:none!important;" +
+        "border-radius:0!important;border:none!important}" +
+      /* Clean header bar */
+      ".vxr-header{" +
+        "padding:12px 16px;padding-top:max(12px,env(safe-area-inset-top));" +
+        "background:#0a0a0a;border-bottom:1px solid rgba(255,255,255,.08)}" +
+      /* Hide captions — Maria is speaking, no need */
       ".vxr-captions{display:none!important}" +
-      /* Compact footer */
-      ".vxr-footer{padding:4px 12px}" +
-      ".vxr-powered{font-size:8px}" +
-      /* Trigger: smaller on mobile */
-      ".vxr-trigger{bottom:12px;" + (posRight ? "right" : "left") + ":12px;" +
-        "padding:5px 14px 5px 5px;gap:8px}" +
-      ".vxr-trigger-avatar{width:36px;height:36px}" +
-      ".vxr-trigger-name{font-size:12px}" +
+      /* Minimal footer */
+      ".vxr-footer{" +
+        "padding:8px 16px;padding-bottom:max(8px,env(safe-area-inset-bottom));" +
+        "background:#0a0a0a}" +
+      /* Smaller trigger on mobile */
+      ".vxr-trigger{bottom:16px;" + (posRight ? "right" : "left") + ":16px;" +
+        "padding:5px 16px 5px 5px;gap:10px}" +
+      ".vxr-trigger-avatar{width:38px;height:38px}" +
+      ".vxr-trigger-name{font-size:13px}" +
       ".vxr-trigger-sub{font-size:10px}" +
     "}",
 
-    /* ── Tablet / small desktop ── */
+    /* ── Tablet ── */
     "@media(min-width:481px) and (max-width:768px){" +
-      ".vxr-panel{width:340px;height:460px}" +
-    "}",
-
-    /* ── Landscape mobile ── */
-    "@media(max-width:480px) and (orientation:landscape){" +
-      ".vxr-panel{" +
-        "height:calc(100vh - 16px)!important;max-height:none!important;" +
-        "width:260px!important;left:auto!important;right:8px!important;" +
-        "bottom:8px!important;top:8px!important}" +
+      ".vxr-panel{width:340px;height:480px}" +
     "}"
   ].join("\n");
   document.head.appendChild(css);
