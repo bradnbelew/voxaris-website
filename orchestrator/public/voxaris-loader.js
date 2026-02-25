@@ -497,20 +497,6 @@
           showLocalVideo: false,
           showParticipantsBar: false,
           activeSpeakerMode: true,
-          theme: {
-            colors: {
-              accent: "#c0c0c0",
-              accentText: "#fafafa",
-              background: "#0a0a0a",
-              backgroundAccent: "#171717",
-              baseText: "#fafafa",
-              border: "rgba(255,255,255,0.08)",
-              mainAreaBg: "#0a0a0a",
-              mainAreaBgAccent: "#0f0f0f",
-              mainAreaText: "#fafafa",
-              supportiveText: "#737373",
-            },
-          },
         });
 
         callFrame.join({
