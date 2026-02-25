@@ -1,28 +1,25 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-// Routes that require Clerk authentication
-const isDashboardRoute = createRouteMatcher(["/dashboard(.*)"]);
-
 // Public API routes (no auth, handled by embed keys / rate limiting)
-const isPublicApiRoute = createRouteMatcher([
-  "/api/embed(.*)",
-  "/api/orchestrate",
-  "/api/webhooks(.*)",
-]);
+const PUBLIC_API_PATTERNS = [
+  /^\/api\/embed/,
+  /^\/api\/orchestrate/,
+  /^\/api\/webhooks/,
+  /^\/api\/execute/,
+  /^\/api\/tavus/,
+];
 
-export default clerkMiddleware(async (auth, req: NextRequest) => {
-  // Dashboard routes require sign-in
-  if (isDashboardRoute(req)) {
-    await auth.protect();
-  }
+function isPublicApiRoute(pathname: string) {
+  return PUBLIC_API_PATTERNS.some((p) => p.test(pathname));
+}
 
-  // Public API routes: add security headers + CORS
-  if (isPublicApiRoute(req)) {
+export default async function middleware(req: NextRequest) {
+  const { pathname } = req.nextUrl;
+
+  // Public API routes: add security headers
+  if (isPublicApiRoute(pathname)) {
     const response = NextResponse.next();
-
-    // Security headers
     response.headers.set("X-Content-Type-Options", "nosniff");
     response.headers.set("X-Frame-Options", "DENY");
     response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
@@ -30,18 +27,34 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
       "Permissions-Policy",
       "camera=(), microphone=(), geolocation=()"
     );
-
     return response;
   }
 
+  // Dashboard routes: protect with Clerk if available
+  if (pathname.startsWith("/dashboard")) {
+    if (process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) {
+      const { clerkMiddleware, createRouteMatcher } = await import(
+        "@clerk/nextjs/server"
+      );
+      const isDashboard = createRouteMatcher(["/dashboard(.*)"]);
+      const handler = clerkMiddleware(async (auth, r) => {
+        if (isDashboard(r)) {
+          await auth.protect();
+        }
+        return NextResponse.next();
+      });
+      return handler(req, {} as never);
+    }
+    // No Clerk — allow through (dev/demo mode)
+    return NextResponse.next();
+  }
+
   return NextResponse.next();
-});
+}
 
 export const config = {
   matcher: [
-    // Skip static files and Next.js internals
     "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-    // Always run for API routes
     "/(api|trpc)(.*)",
   ],
 };

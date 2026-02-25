@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
+import { optionalAuth } from "@/lib/auth";
 import { db } from "@/db";
 import { auditLogs, sessions, hotelConfigs } from "@/db/schema";
 import { eq, desc, and } from "drizzle-orm";
 
 export async function GET(request: NextRequest) {
-  const { orgId } = await auth();
+  const { orgId } = await optionalAuth();
   if (!orgId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
