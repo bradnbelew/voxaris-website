@@ -2,15 +2,17 @@
  * Voxaris Embed Loader — Tavus CVI Avatar + Navigation Bridge
  *
  * Self-demo on voxaris.io:
- * <script src="/orchestrator/voxaris-loader.js"
- *         data-persona-id="YOUR_PERSONA_ID"
+ * <script src="https://voxaris-orchestrator.vercel.app/voxaris-loader.js"
  *         data-mode="self-demo"
+ *         data-persona-id="p40793780aaa"
+ *         data-agent-name="Maria"
  *         async></script>
  *
- * Hotel integration:
- * <script src="https://orchestrator.voxaris.io/voxaris-loader.js"
+ * Hotel/client integration:
+ * <script src="https://voxaris-orchestrator.vercel.app/voxaris-loader.js"
  *         data-hotel-id="UUID"
  *         data-embed-key="emb_xxxx"
+ *         data-agent-name="Maria"
  *         async></script>
  */
 (function () {
@@ -24,77 +26,153 @@
   var personaId = script.getAttribute("data-persona-id") || "";
   var hotelId = script.getAttribute("data-hotel-id") || "";
   var embedKey = script.getAttribute("data-embed-key") || "";
+  var agentName = script.getAttribute("data-agent-name") || "Maria";
   var position = script.getAttribute("data-position") || "bottom-right";
+  var thumbnailUrl = script.getAttribute("data-thumbnail") || "https://cdn.replica.tavus.io/39359/cd603e65.mp4";
   var BASE_URL = script.getAttribute("data-api-base") || script.src.replace(/\/[^/]*$/, "");
+  var posRight = position !== "bottom-left";
+
+  // ── Inject Satoshi font ──
+  if (!document.querySelector('link[href*="fontshare"][href*="satoshi"]')) {
+    var fontLink = document.createElement("link");
+    fontLink.rel = "stylesheet";
+    fontLink.href = "https://api.fontshare.com/v2/css?f[]=satoshi@400,500,600,700&display=swap";
+    document.head.appendChild(fontLink);
+  }
 
   // ── Styles ──
+  var FONT = "'Satoshi', 'Inter', system-ui, -apple-system, sans-serif";
   var css = document.createElement("style");
   css.textContent = [
-    /* Trigger pill */
-    ".vxr-trigger{position:fixed;bottom:24px;" +
-      (position === "bottom-left" ? "left" : "right") +
-      ":24px;z-index:99998;display:flex;align-items:center;gap:10px;padding:10px 18px 10px 10px;" +
-      "border-radius:999px;border:1px solid rgba(212,168,67,.3);cursor:pointer;" +
-      "background:linear-gradient(135deg,#0a0b0d 0%,#131519 100%);" +
-      "box-shadow:0 4px 24px rgba(0,0,0,.5),0 0 0 1px rgba(212,168,67,.15);" +
-      "transition:all .3s cubic-bezier(.4,0,.2,1);font-family:'DM Sans',system-ui,sans-serif}",
-    ".vxr-trigger:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.6),0 0 20px rgba(212,168,67,.2)}",
-    ".vxr-trigger-avatar{width:40px;height:40px;border-radius:50%;background:#1a1c20;" +
-      "border:2px solid rgba(212,168,67,.4);overflow:hidden;flex-shrink:0;position:relative}",
-    ".vxr-trigger-avatar::after{content:'';position:absolute;top:2px;right:2px;width:10px;height:10px;" +
-      "border-radius:50%;background:#4ade80;border:2px solid #0a0b0d}",
-    ".vxr-trigger-text{color:#e5e2d9;font-size:13px;font-weight:500;white-space:nowrap}",
-    ".vxr-trigger-gold{color:#d4a843}",
+    /* ── Trigger pill ── */
+    ".vxr-trigger{" +
+      "position:fixed;bottom:28px;" + (posRight ? "right" : "left") + ":28px;" +
+      "z-index:99998;display:flex;align-items:center;gap:12px;" +
+      "padding:6px 20px 6px 6px;" +
+      "border-radius:999px;cursor:pointer;" +
+      "background:rgba(10,10,10,.92);" +
+      "backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);" +
+      "border:1px solid rgba(255,255,255,.08);" +
+      "box-shadow:0 4px 24px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.04);" +
+      "transition:all .35s cubic-bezier(.4,0,.2,1);" +
+      "font-family:" + FONT + "}",
+    ".vxr-trigger:hover{" +
+      "transform:translateY(-2px);" +
+      "box-shadow:0 8px 40px rgba(0,0,0,.5),0 0 60px rgba(192,192,192,.06),0 0 0 1px rgba(255,255,255,.1);" +
+      "border-color:rgba(255,255,255,.12)}",
 
-    /* Video panel */
-    ".vxr-panel{position:fixed;bottom:24px;" +
-      (position === "bottom-left" ? "left" : "right") +
-      ":24px;z-index:99999;width:380px;height:520px;" +
-      "border-radius:20px;overflow:hidden;display:none;flex-direction:column;" +
-      "background:#07080a;border:1px solid rgba(212,168,67,.2);" +
-      "box-shadow:0 12px 48px rgba(0,0,0,.7),0 0 0 1px rgba(212,168,67,.1);" +
-      "font-family:'DM Sans',system-ui,sans-serif;transition:all .3s}",
+    /* Avatar circle with live video thumbnail */
+    ".vxr-trigger-avatar{" +
+      "width:44px;height:44px;border-radius:50%;" +
+      "background:#171717;overflow:hidden;flex-shrink:0;position:relative;" +
+      "border:1.5px solid rgba(255,255,255,.1)}",
+    ".vxr-trigger-avatar video{" +
+      "width:100%;height:100%;object-fit:cover;border-radius:50%}",
+    /* Green online dot */
+    ".vxr-trigger-dot{" +
+      "position:absolute;bottom:0;right:0;width:11px;height:11px;" +
+      "border-radius:50%;background:#22c55e;" +
+      "border:2.5px solid #0a0a0a;" +
+      "animation:vxr-pulse 2.5s ease-in-out infinite}",
+
+    /* Text */
+    ".vxr-trigger-text{" +
+      "display:flex;flex-direction:column;gap:1px}",
+    ".vxr-trigger-name{" +
+      "color:#fafafa;font-size:14px;font-weight:600;letter-spacing:-.01em;line-height:1.2}",
+    ".vxr-trigger-sub{" +
+      "color:rgba(163,163,163,.8);font-size:11px;font-weight:500;letter-spacing:.02em}",
+
+    /* ── Video panel ── */
+    ".vxr-panel{" +
+      "position:fixed;bottom:28px;" + (posRight ? "right" : "left") + ":28px;" +
+      "z-index:99999;width:380px;height:560px;" +
+      "border-radius:16px;overflow:hidden;display:none;flex-direction:column;" +
+      "background:#0a0a0a;" +
+      "border:1px solid rgba(255,255,255,.06);" +
+      "box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.04);" +
+      "font-family:" + FONT + ";" +
+      "transition:all .3s}",
     ".vxr-panel.open{display:flex}",
 
     /* Panel header */
-    ".vxr-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;" +
-      "background:linear-gradient(135deg,#0f1114 0%,#151820 100%);" +
-      "border-bottom:1px solid rgba(212,168,67,.15)}",
-    ".vxr-header-left{display:flex;align-items:center;gap:8px}",
-    ".vxr-live-dot{width:8px;height:8px;border-radius:50%;background:#4ade80;animation:vxr-pulse 2s infinite}",
-    ".vxr-header-title{color:#e5e2d9;font-size:13px;font-weight:600;letter-spacing:.02em}",
-    ".vxr-close{background:none;border:none;color:rgba(229,226,217,.5);cursor:pointer;padding:4px;" +
-      "border-radius:6px;transition:all .2s;display:flex;align-items:center;justify-content:center}",
-    ".vxr-close:hover{color:#e5e2d9;background:rgba(255,255,255,.08)}",
+    ".vxr-header{" +
+      "display:flex;align-items:center;justify-content:space-between;" +
+      "padding:14px 16px;" +
+      "background:rgba(23,23,23,.6);" +
+      "backdrop-filter:blur(12px);" +
+      "border-bottom:1px solid rgba(255,255,255,.06)}",
+    ".vxr-header-left{display:flex;align-items:center;gap:10px}",
+    ".vxr-header-avatar{" +
+      "width:32px;height:32px;border-radius:50%;overflow:hidden;" +
+      "border:1px solid rgba(255,255,255,.1);flex-shrink:0}",
+    ".vxr-header-avatar video{width:100%;height:100%;object-fit:cover}",
+    ".vxr-header-info{display:flex;flex-direction:column;gap:1px}",
+    ".vxr-header-name{color:#fafafa;font-size:13px;font-weight:600;letter-spacing:-.005em}",
+    ".vxr-header-status{display:flex;align-items:center;gap:5px}",
+    ".vxr-header-dot{" +
+      "width:6px;height:6px;border-radius:50%;background:#22c55e;" +
+      "animation:vxr-pulse 2.5s ease-in-out infinite}",
+    ".vxr-header-live{color:rgba(163,163,163,.7);font-size:10px;font-weight:500;letter-spacing:.04em;text-transform:uppercase}",
+    ".vxr-close{" +
+      "background:none;border:none;color:rgba(163,163,163,.5);" +
+      "cursor:pointer;padding:6px;border-radius:8px;" +
+      "transition:all .2s;display:flex;align-items:center;justify-content:center}",
+    ".vxr-close:hover{color:#fafafa;background:rgba(255,255,255,.06)}",
 
     /* Video container */
-    ".vxr-video{flex:1;position:relative;background:#07080a;overflow:hidden}",
+    ".vxr-video{flex:1;position:relative;background:#0a0a0a;overflow:hidden}",
     ".vxr-video iframe{width:100%;height:100%;border:none}",
-    ".vxr-video-placeholder{width:100%;height:100%;display:flex;flex-direction:column;" +
-      "align-items:center;justify-content:center;gap:12px;color:rgba(229,226,217,.4)}",
-    ".vxr-video-placeholder svg{opacity:.5}",
+    ".vxr-video-placeholder{" +
+      "width:100%;height:100%;display:flex;flex-direction:column;" +
+      "align-items:center;justify-content:center;gap:16px;color:rgba(163,163,163,.5)}",
+
+    /* Loading spinner */
+    ".vxr-spinner{" +
+      "width:36px;height:36px;border-radius:50%;" +
+      "border:2px solid rgba(255,255,255,.06);" +
+      "border-top:2px solid rgba(192,192,192,.5);" +
+      "animation:vxr-spin .8s linear infinite}",
 
     /* Caption bar */
-    ".vxr-captions{padding:10px 16px;background:rgba(15,17,20,.95);border-top:1px solid rgba(212,168,67,.1);" +
-      "min-height:42px;display:flex;align-items:center}",
-    ".vxr-caption-text{color:rgba(229,226,217,.8);font-size:12px;line-height:1.5;max-height:36px;" +
-      "overflow:hidden;transition:all .3s}",
+    ".vxr-captions{" +
+      "padding:10px 16px;" +
+      "background:rgba(23,23,23,.4);" +
+      "border-top:1px solid rgba(255,255,255,.04);" +
+      "min-height:40px;display:flex;align-items:center}",
+    ".vxr-caption-text{" +
+      "color:rgba(245,245,245,.7);font-size:12px;font-weight:400;line-height:1.5;" +
+      "max-height:36px;overflow:hidden;transition:all .3s}",
 
     /* Footer */
-    ".vxr-footer{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;" +
-      "background:#07080a;border-top:1px solid rgba(255,255,255,.05)}",
-    ".vxr-powered{font-size:9px;color:rgba(229,226,217,.25);letter-spacing:.05em;text-transform:uppercase}",
-    ".vxr-mute{background:none;border:none;color:rgba(229,226,217,.4);cursor:pointer;padding:4px;" +
-      "border-radius:6px;transition:all .2s;display:flex;align-items:center}",
-    ".vxr-mute:hover{color:#e5e2d9;background:rgba(255,255,255,.08)}",
+    ".vxr-footer{" +
+      "display:flex;align-items:center;justify-content:space-between;" +
+      "padding:8px 16px;" +
+      "background:#0a0a0a;" +
+      "border-top:1px solid rgba(255,255,255,.04)}",
+    ".vxr-powered{" +
+      "font-size:9px;color:rgba(163,163,163,.3);" +
+      "letter-spacing:.06em;text-transform:uppercase;font-weight:500}",
+    ".vxr-mute{" +
+      "background:none;border:none;color:rgba(163,163,163,.4);" +
+      "cursor:pointer;padding:6px;border-radius:8px;" +
+      "transition:all .2s;display:flex;align-items:center}",
+    ".vxr-mute:hover{color:#fafafa;background:rgba(255,255,255,.06)}",
 
     /* Draggable */
     ".vxr-dragging{cursor:grabbing!important;user-select:none}",
 
     /* Animations */
     "@keyframes vxr-pulse{0%,100%{opacity:1}50%{opacity:.4}}",
-    "@keyframes vxr-fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}",
-    ".vxr-panel.open{animation:vxr-fadeIn .3s ease-out}",
+    "@keyframes vxr-spin{to{transform:rotate(360deg)}}",
+    "@keyframes vxr-fadeIn{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}",
+    ".vxr-panel.open{animation:vxr-fadeIn .3s cubic-bezier(.16,1,.3,1)}",
+
+    /* Mobile responsive */
+    "@media(max-width:440px){" +
+      ".vxr-panel{width:calc(100vw - 24px);left:12px!important;right:12px!important;bottom:12px;height:70vh;max-height:560px}" +
+      ".vxr-trigger{bottom:16px;" + (posRight ? "right" : "left") + ":16px}" +
+    "}"
   ].join("\n");
   document.head.appendChild(css);
 
@@ -102,46 +180,68 @@
   var isOpen = false;
   var conversationId = null;
   var isMuted = false;
-  var lastCaption = "";
   var dragState = { dragging: false, offsetX: 0, offsetY: 0 };
+
+  // ── Build avatar HTML (reused in trigger + header) ──
+  function avatarVideoHtml(size) {
+    return '<video width="' + size + '" height="' + size + '" autoplay loop muted playsinline ' +
+      'src="' + thumbnailUrl + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%"></video>';
+  }
 
   // ── Create trigger ──
   var trigger = document.createElement("button");
   trigger.className = "vxr-trigger";
-  trigger.setAttribute("aria-label", "Talk to Voxaris AI");
+  trigger.setAttribute("aria-label", "Talk to " + agentName);
   trigger.innerHTML =
     '<div class="vxr-trigger-avatar">' +
-    '<svg width="40" height="40" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="20" fill="#1a1c20"/>' +
-    '<path d="M20 8C13.4 8 8 13.4 8 20s5.4 12 12 12 12-5.4 12-12S26.6 8 20 8zm0 4a4 4 0 110 8 4 4 0 010-8zm0 17c-3.3 0-6.2-1.7-7.9-4.2.04-2.6 5.3-4 7.9-4s7.9 1.4 7.9 4A9.5 9.5 0 0120 29z" fill="#d4a843" opacity=".6"/></svg>' +
-    "</div>" +
-    '<span class="vxr-trigger-text">Talk to <span class="vxr-trigger-gold">Voxaris</span></span>';
+      avatarVideoHtml(44) +
+      '<div class="vxr-trigger-dot"></div>' +
+    '</div>' +
+    '<div class="vxr-trigger-text">' +
+      '<span class="vxr-trigger-name">Talk to ' + agentName + '</span>' +
+      '<span class="vxr-trigger-sub">AI Video Agent</span>' +
+    '</div>';
   document.body.appendChild(trigger);
 
   // ── Create panel ──
   var panel = document.createElement("div");
   panel.className = "vxr-panel";
   panel.setAttribute("role", "dialog");
-  panel.setAttribute("aria-label", "Voxaris AI Video Agent");
+  panel.setAttribute("aria-label", agentName + " — Voxaris AI Agent");
   panel.innerHTML =
     '<div class="vxr-header">' +
-    '<div class="vxr-header-left">' +
-    '<div class="vxr-live-dot"></div>' +
-    '<span class="vxr-header-title">Voxaris Agent</span>' +
-    "</div>" +
-    '<button class="vxr-close" id="vxr-close" aria-label="Close">' +
-    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
-    "</button></div>" +
+      '<div class="vxr-header-left">' +
+        '<div class="vxr-header-avatar">' + avatarVideoHtml(32) + '</div>' +
+        '<div class="vxr-header-info">' +
+          '<span class="vxr-header-name">' + agentName + '</span>' +
+          '<div class="vxr-header-status">' +
+            '<div class="vxr-header-dot"></div>' +
+            '<span class="vxr-header-live">Live</span>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      '<button class="vxr-close" id="vxr-close" aria-label="Close">' +
+        '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">' +
+          '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>' +
+        '</svg>' +
+      '</button>' +
+    '</div>' +
     '<div class="vxr-video" id="vxr-video">' +
-    '<div class="vxr-video-placeholder" id="vxr-placeholder">' +
-    '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16"/></svg>' +
-    '<span style="font-size:13px">Starting video agent...</span>' +
-    "</div></div>" +
+      '<div class="vxr-video-placeholder" id="vxr-placeholder">' +
+        '<div class="vxr-spinner"></div>' +
+        '<span style="font-size:13px;font-weight:500;letter-spacing:.01em">Connecting to ' + agentName + '...</span>' +
+      '</div>' +
+    '</div>' +
     '<div class="vxr-captions"><span class="vxr-caption-text" id="vxr-caption"></span></div>' +
     '<div class="vxr-footer">' +
-    '<span class="vxr-powered">Powered by Voxaris</span>' +
-    '<button class="vxr-mute" id="vxr-mute" aria-label="Mute">' +
-    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19"/><path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/></svg>' +
-    "</button></div>";
+      '<span class="vxr-powered">Powered by Voxaris</span>' +
+      '<button class="vxr-mute" id="vxr-mute" aria-label="Mute">' +
+        '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">' +
+          '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19"/>' +
+          '<path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/>' +
+        '</svg>' +
+      '</button>' +
+    '</div>';
   document.body.appendChild(panel);
 
   // ── Event handlers ──
@@ -186,9 +286,8 @@
     if (!dragState.dragging) return;
     var x = e.clientX - dragState.offsetX;
     var y = e.clientY - dragState.offsetY;
-    // Clamp to viewport
     x = Math.max(0, Math.min(window.innerWidth - 380, x));
-    y = Math.max(0, Math.min(window.innerHeight - 520, y));
+    y = Math.max(0, Math.min(window.innerHeight - 560, y));
     panel.style.left = x + "px";
     panel.style.top = y + "px";
     panel.style.right = "auto";
@@ -205,9 +304,11 @@
   // ── Tavus CVI Integration ──
   function startConversation() {
     var placeholder = document.getElementById("vxr-placeholder");
-    if (placeholder) placeholder.querySelector("span").textContent = "Connecting...";
+    if (placeholder) {
+      var span = placeholder.querySelector("span");
+      if (span) span.textContent = "Connecting to " + agentName + "...";
+    }
 
-    // Create conversation via Tavus API
     var createUrl = BASE_URL + "/api/tavus/conversation";
     var body = mode === "self-demo"
       ? { persona_id: personaId, mode: "self-demo" }
@@ -229,11 +330,20 @@
       .catch(function (err) {
         console.error("[Voxaris] Conversation start failed:", err);
         if (placeholder) {
-          placeholder.querySelector("span").textContent =
-            "Connection failed. Click to retry.";
+          var spinner = placeholder.querySelector(".vxr-spinner");
+          if (spinner) spinner.style.display = "none";
+          var span = placeholder.querySelector("span");
+          if (span) {
+            span.textContent = "Connection failed. Tap to retry.";
+            span.style.cursor = "pointer";
+          }
           placeholder.style.cursor = "pointer";
           placeholder.onclick = function () {
-            placeholder.querySelector("span").textContent = "Reconnecting...";
+            if (spinner) spinner.style.display = "block";
+            if (span) {
+              span.textContent = "Reconnecting...";
+              span.style.cursor = "default";
+            }
             placeholder.style.cursor = "default";
             placeholder.onclick = null;
             startConversation();
@@ -259,30 +369,26 @@
 
     fetch(BASE_URL + "/api/tavus/conversation/" + conversationId, {
       method: "DELETE",
-    }).catch(function () {
-      // Best-effort cleanup
-    });
+    }).catch(function () {});
 
-    // Remove iframe
     var iframe = panel.querySelector("iframe");
     if (iframe) iframe.remove();
 
-    // Re-add placeholder
     var container = document.getElementById("vxr-video");
     var placeholder = document.createElement("div");
     placeholder.className = "vxr-video-placeholder";
     placeholder.id = "vxr-placeholder";
     placeholder.innerHTML =
-      '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16"/></svg>' +
-      "<span>Session ended</span>";
+      '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".3">' +
+        '<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>' +
+      '</svg>' +
+      '<span style="font-size:13px;font-weight:500">Session ended</span>';
     container.appendChild(placeholder);
 
     conversationId = null;
   }
 
   // ── Navigation Bridge (postMessage) ──
-  // Listens for tool execution results from the orchestrator
-  // and performs DOM actions on the host page
   window.addEventListener("message", function (e) {
     var data = e.data;
     if (!data || data.source !== "voxaris-orchestrator") return;
@@ -294,12 +400,9 @@
           var el = document.querySelector(selectors[i].trim());
           if (el) {
             el.scrollIntoView({ behavior: "smooth", block: "start" });
-            // Brief gold highlight
-            el.style.transition = "box-shadow .4s";
-            el.style.boxShadow = "0 0 0 3px rgba(212,168,67,.4)";
-            setTimeout(function () {
-              el.style.boxShadow = "";
-            }, 2000);
+            el.style.transition = "box-shadow .5s ease-out";
+            el.style.boxShadow = "0 0 0 2px rgba(192,192,192,.2)";
+            setTimeout(function () { el.style.boxShadow = ""; }, 2500);
             break;
           }
         }
@@ -307,13 +410,11 @@
       }
 
       case "highlight_feature": {
-        var target = document.querySelector(
-          '[data-feature="' + data.feature + '"]'
-        );
+        var target = document.querySelector('[data-feature="' + data.feature + '"]');
         if (target) {
-          target.style.transition = "all .4s";
-          target.style.boxShadow = "0 0 20px rgba(212,168,67,.5)";
-          target.style.transform = "scale(1.02)";
+          target.style.transition = "all .4s ease-out";
+          target.style.boxShadow = "0 0 40px rgba(192,192,192,.12),0 0 0 1px rgba(255,255,255,.1)";
+          target.style.transform = "scale(1.01)";
           setTimeout(function () {
             target.style.boxShadow = "";
             target.style.transform = "";
@@ -323,9 +424,7 @@
       }
 
       case "navigate_to_page": {
-        if (data.route) {
-          window.location.href = data.route;
-        }
+        if (data.route) window.location.href = data.route;
         break;
       }
 
@@ -337,7 +436,7 @@
     }
   });
 
-  // ── Keyboard shortcut: Escape to close ──
+  // ── Keyboard: Escape to close ──
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape" && isOpen) {
       document.getElementById("vxr-close").click();
