@@ -176,9 +176,20 @@
   ].join("\n");
   document.head.appendChild(css);
 
+  // ── Load Daily.co SDK (auto-join, dark theme, no haircheck) ──
+  var dailyReady = new Promise(function (resolve) {
+    if (window.DailyIframe) return resolve(window.DailyIframe);
+    var s = document.createElement("script");
+    s.src = "https://unpkg.com/@daily-co/daily-js";
+    s.onload = function () { resolve(window.DailyIframe); };
+    s.onerror = function () { resolve(null); }; // fallback to raw iframe
+    document.head.appendChild(s);
+  });
+
   // ── State ──
   var isOpen = false;
   var conversationId = null;
+  var callFrame = null;
   var isMuted = false;
   var dragState = { dragging: false, offsetX: 0, offsetY: 0 };
 
@@ -261,9 +272,8 @@
 
   document.getElementById("vxr-mute").addEventListener("click", function () {
     isMuted = !isMuted;
-    var iframe = panel.querySelector("iframe");
-    if (iframe && iframe.contentWindow) {
-      iframe.contentWindow.postMessage({ type: "voxaris:mute", muted: isMuted }, "*");
+    if (callFrame) {
+      callFrame.setLocalAudio(!isMuted);
     }
     this.style.opacity = isMuted ? "0.3" : "1";
   });
@@ -355,35 +365,98 @@
   function embedTavusVideo(conversationUrl) {
     var container = document.getElementById("vxr-video");
     var placeholder = document.getElementById("vxr-placeholder");
-    if (placeholder) placeholder.remove();
 
-    var iframe = document.createElement("iframe");
-    iframe.src = conversationUrl;
-    iframe.allow = "camera;microphone;display-capture;autoplay";
-    iframe.setAttribute("sandbox", "allow-scripts allow-same-origin allow-popups");
-    container.appendChild(iframe);
+    dailyReady.then(function (DailyIframe) {
+      if (placeholder) placeholder.remove();
+
+      if (DailyIframe) {
+        // ── Daily.co SDK: auto-join, dark theme, no haircheck ──
+        callFrame = DailyIframe.createFrame(container, {
+          iframeStyle: {
+            width: "100%",
+            height: "100%",
+            border: "none",
+            borderRadius: "0",
+            background: "#0a0a0a",
+          },
+          showLeaveButton: false,
+          showFullscreenButton: false,
+          showLocalVideo: false,
+          showParticipantsBar: false,
+          activeSpeakerMode: true,
+          theme: {
+            colors: {
+              accent: "#c0c0c0",
+              accentText: "#fafafa",
+              background: "#0a0a0a",
+              backgroundAccent: "#171717",
+              baseText: "#fafafa",
+              border: "rgba(255,255,255,0.08)",
+              mainAreaBg: "#0a0a0a",
+              mainAreaBgAccent: "#0f0f0f",
+              mainAreaText: "#fafafa",
+              supportiveText: "#737373",
+            },
+          },
+        });
+
+        callFrame.join({
+          url: conversationUrl,
+          userName: "Visitor",
+          startVideoOff: false,
+          startAudioOff: false,
+        }).catch(function (err) {
+          console.error("[Voxaris] Daily join failed:", err);
+        });
+
+        // Listen for call end
+        callFrame.on("left-meeting", function () {
+          if (isOpen) document.getElementById("vxr-close").click();
+        });
+      } else {
+        // ── Fallback: raw iframe (if Daily SDK fails to load) ──
+        var iframe = document.createElement("iframe");
+        iframe.src = conversationUrl;
+        iframe.allow = "camera;microphone;display-capture;autoplay";
+        iframe.style.cssText = "width:100%;height:100%;border:none;background:#0a0a0a";
+        container.appendChild(iframe);
+      }
+    });
   }
 
   function endConversation() {
     if (!conversationId) return;
 
+    // End via Daily SDK
+    if (callFrame) {
+      try { callFrame.leave(); } catch (e) {}
+      try { callFrame.destroy(); } catch (e) {}
+      callFrame = null;
+    }
+
+    // Best-effort API cleanup
     fetch(BASE_URL + "/api/tavus/conversation/" + conversationId, {
       method: "DELETE",
     }).catch(function () {});
 
-    var iframe = panel.querySelector("iframe");
-    if (iframe) iframe.remove();
+    // Remove any iframe remnants
+    var iframes = panel.querySelectorAll("iframe");
+    for (var i = 0; i < iframes.length; i++) iframes[i].remove();
 
+    // Re-add placeholder
     var container = document.getElementById("vxr-video");
-    var placeholder = document.createElement("div");
-    placeholder.className = "vxr-video-placeholder";
-    placeholder.id = "vxr-placeholder";
-    placeholder.innerHTML =
-      '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".3">' +
-        '<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>' +
-      '</svg>' +
-      '<span style="font-size:13px;font-weight:500">Session ended</span>';
-    container.appendChild(placeholder);
+    if (container) {
+      container.innerHTML = "";
+      var placeholder = document.createElement("div");
+      placeholder.className = "vxr-video-placeholder";
+      placeholder.id = "vxr-placeholder";
+      placeholder.innerHTML =
+        '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".3">' +
+          '<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>' +
+        '</svg>' +
+        '<span style="font-size:13px;font-weight:500">Session ended</span>';
+      container.appendChild(placeholder);
+    }
 
     conversationId = null;
   }
