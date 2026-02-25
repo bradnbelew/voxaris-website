@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-void: #07080a;
+  --color-void-light: #0d0f12;
+  --color-gold: #d4a843;
+  --color-gold-dim: #b8922e;
+  --color-emerald-vox: #34d399;
+  --color-rose-vox: #fb7185;
+  --font-sans: "Instrument Sans", "DM Sans", system-ui, sans-serif;
+}
+
+body {
+  font-family: var(--font-sans);
+}
