@@ -20,7 +20,7 @@ export function getDb() {
 // Re-export for backwards compatibility (used at runtime only)
 export const db = new Proxy({} as NeonHttpDatabase<typeof schema>, {
   get(_target, prop) {
-    return (getDb() as Record<string | symbol, unknown>)[prop];
+    return (getDb() as unknown as Record<string | symbol, unknown>)[prop];
   },
 });
 
