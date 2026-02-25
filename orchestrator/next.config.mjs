@@ -1,9 +1,6 @@
-import { withSentryConfig } from "@sentry/nextjs";
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    ppr: "incremental",
     serverActions: {
       bodySizeLimit: "2mb",
     },
@@ -28,15 +25,41 @@ const nextConfig = {
         },
       ],
     },
+    {
+      source: "/api/execute",
+      headers: [
+        { key: "Access-Control-Allow-Origin", value: "*" },
+        { key: "Access-Control-Allow-Methods", value: "POST, OPTIONS" },
+        { key: "Access-Control-Allow-Headers", value: "Content-Type" },
+      ],
+    },
+    {
+      source: "/api/tavus/:path*",
+      headers: [
+        { key: "Access-Control-Allow-Origin", value: "*" },
+        { key: "Access-Control-Allow-Methods", value: "POST, DELETE, OPTIONS" },
+        { key: "Access-Control-Allow-Headers", value: "Content-Type" },
+      ],
+    },
+    {
+      source: "/api/webhooks/:path*",
+      headers: [
+        { key: "Access-Control-Allow-Origin", value: "*" },
+        { key: "Access-Control-Allow-Methods", value: "POST, OPTIONS" },
+        { key: "Access-Control-Allow-Headers", value: "Content-Type, X-Tavus-Signature" },
+      ],
+    },
+    {
+      // Security headers for all routes
+      source: "/:path*",
+      headers: [
+        { key: "X-Content-Type-Options", value: "nosniff" },
+        { key: "X-Frame-Options", value: "SAMEORIGIN" },
+        { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+      ],
+    },
   ],
   serverExternalPackages: ["pino"],
 };
 
-export default withSentryConfig(nextConfig, {
-  org: "voxaris",
-  project: "orchestrator",
-  silent: !process.env.CI,
-  widenClientFileUpload: true,
-  disableLogger: true,
-  automaticVercelMonitors: true,
-});
+export default nextConfig;

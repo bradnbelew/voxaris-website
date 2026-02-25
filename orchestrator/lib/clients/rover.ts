@@ -7,11 +7,11 @@ import type { RoverActionResult } from "@/lib/schemas/events";
 
 interface RoverAgentRequest {
   goal: string;
-  startUrl?: string;
-  trajectoryId?: string;
-  emitEvents?: boolean;
-  maxSteps?: number;
-  timeout?: number;
+  startUrl?: string | undefined;
+  trajectoryId?: string | undefined;
+  emitEvents?: boolean | undefined;
+  maxSteps?: number | undefined;
+  timeout?: number | undefined;
 }
 
 interface RoverAgentResponse {
@@ -19,13 +19,13 @@ interface RoverAgentResponse {
   status: "running" | "completed" | "error";
   steps: RoverStep[];
   current_url: string;
-  screenshot_url?: string;
+  screenshot_url?: string | undefined;
 }
 
 interface RoverStep {
   action: string;
-  selector?: string;
-  value?: string;
+  selector?: string | undefined;
+  value?: string | undefined;
   description: string;
   result: "success" | "error";
   duration_ms: number;

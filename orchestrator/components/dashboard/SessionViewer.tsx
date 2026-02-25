@@ -13,7 +13,7 @@ interface SessionRecord {
   hotelName?: string;
 }
 
-export default function SessionViewer({ hotelId }: { hotelId?: string }) {
+export default function SessionViewer({ hotelId }: { hotelId?: string | undefined }) {
   const [sessions, setSessions] = useState<SessionRecord[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -27,9 +27,13 @@ export default function SessionViewer({ hotelId }: { hotelId?: string }) {
       .then((data) => {
         const list = data.sessions ?? [];
         setSessions(
-          list.map((s: Record<string, unknown>) =>
-            "session" in s ? { ...s.session, hotelName: s.hotelName } : s
-          )
+          list.map((s: unknown) => {
+            const obj = s as Record<string, unknown>;
+            if ("session" in obj && typeof obj.session === "object" && obj.session !== null) {
+              return Object.assign({} as SessionRecord, obj.session, { hotelName: String(obj.hotelName ?? "") });
+            }
+            return obj as unknown as SessionRecord;
+          })
         );
       })
       .catch(console.error)

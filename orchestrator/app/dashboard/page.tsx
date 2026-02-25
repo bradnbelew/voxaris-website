@@ -26,8 +26,8 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
       </div>
 
       {tab === "hotels" && <HotelList />}
-      {tab === "sessions" && <SessionViewer hotelId={params.hotelId} />}
-      {tab === "audit" && <AuditLog sessionId={params.sessionId} />}
+      {tab === "sessions" && <SessionViewer hotelId={params.hotelId ?? undefined} />}
+      {tab === "audit" && <AuditLog sessionId={params.sessionId ?? undefined} />}
     </div>
   );
 }

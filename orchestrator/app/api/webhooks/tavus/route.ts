@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { tavusWebhookEventSchema } from "@/lib/schemas/events";
 import { TavusClient } from "@/lib/clients/tavus";
-import { orchestrate } from "@/lib/orchestrator";
 import { db } from "@/db";
 import { sessions, auditLogs } from "@/db/schema";
 import { eq } from "drizzle-orm";
@@ -11,9 +10,22 @@ import { correlationId } from "@/lib/utils/id";
 export const runtime = "nodejs";
 export const maxDuration = 30;
 
+/**
+ * Tavus webhook handler — receives events from Tavus CVI.
+ *
+ * In BRAIN_MODE=tavus (default):
+ *   - conversation.tool_call events are routed directly to /api/execute
+ *     by Tavus via the callback_url. This webhook just logs them.
+ *   - conversation.utterance events are logged but NOT sent to Claude.
+ *
+ * In BRAIN_MODE=claude:
+ *   - conversation.utterance (user) events trigger the full Claude ReAct loop.
+ */
+
 export async function POST(request: NextRequest) {
   const corrId = correlationId();
   const log = createRequestLogger(corrId, { route: "tavus-webhook" });
+  const brainMode = process.env.BRAIN_MODE ?? "tavus";
 
   try {
     // Verify webhook signature
@@ -39,11 +51,13 @@ export async function POST(request: NextRequest) {
     }
 
     const event = parsed.data;
-    log.info({ eventType: event.event_type, conversationId: event.conversation_id }, "Tavus webhook received");
+    log.info(
+      { eventType: event.event_type, conversationId: event.conversation_id, brainMode },
+      "Tavus webhook received"
+    );
 
     switch (event.event_type) {
       case "conversation.started": {
-        // Find session by tavus conversation ID and mark active
         await db
           .update(sessions)
           .set({ status: "active" })
@@ -63,29 +77,59 @@ export async function POST(request: NextRequest) {
       }
 
       case "conversation.utterance": {
-        if (event.role === "user") {
-          // Find the session for this conversation
-          const [session] = await db
-            .select()
-            .from(sessions)
-            .where(eq(sessions.tavusConversationId, event.conversation_id))
-            .limit(1);
-
-          if (session) {
-            // Route user utterance through the orchestrator
-            try {
-              await orchestrate(
-                session.sessionKey,
-                session.hotelConfigId,
-                event.text
-              );
-            } catch (err) {
-              log.error({ err, conversationId: event.conversation_id }, "Orchestration from webhook failed");
-            }
-          }
-        }
+        // Look up session
+        const [session] = await db
+          .select()
+          .from(sessions)
+          .where(eq(sessions.tavusConversationId, event.conversation_id))
+          .limit(1);
 
         // Log all utterances
+        if (session) {
+          await db.insert(auditLogs).values({
+            sessionId: session.id,
+            hotelConfigId: session.hotelConfigId,
+            correlationId: corrId,
+            eventType: event.role === "user" ? "utterance_in" : "utterance_out",
+            actor: event.role === "user" ? "user" : "agent",
+            payload: { text: event.text, source: "tavus_webhook", brainMode },
+          });
+        }
+
+        // In Claude mode, route user utterances through Claude orchestrator
+        if (brainMode === "claude" && event.role === "user" && session) {
+          try {
+            const { orchestrate } = await import("@/lib/orchestrator");
+            await orchestrate(
+              session.sessionKey,
+              session.hotelConfigId,
+              event.text
+            );
+          } catch (err) {
+            log.error(
+              { err, conversationId: event.conversation_id },
+              "Claude orchestration from webhook failed"
+            );
+          }
+        }
+        // In Tavus mode, Raven handles everything — utterances are just logged
+        break;
+      }
+
+      case "conversation.tool_call": {
+        log.info(
+          {
+            toolName: event.tool_name,
+            conversationId: event.conversation_id,
+            brainMode,
+          },
+          "Tool call from Tavus"
+        );
+
+        // In Tavus-native mode, tool calls go directly to /api/execute
+        // via the callback_url set during conversation creation.
+        // This webhook event is just for logging/audit.
+
         const [session] = await db
           .select({ id: sessions.id, hotelConfigId: sessions.hotelConfigId })
           .from(sessions)
@@ -97,20 +141,15 @@ export async function POST(request: NextRequest) {
             sessionId: session.id,
             hotelConfigId: session.hotelConfigId,
             correlationId: corrId,
-            eventType: event.role === "user" ? "utterance_in" : "utterance_out",
-            actor: event.role === "user" ? "user" : "agent",
-            payload: { text: event.text, source: "tavus_webhook" },
+            eventType: "tool_call",
+            actor: "agent",
+            payload: {
+              tool_name: event.tool_name,
+              source: "tavus_webhook",
+              brainMode,
+            },
           });
         }
-        break;
-      }
-
-      case "conversation.tool_call": {
-        log.info(
-          { toolName: event.tool_name, conversationId: event.conversation_id },
-          "Tool call from Tavus"
-        );
-        // Tool calls are handled by the orchestrator when routed through utterances
         break;
       }
     }

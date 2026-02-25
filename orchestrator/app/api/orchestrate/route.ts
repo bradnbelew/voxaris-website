@@ -8,12 +8,26 @@ import { correlationId } from "@/lib/utils/id";
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
+/**
+ * Dual-mode orchestration endpoint.
+ *
+ * BRAIN_MODE=tavus  → Raven-1 handles reasoning, tool_calls route to /api/execute
+ *                     This endpoint is only used for Claude-mode fallback.
+ * BRAIN_MODE=claude → Full Claude ReAct loop with 8 tools + Rover
+ */
+
 export async function POST(request: NextRequest) {
+  const brainMode = process.env.BRAIN_MODE ?? "tavus";
   const corrId = correlationId();
-  const log = createRequestLogger(corrId, { route: "orchestrate" });
+  const log = createRequestLogger(corrId, { route: "orchestrate", brainMode });
+
+  // In Tavus-native mode, this endpoint is a fallback.
+  // Primary path: Raven-1 → tool_call webhook → /api/execute
+  if (brainMode === "tavus") {
+    log.info("Tavus-native mode — orchestrate endpoint used as fallback");
+  }
 
   try {
-    // Parse and validate request body
     const raw = await request.json();
     const parsed = orchestrateRequestSchema.safeParse(raw);
 
@@ -48,7 +62,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Run orchestrator
+    // In Tavus mode, we don't have Claude — return a simple ack
+    if (brainMode === "tavus") {
+      return NextResponse.json({
+        response: "This endpoint is for Claude-mode fallback. In Tavus-native mode, Raven-1 handles all reasoning. Tool calls route to /api/execute.",
+        narrations: [],
+        requiresConfirmation: false,
+        sessionStatus: "active",
+        actionsTaken: [],
+      });
+    }
+
+    // Claude mode — full ReAct orchestration
     const result = await orchestrate(
       sessionKey,
       hotelId,
@@ -68,6 +93,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(result, {
       headers: {
         "X-Correlation-Id": corrId,
+        "X-Brain-Mode": brainMode,
         "Cache-Control": "no-store",
       },
     });

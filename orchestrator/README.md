@@ -1,166 +1,133 @@
 # Voxaris Orchestrator
 
-Real-time conversational video AI concierge that visibly controls hotel websites using Tavus CVI + Rover DOM automation, orchestrated by Claude 4.
+Real-time conversational video AI agent powered by Tavus CVI + Rover DOM automation.
 
 ## Architecture
 
 ```
-Hotel Website
-  ├── Rover embed script (visible DOM actions)
-  ├── Tavus CVI widget (video avatar)
-  └── Voxaris loader (postMessage bridge)
-         │
-         ▼
-Vercel Edge/Serverless
-  ├── /api/orchestrate (Claude ReAct agent)
-  ├── /api/webhooks/tavus (CVI events)
-  ├── /api/embed/[hotelId] (config loader)
-  └── /api/dashboard/* (multi-tenant CRUD)
-         │
-         ▼
-External Services
-  ├── Claude 4 (Sonnet/Opus) — tool-calling brain
-  ├── Tavus CVI API — photorealistic video avatar
-  ├── Rover /agent API — DOM automation
-  ├── Clerk — multi-tenant auth
-  ├── Vercel Postgres — persistent storage
-  └── Vercel KV — session state
+Visitor speaks → Tavus Raven-1 (perception + reasoning)
+                      ↓
+              tool_call webhook
+                      ↓
+        /api/execute (thin executor)
+          ↓                    ↓
+   postMessage bridge     Rover REST API
+   (self-demo scroll)    (hotel DOM control)
+          ↓                    ↓
+     voxaris-loader.js     Hotel website
+     handles DOM action    visible actions
+          ↓                    ↓
+       Result → Tavus → Raven narrates
 ```
 
-## Quick Start
+**Dual-mode**: `BRAIN_MODE=tavus` (default, ~600ms) or `BRAIN_MODE=claude` (fallback, ~1.2s)
 
-### Prerequisites
+## Ship Tonight Checklist
 
-- Node.js 22+
-- Vercel account with Postgres + KV addons
-- API keys: Anthropic, Tavus, Rover, Clerk
-
-### Setup
+### 1. Environment
 
 ```bash
-# Clone and install
-git clone <repo-url>
-cd voxaris-orchestrator
-npm install
-
-# Configure environment
+cd orchestrator
 cp .env.example .env.local
-# Fill in all API keys in .env.local
-
-# Run database migrations
-npx drizzle-kit push
-
-# Start dev server
-npm run dev
+# Fill in: TAVUS_API_KEY, TAVUS_PERSONA_ID, ROVER_API_KEY
 ```
 
-### Hotel Integration (One Script Tag)
-
-After creating a hotel config in the dashboard, hotels add a single script:
-
-```html
-<script
-  src="https://orchestrator.voxaris.io/voxaris-loader.js"
-  data-hotel-id="YOUR_HOTEL_UUID"
-  data-embed-key="emb_YOUR_KEY"
-  data-position="bottom-right"
-  async
-></script>
-```
-
-## Deployment
-
-### Vercel (Recommended)
+### 2. Install + Build
 
 ```bash
-# Install Vercel CLI
-npm i -g vercel
+npm install --legacy-peer-deps
+npm run build
+```
 
-# Deploy
+### 3. Tavus Persona
+
+Persona `p40793780aaa` with replica `raf6459c9b82`.
+
+Configure in Tavus dashboard:
+- Perception: Raven-1 with ambient awareness
+- Turn-taking: Sparrow-1, medium patience
+- Tools: 5 tools (scroll, highlight, navigate, extract, demo booking)
+- Callback URL: `https://orchestrator.voxaris.io/api/execute`
+- Speculative inference: enabled
+
+### 4. Database (when ready)
+
+```bash
+npm run db:push        # Push schema to Neon/Vercel Postgres
+npx tsx scripts/seed-demo.ts   # Seed voxaris-demo config
+```
+
+### 5. Deploy
+
+```bash
 vercel --prod
 ```
 
-CI/CD is configured via GitHub Actions — push to `main` auto-deploys.
+### 6. Embed on voxaris.io
 
-### Environment Variables
-
-See `.env.example` for the complete list. All secrets go in Vercel project settings.
-
-## Dashboard
-
-The multi-tenant dashboard at `/dashboard` provides:
-
-- **Hotels**: Create and manage hotel configurations
-- **Sessions**: Monitor live and recent guest interactions
-- **Audit Log**: Full trail of every utterance, tool call, and Rover action
-
-Authentication is handled by Clerk with organization-based multi-tenancy.
-
-## Safety & Compliance
-
-### Booking Safety
-
-- Every booking requires **dual confirmation**: verbal + UI button click
-- Payment info is **never entered** by the agent — guests type it themselves
-- All actions are logged to an immutable audit trail
-- Sessions have configurable action limits (default: 50)
-
-### Security
-
-- [x] Zod validation on all inputs
-- [x] Rate limiting (per-IP and per-session)
-- [x] Webhook signature verification (Tavus)
-- [x] Origin validation for embed endpoints
-- [x] No client-side secrets
-- [x] Sensitive data detection and blocking
-- [x] CORS properly configured
-- [x] Security headers (CSP-ready, X-Frame-Options, etc.)
-
-### GDPR
-
-- Session data auto-expires via KV TTL
-- Audit logs can be exported/deleted per hotel
-- No PII stored beyond session scope
-- Cookie-free embed (no tracking)
-
-### PCI DSS
-
-- Agent never touches payment card data
-- Sensitive input detection blocks CC numbers
-- No card data in logs or session state
-- Hotels handle payment through their own PCI-compliant systems
-
-## Testing
-
-```bash
-# Unit tests
-npm test
-
-# E2E tests
-npm run test:e2e
-
-# Type checking
-npx tsc --noEmit
+Self-demo mode (no hotel config needed):
+```html
+<script src="https://orchestrator.voxaris.io/voxaris-loader.js"
+        data-persona-id="p40793780aaa"
+        data-mode="self-demo"
+        async></script>
 ```
 
-## Cost Optimization
+Hotel integration:
+```html
+<script src="https://orchestrator.voxaris.io/voxaris-loader.js"
+        data-hotel-id="UUID"
+        data-embed-key="emb_xxxx"
+        async></script>
+```
 
-| Component | Estimated Cost | Notes |
-|-----------|---------------|-------|
-| Claude API | ~$0.02-0.08/session | 3-8 turns avg, Sonnet pricing |
-| Tavus CVI | Per-minute pricing | Video generation |
-| Rover | Per-action pricing | DOM automation |
-| Vercel | $20/mo Pro plan | Edge + Serverless |
-| Postgres | Included in Vercel | Up to 256MB free |
-| KV | Included in Vercel | Up to 256MB free |
+## API Endpoints
 
-### Optimization Strategies
+| Endpoint | Method | Mode | Purpose |
+|----------|--------|------|---------|
+| `/api/execute` | POST | tavus | Thin tool executor for Raven-1 tool calls |
+| `/api/orchestrate` | POST | claude | Full Claude ReAct loop (fallback) |
+| `/api/tavus/conversation` | POST | both | Create Tavus CVI conversation |
+| `/api/webhooks/tavus` | POST | both | Tavus event webhooks |
+| `/api/embed/[hotelId]` | GET | both | Hotel embed config |
+| `/api/dashboard/*` | GET/POST | both | Dashboard CRUD (Clerk auth) |
 
-- Use Claude Sonnet (not Opus) for routine navigation
-- Cache Rover trajectories for common flows
-- Session KV TTL prevents state bloat
-- Audit log archival to cold storage after 90 days
-- Embed config cached (5min) at CDN edge
+## Tools (Tavus-native mode)
+
+| Tool | Description |
+|------|-------------|
+| `scroll_to_section` | Smooth scroll to page section (hero, features, pricing, etc.) |
+| `highlight_feature` | Gold pulse animation on a feature element |
+| `navigate_to_page` | Navigate to a different page on the site |
+| `extract_page_content` | Read page content to answer questions |
+| `request_demo_booking` | Start demo booking flow with confirmation |
+
+## Key Files
+
+```
+app/api/execute/route.ts     <- Tavus-native tool executor
+app/api/orchestrate/route.ts <- Claude fallback orchestrator
+app/api/tavus/conversation/  <- Conversation creator
+app/api/webhooks/tavus/      <- Webhook handler
+public/voxaris-loader.js     <- One-script-tag embed (vanilla JS)
+components/embed/            <- React embed component
+lib/orchestrator.ts          <- Claude ReAct brain
+lib/clients/rover.ts         <- Rover REST client
+lib/clients/tavus.ts         <- Tavus API client
+scripts/create-persona.ts    <- Persona creation script
+scripts/seed-demo.ts         <- Database seeder
+```
+
+## Security
+
+- Dual confirmation (verbal + button) for bookings
+- Sensitive data detection blocks CC/SSN entry
+- Rate limiting per session (30/min) and per IP (60/min)
+- CORS restricted to allowed origins
+- Webhook signature verification
+- Immutable audit log trail
+- Circuit breakers on external APIs
+- Input sanitization (control char stripping)
 
 ## License
 

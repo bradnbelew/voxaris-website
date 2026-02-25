@@ -26,7 +26,7 @@ const EVENT_COLORS: Record<string, string> = {
   handoff_requested: "text-yellow-400",
 };
 
-export default function AuditLog({ sessionId }: { sessionId?: string }) {
+export default function AuditLog({ sessionId }: { sessionId?: string | undefined }) {
   const [logs, setLogs] = useState<AuditEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
