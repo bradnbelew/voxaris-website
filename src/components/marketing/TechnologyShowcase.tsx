@@ -46,7 +46,7 @@ const products = [
 
 export function TechnologyShowcase() {
   return (
-    <section className="section-padding-lg bg-white">
+    <section data-section="technology" className="section-padding-lg bg-white">
       <div className="container-wide">
         {/* Header */}
         <motion.div
@@ -72,6 +72,7 @@ export function TechnologyShowcase() {
           {products.map((product, index) => (
             <motion.div
               key={product.id}
+              data-feature={product.name}
               className="group relative bg-carbon-50 border border-carbon-200 rounded-[24px] overflow-hidden transition-all duration-500 hover:border-carbon-300"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}

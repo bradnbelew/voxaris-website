@@ -7,7 +7,7 @@ const TAVUS_VIDEO_URL = "https://cdn.replica.tavus.io/40242/2fe8396c.mp4";
 
 export function Hero() {
   return (
-    <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-white">
+    <section data-section="hero" className="relative min-h-[90vh] flex items-center overflow-hidden bg-white">
       {/* Background — subtle light texture */}
       <div className="absolute inset-0">
         {/* Primary ambient glow — warm grey */}

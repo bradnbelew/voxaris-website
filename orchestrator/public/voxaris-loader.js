@@ -1,11 +1,12 @@
 /**
- * Voxaris Embed Loader — Tavus CVI Avatar + Navigation Bridge
+ * Voxaris Embed Loader — Tavus CVI Avatar + Rover DOM Automation
  *
  * Self-demo on voxaris.io:
  * <script src="https://voxaris-orchestrator.vercel.app/voxaris-loader.js"
  *         data-mode="self-demo"
  *         data-persona-id="p40793780aaa"
  *         data-agent-name="Maria"
+ *         data-position="bottom-right"
  *         async></script>
  *
  * Hotel/client integration:
@@ -100,7 +101,6 @@
       "display:flex;align-items:center;justify-content:space-between;" +
       "padding:14px 16px;" +
       "background:#171717;" +
-      "backdrop-filter:blur(12px);" +
       "border-bottom:1px solid rgba(255,255,255,.06)}",
     ".vxr-header-left{display:flex;align-items:center;gap:10px}",
     ".vxr-header-avatar{" +
@@ -159,6 +159,13 @@
       "transition:all .2s;display:flex;align-items:center}",
     ".vxr-mute:hover{color:#fafafa;background:rgba(255,255,255,.06)}",
 
+    /* Rover scroll highlight animation */
+    ".vxr-rover-highlight{" +
+      "animation:vxr-rover-glow 2s ease-out forwards}",
+    "@keyframes vxr-rover-glow{" +
+      "0%{box-shadow:0 0 0 2px rgba(192,192,192,.3)}" +
+      "100%{box-shadow:0 0 0 0 transparent}}",
+
     /* Draggable */
     ".vxr-dragging{cursor:grabbing!important;user-select:none}",
 
@@ -191,6 +198,7 @@
   var conversationId = null;
   var callFrame = null;
   var isMuted = false;
+  var roverPollTimer = null;
   var dragState = { dragging: false, offsetX: 0, offsetY: 0 };
 
   // ── Build avatar HTML (reused in trigger + header) ──
@@ -311,6 +319,109 @@
     }
   });
 
+  // ══════════════════════════════════════════════════════════════
+  // ── ROVER: DOM Automation Engine ──
+  // Polls /api/execute?cid=xxx for actions queued by Tavus tool calls.
+  // Executes scroll, highlight, navigate actions on the host page.
+  // ══════════════════════════════════════════════════════════════
+
+  function startRoverPolling() {
+    if (roverPollTimer) return;
+    if (!conversationId) return;
+
+    var pollUrl = BASE_URL + "/api/execute?cid=" + encodeURIComponent(conversationId);
+
+    roverPollTimer = setInterval(function () {
+      if (!conversationId) {
+        stopRoverPolling();
+        return;
+      }
+
+      fetch(pollUrl, { method: "GET" })
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+          if (data.actions && data.actions.length > 0) {
+            for (var i = 0; i < data.actions.length; i++) {
+              executeRoverAction(data.actions[i]);
+            }
+          }
+        })
+        .catch(function () {
+          // Silent fail — polling will retry on next tick
+        });
+    }, 400); // Poll every 400ms
+  }
+
+  function stopRoverPolling() {
+    if (roverPollTimer) {
+      clearInterval(roverPollTimer);
+      roverPollTimer = null;
+    }
+  }
+
+  function executeRoverAction(action) {
+    console.log("[Voxaris Rover]", action.action, action);
+
+    switch (action.action) {
+      case "scroll_to_section": {
+        var selectors = (action.selector || "").split(",");
+        for (var i = 0; i < selectors.length; i++) {
+          var el = document.querySelector(selectors[i].trim());
+          if (el) {
+            el.scrollIntoView({ behavior: "smooth", block: "start" });
+            // Add subtle highlight
+            el.classList.add("vxr-rover-highlight");
+            setTimeout(function () { el.classList.remove("vxr-rover-highlight"); }, 2500);
+            break;
+          }
+        }
+        break;
+      }
+
+      case "highlight_feature": {
+        // Try data-feature attribute first, then text content match
+        var target = document.querySelector('[data-feature="' + action.feature + '"]');
+
+        if (!target) {
+          // Fuzzy match: find elements containing the feature text
+          var featureLower = (action.feature || "").toLowerCase();
+          var allCards = document.querySelectorAll("[data-feature], .feature-card, [class*='card']");
+          for (var j = 0; j < allCards.length; j++) {
+            if (allCards[j].textContent.toLowerCase().indexOf(featureLower) > -1) {
+              target = allCards[j];
+              break;
+            }
+          }
+        }
+
+        if (target) {
+          target.scrollIntoView({ behavior: "smooth", block: "center" });
+          target.style.transition = "all .4s ease-out";
+          target.style.boxShadow = "0 0 40px rgba(192,192,192,.12),0 0 0 1px rgba(255,255,255,.1)";
+          target.style.transform = "scale(1.02)";
+          setTimeout(function () {
+            target.style.boxShadow = "";
+            target.style.transform = "";
+          }, 3000);
+        }
+        break;
+      }
+
+      case "navigate_to_page": {
+        if (action.route) {
+          window.location.href = action.route;
+        }
+        break;
+      }
+
+      case "update_caption": {
+        var captionEl = document.getElementById("vxr-caption");
+        if (captionEl) captionEl.textContent = action.text || "";
+        break;
+      }
+    }
+  }
+
   // ── Tavus CVI Integration ──
   function startConversation() {
     var placeholder = document.getElementById("vxr-placeholder");
@@ -336,6 +447,8 @@
       .then(function (data) {
         conversationId = data.conversation_id;
         embedTavusVideo(data.conversation_url);
+        // Start Rover polling for DOM actions
+        startRoverPolling();
       })
       .catch(function (err) {
         console.error("[Voxaris] Conversation start failed:", err);
@@ -427,6 +540,9 @@
   function endConversation() {
     if (!conversationId) return;
 
+    // Stop Rover polling
+    stopRoverPolling();
+
     // End via Daily SDK
     if (callFrame) {
       try { callFrame.leave(); } catch (e) {}
@@ -461,52 +577,12 @@
     conversationId = null;
   }
 
-  // ── Navigation Bridge (postMessage) ──
+  // ── Navigation Bridge (postMessage — legacy support) ──
   window.addEventListener("message", function (e) {
     var data = e.data;
     if (!data || data.source !== "voxaris-orchestrator") return;
-
-    switch (data.action) {
-      case "scroll_to_section": {
-        var selectors = data.selector.split(",");
-        for (var i = 0; i < selectors.length; i++) {
-          var el = document.querySelector(selectors[i].trim());
-          if (el) {
-            el.scrollIntoView({ behavior: "smooth", block: "start" });
-            el.style.transition = "box-shadow .5s ease-out";
-            el.style.boxShadow = "0 0 0 2px rgba(192,192,192,.2)";
-            setTimeout(function () { el.style.boxShadow = ""; }, 2500);
-            break;
-          }
-        }
-        break;
-      }
-
-      case "highlight_feature": {
-        var target = document.querySelector('[data-feature="' + data.feature + '"]');
-        if (target) {
-          target.style.transition = "all .4s ease-out";
-          target.style.boxShadow = "0 0 40px rgba(192,192,192,.12),0 0 0 1px rgba(255,255,255,.1)";
-          target.style.transform = "scale(1.01)";
-          setTimeout(function () {
-            target.style.boxShadow = "";
-            target.style.transform = "";
-          }, 3000);
-        }
-        break;
-      }
-
-      case "navigate_to_page": {
-        if (data.route) window.location.href = data.route;
-        break;
-      }
-
-      case "update_caption": {
-        var captionEl = document.getElementById("vxr-caption");
-        if (captionEl) captionEl.textContent = data.text || "";
-        break;
-      }
-    }
+    // Relay postMessage actions through Rover executor
+    executeRoverAction(data);
   });
 
   // ── Keyboard: Escape to close ──

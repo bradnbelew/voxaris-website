@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 
 export function CTASection() {
   return (
-    <section className="relative py-20 lg:py-28 bg-carbon-900 overflow-hidden">
+    <section data-section="cta" className="relative py-20 lg:py-28 bg-carbon-900 overflow-hidden">
       {/* Background glow */}
       <div className="absolute inset-0">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[600px]"

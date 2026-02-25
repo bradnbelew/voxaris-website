@@ -22,7 +22,7 @@ const comparisons = [
 
 export function ProblemSolution() {
   return (
-    <section className="section-padding-lg bg-carbon-50">
+    <section data-section="features" className="section-padding-lg bg-carbon-50">
       <div className="container-editorial">
         {/* Header */}
         <motion.div

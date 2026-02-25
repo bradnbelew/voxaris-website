@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { getRoverClient } from "@/lib/clients/rover";
 import { createRequestLogger } from "@/lib/utils/logger";
 import { correlationId } from "@/lib/utils/id";
 
@@ -8,12 +7,63 @@ export const runtime = "nodejs";
 export const maxDuration = 30;
 
 /**
- * Thin tool executor for Tavus-native mode.
- * Tavus Raven-1 handles all reasoning — this endpoint just executes tool calls
- * and returns results. No Claude in the loop.
+ * Tool executor + Rover action relay for Tavus-native mode.
  *
- * Flow: Raven decides tool_call → POST here → execute → return result → Raven narrates
+ * POST: Tavus Raven calls tools → execute → queue DOM action → return result
+ * GET:  Loader polls for pending DOM actions → return + clear queue
+ *
+ * globalThis.__roverActionQueue is shared within the same Vercel function bundle,
+ * so POST (from Tavus) and GET (from loader) share the same in-memory queue.
  */
+
+// ── In-memory action queue (shared within warm function instance) ──
+interface RoverAction {
+  action: string;
+  [key: string]: unknown;
+}
+
+declare global {
+  // eslint-disable-next-line no-var
+  var __roverActionQueue: Map<string, RoverAction[]> | undefined;
+  // eslint-disable-next-line no-var
+  var __roverQueueCleanup: ReturnType<typeof setInterval> | undefined;
+}
+
+function getQueue(): Map<string, RoverAction[]> {
+  if (!globalThis.__roverActionQueue) {
+    globalThis.__roverActionQueue = new Map();
+
+    // Auto-cleanup stale queues every 5 minutes
+    if (!globalThis.__roverQueueCleanup) {
+      globalThis.__roverQueueCleanup = setInterval(() => {
+        const queue = globalThis.__roverActionQueue;
+        if (queue && queue.size > 100) {
+          const keys = Array.from(queue.keys());
+          for (let i = 0; i < keys.length - 50; i++) {
+            queue.delete(keys[i]);
+          }
+        }
+      }, 300_000);
+    }
+  }
+  return globalThis.__roverActionQueue;
+}
+
+function pushAction(conversationId: string, action: RoverAction) {
+  const queue = getQueue();
+  const actions = queue.get(conversationId) || [];
+  actions.push(action);
+  queue.set(conversationId, actions);
+}
+
+function popActions(conversationId: string): RoverAction[] {
+  const queue = getQueue();
+  const actions = queue.get(conversationId) || [];
+  queue.delete(conversationId);
+  return actions;
+}
+
+// ── Schemas ──
 
 const toolCallSchema = z.object({
   conversation_id: z.string(),
@@ -33,6 +83,7 @@ const SECTION_SELECTORS: Record<string, string> = {
   pricing: "#pricing, [data-section='pricing']",
   demo: "#demo, #book-demo, [data-section='demo']",
   contact: "#contact, footer, [data-section='contact']",
+  cta: "#cta, [data-section='cta']",
   vface: "#vface, [data-section='vface'], .vface-section",
   vvoice: "#vvoice, [data-section='vvoice'], .vvoice-section",
   vsuite: "#vsuite, [data-section='vsuite'], .vsuite-section",
@@ -50,6 +101,29 @@ const PAGE_ROUTES: Record<string, string> = {
   "how-it-works": "/how-it-works",
 };
 
+// ── GET: Loader polls for pending Rover actions ──
+export async function GET(request: NextRequest) {
+  const cid = request.nextUrl.searchParams.get("cid");
+  if (!cid) {
+    return NextResponse.json({ actions: [] }, {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Cache-Control": "no-store",
+      },
+    });
+  }
+
+  const actions = popActions(cid);
+
+  return NextResponse.json({ actions }, {
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Cache-Control": "no-store",
+    },
+  });
+}
+
+// ── POST: Tavus Raven tool execution ──
 export async function POST(request: NextRequest) {
   const corrId = correlationId();
   const log = createRequestLogger(corrId, { route: "execute" });
@@ -82,38 +156,35 @@ export async function POST(request: NextRequest) {
           break;
         }
 
-        // For self-demo on voxaris.io, we emit a postMessage that the embed
-        // bridge picks up and executes as a smooth scroll. For hotel sites,
-        // this would call Rover instead.
         result = {
           success: true,
           action: "scroll_to_section",
           section,
           selector,
           instruction: `Smooth scroll to ${section} section`,
-          // The embed bridge on voxaris.io handles the actual DOM scroll
-          // via postMessage. For production hotels, Rover handles it.
         };
 
-        // If Rover is available, also fire the action for hotel sites
+        // Queue DOM action for the loader to pick up
+        pushAction(conversation_id, {
+          action: "scroll_to_section",
+          selector,
+          section,
+        });
+
+        // If Rover is available (hotel mode), also fire via Rover
         try {
           if (process.env.ROVER_API_KEY) {
+            const { getRoverClient } = await import("@/lib/clients/rover");
             const rover = getRoverClient();
             if (rover.isAvailable) {
               const roverResult = await rover.executeAction(
-                {
-                  goal: `Scroll to the ${section} section of the page`,
-                  maxSteps: 2,
-                  timeout: 8000,
-                },
+                { goal: `Scroll to the ${section} section of the page`, maxSteps: 2, timeout: 8000 },
                 corrId
               );
               result.rover_status = roverResult.status;
-              result.current_url = roverResult.current_url;
             }
           }
         } catch {
-          // Rover failure is non-fatal — the embed bridge handles the scroll
           log.warn("Rover scroll failed, falling back to embed bridge");
         }
         break;
@@ -125,8 +196,14 @@ export async function POST(request: NextRequest) {
           success: true,
           action: "highlight_feature",
           feature,
-          instruction: `Highlight the "${feature}" element with a gold pulse animation`,
+          instruction: `Highlight the "${feature}" element`,
         };
+
+        // Queue DOM action
+        pushAction(conversation_id, {
+          action: "highlight_feature",
+          feature,
+        });
         break;
       }
 
@@ -147,17 +224,20 @@ export async function POST(request: NextRequest) {
           instruction: `Navigate to ${route}`,
         };
 
-        // Fire Rover for production hotel sites
+        // Queue DOM action
+        pushAction(conversation_id, {
+          action: "navigate_to_page",
+          route,
+        });
+
+        // Fire Rover for hotel sites
         try {
           if (process.env.ROVER_API_KEY) {
+            const { getRoverClient } = await import("@/lib/clients/rover");
             const rover = getRoverClient();
             if (rover.isAvailable) {
               const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.voxaris.io";
-              const roverResult = await rover.navigate(
-                `${baseUrl}${route}`,
-                undefined,
-                corrId
-              );
+              const roverResult = await rover.navigate(`${baseUrl}${route}`, undefined, corrId);
               result.rover_status = roverResult.status;
             }
           }
@@ -170,15 +250,16 @@ export async function POST(request: NextRequest) {
       case "extract_page_content": {
         const query = tool_input.query as string;
 
-        // For self-demo, return known content. For hotels, use Rover extract.
+        // For self-demo, return known content. For hotels, use Rover.
         try {
           if (process.env.ROVER_API_KEY) {
+            const { getRoverClient } = await import("@/lib/clients/rover");
             const rover = getRoverClient();
             if (rover.isAvailable) {
               const roverResult = await rover.extractContent(query, undefined, corrId);
               result = {
                 success: true,
-                content: roverResult.steps.map((s) => s.description).join("\n"),
+                content: roverResult.steps.map((s: { description: string }) => s.description).join("\n"),
               };
               break;
             }
@@ -187,7 +268,7 @@ export async function POST(request: NextRequest) {
           log.warn("Rover extract failed");
         }
 
-        // Fallback: return static site knowledge
+        // Fallback: static site knowledge
         result = {
           success: true,
           content: getStaticSiteContent(query),
@@ -203,6 +284,13 @@ export async function POST(request: NextRequest) {
           message: "Demo booking request received. Please confirm by clicking the 'Book Demo' button.",
           details: tool_input,
         };
+
+        // Queue action to scroll to CTA section
+        pushAction(conversation_id, {
+          action: "scroll_to_section",
+          selector: "#cta, [data-section='cta'], #demo, [data-section='demo']",
+          section: "cta",
+        });
         break;
       }
 
@@ -214,7 +302,6 @@ export async function POST(request: NextRequest) {
     const durationMs = Date.now() - startTime;
     log.info({ tool_name, durationMs, success: result.success }, "Tool execution complete");
 
-    // Return result to Tavus (Raven will narrate based on this)
     return NextResponse.json({
       tool_call_id,
       result,
@@ -236,24 +323,24 @@ function getStaticSiteContent(query: string): string {
   const q = query.toLowerCase();
 
   if (q.includes("price") || q.includes("cost"))
-    return "Pricing is custom per business. V·VOICE starts at competitive rates for 24/7 AI phone coverage. V·FACE and V·SUITE pricing depends on usage and integration scope. Best to book a demo call for a personalized quote.";
+    return "Pricing is custom per business. V\u00B7VOICE starts at competitive rates for 24/7 AI phone coverage. V\u00B7FACE and V\u00B7SUITE pricing depends on usage and integration scope. Best to book a demo call for a personalized quote.";
 
   if (q.includes("vface") || q.includes("video"))
-    return "V·FACE is our photorealistic video AI agent — exactly what you're talking to right now. It uses Tavus CVI with Phoenix-4 rendering, Raven-1 multimodal perception, and Sparrow-1 turn-taking for sub-600ms response times.";
+    return "V\u00B7FACE is our photorealistic video AI agent \u2014 exactly what you're talking to right now. It uses Tavus CVI with Phoenix-4 rendering, Raven-1 multimodal perception, and Sparrow-1 turn-taking for sub-600ms response times.";
 
   if (q.includes("vvoice") || q.includes("voice") || q.includes("phone"))
-    return "V·VOICE is our AI phone agent. It answers calls 24/7, books appointments, qualifies leads, and handles common questions. Built on Retell AI with natural voice quality, it replaces the need for after-hours answering services.";
+    return "V\u00B7VOICE is our AI phone agent. It answers calls 24/7, books appointments, qualifies leads, and handles common questions. Built on Retell AI with natural voice quality, it replaces the need for after-hours answering services.";
 
   if (q.includes("vsuite") || q.includes("dashboard"))
-    return "V·SUITE is the command center — a dashboard where businesses manage all their AI employees. Monitor calls, view analytics, train agents, and configure workflows all in one place.";
+    return "V\u00B7SUITE is the command center \u2014 a dashboard where businesses manage all their AI employees. Monitor calls, view analytics, train agents, and configure workflows all in one place.";
 
   if (q.includes("talking") || q.includes("postcard") || q.includes("direct mail"))
-    return "Talking Postcards combine direct mail with AI video. Businesses send physical postcards with QR codes. When scanned, recipients get a personalized AI video conversation — 10x engagement vs traditional mailers.";
+    return "Talking Postcards combine direct mail with AI video. Businesses send physical postcards with QR codes. When scanned, recipients get a personalized AI video conversation \u2014 10x engagement vs traditional mailers.";
 
   if (q.includes("dealer") || q.includes("automotive") || q.includes("car"))
     return "For dealerships, Voxaris handles inbound calls (service, sales, BDC), outbound follow-ups, website video chat, and Talking Postcard campaigns for conquest and retention.";
 
-  return "Voxaris builds AI employees for businesses — voice agents, video agents, and a full management suite. We serve dealerships, law firms, contractors, and medical spas across the US.";
+  return "Voxaris builds AI employees for businesses \u2014 voice agents, video agents, and a full management suite. We serve dealerships, law firms, contractors, and medical spas across the US.";
 }
 
 export async function OPTIONS() {
@@ -261,7 +348,7 @@ export async function OPTIONS() {
     status: 204,
     headers: {
       "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type",
     },
   });

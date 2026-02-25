@@ -20,7 +20,7 @@ const vSuite = [
 
 export function VSuiteSection() {
   return (
-    <section className="relative py-16 lg:py-24 bg-carbon-50 overflow-hidden">
+    <section data-section="vsuite" className="relative py-16 lg:py-24 bg-carbon-50 overflow-hidden">
       {/* Background ambient */}
       <div className="absolute inset-0">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[500px]"

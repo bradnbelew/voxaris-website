@@ -24,7 +24,7 @@ const steps = [
 
 export function HowItWorks() {
   return (
-    <section className="section-padding-lg bg-white relative">
+    <section data-section="how-it-works" className="section-padding-lg bg-white relative">
       <div className="container-wide">
         {/* Header */}
         <motion.div
