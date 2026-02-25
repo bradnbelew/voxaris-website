@@ -183,20 +183,10 @@
   ].join("\n");
   document.head.appendChild(css);
 
-  // ── Load Daily.co SDK (auto-join, dark theme, no haircheck) ──
-  var dailyReady = new Promise(function (resolve) {
-    if (window.DailyIframe) return resolve(window.DailyIframe);
-    var s = document.createElement("script");
-    s.src = "https://unpkg.com/@daily-co/daily-js";
-    s.onload = function () { resolve(window.DailyIframe); };
-    s.onerror = function () { resolve(null); }; // fallback to raw iframe
-    document.head.appendChild(s);
-  });
-
   // ── State ──
   var isOpen = false;
   var conversationId = null;
-  var callFrame = null;
+  var tavusIframe = null;
   var isMuted = false;
   var roverPollTimer = null;
   var dragState = { dragging: false, offsetX: 0, offsetY: 0 };
@@ -478,49 +468,15 @@
   function embedTavusVideo(conversationUrl) {
     var container = document.getElementById("vxr-video");
     var placeholder = document.getElementById("vxr-placeholder");
+    if (placeholder) placeholder.remove();
 
-    dailyReady.then(function (DailyIframe) {
-      if (placeholder) placeholder.remove();
-
-      if (DailyIframe) {
-        // ── Daily.co SDK: auto-join, dark theme, no haircheck ──
-        callFrame = DailyIframe.createFrame(container, {
-          iframeStyle: {
-            width: "100%",
-            height: "100%",
-            border: "none",
-            borderRadius: "0",
-            background: "#0a0a0a",
-          },
-          showLeaveButton: false,
-          showFullscreenButton: false,
-          showLocalVideo: false,
-          showParticipantsBar: false,
-          activeSpeakerMode: true,
-        });
-
-        callFrame.join({
-          url: conversationUrl,
-          userName: "Visitor",
-          startVideoOff: false,
-          startAudioOff: false,
-        }).catch(function (err) {
-          console.error("[Voxaris] Daily join failed:", err);
-        });
-
-        // Listen for call end
-        callFrame.on("left-meeting", function () {
-          if (isOpen) document.getElementById("vxr-close").click();
-        });
-      } else {
-        // ── Fallback: raw iframe (if Daily SDK fails to load) ──
-        var iframe = document.createElement("iframe");
-        iframe.src = conversationUrl;
-        iframe.allow = "camera;microphone;display-capture;autoplay";
-        iframe.style.cssText = "width:100%;height:100%;border:none;background:#0a0a0a";
-        container.appendChild(iframe);
-      }
-    });
+    // ── Direct iframe embed — Tavus CVI handles its own UI ──
+    var iframe = document.createElement("iframe");
+    iframe.src = conversationUrl;
+    iframe.allow = "camera;microphone;display-capture;autoplay";
+    iframe.style.cssText = "width:100%;height:100%;border:none;background:#0a0a0a;border-radius:0";
+    container.appendChild(iframe);
+    tavusIframe = iframe;
   }
 
   function endConversation() {
@@ -529,11 +485,10 @@
     // Stop Rover polling
     stopRoverPolling();
 
-    // End via Daily SDK
-    if (callFrame) {
-      try { callFrame.leave(); } catch (e) {}
-      try { callFrame.destroy(); } catch (e) {}
-      callFrame = null;
+    // Remove Tavus iframe
+    if (tavusIframe) {
+      try { tavusIframe.remove(); } catch (e) {}
+      tavusIframe = null;
     }
 
     // Best-effort API cleanup
