@@ -89,7 +89,6 @@ export async function POST(request: NextRequest) {
           max_call_duration: 1200,
           enable_recording: true,
           enable_transcription: true,
-          apply_greenscreen: false,
           language: "english",
         },
         // Tool call callback — Tavus sends tool_call events here
