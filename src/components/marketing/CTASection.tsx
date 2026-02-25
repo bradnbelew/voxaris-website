@@ -77,6 +77,26 @@ export function CTASection() {
           </Link>
         </motion.div>
 
+        {/* Phone CTA */}
+        <motion.div
+          className="flex items-center justify-center gap-3 mb-12"
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.4, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <span className="text-[14px] text-white/30">Or call our AI agent now:</span>
+          <a
+            href="tel:+14077594100"
+            className="inline-flex items-center gap-2 text-[15px] font-semibold text-white/80 hover:text-white transition-colors group"
+          >
+            <svg className="w-4 h-4 text-emerald-400/60 group-hover:text-emerald-400 transition-colors" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+            </svg>
+            (407) 759-4100
+          </a>
+        </motion.div>
+
         {/* Trust signals */}
         <motion.div
           className="flex flex-wrap items-center justify-center gap-8 text-[13px] text-white/30"

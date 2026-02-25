@@ -75,8 +75,8 @@ export default function NewCTASection() {
           >
             <Phone className="w-4 h-4" />
             <span className="text-sm">Or call us for a human:</span>
-            <a href="tel:+13215550000" className="text-primary font-medium hover:underline">
-              (321) XXX-XXXX
+            <a href="tel:+14077594100" className="text-primary font-medium hover:underline">
+              (407) 759-4100
             </a>
           </motion.div>
         </motion.div>
