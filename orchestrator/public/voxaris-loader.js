@@ -99,7 +99,7 @@
     ".vxr-header{" +
       "display:flex;align-items:center;justify-content:space-between;" +
       "padding:14px 16px;" +
-      "background:rgba(23,23,23,.6);" +
+      "background:#171717;" +
       "backdrop-filter:blur(12px);" +
       "border-bottom:1px solid rgba(255,255,255,.06)}",
     ".vxr-header-left{display:flex;align-items:center;gap:10px}",
@@ -137,7 +137,7 @@
     /* Caption bar */
     ".vxr-captions{" +
       "padding:10px 16px;" +
-      "background:rgba(23,23,23,.4);" +
+      "background:#171717;" +
       "border-top:1px solid rgba(255,255,255,.04);" +
       "min-height:40px;display:flex;align-items:center}",
     ".vxr-caption-text{" +
