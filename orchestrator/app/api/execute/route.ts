@@ -38,9 +38,9 @@ function getQueue(): Map<string, RoverAction[]> {
       globalThis.__roverQueueCleanup = setInterval(() => {
         const queue = globalThis.__roverActionQueue;
         if (queue && queue.size > 100) {
-          const keys = Array.from(queue.keys());
+          const keys: string[] = Array.from(queue.keys());
           for (let i = 0; i < keys.length - 50; i++) {
-            queue.delete(keys[i]);
+            queue.delete(keys[i]!);
           }
         }
       }, 300_000);
