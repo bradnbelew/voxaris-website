@@ -14,7 +14,7 @@ async function main() {
 
   console.log(`Creating conversation with persona ${PERSONA_ID}...\n`);
 
-  const response = await fetch("https://api.tavus.io/v2/conversations", {
+  const response = await fetch("https://tavusapi.com/v2/conversations", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

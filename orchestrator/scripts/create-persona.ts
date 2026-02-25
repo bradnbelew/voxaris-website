@@ -144,7 +144,7 @@ const TOOLS = [
 async function main() {
   console.log("Creating Voxaris Site Demo Agent persona on Tavus...\n");
 
-  const response = await fetch("https://api.tavus.io/v2/personas", {
+  const response = await fetch("https://tavusapi.com/v2/personas", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

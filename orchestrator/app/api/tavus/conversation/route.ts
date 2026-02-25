@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
 
     const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://orchestrator.voxaris.io";
 
-    const tavusResponse = await fetch("https://api.tavus.io/v2/conversations", {
+    const tavusResponse = await fetch("https://tavusapi.com/v2/conversations", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

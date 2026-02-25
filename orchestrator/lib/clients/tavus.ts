@@ -37,7 +37,7 @@ const tavusCircuit = new CircuitBreaker({
 
 export class TavusClient {
   private readonly apiKey: string;
-  private readonly baseUrl = "https://api.tavus.io/v2";
+  private readonly baseUrl = "https://tavusapi.com/v2";
 
   constructor() {
     this.apiKey = process.env.TAVUS_API_KEY ?? "";
