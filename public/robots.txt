@@ -1,3 +1,4 @@
+# Standard Search Crawlers
 User-agent: Googlebot
 Allow: /
 
@@ -10,6 +11,32 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
+# AI / LLM Crawlers — DO NOT BLOCK
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Anthropic-AI
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+# Default
 User-agent: *
 Allow: /
 

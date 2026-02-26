@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Video, Phone, Mail, Building2, Users, Clock, Target } from 'lucide-react';
@@ -36,6 +37,16 @@ const audienceItems = [
 export function SolutionDealerships() {
   return (
     <div className="min-h-screen bg-white">
+      <Helmet>
+        <title>AI Sales Agents for Car Dealerships | Voxaris</title>
+        <meta name="description" content="Voxaris AI sales agents answer every dealership inquiry, qualify every lead, and book every appointment \u2014 24/7. Recover missed leads with V\u00b7GUIDE video and voice AI." />
+        <meta name="keywords" content="dealership AI, AI BDC agent, automotive AI, AI voice agent for dealerships, missed call recovery, AI sales agent, dealership lead recovery, V\u00b7GUIDE" />
+        <link rel="canonical" href="https://voxaris.io/solutions/dealerships" />
+        <meta property="og:title" content="AI Sales Agents for Car Dealerships | Voxaris" />
+        <meta property="og:description" content="AI sales agents that answer every inquiry, qualify every lead, and book every appointment \u2014 before your competition picks up the phone." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://voxaris.io/solutions/dealerships" />
+      </Helmet>
       <Navbar />
 
       {/* Hero */}

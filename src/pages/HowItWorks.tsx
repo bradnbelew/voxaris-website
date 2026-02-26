@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
 import Layout from "@/components/layout/Layout";
 import { Phone, Globe, PhoneOutgoing, CheckSquare, Calendar, Database, Bell, RefreshCw, ArrowRight, Zap, Shield, BarChart3 } from "lucide-react";
@@ -115,6 +116,16 @@ const FeatureCard = ({ feature, index }: { feature: typeof coreFeatures[0], inde
 export default function HowItWorks() {
   return (
     <Layout>
+      <Helmet>
+        <title>How Voxaris Works | AI-Powered Lead Automation Platform</title>
+        <meta name="description" content="Voxaris handles every touchpoint from first contact to confirmed appointment with AI-powered precision. Inbound calls, outbound follow-up, qualification, and booking \u2014 all automated." />
+        <meta name="keywords" content="AI lead automation, AI call handling, automated lead qualification, AI appointment booking, CRM integration, conversational AI platform" />
+        <link rel="canonical" href="https://voxaris.io/how-it-works" />
+        <meta property="og:title" content="How Voxaris Works | AI-Powered Lead Automation" />
+        <meta property="og:description" content="A unified platform that handles every touchpoint \u2014 from first contact to confirmed appointment \u2014 with AI-powered precision." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://voxaris.io/how-it-works" />
+      </Helmet>
       {/* Hero */}
       <section className="section-padding bg-secondary/30">
         <div className="container-wide">

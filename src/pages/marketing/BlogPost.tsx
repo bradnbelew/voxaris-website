@@ -23,19 +23,33 @@ export function BlogPost() {
     author: {
       '@type': 'Person',
       name: post.author,
+      url: 'https://www.linkedin.com/in/ethanstopperich',
+      jobTitle: 'President & Founder',
+      worksFor: {
+        '@type': 'Organization',
+        name: 'Voxaris',
+      },
     },
     publisher: {
       '@type': 'Organization',
       name: 'Voxaris',
       url: 'https://voxaris.io',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://voxaris.io/favicon.png',
+      },
     },
     datePublished: '2026-02-01',
-    dateModified: '2026-02-25',
+    dateModified: '2026-02-26',
     mainEntityOfPage: {
       '@type': 'WebPage',
       '@id': canonicalUrl,
     },
     keywords: post.keywords.join(', '),
+    about: {
+      '@type': 'Thing',
+      name: 'AI voice agents for automotive dealerships',
+    },
   };
 
   return (

@@ -1,0 +1,43 @@
+# Voxaris
+
+> Voxaris builds proprietary AI-powered virtual agents for automotive dealerships. Our V·Suite technology — V·INBOUND, V·OUTBOUND, V·CVI, and V·WEB — gives every lead a face, a voice, and a real conversation, 24/7. Founded by Ethan Stopperich, based in Orlando, FL.
+
+Voxaris is an AI technology company focused on conversational AI for automotive retail. Our flagship product, V·GUIDE, is an embodied AI agent that handles voice calls, video interactions, and chat with realistic face-to-face conversation. We serve car dealerships, helping them recover missed leads, engage after-hours shoppers, and convert more website visitors into appointments.
+
+## Products
+
+- [V·INBOUND](https://voxaris.io/how-it-works): AI-powered inbound call handling — answers every call 24/7 with a conversational virtual agent
+- [V·OUTBOUND](https://voxaris.io/how-it-works): Automated outbound follow-up — re-engages missed leads, no-shows, and dormant prospects
+- [V·CVI](https://voxaris.io/technology): Conversational video intelligence — AI-powered video communication for sales and service
+- [V·WEB](https://voxaris.io/technology): Website AI agent — V·GUIDE lives on your website and engages visitors in real-time video conversation
+- [V·GUIDE](https://voxaris.io/demo): Flagship embodied AI agent with face, voice, and personality — the core of the V·Suite
+
+## Solutions
+
+- [Auto Dealerships](https://voxaris.io/solutions/dealerships): AI sales agents that answer every inquiry, qualify every lead, and book every appointment
+- [Contractors](https://voxaris.io/solutions/contractors): AI-powered lead capture and appointment booking for home service contractors
+- [Direct Mail](https://voxaris.io/solutions/direct-mail): Talking Postcards — personalized QR-to-video AI outreach with 8-30% response rates
+
+## Resources
+
+- [Blog](https://voxaris.io/blog): Thought leadership on AI in automotive, conversational AI, and dealership technology
+- [How It Works](https://voxaris.io/how-it-works): Platform features and capabilities overview
+- [Why Voxaris](https://voxaris.io/why-voxaris): What makes Voxaris different from other AI solutions
+- [Book a Demo](https://voxaris.io/book-demo): Schedule a personalized V·GUIDE demonstration
+
+## Key Facts
+
+- Founded: 2025
+- Headquarters: Orlando, FL 32835
+- Founder: Ethan Stopperich, President
+- Technology: 100% proprietary — V·Suite built entirely in-house
+- Focus: AI voice agents, video AI agents, and conversational AI for automotive retail
+- Early pilot data: 6-30% response rates, $10-20K/month in recovered revenue per dealership
+
+## Contact
+
+- Phone: (407) 759-4100
+- Email: ethan@voxaris.io
+- Website: https://voxaris.io
+- LinkedIn: https://www.linkedin.com/company/voxaris
+- Instagram: https://www.instagram.com/voxaris_ai/
