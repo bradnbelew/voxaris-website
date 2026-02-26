@@ -196,7 +196,7 @@ export function Hero() {
                     </div>
                   </div>
 
-                  {/* Rover badge */}
+                  {/* Vox badge */}
                   <motion.div
                     className="absolute top-4 right-4 bg-white text-carbon-800 text-[11px] font-medium px-4 py-2 rounded-2xl shadow-lg flex items-center gap-2 border border-carbon-100"
                     initial={{ opacity: 0, x: 10 }}
@@ -204,7 +204,7 @@ export function Hero() {
                     transition={{ delay: 1.2, duration: 0.5 }}
                   >
                     <span className="text-amber-500">↻</span>
-                    Rover is moving the page
+                    Vox is moving the page
                   </motion.div>
                 </div>
 
