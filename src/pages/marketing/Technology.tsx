@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
@@ -68,7 +69,7 @@ const technicalSections = [
   {
     icon: MessageSquare,
     title: 'Natural Language Understanding',
-    body: 'VoxEngine processes intent, sentiment, and context simultaneously — not sequentially. The agent understands what a caller means, not just what they said. Industry-specific language models are fine-tuned per vertical, so a roofing caller saying "I\'ve got a leak" is treated differently than an auto shopper saying "I\'m looking at the new Civic."',
+    body: 'VoxEngine processes intent, sentiment, and context simultaneously — not sequentially. The agent understands what a caller means, not just what they said. Industry-specific models are fine-tuned per vertical, so a hospitality caller asking about availability is handled differently than an auto shopper saying "I\'m looking at the new Civic."',
   },
   {
     icon: AudioLines,
@@ -97,6 +98,16 @@ export function Technology() {
 
   return (
     <div className="min-h-screen bg-white">
+      <Helmet>
+        <title>VoxEngine AI Platform | Voice, Video & Browser Control | Voxaris</title>
+        <meta name="description" content="VoxEngine powers every Voxaris agent — voice AI, video AI, V·GUIDE browser control, and V·MEMORY persistent context. Sub-1-second response time across every interaction." />
+        <meta name="keywords" content="VoxEngine, AI platform, voice AI, video AI agent, V·GUIDE, V·MEMORY, conversational AI technology, AI browser control, sub-second AI response, real-time AI video" />
+        <link rel="canonical" href="https://voxaris.io/technology" />
+        <meta property="og:title" content="VoxEngine AI Platform | Voxaris" />
+        <meta property="og:description" content="One engine powers every conversation. Voice, video, and browser control — sub-1-second response time, persistent memory, real-time video rendering." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://voxaris.io/technology" />
+      </Helmet>
       <Navbar />
 
       {/* Hero */}
@@ -126,7 +137,7 @@ export function Technology() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            VoxEngine is the AI platform behind every Voxaris agent — voice, video, and memory. Sub-1-second responses. Persistent context across every interaction. Built from the ground up to make AI feel human.
+            VoxEngine is the AI platform behind every Voxaris agent — voice, video, and browser control. Sub-1-second responses. Persistent context across every interaction. Built from the ground up to make AI feel human.
           </motion.p>
 
           <motion.div
@@ -169,10 +180,10 @@ export function Technology() {
               VoxEngine is Voxaris's conversational AI platform. It's the single intelligence layer that powers every voice call, every video agent, and every personalized outreach interaction — across every industry we serve.
             </p>
             <p>
-              Most AI vendors stitch together third-party APIs and call it a product. VoxEngine is different. It's a <strong className="text-carbon-900">unified architecture purpose-built for one thing</strong>: making AI conversations indistinguishable from human ones.
+              It's a <strong className="text-carbon-900">unified architecture purpose-built for one thing</strong>: making AI conversations indistinguishable from human ones.
             </p>
             <p>
-              Every component — speech synthesis, natural language understanding, memory, video rendering — is engineered to work together with zero friction and sub-1-second latency end to end.
+              Every component — speech synthesis, natural language understanding, memory, video rendering, browser control — is engineered to work together with zero friction and sub-1-second latency end to end.
             </p>
             <p>
               The result: AI agents that don't sound like AI. They listen, they remember, they respond in context. And they do it faster than any human on your team.

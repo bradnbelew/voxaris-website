@@ -2,16 +2,18 @@ import { Link } from 'react-router-dom';
 
 const footerLinks = {
   product: [
+    { label: 'V·GUIDE', href: '/technology' },
     { label: 'Video AI', href: '/technology' },
     { label: 'Voice AI', href: '/technology' },
-    { label: 'Talking Postcard', href: '/technology' },
-    { label: 'Sales Training', href: '/technology' },
+    { label: 'Talking Postcards', href: '/talking-postcard' },
     { label: 'Demo', href: '/demo' },
   ],
   solutions: [
     { label: 'Auto Dealerships', href: '/solutions/dealerships' },
     { label: 'Direct Mail', href: '/solutions/direct-mail' },
-    { label: 'Roofing Contractors', href: '/solutions/contractors' },
+    { label: 'Hotels & Resorts', href: '/solutions/hospitality' },
+    { label: 'Home Services', href: '/solutions/contractors' },
+    { label: 'White Label', href: '/solutions/white-label' },
   ],
   technology: [
     { label: 'V·FACE', href: '/technology' },
@@ -21,9 +23,7 @@ const footerLinks = {
   ],
   company: [
     { label: 'Blog', href: '/blog' },
-    { label: 'About', href: '#' },
-    { label: 'Careers', href: '#' },
-    { label: 'Contact', href: '#' },
+    { label: 'Contact', href: '/book-demo' },
   ],
 };
 

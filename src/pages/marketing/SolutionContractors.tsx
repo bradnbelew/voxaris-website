@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Phone, ClipboardCheck, CloudLightning, Timer, Database, ShieldCheck } from 'lucide-react';
@@ -14,6 +15,16 @@ const stats = [
 export function SolutionContractors() {
   return (
     <div className="min-h-screen bg-white">
+      <Helmet>
+        <title>AI Voice Agents for Roofing Contractors | Voxaris</title>
+        <meta name="description" content="AI voice agents that answer every call, qualify every lead, and book every inspection — 24/7. Built for roofing contractors with JobNimbus integration. Never miss a storm call again." />
+        <meta name="keywords" content="AI for roofing contractors, roofing AI voice agent, AI receptionist roofing, missed call recovery roofing, JobNimbus AI integration, storm damage lead capture, home services AI, contractor AI phone answering" />
+        <link rel="canonical" href="https://voxaris.io/solutions/contractors" />
+        <meta property="og:title" content="AI Voice Agents for Roofing Contractors | Voxaris" />
+        <meta property="og:description" content="Every missed call is a roof you didn't close. AI voice agents that answer 24/7, qualify leads, and sync to JobNimbus automatically." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://voxaris.io/solutions/contractors" />
+      </Helmet>
       <Navbar />
 
       {/* Hero */}

@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { ArrowRight, Phone, Video, PhoneCall, PhoneOff, Zap, Brain, Database, Volume2, VolumeX, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -139,6 +140,16 @@ export function Demo() {
 
   return (
     <div className="min-h-screen bg-white">
+      <Helmet>
+        <title>Live AI Demo | Talk to Maria | Voxaris</title>
+        <meta name="description" content="Experience Voxaris AI live. Call Maria, get a call back, or start a face-to-face video conversation — all powered by VoxEngine. No scripts, no recordings, just real AI." />
+        <meta name="keywords" content="AI demo, live AI agent, AI voice demo, AI video demo, talk to AI agent, Voxaris demo, VoxEngine demo, conversational AI demo" />
+        <link rel="canonical" href="https://voxaris.io/demo" />
+        <meta property="og:title" content="Live AI Demo | Talk to Maria | Voxaris" />
+        <meta property="og:description" content="Don't take our word for it — talk to her. Call Maria, get a callback, or meet her face-to-face in a live video conversation. Powered by VoxEngine." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://voxaris.io/demo" />
+      </Helmet>
       <Navbar />
 
       {/* Hero */}

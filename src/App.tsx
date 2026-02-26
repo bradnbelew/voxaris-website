@@ -10,7 +10,9 @@ import {
   HomePage,
   SolutionDealerships,
   SolutionContractors,
+  SolutionHospitality,
   SolutionDirectMail,
+  SolutionWhiteLabel,
   Technology,
   Demo as MarketingDemo,
   TalkingPostcard,
@@ -71,8 +73,10 @@ const App = () => (
 
           {/* Solution Pages */}
           <Route path="/solutions/dealerships" element={<SolutionDealerships />} />
+          <Route path="/solutions/hospitality" element={<SolutionHospitality />} />
           <Route path="/solutions/contractors" element={<SolutionContractors />} />
           <Route path="/solutions/direct-mail" element={<SolutionDirectMail />} />
+          <Route path="/solutions/white-label" element={<SolutionWhiteLabel />} />
 
           {/* Auth Routes */}
           <Route path="/login" element={<Login />} />

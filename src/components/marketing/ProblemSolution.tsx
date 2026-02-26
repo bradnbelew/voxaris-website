@@ -14,7 +14,7 @@ const comparisons = [
   },
   {
     without: 'Manual follow-up that can\'t scale',
-    with: '1,000+ simultaneous conversations',
+    with: 'Scales to every lead — simultaneously',
   },
   {
     without: 'Opportunities quietly slipping away',
