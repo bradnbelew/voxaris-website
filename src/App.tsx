@@ -14,7 +14,9 @@ import {
   Technology,
   Demo as MarketingDemo,
   TalkingPostcard,
-  TalkingPostcardDemo
+  TalkingPostcardDemo,
+  BlogIndex,
+  BlogPost,
 } from "./pages/marketing";
 import HowItWorks from "./pages/HowItWorks";
 import WhyVoxaris from "./pages/WhyVoxaris";
@@ -62,6 +64,10 @@ const App = () => (
           <Route path="/book-demo" element={<BookDemo />} />
           <Route path="/talking-postcard" element={<TalkingPostcard />} />
           <Route path="/talking-postcard/demo" element={<TalkingPostcardDemo />} />
+
+          {/* Blog */}
+          <Route path="/blog" element={<BlogIndex />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
 
           {/* Solution Pages */}
           <Route path="/solutions/dealerships" element={<SolutionDealerships />} />

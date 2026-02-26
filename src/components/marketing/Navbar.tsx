@@ -19,6 +19,7 @@ const navLinks = [
   },
   { label: 'Technology', href: '/technology' },
   { label: 'Demo', href: '/demo' },
+  { label: 'Blog', href: '/blog' },
 ];
 
 export function Navbar() {

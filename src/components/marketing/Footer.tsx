@@ -20,10 +20,10 @@ const footerLinks = {
     { label: 'How It Works', href: '/how-it-works' },
   ],
   company: [
+    { label: 'Blog', href: '/blog' },
     { label: 'About', href: '#' },
     { label: 'Careers', href: '#' },
     { label: 'Contact', href: '#' },
-    { label: 'Partners', href: '#' },
   ],
 };
 

@@ -210,6 +210,16 @@ export default function Navigation() {
               >
                 Demo
               </Link>
+              <Link
+                to="/blog"
+                className={`text-sm font-medium transition-colors ${
+                  location.pathname.startsWith('/blog')
+                    ? "text-ink"
+                    : "text-slate hover:text-ink"
+                }`}
+              >
+                Blog
+              </Link>
             </div>
 
             {/* Desktop CTA */}
@@ -318,6 +328,13 @@ export default function Navigation() {
                     onClick={() => setMobileOpen(false)}
                   >
                     Demo
+                  </Link>
+                  <Link
+                    to="/blog"
+                    className="block text-base font-medium text-charcoal hover:text-ink transition-colors py-2"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    Blog
                   </Link>
                 </div>
                 
