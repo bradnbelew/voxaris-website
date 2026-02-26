@@ -73,7 +73,7 @@ const technicalSections = [
   {
     icon: AudioLines,
     title: 'Speech Synthesis',
-    body: 'Proprietary voice generation with natural cadence, filler words, and active listening cues. The agent says "mhm," "got it," and "let me check on that" in context — not on a timer. Voices are customizable per deployment and designed to match your brand personality.',
+    body: 'Voice generation with natural cadence, filler words, and active listening cues. The agent says "mhm," "got it," and "let me check on that" in context — not on a timer. Voices are customizable per deployment and designed to match your brand personality.',
   },
   {
     icon: Clapperboard,
@@ -126,7 +126,7 @@ export function Technology() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            VoxEngine is the proprietary AI platform behind every Voxaris agent — voice, video, and memory. Sub-1-second responses. Persistent context across every interaction. Built from the ground up to make AI feel human.
+            VoxEngine is the AI platform behind every Voxaris agent — voice, video, and memory. Sub-1-second responses. Persistent context across every interaction. Built from the ground up to make AI feel human.
           </motion.p>
 
           <motion.div
@@ -166,7 +166,7 @@ export function Technology() {
             transition={{ delay: 0.1 }}
           >
             <p>
-              VoxEngine is Voxaris's proprietary conversational AI platform. It's the single intelligence layer that powers every voice call, every video agent, and every personalized outreach interaction — across every industry we serve.
+              VoxEngine is Voxaris's conversational AI platform. It's the single intelligence layer that powers every voice call, every video agent, and every personalized outreach interaction — across every industry we serve.
             </p>
             <p>
               Most AI vendors stitch together third-party APIs and call it a product. VoxEngine is different. It's a <strong className="text-carbon-900">unified architecture purpose-built for one thing</strong>: making AI conversations indistinguishable from human ones.

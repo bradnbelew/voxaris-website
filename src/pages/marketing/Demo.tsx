@@ -445,7 +445,7 @@ export function Demo() {
               That's VoxEngine.
             </h2>
             <p className="max-w-2xl mx-auto text-carbon-500 text-lg leading-relaxed mb-4">
-              The voice call, the video conversation, the instant response time — all of it runs on VoxEngine, the same proprietary platform that powers every Voxaris deployment.
+              The voice call, the video conversation, the instant response time — all of it runs on VoxEngine, the same platform that powers every Voxaris deployment.
             </p>
             <p className="max-w-2xl mx-auto text-carbon-500 leading-relaxed mb-4">
               What you just experienced is what your leads, customers, and prospects will experience — 24 hours a day, 7 days a week, with no hold time, no missed calls, and no forgotten follow-ups.

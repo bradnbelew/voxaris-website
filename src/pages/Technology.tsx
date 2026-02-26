@@ -21,7 +21,7 @@ const neuralEngines = [
     title: "V-Sight Perception",
     subtitle: "The Eyes",
     icon: Eye,
-    description: "Our proprietary Perception Model that allows your AI agent to 'see' the customer. It detects engagement, eye contact, and emotional cues in real-time.",
+    description: "Our Perception Model that allows your AI agent to 'see' the customer. It detects engagement, eye contact, and emotional cues in real-time.",
     highlight: "Pivots the conversation dynamically when a customer looks confused or disengaged.",
     specs: ["Engagement Detection", "Eye Contact Tracking", "Emotion Recognition"]
   },
@@ -103,7 +103,7 @@ export default function Technology() {
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-background/10 rounded-full text-background/80 text-sm font-medium mb-8">
               <Cpu className="w-4 h-4" />
-              Proprietary Neural Architecture
+              Neural Architecture
             </div>
             
             <h1 className="text-[clamp(3rem,8vw,6rem)] font-bold text-background leading-[0.9] tracking-[-0.03em] mb-6">

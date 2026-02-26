@@ -43,7 +43,7 @@ export function VSuiteSection() {
           <span className="eyebrow mb-6 block">Under The Hood</span>
           <h2 className="headline-xl text-carbon-900 mb-6">The V·Suite</h2>
           <p className="text-carbon-400 max-w-lg mx-auto text-lg">
-            Three proprietary AI systems working in concert to deliver
+            Three AI systems working in concert to deliver
             conversations that feel genuinely human.
           </p>
         </motion.div>
@@ -87,7 +87,7 @@ export function VSuiteSection() {
             V·GUIDE — Embodied Website Control
           </h3>
           <p className="text-lg text-carbon-500 max-w-2xl leading-relaxed">
-            Proprietary <span className="font-medium text-carbon-700">V·FACE</span> rendering for photorealistic, emotionally intelligent video avatars (Maria or your own replica) paired with our <span className="font-medium text-carbon-700">Vox</span> engine that gives the agent direct, visible control over your live DOM.
+            <span className="font-medium text-carbon-700">V·FACE</span> rendering for photorealistic, emotionally intelligent video avatars (Maria or your own replica) paired with our <span className="font-medium text-carbon-700">Vox</span> engine that gives the agent direct, visible control over your live DOM.
           </p>
           <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
             {[
@@ -116,7 +116,7 @@ export function VSuiteSection() {
           transition={{ delay: 0.4 }}
         >
           <p className="text-[13px] text-carbon-300">
-            100% proprietary technology. Built from the ground up by Voxaris.
+            Built from the ground up by Voxaris.
           </p>
         </motion.div>
       </div>
