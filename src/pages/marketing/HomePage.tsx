@@ -9,6 +9,8 @@ import {
   Footer,
 } from '@/components/marketing';
 import { LogoStrip } from '@/components/marketing/LogoStrip';
+import { DemoSection } from '@/components/marketing/DemoSection';
+import { FloatingMaria } from '@/components/marketing/FloatingMaria';
 
 export function HomePage() {
   return (
@@ -18,12 +20,14 @@ export function HomePage() {
         <Hero />
         <LogoStrip />
         <TechnologyShowcase />
+        <DemoSection />
         <VSuiteSection />
         <ProblemSolution />
         <HowItWorks />
         <CTASection />
       </main>
       <Footer />
+      <FloatingMaria />
     </div>
   );
 }

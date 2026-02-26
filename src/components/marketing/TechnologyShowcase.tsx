@@ -36,7 +36,7 @@ export function TechnologyShowcase() {
           {/* V·GUIDE — Flagship (spans 5 cols) */}
           <motion.div
             data-feature="V·GUIDE"
-            className="lg:col-span-5 bg-white border border-carbon-200 rounded-[24px] overflow-hidden group hover:border-carbon-300 transition-all duration-500"
+            className="lg:col-span-5 relative bg-white border border-slate-200 rounded-[24px] overflow-hidden group hover:border-slate-300 transition-all duration-500 shadow-[0_0_60px_rgba(148,163,184,0.08)] hover:shadow-[0_0_80px_rgba(148,163,184,0.12)]"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -57,8 +57,8 @@ export function TechnologyShowcase() {
                 <div className="bg-white/90 backdrop-blur-xl rounded-full px-3 py-1 border border-carbon-200">
                   <span className="text-[9px] font-semibold text-carbon-700 uppercase tracking-[0.15em]">Flagship</span>
                 </div>
-                <div className="bg-amber-50 rounded-full px-2.5 py-1 border border-amber-200">
-                  <span className="text-[9px] font-semibold text-amber-700 uppercase tracking-[0.12em]">New</span>
+                <div className="bg-emerald-50 rounded-full px-2.5 py-1 border border-emerald-200">
+                  <span className="text-[9px] font-semibold text-emerald-700 uppercase tracking-[0.12em]">Early Access</span>
                 </div>
               </div>
             </div>
