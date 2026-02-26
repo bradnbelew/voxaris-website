@@ -1,21 +1,23 @@
 import { motion } from 'framer-motion';
 import { X, Check } from 'lucide-react';
 
+const ease = [0.22, 1, 0.36, 1] as const;
+
 const comparisons = [
   {
-    without: 'Leads go cold in 5+ minutes',
+    without: 'Leads wait 5+ minutes for a response',
     with: 'Every lead engaged in under 3 seconds',
   },
   {
-    without: 'Sales team unavailable after hours',
+    without: 'No one available after hours',
     with: '24/7 coverage — nights, weekends, holidays',
   },
   {
-    without: 'Manual follow-up that doesn\'t scale',
+    without: 'Manual follow-up that can\'t scale',
     with: '1,000+ simultaneous conversations',
   },
   {
-    without: 'Lost opportunities every single day',
+    without: 'Opportunities quietly slipping away',
     with: 'Every lead captured, qualified, and booked',
   },
 ];
@@ -23,23 +25,23 @@ const comparisons = [
 export function ProblemSolution() {
   return (
     <section data-section="features" className="section-padding-lg bg-carbon-50">
-      <div className="container-editorial">
-        {/* Header */}
+      <div className="max-w-[1200px] mx-auto px-6 sm:px-8">
+        {/* Header — softer tone */}
         <motion.div
           className="text-center mb-10 lg:mb-12"
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.7, ease }}
         >
-          <span className="eyebrow mb-6 block">The Problem</span>
+          <span className="eyebrow mb-6 block">The Gap</span>
           <h2 className="headline-xl text-carbon-900 mb-6">
-            You're losing revenue
+            Every missed call is
             <br className="hidden sm:block" />
-            <span className="text-carbon-400">while you sleep.</span>
+            <span className="text-carbon-400">a missed opportunity.</span>
           </h2>
           <p className="text-carbon-400 max-w-xl mx-auto text-lg">
-            The average business loses thousands every month from slow response times and missed calls.
+            Most businesses respond to leads in hours. The ones winning respond in seconds.
           </p>
         </motion.div>
 
@@ -64,7 +66,7 @@ export function ProblemSolution() {
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.5, delay: index * 0.08, ease }}
               >
                 {/* Without */}
                 <div className="flex items-center gap-3 p-5 rounded-2xl bg-white border border-carbon-200">

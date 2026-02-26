@@ -1,20 +1,38 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Copy, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
+const ease = [0.22, 1, 0.36, 1] as const;
+
+const EMBED_SCRIPT = `<script src="https://voxaris-orchestrator.vercel.app/voxaris-loader.js"
+  data-mode="self-demo"
+  data-persona-id="YOUR_PERSONA_ID"
+  data-agent-name="Maria"
+  async></script>`;
+
 export function CTASection() {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(EMBED_SCRIPT);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2500);
+  };
+
   return (
     <section data-section="cta" className="relative py-20 lg:py-28 bg-carbon-900 overflow-hidden">
       {/* Background glow */}
       <div className="absolute inset-0">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[600px]"
+        <div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[600px]"
           style={{ background: 'radial-gradient(ellipse at 50% 50%, rgba(255,255,255,0.03) 0%, transparent 55%)' }}
         />
       </div>
 
-      <div className="container-narrow text-center relative z-10">
-        {/* Logo + tagline */}
+      <div className="max-w-[900px] mx-auto px-6 sm:px-8 text-center relative z-10">
+        {/* Logo */}
         <motion.div
           className="flex flex-col items-center mb-14"
           initial={{ opacity: 0, scale: 0.9 }}
@@ -30,32 +48,57 @@ export function CTASection() {
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.1, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ delay: 0.1, duration: 0.7, ease }}
         >
-          Your competitors are
+          Add V·GUIDE to your site
           <br />
-          <span className="text-white/60">already losing leads to AI.</span>
+          <span className="text-white/50">in 60 seconds.</span>
         </motion.h2>
 
         {/* Sub */}
         <motion.p
-          className="text-lg text-white/40 mb-14 max-w-lg mx-auto"
+          className="text-lg text-white/40 mb-10 max-w-lg mx-auto"
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.2, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ delay: 0.2, duration: 0.7, ease }}
         >
-          The question isn't whether AI will handle your sales conversations.
-          It's whether you'll be the one using it — or losing to it.
+          One script tag. A photorealistic AI agent that works on your website — today.
         </motion.p>
+
+        {/* Script copy block */}
+        <motion.div
+          className="relative mx-auto max-w-xl mb-10"
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.25, duration: 0.7, ease }}
+        >
+          <div className="bg-white/[0.04] border border-white/10 rounded-2xl p-5 text-left relative group">
+            <pre className="text-[12px] text-white/50 font-mono leading-relaxed overflow-x-auto whitespace-pre">
+              {EMBED_SCRIPT}
+            </pre>
+            <button
+              onClick={handleCopy}
+              className="absolute top-4 right-4 p-2.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 transition-all text-white/60 hover:text-white"
+            >
+              {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+            </button>
+          </div>
+          {copied && (
+            <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-[12px] text-emerald-400 font-medium">
+              Copied to clipboard
+            </div>
+          )}
+        </motion.div>
 
         {/* CTAs */}
         <motion.div
-          className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
+          className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-14"
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.3, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ delay: 0.3, duration: 0.7, ease }}
         >
           <Link to="/book-demo">
             <Button
@@ -79,11 +122,11 @@ export function CTASection() {
 
         {/* Phone CTA */}
         <motion.div
-          className="flex items-center justify-center gap-3 mb-12"
+          className="flex items-center justify-center gap-3 mb-10"
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.4, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ delay: 0.4, duration: 0.6, ease }}
         >
           <span className="text-[14px] text-white/30">Or call our AI agent now:</span>
           <a

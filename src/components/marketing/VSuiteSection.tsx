@@ -1,5 +1,7 @@
 import { motion } from 'framer-motion';
 
+const ease = [0.22, 1, 0.36, 1] as const;
+
 const vSuite = [
   {
     name: 'V·FACE',
@@ -23,31 +25,30 @@ export function VSuiteSection() {
     <section data-section="vsuite" className="relative py-16 lg:py-24 bg-carbon-50 overflow-hidden">
       {/* Background ambient */}
       <div className="absolute inset-0">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[500px]"
+        <div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[500px]"
           style={{ background: 'radial-gradient(ellipse, rgba(0,0,0,0.01) 0%, transparent 60%)' }}
         />
       </div>
 
-      <div className="container-editorial relative z-10">
+      <div className="max-w-[1200px] mx-auto px-6 sm:px-8 relative z-10">
         {/* Header */}
         <motion.div
           className="text-center mb-12"
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.7, ease }}
         >
           <span className="eyebrow mb-6 block">Under The Hood</span>
-          <h2 className="headline-xl text-carbon-900 mb-6">
-            The V·Suite
-          </h2>
+          <h2 className="headline-xl text-carbon-900 mb-6">The V·Suite</h2>
           <p className="text-carbon-400 max-w-lg mx-auto text-lg">
             Three proprietary AI systems working in concert to deliver
             conversations that feel genuinely human.
           </p>
         </motion.div>
 
-        {/* V-Suite cards — horizontal */}
+        {/* V-Suite cards */}
         <div className="grid md:grid-cols-3 gap-px bg-carbon-200 rounded-[24px] overflow-hidden">
           {vSuite.map((item, index) => (
             <motion.div
@@ -56,24 +57,17 @@ export function VSuiteSection() {
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: index * 0.1, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ delay: index * 0.1, duration: 0.6, ease }}
             >
-              {/* Name */}
               <div className="mb-8">
                 <span className="text-carbon-900 text-3xl lg:text-4xl font-bold font-display tracking-tight">
                   {item.name}
                 </span>
               </div>
-
-              {/* Label */}
               <div className="text-[11px] font-medium text-carbon-500 uppercase tracking-[0.2em] mb-4">
                 {item.label}
               </div>
-
-              {/* Divider */}
               <div className="w-8 h-px bg-carbon-200 mb-5" />
-
-              {/* Description */}
               <p className="text-[14px] text-carbon-400 leading-relaxed">
                 {item.description}
               </p>
@@ -81,9 +75,41 @@ export function VSuiteSection() {
           ))}
         </div>
 
+        {/* V·GUIDE Technology Deep-Dive */}
+        <motion.div
+          className="mt-16 border-l-4 border-carbon-300 pl-8 py-2"
+          initial={{ opacity: 0, x: -20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, delay: 0.2, ease }}
+        >
+          <h3 className="text-2xl lg:text-3xl font-bold text-carbon-900 font-display tracking-tight mb-5">
+            V·GUIDE — Embodied Website Control
+          </h3>
+          <p className="text-lg text-carbon-500 max-w-2xl leading-relaxed">
+            Powered by <span className="font-medium text-carbon-700">Tavus</span> for photorealistic, emotionally intelligent video avatars (Maria or your own replica) and our proprietary <span className="font-medium text-carbon-700">Rover</span> engine that gives the agent direct, visible control over your live DOM.
+          </p>
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
+            {[
+              'Real-time scrolling, filtering, and option selection',
+              'Form filling with customer data',
+              'Visible booking completion',
+              'Double explicit confirmation for every action',
+            ].map((item) => (
+              <div key={item} className="flex items-start gap-3 text-[14px] text-carbon-500">
+                <span className="text-carbon-300 mt-0.5">↳</span>
+                {item}
+              </div>
+            ))}
+          </div>
+          <p className="mt-8 text-[11px] uppercase tracking-[0.2em] text-carbon-300 font-medium">
+            Seamlessly layers with Retell voice agents and closes the loop with Talking Postcards.
+          </p>
+        </motion.div>
+
         {/* Bottom note */}
         <motion.div
-          className="text-center mt-12"
+          className="text-center mt-14"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
