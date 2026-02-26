@@ -50,9 +50,9 @@ export function CTASection() {
           viewport={{ once: true }}
           transition={{ delay: 0.1, duration: 0.7, ease }}
         >
-          Add V·GUIDE to your site
+          Your AI agent.
           <br />
-          <span className="text-white/50">in 60 seconds.</span>
+          <span className="text-white/50">Live in days, not months.</span>
         </motion.h2>
 
         {/* Sub */}
@@ -63,7 +63,7 @@ export function CTASection() {
           viewport={{ once: true }}
           transition={{ delay: 0.2, duration: 0.7, ease }}
         >
-          One script tag. A photorealistic AI agent that works on your website — today.
+          White-glove onboarding. A photorealistic AI agent built for your brand and live on your website.
         </motion.p>
 
         {/* Script copy block */}
@@ -148,7 +148,7 @@ export function CTASection() {
           viewport={{ once: true }}
           transition={{ delay: 0.5 }}
         >
-          {['No credit card required', 'Setup in 5 minutes', 'Cancel anytime'].map((item) => (
+          {['No credit card required', 'White-glove onboarding', 'Cancel anytime'].map((item) => (
             <span key={item} className="flex items-center gap-2">
               <svg className="w-4 h-4 text-emerald-500/40" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />

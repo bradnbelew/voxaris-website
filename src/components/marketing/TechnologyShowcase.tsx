@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
-const TAVUS_VIDEO_URL = "https://cdn.replica.tavus.io/40242/2fe8396c.mp4";
+const MARIA_VIDEO_URL = "https://cdn.replica.tavus.io/40242/2fe8396c.mp4";
 const LUCAS_VIDEO_URL = "https://cdn.replica.tavus.io/40779/d5481d67.mp4";
 
 export function TechnologyShowcase() {
@@ -45,7 +45,7 @@ export function TechnologyShowcase() {
             {/* Video preview */}
             <div className="aspect-[16/10] relative overflow-hidden bg-carbon-50">
               <video
-                src={TAVUS_VIDEO_URL}
+                src={MARIA_VIDEO_URL}
                 className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-[1.02] transition-all duration-700"
                 autoPlay
                 loop
@@ -70,7 +70,7 @@ export function TechnologyShowcase() {
                 The world's first embodied real-time video agent. Add one {'<script>'} tag and watch a photorealistic avatar visibly control your live website — scrolling, filtering, filling forms, and completing bookings while talking naturally with every visitor.
               </p>
               <div className="pt-6 border-t border-carbon-100 flex items-center justify-between">
-                <span className="text-[12px] text-carbon-300">Tavus video · Vox DOM control</span>
+                <span className="text-[12px] text-carbon-300">V·FACE video · Vox DOM control</span>
                 <Link to="/demo" className="inline-flex items-center gap-1.5 text-[13px] font-medium text-carbon-900 hover:text-carbon-600 transition-colors group/link">
                   See it move your site
                   <ArrowUpRight className="w-3.5 h-3.5 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform" />

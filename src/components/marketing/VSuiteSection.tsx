@@ -87,7 +87,7 @@ export function VSuiteSection() {
             V·GUIDE — Embodied Website Control
           </h3>
           <p className="text-lg text-carbon-500 max-w-2xl leading-relaxed">
-            Powered by <span className="font-medium text-carbon-700">Tavus</span> for photorealistic, emotionally intelligent video avatars (Maria or your own replica) and our proprietary <span className="font-medium text-carbon-700">Vox</span> engine that gives the agent direct, visible control over your live DOM.
+            Proprietary <span className="font-medium text-carbon-700">V·FACE</span> rendering for photorealistic, emotionally intelligent video avatars (Maria or your own replica) paired with our <span className="font-medium text-carbon-700">Vox</span> engine that gives the agent direct, visible control over your live DOM.
           </p>
           <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
             {[
@@ -103,7 +103,7 @@ export function VSuiteSection() {
             ))}
           </div>
           <p className="mt-8 text-[11px] uppercase tracking-[0.2em] text-carbon-300 font-medium">
-            Seamlessly layers with Retell voice agents and closes the loop with Talking Postcards.
+            Seamlessly layers with V·SENSE voice agents and closes the loop with Talking Postcards.
           </p>
         </motion.div>
 

@@ -70,7 +70,7 @@ export function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.2, ease }}
             >
-              One single {'<script>'} tag. A photorealistic avatar that scrolls, clicks, fills forms, and completes bookings in full view — while having a natural conversation.
+              A photorealistic avatar that scrolls, clicks, fills forms, and completes bookings in full view — while having a natural conversation with every visitor.
             </motion.p>
 
             {/* CTAs */}
@@ -109,7 +109,7 @@ export function Hero() {
               transition={{ duration: 0.6, delay: 0.6 }}
             >
               {[
-                'Zero code changes',
+                'Live in days, not months',
                 'Works on any existing website',
                 'Double confirmation on bookings',
               ].map((item) => (
