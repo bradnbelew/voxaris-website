@@ -8,7 +8,7 @@ const ORCHESTRATOR_URL = "https://voxaris-orchestrator.vercel.app";
 type SessionState = 'idle' | 'loading' | 'active' | 'error';
 
 // ── Vox DOM Engine: executes actions queued by Tavus tool calls ──
-function executeVoxAction(action: { action: string; selector?: string; section?: string; feature?: string; route?: string }) {
+function executeVoxAction(action: { action: string; selector?: string; section?: string; feature?: string; route?: string; value?: string }) {
   console.log('[Vox]', action.action, action);
 
   switch (action.action) {
@@ -26,7 +26,7 @@ function executeVoxAction(action: { action: string; selector?: string; section?:
       break;
     }
     case 'highlight_feature': {
-      let target = document.querySelector(`[data-feature="${action.feature}"]`);
+      let target: Element | null = document.querySelector(`[data-feature="${action.feature}"]`);
       if (!target) {
         const featureLower = (action.feature || '').toLowerCase();
         const cards = document.querySelectorAll('[data-feature], [class*="card"]');
@@ -46,6 +46,38 @@ function executeVoxAction(action: { action: string; selector?: string; section?:
           (target as HTMLElement).style.boxShadow = '';
           (target as HTMLElement).style.transform = '';
         }, 3000);
+      }
+      break;
+    }
+    case 'click_element': {
+      const el = document.querySelector(action.selector || '');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => (el as HTMLElement).click(), 500);
+      }
+      break;
+    }
+    case 'fill_field': {
+      const input = document.querySelector(action.selector || '') as HTMLInputElement | null;
+      if (input) {
+        input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => {
+          input.focus();
+          input.value = action.value || '';
+          input.dispatchEvent(new Event('input', { bubbles: true }));
+          input.dispatchEvent(new Event('change', { bubbles: true }));
+        }, 500);
+      }
+      break;
+    }
+    case 'select_option': {
+      const select = document.querySelector(action.selector || '') as HTMLSelectElement | null;
+      if (select) {
+        select.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => {
+          select.value = action.value || '';
+          select.dispatchEvent(new Event('change', { bubbles: true }));
+        }, 500);
       }
       break;
     }

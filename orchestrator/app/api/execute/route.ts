@@ -276,6 +276,73 @@ export async function POST(request: NextRequest) {
         break;
       }
 
+      case "perform_rover_action": {
+        const roverAction = tool_input.action as string;
+        const target = tool_input.target as string;
+        const value = tool_input.value as string | undefined;
+
+        // Map generic rover actions to DOM queue actions
+        switch (roverAction) {
+          case "scroll_to": {
+            // Target can be a CSS selector, section name, or description
+            const sectionSelector = SECTION_SELECTORS[target] || target;
+            pushAction(conversation_id, {
+              action: "scroll_to_section",
+              selector: sectionSelector,
+              section: target,
+            });
+            result = { success: true, action: "scroll_to", target, selector: sectionSelector };
+            break;
+          }
+          case "click": {
+            pushAction(conversation_id, {
+              action: "click_element",
+              selector: target,
+            });
+            result = { success: true, action: "click", target };
+            break;
+          }
+          case "highlight": {
+            pushAction(conversation_id, {
+              action: "highlight_feature",
+              feature: target,
+            });
+            result = { success: true, action: "highlight", target };
+            break;
+          }
+          case "fill": {
+            pushAction(conversation_id, {
+              action: "fill_field",
+              selector: target,
+              value: value || "",
+            });
+            result = { success: true, action: "fill", target, value };
+            break;
+          }
+          case "select": {
+            pushAction(conversation_id, {
+              action: "select_option",
+              selector: target,
+              value: value || "",
+            });
+            result = { success: true, action: "select", target, value };
+            break;
+          }
+          case "submit": {
+            pushAction(conversation_id, {
+              action: "click_element",
+              selector: target,
+            });
+            result = { success: true, action: "submit", target };
+            break;
+          }
+          default: {
+            result = { success: false, error: `Unknown rover action: ${roverAction}` };
+          }
+        }
+        break;
+      }
+
       case "request_demo_booking": {
         result = {
           success: true,

@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { ArrowRight, Clock } from 'lucide-react';
 import { Navbar, Footer } from '@/components/marketing';
@@ -13,6 +14,16 @@ export function BlogIndex() {
 
   return (
     <div className="min-h-screen bg-white">
+      <Helmet>
+        <title>Blog | Voxaris — AI Agents, Hospitality, Auto, Legal</title>
+        <meta name="description" content="Insights on embodied AI agents, website engagement, and how V·GUIDE is transforming lead conversion for hotels, dealerships, and law firms." />
+        <meta name="keywords" content="AI agents blog, V·GUIDE, AI for business, hotel AI, dealership AI, law firm AI, conversational AI" />
+        <link rel="canonical" href="https://voxaris.io/blog" />
+        <meta property="og:title" content="Blog | Voxaris" />
+        <meta property="og:description" content="Insights on embodied AI agents and how V·GUIDE is transforming lead conversion." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://voxaris.io/blog" />
+      </Helmet>
       <Navbar />
       <main>
         {/* Hero */}

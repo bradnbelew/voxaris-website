@@ -1,4 +1,5 @@
 import { useParams, Link, Navigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Clock } from 'lucide-react';
 import { Navbar, Footer } from '@/components/marketing';
@@ -13,8 +14,51 @@ export function BlogPost() {
 
   if (!post) return <Navigate to="/blog" replace />;
 
+  const canonicalUrl = `https://voxaris.io/blog/${post.slug}`;
+  const articleJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: post.title,
+    description: post.description,
+    author: {
+      '@type': 'Person',
+      name: post.author,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Voxaris',
+      url: 'https://voxaris.io',
+    },
+    datePublished: '2026-02-01',
+    dateModified: '2026-02-25',
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': canonicalUrl,
+    },
+    keywords: post.keywords.join(', '),
+  };
+
   return (
     <div className="min-h-screen bg-white">
+      <Helmet>
+        <title>{post.title} | Voxaris Blog</title>
+        <meta name="description" content={post.description} />
+        <meta name="keywords" content={post.keywords.join(', ')} />
+        <link rel="canonical" href={canonicalUrl} />
+        <meta property="og:title" content={`${post.title} | Voxaris Blog`} />
+        <meta property="og:description" content={post.description} />
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:site_name" content="Voxaris" />
+        <meta property="article:author" content={post.author} />
+        <meta property="article:published_time" content="2026-02-01" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={post.title} />
+        <meta name="twitter:description" content={post.description} />
+        <script type="application/ld+json">
+          {JSON.stringify(articleJsonLd)}
+        </script>
+      </Helmet>
       <Navbar />
       <main>
         {/* Header */}
