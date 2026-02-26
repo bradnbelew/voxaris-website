@@ -3,23 +3,28 @@ import { withRetry, CircuitBreaker } from "@/lib/utils/retry";
 import { createRequestLogger } from "@/lib/utils/logger";
 import type { RoverActionResult } from "@/lib/schemas/events";
 
-// ── Types ──
+// ── Types (current rtrvr.ai API) ──
 
 interface RoverAgentRequest {
-  goal: string;
-  startUrl?: string | undefined;
-  trajectoryId?: string | undefined;
-  emitEvents?: boolean | undefined;
-  maxSteps?: number | undefined;
-  timeout?: number | undefined;
+  /** Natural-language task description */
+  input: string;
+  /** Starting URLs for the agent */
+  urls?: string[];
+  /** Expected response structure (JSON Schema) */
+  outputSchema?: Record<string, unknown>;
+  /** Verbosity: "final" | "steps" | "debug" */
+  verbosity?: "final" | "steps" | "debug";
+  /** Max execution steps */
+  maxSteps?: number;
+  /** Webhook callbacks */
+  webhooks?: { url: string; events: string[] }[];
 }
 
-interface RoverAgentResponse {
-  trajectory_id: string;
-  status: "running" | "completed" | "error";
-  steps: RoverStep[];
-  current_url: string;
-  screenshot_url?: string | undefined;
+interface RoverScrapeRequest {
+  /** What to extract */
+  input: string;
+  /** URLs to scrape */
+  urls: string[];
 }
 
 interface RoverStep {
@@ -31,9 +36,37 @@ interface RoverStep {
   duration_ms: number;
 }
 
+interface RoverAgentResponse {
+  id: string;
+  status: "running" | "completed" | "error";
+  output?: unknown;
+  steps: RoverStep[];
+  current_url: string;
+  screenshot_url?: string | undefined;
+  metadata?: {
+    responseRef?: string;
+    outputRef?: string;
+  };
+}
+
+interface RoverScrapeResponse {
+  id: string;
+  status: "completed" | "error";
+  text?: string;
+  accessibility_tree?: string;
+  metadata?: {
+    responseRef?: string;
+  };
+}
+
+// Keep backward compat — callers that still use the old shape
+// can use this alias, which maps to the new response
+export type { RoverAgentResponse };
+
 const agentResponseSchema = z.object({
-  trajectory_id: z.string(),
+  id: z.string(),
   status: z.enum(["running", "completed", "error"]),
+  output: z.unknown().optional(),
   steps: z.array(
     z.object({
       action: z.string(),
@@ -43,9 +76,23 @@ const agentResponseSchema = z.object({
       result: z.enum(["success", "error"]),
       duration_ms: z.number(),
     })
-  ),
-  current_url: z.string(),
+  ).default([]),
+  current_url: z.string().default(""),
   screenshot_url: z.string().optional(),
+  metadata: z.object({
+    responseRef: z.string().optional(),
+    outputRef: z.string().optional(),
+  }).optional(),
+});
+
+const scrapeResponseSchema = z.object({
+  id: z.string(),
+  status: z.enum(["completed", "error"]),
+  text: z.string().optional(),
+  accessibility_tree: z.string().optional(),
+  metadata: z.object({
+    responseRef: z.string().optional(),
+  }).optional(),
 });
 
 // ── Circuit Breaker ──
@@ -63,14 +110,15 @@ export class RoverClient {
   private readonly apiKey: string;
 
   constructor() {
-    this.baseUrl = process.env.ROVER_API_BASE ?? "https://api.rtrvr.ai/v1";
+    this.baseUrl = process.env.ROVER_API_BASE ?? "https://api.rtrvr.ai";
     this.apiKey = process.env.ROVER_API_KEY ?? "";
     if (!this.apiKey) {
       throw new Error("ROVER_API_KEY is required");
     }
   }
 
-  /** Execute a goal-based agent action via the Rover /agent API */
+  // ── /agent — full planner + tools engine ──
+
   async executeAction(
     request: RoverAgentRequest,
     correlationId: string
@@ -78,11 +126,20 @@ export class RoverClient {
     const log = createRequestLogger(correlationId, { service: "rover" });
     const startTime = Date.now();
 
-    log.info({ goal: request.goal, trajectoryId: request.trajectoryId }, "Executing Rover action");
+    log.info({ input: request.input, urls: request.urls }, "Executing Rover agent task");
 
     const result = await roverCircuit.execute(() =>
       withRetry(
         async () => {
+          const body: Record<string, unknown> = {
+            input: request.input,
+          };
+          if (request.urls?.length) body.urls = request.urls;
+          if (request.outputSchema) body.output_schema = request.outputSchema;
+          if (request.maxSteps) body.response = { ...(body.response as Record<string, unknown> ?? {}), max_steps: request.maxSteps };
+          if (request.verbosity) body.response = { ...(body.response as Record<string, unknown> ?? {}), verbosity: request.verbosity };
+          if (request.webhooks?.length) body.webhooks = request.webhooks;
+
           const response = await fetch(`${this.baseUrl}/agent`, {
             method: "POST",
             headers: {
@@ -90,20 +147,13 @@ export class RoverClient {
               Authorization: `Bearer ${this.apiKey}`,
               "X-Correlation-Id": correlationId,
             },
-            body: JSON.stringify({
-              goal: request.goal,
-              start_url: request.startUrl,
-              trajectory_id: request.trajectoryId,
-              emit_events: request.emitEvents ?? true,
-              max_steps: request.maxSteps ?? 10,
-              timeout: request.timeout ?? 30_000,
-            }),
-            signal: AbortSignal.timeout(35_000),
+            body: JSON.stringify(body),
+            signal: AbortSignal.timeout(60_000),
           });
 
           if (!response.ok) {
-            const body = await response.text();
-            throw new RoverApiError(response.status, body);
+            const text = await response.text();
+            throw new RoverApiError(response.status, text);
           }
 
           const raw = await response.json();
@@ -115,29 +165,73 @@ export class RoverClient {
 
     log.info(
       {
-        trajectoryId: result.trajectory_id,
+        id: result.id,
         status: result.status,
         steps: result.steps.length,
         durationMs: Date.now() - startTime,
       },
-      "Rover action complete"
+      "Rover agent task complete"
     );
 
     return result;
   }
 
+  // ── /scrape — accessibility tree extraction ──
+
+  async scrape(
+    request: RoverScrapeRequest,
+    correlationId: string
+  ): Promise<RoverScrapeResponse> {
+    const log = createRequestLogger(correlationId, { service: "rover" });
+    log.info({ input: request.input, urls: request.urls }, "Scraping via Rover");
+
+    const result = await roverCircuit.execute(() =>
+      withRetry(
+        async () => {
+          const response = await fetch(`${this.baseUrl}/scrape`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${this.apiKey}`,
+              "X-Correlation-Id": correlationId,
+            },
+            body: JSON.stringify({
+              input: request.input,
+              urls: request.urls,
+            }),
+            signal: AbortSignal.timeout(30_000),
+          });
+
+          if (!response.ok) {
+            const text = await response.text();
+            throw new RoverApiError(response.status, text);
+          }
+
+          const raw = await response.json();
+          return scrapeResponseSchema.parse(raw);
+        },
+        { maxRetries: 2, baseDelayMs: 1000 }
+      )
+    );
+
+    log.info({ id: result.id, status: result.status }, "Rover scrape complete");
+    return result;
+  }
+
+  // ── Convenience methods ──
+
   /** Navigate to a specific URL */
   async navigate(
     url: string,
-    trajectoryId: string | undefined,
+    _trajectoryId: string | undefined,
     correlationId: string
   ): Promise<RoverAgentResponse> {
     return this.executeAction(
       {
-        goal: `Navigate to ${url}`,
-        startUrl: url,
-        trajectoryId,
+        input: `Navigate to ${url}`,
+        urls: [url],
         maxSteps: 1,
+        verbosity: "steps",
       },
       correlationId
     );
@@ -146,14 +240,14 @@ export class RoverClient {
   /** Click an element described in natural language */
   async clickElement(
     description: string,
-    trajectoryId: string | undefined,
+    _trajectoryId: string | undefined,
     correlationId: string
   ): Promise<RoverAgentResponse> {
     return this.executeAction(
       {
-        goal: `Click the element: ${description}`,
-        trajectoryId,
+        input: `Click the element: ${description}`,
         maxSteps: 3,
+        verbosity: "steps",
       },
       correlationId
     );
@@ -163,38 +257,43 @@ export class RoverClient {
   async fillField(
     fieldDescription: string,
     value: string,
-    trajectoryId: string | undefined,
+    _trajectoryId: string | undefined,
     correlationId: string
   ): Promise<RoverAgentResponse> {
     return this.executeAction(
       {
-        goal: `Find the field "${fieldDescription}" and type "${value}" into it`,
-        trajectoryId,
+        input: `Find the field "${fieldDescription}" and type "${value}" into it`,
         maxSteps: 3,
+        verbosity: "steps",
       },
       correlationId
     );
   }
 
-  /** Extract information from the current page */
+  /** Extract information from the current page via /scrape */
   async extractContent(
     query: string,
-    trajectoryId: string | undefined,
+    _trajectoryId: string | undefined,
     correlationId: string
   ): Promise<RoverAgentResponse> {
-    return this.executeAction(
-      {
-        goal: `Extract the following information from the current page: ${query}`,
-        trajectoryId,
-        maxSteps: 2,
-      },
+    // Use scrape for extraction, then wrap in agent response shape
+    const scrapeResult = await this.scrape(
+      { input: query, urls: [] },
       correlationId
     );
-  }
 
-  /** Get the live view iframe URL for monitoring */
-  getLiveViewUrl(trajectoryId: string): string {
-    return `${this.baseUrl}/live/${trajectoryId}`;
+    return {
+      id: scrapeResult.id,
+      status: scrapeResult.status === "completed" ? "completed" : "error",
+      output: scrapeResult.text || scrapeResult.accessibility_tree,
+      steps: [{
+        action: "extract",
+        description: scrapeResult.text || scrapeResult.accessibility_tree || "No content extracted",
+        result: scrapeResult.status === "completed" ? "success" : "error",
+        duration_ms: 0,
+      }],
+      current_url: "",
+    };
   }
 
   /** Check circuit breaker state */
@@ -214,7 +313,6 @@ export class RoverApiError extends Error {
 }
 
 // ── Client-Side PostMessage Bridge Types ──
-// These types are used by the embed script to communicate with the Rover embed
 
 export interface RoverBridgeMessage {
   type: "voxaris:rover:action";
