@@ -1,11 +1,38 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X } from 'lucide-react';
+import { X, Loader2 } from 'lucide-react';
 
 const MARIA_VIDEO = "https://cdn.replica.tavus.io/40242/2fe8396c.mp4";
 
+type SessionState = 'idle' | 'loading' | 'active' | 'error';
+
 export function FloatingMaria() {
   const [open, setOpen] = useState(false);
+  const [sessionState, setSessionState] = useState<SessionState>('idle');
+  const [conversationUrl, setConversationUrl] = useState<string | null>(null);
+
+  const startSession = useCallback(async () => {
+    setOpen(true);
+    setSessionState('loading');
+    try {
+      const res = await fetch('/api/voxaris/tavus/create-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      if (!res.ok) throw new Error('Failed to create session');
+      const data = await res.json();
+      setConversationUrl(data.conversation_url);
+      setSessionState('active');
+    } catch {
+      setSessionState('error');
+    }
+  }, []);
+
+  const closeSession = useCallback(() => {
+    setOpen(false);
+    setSessionState('idle');
+    setConversationUrl(null);
+  }, []);
 
   return (
     <>
@@ -13,7 +40,7 @@ export function FloatingMaria() {
       <AnimatePresence>
         {!open && (
           <motion.button
-            onClick={() => setOpen(true)}
+            onClick={startSession}
             className="fixed bottom-6 right-6 z-50 group"
             initial={{ opacity: 0, scale: 0.8, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -81,56 +108,92 @@ export function FloatingMaria() {
                     <div className="text-[13px] font-semibold text-slate-900">Maria</div>
                     <div className="text-[10px] text-emerald-600 font-medium flex items-center gap-1">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                      Online now
+                      {sessionState === 'active' ? 'Connected' : sessionState === 'loading' ? 'Connecting...' : 'Online now'}
                     </div>
                   </div>
                 </div>
                 <button
-                  onClick={() => setOpen(false)}
+                  onClick={closeSession}
                   className="w-8 h-8 rounded-full hover:bg-slate-50 flex items-center justify-center transition-colors"
                 >
                   <X className="w-4 h-4 text-slate-400" />
                 </button>
               </div>
 
-              {/* Video area */}
+              {/* Video / iframe area */}
               <div className="aspect-[4/3] bg-slate-900 relative">
-                <video
-                  src={MARIA_VIDEO}
-                  className="w-full h-full object-cover"
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent" />
-                <div className="absolute bottom-3 left-3 text-white text-[10px] font-medium flex items-center gap-1.5">
-                  <span className="relative flex h-1.5 w-1.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400" />
-                  </span>
-                  V·GUIDE Preview
-                </div>
+                {sessionState === 'active' && conversationUrl ? (
+                  <iframe
+                    src={conversationUrl}
+                    className="w-full h-full border-0"
+                    allow="camera;microphone;autoplay;display-capture"
+                  />
+                ) : (
+                  <>
+                    <video
+                      src={MARIA_VIDEO}
+                      className="w-full h-full object-cover"
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent" />
+
+                    {sessionState === 'loading' && (
+                      <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center gap-3">
+                        <Loader2 className="w-8 h-8 text-white animate-spin" />
+                        <span className="text-white text-[12px] font-medium">Starting conversation...</span>
+                      </div>
+                    )}
+
+                    {sessionState === 'error' && (
+                      <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center gap-3 px-6">
+                        <span className="text-white text-[13px] font-medium text-center">
+                          Couldn't connect right now.
+                        </span>
+                        <button
+                          onClick={startSession}
+                          className="bg-white text-slate-900 text-[12px] font-semibold px-4 py-2 rounded-xl hover:bg-slate-50 transition-colors"
+                        >
+                          Try Again
+                        </button>
+                      </div>
+                    )}
+                  </>
+                )}
+
+                {sessionState !== 'active' && sessionState !== 'loading' && sessionState !== 'error' && (
+                  <div className="absolute bottom-3 left-3 text-white text-[10px] font-medium flex items-center gap-1.5">
+                    <span className="relative flex h-1.5 w-1.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400" />
+                    </span>
+                    V·GUIDE Preview
+                  </div>
+                )}
               </div>
 
-              {/* Message area */}
-              <div className="p-5">
-                <p className="text-[13px] text-slate-600 leading-relaxed mb-4">
-                  Hi! I'm Maria, your V·GUIDE agent. I can walk you through how I'd work on your website — scrolling, booking, everything. Want to see a live demo?
-                </p>
-                <a
-                  href="/book-demo"
-                  className="block w-full text-center bg-slate-900 hover:bg-black text-white text-[13px] font-semibold py-3 rounded-xl transition-all duration-300 hover:shadow-lg"
-                >
-                  Book a Personalized Demo
-                </a>
-                <a
-                  href="tel:+14077594100"
-                  className="block w-full text-center text-slate-500 hover:text-slate-700 text-[12px] font-medium py-2.5 mt-2 transition-colors"
-                >
-                  Or call (407) 759-4100
-                </a>
-              </div>
+              {/* Message area — only show when not in active session */}
+              {sessionState !== 'active' && (
+                <div className="p-5">
+                  <p className="text-[13px] text-slate-600 leading-relaxed mb-4">
+                    Hi! I'm Maria, your V·GUIDE agent. I can walk you through how I'd work on your website — scrolling, booking, everything. Want to see a live demo?
+                  </p>
+                  <a
+                    href="/book-demo"
+                    className="block w-full text-center bg-slate-900 hover:bg-black text-white text-[13px] font-semibold py-3 rounded-xl transition-all duration-300 hover:shadow-lg"
+                  >
+                    Book a Personalized Demo
+                  </a>
+                  <a
+                    href="tel:+14077594100"
+                    className="block w-full text-center text-slate-500 hover:text-slate-700 text-[12px] font-medium py-2.5 mt-2 transition-colors"
+                  >
+                    Or call (407) 759-4100
+                  </a>
+                </div>
+              )}
             </div>
           </motion.div>
         )}
