@@ -39,11 +39,11 @@ export function SolutionHospitality() {
     <div className="min-h-screen bg-white">
       <Helmet>
         <title>AI Concierge for Hotels & Resorts | Voxaris</title>
-        <meta name="description" content="Voxaris AI concierge agents greet every website visitor, answer questions in real time, and book direct stays — 24/7. Video, voice, and browser-guided booking for hospitality." />
-        <meta name="keywords" content="hotel AI concierge, AI booking agent, hospitality AI, resort AI agent, direct booking AI, hotel website engagement, V·GUIDE hospitality" />
+        <meta name="description" content="V·GUIDE photorealistic AI video concierge controls your site, answers questions & completes direct bookings 24/7. Boost revenue, cut OTA fees." />
+        <meta name="keywords" content="ai concierge hotel website, virtual concierge hotel, ai booking agent hotel, hotel ai concierge, ai direct booking hotel, photorealistic ai concierge hospitality, ai video concierge hotel, 24/7 ai hotel concierge, ai virtual receptionist hotel, deploy ai concierge hotel site, ai that books hotel reservations, reduce ota fees ai concierge, interactive ai video hotel website" />
         <link rel="canonical" href="https://voxaris.io/solutions/hospitality" />
         <meta property="og:title" content="AI Concierge for Hotels & Resorts | Voxaris" />
-        <meta property="og:description" content="A photorealistic AI concierge that greets every website visitor, walks them through availability, and books direct stays — 24/7." />
+        <meta property="og:description" content="V·GUIDE photorealistic AI video concierge controls your site, answers questions & completes direct bookings 24/7. Boost revenue, cut OTA fees." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://voxaris.io/solutions/hospitality" />
       </Helmet>

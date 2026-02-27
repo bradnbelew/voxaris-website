@@ -15,12 +15,12 @@ export function SolutionDirectMail() {
   return (
     <div className="min-h-screen bg-white">
       <Helmet>
-        <title>AI-Powered Talking Postcards for Direct Mail | Voxaris</title>
-        <meta name="description" content="Turn static direct mail into live AI-powered conversations. Talking Postcards with personalized video agents that qualify leads and book appointments the moment a prospect scans." />
-        <meta name="keywords" content="Talking Postcards, AI direct mail, interactive mail, QR code AI agent, direct mail AI, video mail, personalized direct mail AI, direct mail engagement, AI mailer" />
+        <title>AI Talking Postcards with Video QR | Voxaris</title>
+        <meta name="description" content="Send physical postcards with QR that launch personalized photorealistic AI video conversations. Higher response rates, instant leads. 8-30% vs 1-2% industry standard." />
+        <meta name="keywords" content="talking postcards ai, ai video postcard, interactive video direct mail, qr code ai video postcard, talking postcard marketing, ai powered direct mail, personalized ai video mailer, qr talking postcard, direct mail with ai video, ai video direct mail campaign, interactive postcard qr ai, ai qr postcard lead generation" />
         <link rel="canonical" href="https://voxaris.io/solutions/direct-mail" />
-        <meta property="og:title" content="AI-Powered Talking Postcards for Direct Mail | Voxaris" />
-        <meta property="og:description" content="Your mailer just got a face and a voice. Turn static postcards into live AI conversations that qualify leads and book appointments on the spot." />
+        <meta property="og:title" content="AI Talking Postcards with Video QR | Voxaris" />
+        <meta property="og:description" content="Send physical postcards with QR that launch personalized photorealistic AI video conversations. Higher response rates, instant leads." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://voxaris.io/solutions/direct-mail" />
       </Helmet>

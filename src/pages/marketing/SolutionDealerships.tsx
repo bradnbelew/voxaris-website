@@ -38,12 +38,12 @@ export function SolutionDealerships() {
   return (
     <div className="min-h-screen bg-white">
       <Helmet>
-        <title>AI Sales Agents for Car Dealerships | Voxaris</title>
-        <meta name="description" content="Voxaris AI sales agents answer every dealership inquiry, qualify every lead, and book every appointment \u2014 24/7. Recover missed leads with V\u00b7GUIDE video and voice AI." />
-        <meta name="keywords" content="dealership AI, AI BDC agent, automotive AI, AI voice agent for dealerships, missed call recovery, AI sales agent, dealership lead recovery, V\u00b7GUIDE" />
+        <title>AI BDC Agents for Car Dealerships | Voxaris</title>
+        <meta name="description" content="V·GUIDE + V·SENSE: Photorealistic video + voice AI BDC agents that control your site, book test drives, qualify leads 24/7. Podium/Kenect alternative. \u2014 24/7. Recover missed leads with V\u00b7GUIDE video and voice AI." />
+        <meta name="keywords" content="ai bdc dealership, ai voice agent car dealership, podium alternative dealership, kenect alternative dealership, ai appointment setter dealership, dealership ai video agent, ai test drive booking agent, ai lead qualification dealership, dealersocket ai alternative, 24/7 ai for car dealership, ai bdc software dealership, ai phone agent auto dealer, interactive ai video dealership website, ai sales agent car dealership" />
         <link rel="canonical" href="https://voxaris.io/solutions/dealerships" />
-        <meta property="og:title" content="AI Sales Agents for Car Dealerships | Voxaris" />
-        <meta property="og:description" content="AI sales agents that answer every inquiry, qualify every lead, and book every appointment \u2014 before your competition picks up the phone." />
+        <meta property="og:title" content="AI BDC Agents for Car Dealerships | Voxaris" />
+        <meta property="og:description" content="Photorealistic video + voice AI BDC agents that control your dealership site, book test drives, and qualify leads 24/7. Podium/Kenect alternative." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://voxaris.io/solutions/dealerships" />
       </Helmet>

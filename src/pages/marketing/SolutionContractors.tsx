@@ -16,12 +16,12 @@ export function SolutionContractors() {
   return (
     <div className="min-h-screen bg-white">
       <Helmet>
-        <title>AI Voice Agents for Roofing Contractors | Voxaris</title>
-        <meta name="description" content="AI voice agents that answer every call, qualify every lead, and book every inspection — 24/7. Built for roofing contractors with JobNimbus integration. Never miss a storm call again." />
-        <meta name="keywords" content="AI for roofing contractors, roofing AI voice agent, AI receptionist roofing, missed call recovery roofing, JobNimbus AI integration, storm damage lead capture, home services AI, contractor AI phone answering" />
+        <title>AI Voice Agents for Contractors | Voxaris</title>
+        <meta name="description" content="Never miss another call. V·SENSE AI voice agents answer 24/7, qualify leads, book jobs & send texts. Perfect for plumbers, HVAC, roofers, home services." />
+        <meta name="keywords" content="ai voice agent missed calls, ai receptionist contractor, ai call answering home services, missed call recovery ai, ai phone agent plumber, 24/7 ai receptionist hvac, ai booking agent contractor, virtual receptionist home services, ai that answers contractor calls, contractor ai answering service, ai lead capture missed calls, ai missed call text back" />
         <link rel="canonical" href="https://voxaris.io/solutions/contractors" />
-        <meta property="og:title" content="AI Voice Agents for Roofing Contractors | Voxaris" />
-        <meta property="og:description" content="Every missed call is a roof you didn't close. AI voice agents that answer 24/7, qualify leads, and sync to JobNimbus automatically." />
+        <meta property="og:title" content="AI Voice Agents for Contractors | Voxaris" />
+        <meta property="og:description" content="Never miss another call. V·SENSE AI voice agents answer 24/7, qualify leads, book jobs & send texts. Built for home services." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://voxaris.io/solutions/contractors" />
       </Helmet>

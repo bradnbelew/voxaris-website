@@ -38,12 +38,12 @@ export function SolutionWhiteLabel() {
   return (
     <div className="min-h-screen bg-white">
       <Helmet>
-        <title>White Label AI Agents | Voxaris</title>
-        <meta name="description" content="White label Voxaris AI — deploy voice, video, and browser-guided agents under your own brand. Full VoxEngine platform, your logo, your domain, your clients." />
-        <meta name="keywords" content="white label AI agents, reseller AI voice, white label video AI, AI agent platform, VoxEngine white label, AI reseller program" />
+        <title>White Label AI Video & Voice Agents | Voxaris</title>
+        <meta name="description" content="Resell Voxaris under your brand: photorealistic V·GUIDE video agents + voice. Full white-label, margins up to 70%, white-glove support." />
+        <meta name="keywords" content="white label ai voice agents, white label ai video agent, resell ai agents saas, white label ai concierge, agency white label ai platform, reseller ai video agents, white label photorealistic ai, saas white label ai agents, white label talking postcards, ai agent reseller program, white label browser ai agent, agency ai resell platform" />
         <link rel="canonical" href="https://voxaris.io/solutions/white-label" />
-        <meta property="og:title" content="White Label AI Agents | Voxaris" />
-        <meta property="og:description" content="Your brand. Our AI engine. Deploy voice, video, and browser-guided agents for your clients — powered by VoxEngine." />
+        <meta property="og:title" content="White Label AI Video & Voice Agents | Voxaris" />
+        <meta property="og:description" content="Resell Voxaris under your brand: photorealistic V·GUIDE video agents + voice. Full white-label, margins up to 70%." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://voxaris.io/solutions/white-label" />
       </Helmet>
