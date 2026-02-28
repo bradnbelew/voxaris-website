@@ -47,10 +47,10 @@
       },
       required: ['page']
     },
-    handler: async ({ page }) => {
+    execute: async ({ page }) => {
       const path = page.startsWith('/') ? page : '/' + page;
       window.location.href = path;
-      return { success: true, navigated_to: path };
+      return JSON.stringify({ success: true, navigated_to: path });
     }
   });
 
@@ -93,7 +93,7 @@
       },
       required: ['first_name', 'last_name', 'email', 'business_type']
     },
-    handler: async ({ first_name, last_name, email, phone, company, business_type, message }) => {
+    execute: async ({ first_name, last_name, email, phone, company, business_type, message }) => {
       // Navigate to book-demo page first if not already there
       if (!window.location.pathname.includes('book-demo')) {
         window.location.href = '/book-demo';
@@ -135,10 +135,10 @@
         form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
       }
 
-      return {
+      return JSON.stringify({
         success: true,
         message: `Demo request submitted for ${first_name} ${last_name} (${email}). The Voxaris team will follow up within 24 hours.`
-      };
+      });
     }
   });
 
@@ -157,7 +157,7 @@
       },
       required: ['solution']
     },
-    handler: async ({ solution }) => {
+    execute: async ({ solution }) => {
       const solutions = {
         dealerships: {
           name: 'V·GUIDE for Car Dealerships',
@@ -231,7 +231,7 @@
         }
       };
 
-      return solutions[solution] || { error: 'Unknown solution' };
+      return JSON.stringify(solutions[solution] || { error: 'Unknown solution' });
     }
   });
 
@@ -244,8 +244,8 @@
       properties: {},
       required: []
     },
-    handler: async () => {
-      return {
+    execute: async () => {
+      return JSON.stringify({
         company: 'Voxaris',
         tagline: 'Photorealistic AI Agents for Every Business',
         description: 'Voxaris builds AI agents that see, speak, and act. Our V·GUIDE agents appear as photorealistic video humans on websites, control the browser in real-time, and have natural conversations with visitors. V·SENSE handles voice calls 24/7.',
@@ -261,7 +261,7 @@
         industries: ['Car Dealerships', 'Hotels & Resorts', 'Home Services/Contractors', 'Direct Mail', 'White Label/Agencies'],
         cta: 'Book a demo at /book-demo to see V·GUIDE in action.',
         website: 'https://voxaris.io'
-      };
+      });
     }
   });
 
