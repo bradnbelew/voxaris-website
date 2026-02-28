@@ -9,7 +9,8 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 const TAVUS_API_KEY = process.env.TAVUS_API_KEY || '7f3c93c88c4a44c79f5d969b56bdbd75';
 const PERSONA_ID = process.env.TAVUS_PERSONA_ID || 'p40793780aaa';
-const ORCHESTRATOR_URL = process.env.ORCHESTRATOR_URL || 'https://voxaris-orchestrator.vercel.app';
+// Callback URL points to our own /api/execute endpoint (no separate orchestrator needed)
+const CALLBACK_BASE = process.env.CALLBACK_BASE_URL || 'https://www.voxaris.io';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -33,7 +34,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       body: JSON.stringify({
         persona_id: PERSONA_ID,
         conversation_name: `voxaris-site-${Date.now()}`,
-        callback_url: `${ORCHESTRATOR_URL}/api/execute`,
+        callback_url: `${CALLBACK_BASE}/api/voxaris/tavus/execute`,
         properties: {
           max_call_duration: 900,
           participant_left_timeout: 30,

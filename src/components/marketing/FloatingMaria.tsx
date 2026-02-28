@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Loader2 } from 'lucide-react';
 
 const MARIA_VIDEO = "https://cdn.replica.tavus.io/40242/2fe8396c.mp4";
-const ORCHESTRATOR_URL = "https://voxaris-orchestrator.vercel.app";
+// Poll our own API for tool call actions (no separate orchestrator needed)
+const EXECUTE_API = "/api/voxaris/tavus/execute";
 
 type SessionState = 'idle' | 'loading' | 'active' | 'error';
 
@@ -106,7 +107,7 @@ export function FloatingMaria() {
     }
 
     const cid = conversationIdRef.current;
-    const pollUrl = `${ORCHESTRATOR_URL}/api/execute?cid=${encodeURIComponent(cid)}`;
+    const pollUrl = `${EXECUTE_API}?cid=${encodeURIComponent(cid)}`;
 
     pollTimerRef.current = setInterval(() => {
       fetch(pollUrl)
