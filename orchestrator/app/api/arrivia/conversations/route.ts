@@ -74,12 +74,19 @@ export async function POST(request: NextRequest) {
     const tavus = getArriviaTavusClient();
 
     const conversationalContext = `
-You are speaking with ${member_name}, a ${current_tier} member of ${brand.name}.
-They joined on ${join_date} and have ${points_balance} points.
-Their renewal date is ${renewal_date}.
-${last_booking_destination ? `Their most recent trip was to ${last_booking_destination}.` : ""}
-The recommended upgrade is to ${target_tier}.
-When the member is ready to upgrade, direct them to click the upgrade button on the page.
+## Personalization Variables
+brand_name: ${brand.name}
+member_name: ${member_name}
+current_tier: ${current_tier}
+target_tier: ${target_tier}
+join_date: ${join_date}
+points_balance: ${points_balance}
+renewal_date: ${renewal_date}
+last_booking_destination: ${last_booking_destination ?? "not available"}
+upgrade_link: ${upgrade_link}
+
+## Session Context
+You are on a live video call with ${member_name}. They clicked a personalized link to connect with you about upgrading from ${current_tier} to ${target_tier}. When they're ready to upgrade, tell them to click the upgrade button on the page.
 `.trim();
 
     log.info(
