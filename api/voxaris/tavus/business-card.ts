@@ -11,8 +11,8 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
  */
 
 const TAVUS_API_KEY = process.env.TAVUS_API_KEY || '';
-const PERSONA_ID = process.env.VOXARIS_TAVUS_PERSONA_ID || 'p5827f44cc74';
-const REPLICA_ID = process.env.VOXARIS_TAVUS_REPLICA_ID || 'r5dc7c7d0bcb';
+const PERSONA_ID = process.env.VOXARIS_TAVUS_PERSONA_ID || 'p01ba15e825b';
+const REPLICA_ID = process.env.VOXARIS_TAVUS_REPLICA_ID || 'raf6459c9b82';
 
 const TAVUS_URLS = ['https://tavusapi.com', 'https://api.tavus.io'];
 
