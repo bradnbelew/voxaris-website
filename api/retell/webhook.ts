@@ -11,6 +11,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
  * 2. Extract lead data (phone, transcript, summary, appointment status)
  * 3. Push lead to GoHighLevel CRM
  * 4. Send instant notification to Ethan's phone
+ * 5. If appointment booked → send confirmation SMS to customer via GHL
  */
 
 // ── Config (Vercel env vars) ──
@@ -209,6 +210,42 @@ async function notifyEthan(data: {
   }
 }
 
+// ── GHL: Send SMS to customer ──
+async function sendSmsViaGHL(contactId: string, message: string) {
+  if (!GHL_TOKEN) {
+    console.warn('⚠️ GHL token not set — skipping SMS');
+    return false;
+  }
+
+  try {
+    const res = await fetch('https://services.leadconnectorhq.com/conversations/messages', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${GHL_TOKEN}`,
+        Version: '2021-07-28',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        type: 'SMS',
+        contactId,
+        message,
+      }),
+    });
+
+    if (res.ok) {
+      console.log(`📱 SMS sent to contact ${contactId}`);
+      return true;
+    } else {
+      const errText = await res.text();
+      console.warn(`⚠️ GHL SMS failed: ${res.status} ${errText}`);
+      return false;
+    }
+  } catch (err: any) {
+    console.warn(`⚠️ GHL SMS error: ${err.message}`);
+    return false;
+  }
+}
+
 // ── Agent name resolver ──
 const AGENT_NAMES: Record<string, string> = {
   agent_0bf4698527ae66e7ccaaad2b2e: 'USAA V-SENSE Inbound',
@@ -298,12 +335,28 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }),
   ]);
 
+  // Send confirmation SMS if appointment was booked
+  let smsSent = false;
+  if (appointmentBooked && ghlContactId && customerPhone) {
+    const businessName = agentName.includes('-')
+      ? agentName.split('-').slice(1).join('-').trim()
+      : agentName;
+
+    const smsMessage =
+      `Hi! This is a confirmation from ${businessName}. ` +
+      `Your appointment has been noted and our team will follow up shortly. ` +
+      `If you need to reschedule, just reply to this text. Thank you!`;
+
+    smsSent = await sendSmsViaGHL(ghlContactId, smsMessage);
+  }
+
   return res.status(200).json({
     received: true,
     processed: true,
     agent: agentName,
     appointment_booked: appointmentBooked,
     ghl_contact_id: ghlContactId,
+    sms_sent: smsSent,
     duration_seconds: duration,
   });
 }
