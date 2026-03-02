@@ -116,14 +116,13 @@ export const Conversation = React.memo(({ onLeave, conversationUrl }: Conversati
 
 		(async () => {
 			try {
-				// Initialize the media pipeline first (required per Tavus quickstart)
-				await daily.startCamera();
-				// Then join the Tavus conversation room
+				// Try to initialize camera/mic — don't block join if devices unavailable
+				await daily.startCamera().catch(() => {});
+				// Join the Tavus conversation room
 				await daily.join({
 					url: conversationUrl,
-					inputSettings: {
-						audio: { processor: { type: "noise-cancellation" } },
-					},
+					startVideoOff: false,
+					startAudioOff: false,
 				});
 			} catch (err) {
 				console.error("Failed to join Tavus conversation:", err);
