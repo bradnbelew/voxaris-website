@@ -1,4 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { supabase } from '../lib/supabase';
 
 /**
  * POST /api/retell/webhook
@@ -9,17 +10,16 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
  * Flow:
  * 1. Retell fires webhook after every call ends
  * 2. Extract lead data (phone, transcript, summary, appointment status)
- * 3. Push lead to GoHighLevel CRM
- * 4. Send instant notification to Ethan's phone
- * 5. If appointment booked → send confirmation SMS to customer via GHL
+ * 3. Upsert contact + log call in Supabase (our own DB)
+ * 4. Send instant notification to Ethan's phone via ntfy
+ * 5. If appointment booked → send confirmation SMS via Twilio
  */
 
-// ── Config (Vercel env vars) ──
-const GHL_TOKEN = process.env.GHL_ACCESS_TOKEN || '';
-const GHL_LOCATION_ID = process.env.GHL_LOCATION_ID || '';
-const ETHAN_PHONE = process.env.ETHAN_PHONE || '+14077594100';
+// ── Config ──
 const NTFY_TOPIC = process.env.NTFY_TOPIC || 'voxaris-leads';
-const WEBHOOK_SECRET = process.env.RETELL_WEBHOOK_SECRET || '';
+const TWILIO_SID = process.env.TWILIO_ACCOUNT_SID || '';
+const TWILIO_AUTH = process.env.TWILIO_AUTH_TOKEN || '';
+const TWILIO_FROM = process.env.TWILIO_PHONE_NUMBER || '';
 
 // ── Types ──
 interface RetellCallEvent {
@@ -46,126 +46,135 @@ interface RetellCallEvent {
     };
     metadata?: Record<string, any>;
     transcript?: string;
-    transcript_object?: Array<{
-      role: string;
-      content: string;
-    }>;
+    transcript_object?: Array<{ role: string; content: string }>;
   };
 }
 
-// ── GHL: Create/update contact ──
-async function pushLeadToGHL(data: {
+// ── Supabase: Upsert contact + log call ──
+async function saveToDatabase(data: {
   phone: string;
-  name?: string;
+  agentId: string;
   agentName: string;
+  direction: string;
+  duration: number;
   summary: string;
   sentiment: string;
   appointmentBooked: boolean;
   recordingUrl?: string;
   callId: string;
-  duration: number;
-  direction: string;
+  callStatus: string;
+  disconnectionReason?: string;
+  transcript?: string;
 }) {
-  if (!GHL_TOKEN || !GHL_LOCATION_ID) {
-    console.warn('⚠️ GHL credentials not set — skipping CRM push');
-    return null;
-  }
-
-  const headers: Record<string, string> = {
-    Authorization: `Bearer ${GHL_TOKEN}`,
-    Version: '2021-07-28',
-    'Content-Type': 'application/json',
-  };
-
   try {
-    // 1. Search for existing contact by phone
-    const searchRes = await fetch(
-      `https://services.leadconnectorhq.com/contacts/search/duplicate?locationId=${GHL_LOCATION_ID}&phone=${encodeURIComponent(data.phone)}`,
-      { headers }
-    );
-
-    let contactId: string | null = null;
-
-    if (searchRes.ok) {
-      const searchData = await searchRes.json();
-      contactId = searchData?.contact?.id || null;
-    }
-
-    // 2. Create or update contact
+    // 1. Upsert contact by phone
     const tags = ['voxaris-ai-call', `agent:${data.agentName.toLowerCase().replace(/\s+/g, '-')}`];
-    if (data.appointmentBooked) {
-      tags.push('appointment-booked', 'hot-lead');
+    if (data.appointmentBooked) tags.push('appointment-booked', 'hot-lead');
+
+    const { data: contact, error: contactErr } = await supabase
+      .from('contacts')
+      .upsert(
+        {
+          phone: data.phone,
+          agent_name: data.agentName,
+          tags,
+          appointment_booked: data.appointmentBooked || undefined,
+          last_call_at: new Date().toISOString(),
+          last_sentiment: data.sentiment,
+        },
+        { onConflict: 'phone' }
+      )
+      .select('id')
+      .single();
+
+    if (contactErr) {
+      console.warn(`⚠️ Contact upsert error: ${contactErr.message}`);
     }
 
-    const contactBody: Record<string, any> = {
-      phone: data.phone,
-      tags,
-      source: 'Voxaris AI Agent',
-      locationId: GHL_LOCATION_ID,
-      customFields: [
-        { key: 'last_ai_call_date', field_value: new Date().toISOString() },
-        { key: 'last_ai_agent', field_value: data.agentName },
-        { key: 'last_call_sentiment', field_value: data.sentiment },
-        { key: 'last_call_outcome', field_value: data.appointmentBooked ? 'Appointment Booked' : 'No Appointment' },
-      ],
-    };
+    const contactId = contact?.id || null;
 
-    if (data.name) {
-      contactBody.name = data.name;
+    // 2. Log the call
+    const { error: callErr } = await supabase.from('calls').insert({
+      retell_call_id: data.callId,
+      contact_id: contactId,
+      agent_id: data.agentId,
+      agent_name: data.agentName,
+      direction: data.direction,
+      duration_seconds: data.duration,
+      summary: data.summary,
+      sentiment: data.sentiment,
+      appointment_booked: data.appointmentBooked,
+      recording_url: data.recordingUrl,
+      transcript: data.transcript,
+      call_status: data.callStatus,
+      disconnection_reason: data.disconnectionReason,
+    });
+
+    if (callErr) {
+      console.warn(`⚠️ Call insert error: ${callErr.message}`);
     }
 
-    let contactRes: Response;
-    if (contactId) {
-      // Update existing
-      contactRes = await fetch(`https://services.leadconnectorhq.com/contacts/${contactId}`, {
-        method: 'PUT',
-        headers,
-        body: JSON.stringify(contactBody),
-      });
-    } else {
-      // Create new
-      contactRes = await fetch('https://services.leadconnectorhq.com/contacts/', {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(contactBody),
-      });
-    }
-
-    if (contactRes.ok) {
-      const contactData = await contactRes.json();
-      contactId = contactData?.contact?.id || contactId;
-      console.log(`✅ GHL contact ${contactId ? 'updated' : 'created'}: ${contactId}`);
-    } else {
-      const errText = await contactRes.text();
-      console.warn(`⚠️ GHL contact upsert failed: ${contactRes.status} ${errText}`);
-    }
-
-    // 3. Add note with call details
-    if (contactId) {
-      const durationMin = Math.round(data.duration / 60);
-      const noteBody =
-        `## Voxaris AI Call Summary\n\n` +
-        `**Agent:** ${data.agentName}\n` +
-        `**Direction:** ${data.direction}\n` +
-        `**Duration:** ${durationMin} min\n` +
-        `**Sentiment:** ${data.sentiment}\n` +
-        `**Outcome:** ${data.appointmentBooked ? '✅ APPOINTMENT BOOKED' : 'No appointment'}\n` +
-        `**Call ID:** ${data.callId}\n` +
-        (data.recordingUrl ? `**Recording:** ${data.recordingUrl}\n` : '') +
-        `\n---\n\n` +
-        `**Summary:**\n${data.summary || 'No summary available'}`;
-
-      await fetch(`https://services.leadconnectorhq.com/contacts/${contactId}/notes`, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({ body: noteBody, userId: null }),
-      }).catch((err) => console.warn(`⚠️ GHL note failed: ${err.message}`));
-    }
-
+    console.log(`✅ Saved to DB: contact=${contactId} call=${data.callId}`);
     return contactId;
   } catch (err: any) {
-    console.warn(`⚠️ GHL push error: ${err.message}`);
+    console.warn(`⚠️ DB save error: ${err.message}`);
     return null;
+  }
+}
+
+// ── Twilio: Send SMS ──
+async function sendSms(to: string, message: string, contactId?: string | null, agentName?: string) {
+  if (!TWILIO_SID || !TWILIO_AUTH || !TWILIO_FROM) {
+    console.warn('⚠️ Twilio credentials not set — skipping SMS');
+    return false;
+  }
+
+  try {
+    const params = new URLSearchParams({
+      To: to,
+      From: TWILIO_FROM,
+      Body: message,
+    });
+
+    const res = await fetch(
+      `https://api.twilio.com/2010-04-01/Accounts/${TWILIO_SID}/Messages.json`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: 'Basic ' + Buffer.from(`${TWILIO_SID}:${TWILIO_AUTH}`).toString('base64'),
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: params.toString(),
+      }
+    );
+
+    if (res.ok) {
+      const smsData = await res.json();
+      console.log(`📱 SMS sent: ${smsData.sid}`);
+
+      // Log to sms_log
+      await supabase.from('sms_log').insert({
+        contact_id: contactId,
+        phone: to,
+        message,
+        direction: 'outbound',
+        status: 'sent',
+        twilio_sid: smsData.sid,
+        trigger_type: 'post_call',
+        agent_name: agentName,
+      }).then(({ error }) => {
+        if (error) console.warn(`⚠️ SMS log error: ${error.message}`);
+      });
+
+      return true;
+    } else {
+      const errText = await res.text();
+      console.warn(`⚠️ Twilio SMS failed: ${res.status} ${errText}`);
+      return false;
+    }
+  } catch (err: any) {
+    console.warn(`⚠️ SMS error: ${err.message}`);
+    return false;
   }
 }
 
@@ -192,8 +201,6 @@ async function notifyEthan(data: {
     data.summary ? data.summary.slice(0, 300) : 'No summary',
   ].join('\n');
 
-  // ntfy.sh — free, instant push notifications
-  // Ethan: install ntfy app and subscribe to "voxaris-leads" topic
   try {
     await fetch(`https://ntfy.sh/${NTFY_TOPIC}`, {
       method: 'POST',
@@ -207,42 +214,6 @@ async function notifyEthan(data: {
     console.log(`📱 ntfy notification sent: ${title}`);
   } catch (err: any) {
     console.warn(`⚠️ ntfy notification failed: ${err.message}`);
-  }
-}
-
-// ── GHL: Send SMS to customer ──
-async function sendSmsViaGHL(contactId: string, message: string) {
-  if (!GHL_TOKEN) {
-    console.warn('⚠️ GHL token not set — skipping SMS');
-    return false;
-  }
-
-  try {
-    const res = await fetch('https://services.leadconnectorhq.com/conversations/messages', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${GHL_TOKEN}`,
-        Version: '2021-07-28',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        type: 'SMS',
-        contactId,
-        message,
-      }),
-    });
-
-    if (res.ok) {
-      console.log(`📱 SMS sent to contact ${contactId}`);
-      return true;
-    } else {
-      const errText = await res.text();
-      console.warn(`⚠️ GHL SMS failed: ${res.status} ${errText}`);
-      return false;
-    }
-  } catch (err: any) {
-    console.warn(`⚠️ GHL SMS error: ${err.message}`);
-    return false;
   }
 }
 
@@ -262,7 +233,6 @@ const AGENT_NAMES: Record<string, string> = {
 
 // ── Main handler ──
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Retell-Signature');
@@ -270,7 +240,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  // Quick ack — Retell expects fast response
   const event = req.body as RetellCallEvent;
 
   if (!event?.event || !event?.call) {
@@ -312,18 +281,22 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(200).json({ received: true, skipped: 'too_short' });
   }
 
-  // Fire both GHL push and notification in parallel
-  const [ghlContactId] = await Promise.all([
-    pushLeadToGHL({
+  // Fire DB save and notification in parallel
+  const [contactId] = await Promise.all([
+    saveToDatabase({
       phone: customerPhone,
+      agentId: call.agent_id,
       agentName,
+      direction,
+      duration,
       summary,
       sentiment,
       appointmentBooked,
       recordingUrl: call.recording_url,
       callId: call.call_id,
-      duration,
-      direction,
+      callStatus: call.call_status,
+      disconnectionReason: call.disconnection_reason,
+      transcript: call.transcript,
     }),
     notifyEthan({
       agentName,
@@ -337,7 +310,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   // Send confirmation SMS if appointment was booked
   let smsSent = false;
-  if (appointmentBooked && ghlContactId && customerPhone) {
+  if (appointmentBooked && customerPhone) {
     const businessName = agentName.includes('-')
       ? agentName.split('-').slice(1).join('-').trim()
       : agentName;
@@ -347,7 +320,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       `Your appointment has been noted and our team will follow up shortly. ` +
       `If you need to reschedule, just reply to this text. Thank you!`;
 
-    smsSent = await sendSmsViaGHL(ghlContactId, smsMessage);
+    smsSent = await sendSms(customerPhone, smsMessage, contactId, agentName);
   }
 
   return res.status(200).json({
@@ -355,7 +328,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     processed: true,
     agent: agentName,
     appointment_booked: appointmentBooked,
-    ghl_contact_id: ghlContactId,
+    contact_id: contactId,
     sms_sent: smsSent,
     duration_seconds: duration,
   });

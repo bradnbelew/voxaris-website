@@ -1,4 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { supabase } from '../lib/supabase';
 
 /**
  * POST /api/retell/send-sms
@@ -11,16 +12,14 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
  *  - "I'll send you a confirmation text right now"
  *  - "Let me text you our address"
  *
- * Called by Retell's tool execution with:
- *   { phone: "+1...", message: "..." }
- *
  * Returns Retell-compatible tool response.
  */
 
-const GHL_TOKEN = process.env.GHL_ACCESS_TOKEN || '';
-const GHL_LOCATION_ID = process.env.GHL_LOCATION_ID || '';
+const TWILIO_SID = process.env.TWILIO_ACCOUNT_SID || '';
+const TWILIO_AUTH = process.env.TWILIO_AUTH_TOKEN || '';
+const TWILIO_FROM = process.env.TWILIO_PHONE_NUMBER || '';
 
-// ── Agent booking URLs (agent_id → URL) ──
+// ── Agent booking URLs ──
 const BOOKING_URLS: Record<string, string> = {
   agent_0bf4698527ae66e7ccaaad2b2e: 'https://voxaris.io/book-demo',
   agent_a34129591f0e7e19abeadd264f: 'https://voxaris.io/book-demo',
@@ -34,84 +33,44 @@ const BOOKING_URLS: Record<string, string> = {
   agent_a69305c2fdf8246dadcae8284e: 'https://voxaris.io/book-demo',
 };
 
-async function findOrCreateGHLContact(phone: string): Promise<string | null> {
-  if (!GHL_TOKEN || !GHL_LOCATION_ID) return null;
-
-  const headers: Record<string, string> = {
-    Authorization: `Bearer ${GHL_TOKEN}`,
-    Version: '2021-07-28',
-    'Content-Type': 'application/json',
-  };
+// ── Twilio: Send SMS ──
+async function sendViaTwilio(to: string, message: string): Promise<{ ok: boolean; sid?: string }> {
+  if (!TWILIO_SID || !TWILIO_AUTH || !TWILIO_FROM) {
+    console.warn('⚠️ Twilio credentials not set');
+    return { ok: false };
+  }
 
   try {
-    // Search for existing contact
-    const searchRes = await fetch(
-      `https://services.leadconnectorhq.com/contacts/search/duplicate?locationId=${GHL_LOCATION_ID}&phone=${encodeURIComponent(phone)}`,
-      { headers }
+    const params = new URLSearchParams({
+      To: to,
+      From: TWILIO_FROM,
+      Body: message,
+    });
+
+    const res = await fetch(
+      `https://api.twilio.com/2010-04-01/Accounts/${TWILIO_SID}/Messages.json`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: 'Basic ' + Buffer.from(`${TWILIO_SID}:${TWILIO_AUTH}`).toString('base64'),
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: params.toString(),
+      }
     );
 
-    if (searchRes.ok) {
-      const data = await searchRes.json();
-      if (data?.contact?.id) return data.contact.id;
-      console.log(`GHL search result (no id): ${JSON.stringify(data).slice(0, 200)}`);
-    } else {
-      console.warn(`GHL search failed: ${searchRes.status} ${await searchRes.text().catch(() => '')}`);
-    }
-
-    // Create new contact
-    const createRes = await fetch('https://services.leadconnectorhq.com/contacts/', {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({
-        phone,
-        tags: ['voxaris-ai-call', 'sms-sent'],
-        source: 'Voxaris AI Agent',
-        locationId: GHL_LOCATION_ID,
-      }),
-    });
-
-    if (createRes.ok) {
-      const data = await createRes.json();
-      console.log(`GHL contact created: ${JSON.stringify(data).slice(0, 200)}`);
-      return data?.contact?.id || null;
-    }
-
-    const createErr = await createRes.text().catch(() => '');
-    console.warn(`GHL contact create failed: ${createRes.status} ${createErr}`);
-    return null;
-  } catch (err: any) {
-    console.warn(`⚠️ GHL contact lookup failed: ${err.message}`);
-    return null;
-  }
-}
-
-async function sendSms(contactId: string, message: string): Promise<boolean> {
-  try {
-    const res = await fetch('https://services.leadconnectorhq.com/conversations/messages', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${GHL_TOKEN}`,
-        Version: '2021-07-28',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        type: 'SMS',
-        contactId,
-        message,
-      }),
-    });
-
     if (res.ok) {
-      console.log(`📱 Mid-call SMS sent to contact ${contactId}`);
-      return true;
+      const data = await res.json();
+      console.log(`📱 Mid-call SMS sent: ${data.sid}`);
+      return { ok: true, sid: data.sid };
     } else {
       const errText = await res.text();
-      console.warn(`⚠️ SMS send failed: ${res.status} ${errText}`);
-      return false;
+      console.warn(`⚠️ Twilio SMS failed: ${res.status} ${errText}`);
+      return { ok: false };
     }
   } catch (err: any) {
-    console.warn(`⚠️ SMS send error: ${err.message}`);
-    return false;
+    console.warn(`⚠️ Twilio error: ${err.message}`);
+    return { ok: false };
   }
 }
 
@@ -131,32 +90,43 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
   }
 
-  // Build the message — if not provided, use a default with booking link
+  // Build message — if not provided, use default with booking link
   let smsText = message;
   if (!smsText) {
     const bookingUrl = BOOKING_URLS[agent_id] || 'https://voxaris.io/book-demo';
     smsText = `Thanks for chatting with us! Here's the link to book your appointment: ${bookingUrl}`;
   }
 
-  // Find or create GHL contact, then send SMS
-  const contactId = await findOrCreateGHLContact(phone);
+  // Send via Twilio
+  const { ok, sid } = await sendViaTwilio(phone, smsText);
 
-  if (!contactId) {
-    console.warn(`⚠️ Could not find/create GHL contact for ${phone}`);
-    return res.status(200).json({
-      result: 'I apologize, I wasn\'t able to send the text right now. Let me give you the information verbally instead.',
+  if (ok) {
+    // Log to DB — find contact by phone, log SMS
+    const { data: contact } = await supabase
+      .from('contacts')
+      .select('id')
+      .eq('phone', phone)
+      .maybeSingle();
+
+    await supabase.from('sms_log').insert({
+      contact_id: contact?.id || null,
+      phone,
+      message: smsText,
+      direction: 'outbound',
+      status: 'sent',
+      twilio_sid: sid,
+      trigger_type: 'mid_call',
+      agent_name: agent_id,
+    }).then(({ error }) => {
+      if (error) console.warn(`⚠️ SMS log error: ${error.message}`);
     });
-  }
 
-  const sent = await sendSms(contactId, smsText);
-
-  if (sent) {
     return res.status(200).json({
       result: `I've just sent a text to your phone with that information. You should receive it in a moment.`,
     });
-  } else {
-    return res.status(200).json({
-      result: 'I apologize, I wasn\'t able to send the text right now. Let me give you the information verbally instead.',
-    });
   }
+
+  return res.status(200).json({
+    result: 'I apologize, I wasn\'t able to send the text right now. Let me give you the information verbally instead.',
+  });
 }
