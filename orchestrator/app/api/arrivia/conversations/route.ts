@@ -100,7 +100,7 @@ You are on a live video call with ${member_name}. They clicked a personalized li
         replicaId: process.env.TAVUS_REPLICA_ID,
         conversationName: `arrivia-upgrade-${brand_id}-${Date.now()}`,
         customGreeting: getPersonalizedGreeting(member_name, current_tier),
-        callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/api/arrivia/webhooks/tavus`,
+        // callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/api/arrivia/webhooks/tavus`, // disabled — no tools for now
         conversationalContext,
       },
       corrId
