@@ -109,16 +109,26 @@ export const Conversation = React.memo(({ onLeave, conversationUrl }: Conversati
 		}
 	}, [meetingState, onLeave]);
 
-	// Join when the Daily call object becomes available (not on mount when it's null)
+	// Initialize media then join when the Daily call object is available
 	useEffect(() => {
 		if (!daily || joinedRef.current) return;
 		joinedRef.current = true;
-		daily.join({
-			url: conversationUrl,
-			inputSettings: {
-				audio: { processor: { type: "noise-cancellation" } },
-			},
-		});
+
+		(async () => {
+			try {
+				// Initialize the media pipeline first (required per Tavus quickstart)
+				await daily.startCamera();
+				// Then join the Tavus conversation room
+				await daily.join({
+					url: conversationUrl,
+					inputSettings: {
+						audio: { processor: { type: "noise-cancellation" } },
+					},
+				});
+			} catch (err) {
+				console.error("Failed to join Tavus conversation:", err);
+			}
+		})();
 	}, [daily, conversationUrl]);
 
 	const handleLeave = useCallback(() => {
