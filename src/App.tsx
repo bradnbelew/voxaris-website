@@ -24,6 +24,7 @@ import HowItWorks from "./pages/HowItWorks";
 import WhyVoxaris from "./pages/WhyVoxaris";
 import BookDemo from "./pages/BookDemo";
 import NotFound from "./pages/NotFound";
+import { BusinessCardAgent } from "./pages/marketing/BusinessCardAgent";
 
 // Auth Pages
 import Login from "./pages/auth/Login";
@@ -66,6 +67,10 @@ const App = () => (
           <Route path="/book-demo" element={<BookDemo />} />
           <Route path="/talking-postcard" element={<TalkingPostcard />} />
           <Route path="/talking-postcard/demo" element={<TalkingPostcardDemo />} />
+
+          {/* Business Card Funnels */}
+          <Route path="/ethan" element={<BusinessCardAgent persona="ethan" />} />
+          <Route path="/mike" element={<BusinessCardAgent persona="mike" />} />
 
           {/* Blog */}
           <Route path="/blog" element={<BlogIndex />} />
