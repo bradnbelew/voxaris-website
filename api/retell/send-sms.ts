@@ -53,6 +53,9 @@ async function findOrCreateGHLContact(phone: string): Promise<string | null> {
     if (searchRes.ok) {
       const data = await searchRes.json();
       if (data?.contact?.id) return data.contact.id;
+      console.log(`GHL search result (no id): ${JSON.stringify(data).slice(0, 200)}`);
+    } else {
+      console.warn(`GHL search failed: ${searchRes.status} ${await searchRes.text().catch(() => '')}`);
     }
 
     // Create new contact
@@ -69,9 +72,12 @@ async function findOrCreateGHLContact(phone: string): Promise<string | null> {
 
     if (createRes.ok) {
       const data = await createRes.json();
+      console.log(`GHL contact created: ${JSON.stringify(data).slice(0, 200)}`);
       return data?.contact?.id || null;
     }
 
+    const createErr = await createRes.text().catch(() => '');
+    console.warn(`GHL contact create failed: ${createRes.status} ${createErr}`);
     return null;
   } catch (err: any) {
     console.warn(`⚠️ GHL contact lookup failed: ${err.message}`);
@@ -120,7 +126,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const { phone, message, agent_id } = req.body || {};
 
   if (!phone) {
-    return res.status(400).json({
+    return res.status(200).json({
       result: 'I need the customer phone number to send a text. Could you confirm their number?',
     });
   }
