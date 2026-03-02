@@ -18,7 +18,7 @@ const navLinks = [
     ],
   },
   { label: 'Technology', href: '/technology' },
-  { label: 'Demo', href: '/demo' },
+  { label: 'Demo', href: '/book-demo' },
   { label: 'Blog', href: '/blog' },
 ];
 
@@ -90,7 +90,6 @@ export function Navbar() {
               ))}
             </div>
             <div className="hidden lg:flex items-center gap-4">
-              <Link to="/dashboard"><Button variant="ghost" className="text-carbon-400 hover:text-carbon-700 hover:bg-transparent font-medium text-[13px] px-0">Sign in</Button></Link>
               <Link to="/book-demo"><Button className="bg-carbon-900 hover:bg-carbon-800 text-white rounded-full px-6 h-9 font-medium text-[13px] group">Get Started <ArrowRight className="w-3.5 h-3.5 ml-2 group-hover:translate-x-0.5 transition-transform" /></Button></Link>
             </div>
             <button className="lg:hidden p-2 text-carbon-500" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>{isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}</button>
@@ -115,7 +114,6 @@ export function Navbar() {
               </div>
               <div className="p-6 border-t border-carbon-100 space-y-3">
                 <Link to="/book-demo" className="block"><Button className="w-full bg-carbon-900 text-white h-12 rounded-full font-medium">Get Started <ArrowRight className="w-4 h-4 ml-2" /></Button></Link>
-                <Link to="/dashboard" className="block"><Button variant="outline" className="w-full border-carbon-200 text-carbon-600 h-12 rounded-full bg-transparent hover:bg-carbon-50">Sign in</Button></Link>
               </div>
             </div>
           </motion.div>
