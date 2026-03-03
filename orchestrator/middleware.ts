@@ -8,6 +8,7 @@ const PUBLIC_API_PATTERNS = [
   /^\/api\/webhooks/,
   /^\/api\/execute/,
   /^\/api\/tavus/,
+  /^\/api\/voice/,
 ];
 
 function isPublicApiRoute(pathname: string) {
@@ -28,6 +29,11 @@ export default async function middleware(req: NextRequest) {
       "camera=(), microphone=(), geolocation=()"
     );
     return response;
+  }
+
+  // Voice dashboard: public (no auth)
+  if (pathname.startsWith("/voice")) {
+    return NextResponse.next();
   }
 
   // Dashboard routes: protect with Clerk if available
