@@ -51,6 +51,7 @@ export function TechnologyShowcase() {
                 loop
                 muted
                 playsInline
+                aria-label="V·GUIDE photorealistic AI video agent controlling a live website in real time"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-white via-white/20 to-transparent" />
               <div className="absolute top-4 left-4 flex items-center gap-2">
@@ -99,6 +100,7 @@ export function TechnologyShowcase() {
                   loop
                   muted
                   playsInline
+                  aria-label="V·FACE photorealistic AI avatar rendering engine — static video agent by Voxaris"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent" />
               </div>
@@ -125,7 +127,7 @@ export function TechnologyShowcase() {
               <div className="aspect-[4/3] relative overflow-hidden bg-carbon-50">
                 <img
                   src="/voice-ai.jpg"
-                  alt="Voice AI"
+                  alt="V·SENSE AI voice perception system — inbound and outbound voice agents by Voxaris"
                   className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-[1.02] transition-all duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent" />
@@ -153,7 +155,7 @@ export function TechnologyShowcase() {
               <div className="aspect-[4/3] relative overflow-hidden bg-carbon-50">
                 <img
                   src="/talking-postcard.png"
-                  alt="Talking Postcards"
+                  alt="Talking Postcards — QR-powered AI video direct mail by Voxaris"
                   className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-[1.02] transition-all duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent" />

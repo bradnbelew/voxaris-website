@@ -149,7 +149,8 @@ export function Demo() {
         <meta property="og:description" content="Don't take our word for it — talk to her. Call Maria, get a callback, or meet her face-to-face in a live video conversation. Powered by VoxEngine." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://voxaris.io/demo" />
-      </Helmet>
+        <meta property="og:image" content="https://voxaris.io/og-image.png" />
+        <meta name="twitter:image" content="https://voxaris.io/og-image.png" />      </Helmet>
       <Navbar />
 
       {/* Hero */}

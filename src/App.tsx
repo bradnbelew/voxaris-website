@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 // Marketing Pages
 import Index from "./pages/Index";
@@ -23,6 +23,8 @@ import {
 import HowItWorks from "./pages/HowItWorks";
 import WhyVoxaris from "./pages/WhyVoxaris";
 import BookDemo from "./pages/BookDemo";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
 import NotFound from "./pages/NotFound";
 import { BusinessCardAgent } from "./pages/marketing/BusinessCardAgent";
 
@@ -59,7 +61,7 @@ const App = () => (
         <Routes>
           {/* Marketing/Public Routes */}
           <Route path="/" element={<Index />} />
-          <Route path="/home" element={<HomePage />} />
+          <Route path="/home" element={<Navigate to="/" replace />} />
           <Route path="/how-it-works" element={<HowItWorks />} />
           <Route path="/why-voxaris" element={<WhyVoxaris />} />
           <Route path="/technology" element={<Technology />} />
@@ -67,6 +69,8 @@ const App = () => (
           <Route path="/book-demo" element={<BookDemo />} />
           <Route path="/talking-postcard" element={<TalkingPostcard />} />
           <Route path="/talking-postcard/demo" element={<TalkingPostcardDemo />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
 
           {/* Business Card Funnels */}
           <Route path="/ethan" element={<BusinessCardAgent persona="ethan" />} />

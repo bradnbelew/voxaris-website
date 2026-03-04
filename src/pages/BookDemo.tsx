@@ -1,11 +1,12 @@
 import { useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Calendar, ArrowRight, CheckCircle } from "lucide-react";
+import { Calendar, ArrowRight, CheckCircle, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 export default function BookDemo() {
@@ -19,15 +20,41 @@ export default function BookDemo() {
     message: ""
   });
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
-    toast.success("Demo request submitted! We'll be in touch within 24 hours.");
+    setSubmitting(true);
+    try {
+      const res = await fetch('/api/book-demo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...formData, submitted_at: new Date().toISOString() }),
+      });
+      if (!res.ok) throw new Error('Failed');
+      setSubmitted(true);
+      toast.success("Demo request submitted! We'll be in touch within 24 hours.");
+    } catch {
+      toast.error("Something went wrong. Please try again or call 407-759-4100.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <Layout>
+      <Helmet>
+        <title>Book a Demo — See V·GUIDE AI in Action | Voxaris</title>
+        <meta name="description" content="Schedule a personalized demo. See how V·GUIDE handles lead response, qualification, and appointment booking on your website 24/7." />
+        <meta name="keywords" content="book demo, AI video agent demo, V·GUIDE demo, Voxaris demo, AI website agent, schedule demo" />
+        <link rel="canonical" href="https://voxaris.io/book-demo" />
+        <meta property="og:title" content="Book a Demo — See V·GUIDE AI in Action | Voxaris" />
+        <meta property="og:description" content="Schedule a personalized demo. See how V·GUIDE handles lead response, qualification, and appointment booking on your website 24/7." />
+        <meta property="og:url" content="https://voxaris.io/book-demo" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://voxaris.io/og-image.png" />
+        <meta name="twitter:image" content="https://voxaris.io/og-image.png" />
+      </Helmet>
       <section className="section-padding min-h-[calc(100vh-5rem)]">
         <div className="container-wide">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
@@ -175,9 +202,18 @@ export default function BookDemo() {
                       />
                     </div>
 
-                    <Button type="submit" variant="hero" size="xl" className="w-full mt-6">
-                      Request Demo
-                      <ArrowRight className="h-5 w-5" />
+                    <Button type="submit" variant="hero" size="xl" className="w-full mt-6" disabled={submitting}>
+                      {submitting ? (
+                        <>
+                          <Loader2 className="h-5 w-5 animate-spin" />
+                          Submitting...
+                        </>
+                      ) : (
+                        <>
+                          Request Demo
+                          <ArrowRight className="h-5 w-5" />
+                        </>
+                      )}
                     </Button>
                   </form>
                 </div>

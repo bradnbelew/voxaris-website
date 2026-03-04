@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
 import Layout from "@/components/layout/Layout";
 import { Target, Layers, TrendingUp, Users, Zap, BarChart3, ArrowRight } from "lucide-react";
@@ -40,6 +41,18 @@ const reasons = [
 export default function WhyVoxaris() {
   return (
     <Layout>
+      <Helmet>
+        <title>Why Voxaris — The First AI Agent That Controls Your Website | Voxaris</title>
+        <meta name="description" content="Unlike chatbots or voice-only AI, V·GUIDE is a photorealistic video agent that navigates your site, fills forms, and books appointments live." />
+        <meta name="keywords" content="why Voxaris, AI video agent, website AI, V·GUIDE, AI vs chatbot, embodied AI agent" />
+        <link rel="canonical" href="https://voxaris.io/why-voxaris" />
+        <meta property="og:title" content="Why Voxaris — The First AI Agent That Controls Your Website | Voxaris" />
+        <meta property="og:description" content="Unlike chatbots or voice-only AI, V·GUIDE is a photorealistic video agent that navigates your site, fills forms, and books appointments live." />
+        <meta property="og:url" content="https://voxaris.io/why-voxaris" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://voxaris.io/og-image.png" />
+        <meta name="twitter:image" content="https://voxaris.io/og-image.png" />
+      </Helmet>
       {/* Hero */}
       <section className="section-padding bg-secondary/30">
         <div className="container-wide">

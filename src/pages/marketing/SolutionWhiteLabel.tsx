@@ -46,7 +46,8 @@ export function SolutionWhiteLabel() {
         <meta property="og:description" content="Resell Voxaris under your brand: photorealistic V·GUIDE video agents + voice. Full white-label, margins up to 70%." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://voxaris.io/solutions/white-label" />
-      </Helmet>
+        <meta property="og:image" content="https://voxaris.io/og-image.png" />
+        <meta name="twitter:image" content="https://voxaris.io/og-image.png" />      </Helmet>
       <Navbar />
 
       {/* Hero */}

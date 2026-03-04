@@ -196,6 +196,7 @@ export function Hero() {
                       loop
                       muted
                       playsInline
+                      aria-label="V·GUIDE AI video agent demonstrating live website control"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent" />
                     <div className="absolute bottom-2.5 left-2.5 text-white text-[10px] font-medium flex items-center gap-1.5">

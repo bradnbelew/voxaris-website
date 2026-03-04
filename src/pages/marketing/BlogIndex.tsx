@@ -23,7 +23,8 @@ export function BlogIndex() {
         <meta property="og:description" content="Insights on embodied AI agents and how V·GUIDE is transforming lead conversion." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://voxaris.io/blog" />
-      </Helmet>
+        <meta property="og:image" content="https://voxaris.io/og-image.png" />
+        <meta name="twitter:image" content="https://voxaris.io/og-image.png" />      </Helmet>
       <Navbar />
       <main>
         {/* Hero */}

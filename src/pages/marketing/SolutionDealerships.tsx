@@ -46,7 +46,8 @@ export function SolutionDealerships() {
         <meta property="og:description" content="Photorealistic video + voice AI BDC agents that control your dealership site, book test drives, and qualify leads 24/7. Podium/Kenect alternative." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://voxaris.io/solutions/dealerships" />
-      </Helmet>
+        <meta property="og:image" content="https://voxaris.io/og-image.png" />
+        <meta name="twitter:image" content="https://voxaris.io/og-image.png" />      </Helmet>
       <Navbar />
 
       {/* Hero */}

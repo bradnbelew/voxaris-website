@@ -46,7 +46,8 @@ export function SolutionHospitality() {
         <meta property="og:description" content="V·GUIDE photorealistic AI video concierge controls your site, answers questions & completes direct bookings 24/7. Boost revenue, cut OTA fees." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://voxaris.io/solutions/hospitality" />
-      </Helmet>
+        <meta property="og:image" content="https://voxaris.io/og-image.png" />
+        <meta name="twitter:image" content="https://voxaris.io/og-image.png" />      </Helmet>
       <Navbar />
 
       {/* Hero */}

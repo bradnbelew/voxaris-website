@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import {
@@ -57,6 +58,18 @@ export function TalkingPostcard() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
+      <Helmet>
+        <title>Talking Postcards — AI Video on Direct Mail | Voxaris</title>
+        <meta name="description" content="QR-code postcards that launch a live AI video conversation. Bridge offline marketing to online engagement with photorealistic AI." />
+        <meta name="keywords" content="talking postcards, AI video postcard, QR code AI video, direct mail AI, interactive postcard, personalized AI video mailer" />
+        <link rel="canonical" href="https://voxaris.io/talking-postcard" />
+        <meta property="og:title" content="Talking Postcards — AI Video on Direct Mail | Voxaris" />
+        <meta property="og:description" content="QR-code postcards that launch a live AI video conversation. Bridge offline marketing to online engagement with photorealistic AI." />
+        <meta property="og:url" content="https://voxaris.io/talking-postcard" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://voxaris.io/og-image.png" />
+        <meta name="twitter:image" content="https://voxaris.io/og-image.png" />
+      </Helmet>
 
       {/* ═══════════════════════════════════════════════════
           HERO — Dark, punchy, Hormozi Grand Slam

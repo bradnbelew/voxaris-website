@@ -24,7 +24,8 @@ export function SolutionContractors() {
         <meta property="og:description" content="Never miss another call. V·SENSE AI voice agents answer 24/7, qualify leads, book jobs & send texts. Built for home services." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://voxaris.io/solutions/contractors" />
-      </Helmet>
+        <meta property="og:image" content="https://voxaris.io/og-image.png" />
+        <meta name="twitter:image" content="https://voxaris.io/og-image.png" />      </Helmet>
       <Navbar />
 
       {/* Hero */}

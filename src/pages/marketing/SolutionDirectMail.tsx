@@ -23,7 +23,8 @@ export function SolutionDirectMail() {
         <meta property="og:description" content="Send physical postcards with QR that launch personalized photorealistic AI video conversations. Higher response rates, instant leads." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://voxaris.io/solutions/direct-mail" />
-      </Helmet>
+        <meta property="og:image" content="https://voxaris.io/og-image.png" />
+        <meta name="twitter:image" content="https://voxaris.io/og-image.png" />      </Helmet>
       <Navbar />
 
       {/* Hero */}

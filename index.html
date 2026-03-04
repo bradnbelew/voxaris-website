@@ -18,9 +18,13 @@
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://voxaris.io/" />
     <meta property="og:site_name" content="Voxaris" />
+    <meta property="og:image" content="https://voxaris.io/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Photorealistic AI Video Agents | Voxaris" />
     <meta name="twitter:description" content="Deploy V·GUIDE — the photorealistic AI video agent that controls your website, qualifies leads & books appointments 24/7." />
+    <meta name="twitter:image" content="https://voxaris.io/og-image.png" />
     <meta name="robots" content="index, follow" />
     <script type="application/ld+json">
     {
@@ -180,7 +184,9 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-    <!-- WebMCP: Expose structured tools for AI agents (Chrome 146+) -->
+    <!-- WebMCP: @mcp-b/global polyfill (cross-browser navigator.modelContext) -->
+    <script src="https://unpkg.com/@mcp-b/global@latest/dist/index.iife.js" defer></script>
+    <!-- WebMCP: Voxaris tool registration (runs after polyfill) -->
     <script src="/webmcp-tools.js" defer></script>
   </body>
 </html>

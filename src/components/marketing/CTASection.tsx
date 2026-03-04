@@ -68,7 +68,7 @@ export function CTASection() {
               <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
           </Link>
-          <Link to="/demo">
+          <Link to="/book-demo">
             <Button
               size="lg"
               variant="ghost"

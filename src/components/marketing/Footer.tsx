@@ -43,12 +43,14 @@ export function Footer() {
             </p>
             <div className="flex gap-3">
               {[
-                { label: 'X', path: 'M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z' },
-                { label: 'LinkedIn', path: 'M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z' },
+                { label: 'X', href: 'https://x.com/estop1025', path: 'M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z' },
+                { label: 'LinkedIn', href: 'https://www.linkedin.com/in/ethanstopperich', path: 'M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z' },
               ].map((social) => (
                 <a
                   key={social.label}
-                  href="#"
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-8 h-8 rounded-lg bg-white/[0.04] border border-white/[0.06] flex items-center justify-center text-white/20 hover:text-white/40 hover:bg-white/[0.08] hover:border-white/[0.10] transition-all duration-200"
                   aria-label={social.label}
                 >
@@ -83,11 +85,12 @@ export function Footer() {
             &copy; {new Date().getFullYear()} Voxaris AI. All rights reserved.
           </p>
           <div className="flex gap-6">
-            {['Privacy Policy', 'Terms of Service', 'Cookies'].map((item) => (
-              <Link key={item} to="#" className="text-[11px] text-white/10 hover:text-white/25 transition-colors">
-                {item}
-              </Link>
-            ))}
+            <Link to="/privacy" className="text-[11px] text-white/10 hover:text-white/25 transition-colors">
+              Privacy Policy
+            </Link>
+            <Link to="/terms" className="text-[11px] text-white/10 hover:text-white/25 transition-colors">
+              Terms of Service
+            </Link>
           </div>
         </div>
       </div>

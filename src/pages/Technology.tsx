@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
 import { Eye, Brain, Smile, Video, MessageSquare, Globe, Zap, Users, FileText, Languages, Cpu, Waves, Clock, Shield } from "lucide-react";
 import Layout from "@/components/layout/Layout";
@@ -83,6 +84,18 @@ const stats = [
 export default function Technology() {
   return (
     <Layout>
+      <Helmet>
+        <title>V·Suite Technology — Neural Video, Voice & DOM AI | Voxaris</title>
+        <meta name="description" content="V·FACE rendering, V·SENSE perception, V·FLOW orchestration. The technology stack behind the world's first embodied website AI agent." />
+        <meta name="keywords" content="AI video technology, neural rendering, V·FACE, V·SENSE, V·FLOW, conversational video AI, embodied AI agent technology" />
+        <link rel="canonical" href="https://voxaris.io/technology" />
+        <meta property="og:title" content="V·Suite Technology — Neural Video, Voice & DOM AI | Voxaris" />
+        <meta property="og:description" content="V·FACE rendering, V·SENSE perception, V·FLOW orchestration. The technology stack behind the world's first embodied website AI agent." />
+        <meta property="og:url" content="https://voxaris.io/technology" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://voxaris.io/og-image.png" />
+        <meta name="twitter:image" content="https://voxaris.io/og-image.png" />
+      </Helmet>
       {/* Hero Section - Bold and Tech-Focused */}
       <section className="relative py-20 lg:py-32 overflow-hidden bg-foreground">
         {/* Animated grid background */}

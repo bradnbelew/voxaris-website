@@ -125,7 +125,8 @@ export default function HowItWorks() {
         <meta property="og:description" content="A unified platform that handles every touchpoint \u2014 from first contact to confirmed appointment \u2014 with AI-powered precision." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://voxaris.io/how-it-works" />
-      </Helmet>
+        <meta property="og:image" content="https://voxaris.io/og-image.png" />
+        <meta name="twitter:image" content="https://voxaris.io/og-image.png" />      </Helmet>
       {/* Hero */}
       <section className="section-padding bg-secondary/30">
         <div className="container-wide">
