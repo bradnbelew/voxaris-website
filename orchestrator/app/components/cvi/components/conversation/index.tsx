@@ -14,6 +14,8 @@ import {
 import { MicSelectBtn, CameraSelectBtn, ScreenShareButton } from '../device-select'
 import { useLocalScreenshare } from "../../hooks/use-local-screenshare";
 import { useReplicaIDs } from "../../hooks/use-replica-ids";
+import { useAppMessage } from "../../hooks/use-app-message";
+import { useCVIInteractions } from "../../hooks/use-cvi-interactions";
 import { AudioWave } from "../audio-wave";
 
 import styles from "./conversation.module.css";
@@ -21,6 +23,7 @@ import styles from "./conversation.module.css";
 interface ConversationProps {
 	onLeave: () => void;
 	conversationUrl: string;
+	conversationId: string;
 }
 
 const VideoPreview = React.memo(({ id }: { id: string }) => {
@@ -97,11 +100,17 @@ const MainVideo = React.memo(() => {
 	);
 });
 
-export const Conversation = React.memo(({ onLeave, conversationUrl }: ConversationProps) => {
+export const Conversation = React.memo(({ onLeave, conversationUrl, conversationId }: ConversationProps) => {
 	const daily = useDaily();
 	const meetingState = useMeetingState();
 	const { hasMicError } = useDevices()
 	const joinedRef = useRef(false);
+	const { echo, interrupt, respond, overwriteContext, appendContext, setSensitivity } = useCVIInteractions(conversationId);
+
+	// Listen for CVI app-message events (replica utterances, perception, tool calls)
+	useAppMessage(useCallback((msg) => {
+		console.log('[CVI Event]', msg.event_type, msg);
+	}, []));
 
 	useEffect(() => {
 		if (meetingState === 'error') {
@@ -109,25 +118,32 @@ export const Conversation = React.memo(({ onLeave, conversationUrl }: Conversati
 		}
 	}, [meetingState, onLeave]);
 
-	// Initialize media then join when the Daily call object is available
+	// Join when the Daily call object is available (matches original CVI pattern — no startCamera)
 	useEffect(() => {
 		if (!daily || joinedRef.current) return;
 		joinedRef.current = true;
 
-		(async () => {
-			try {
-				// Try to initialize camera/mic — don't block join if devices unavailable
-				await daily.startCamera().catch(() => {});
-				// Join the Tavus conversation room
-				await daily.join({
-					url: conversationUrl,
-					startVideoOff: false,
-					startAudioOff: false,
-				});
-			} catch (err) {
-				console.error("Failed to join Tavus conversation:", err);
-			}
-		})();
+		daily.join({
+			url: conversationUrl,
+			inputSettings: {
+				audio: {
+					processor: {
+						type: "noise-cancellation",
+					},
+				},
+			},
+		}).then(() => {
+			// Re-apply noise cancellation after join to ensure echo suppression is active
+			daily.updateInputSettings({
+				audio: {
+					processor: {
+						type: "noise-cancellation",
+					},
+				},
+			});
+		}).catch((err) => {
+			console.error("Failed to join Tavus conversation:", err);
+		});
 	}, [daily, conversationUrl]);
 
 	const handleLeave = useCallback(() => {

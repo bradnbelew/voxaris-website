@@ -51,7 +51,7 @@ export function DemoSection() {
         >
           <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-[0.25em] mb-6 block">See It In Action</span>
           <h2 className="headline-xl text-slate-900 mb-6">
-            Watch V·GUIDE
+            Watch V·TEAMS
             <br className="hidden sm:block" />
             <span className="text-slate-400">work a live website.</span>
           </h2>
@@ -203,7 +203,7 @@ export function DemoSection() {
                 {/* Status */}
                 <div className="absolute top-4 left-4 flex items-center gap-2">
                   <div className="bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 text-[9px] font-semibold text-slate-700 uppercase tracking-wider">
-                    V·GUIDE
+                    V·TEAMS
                   </div>
                   <div className="bg-emerald-500 rounded-full px-2.5 py-1 text-[9px] font-semibold text-white flex items-center gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
@@ -249,7 +249,7 @@ export function DemoSection() {
             {/* CTA */}
             <Link to="/book-demo" className="block">
               <Button className="w-full bg-slate-900 hover:bg-black text-white h-12 rounded-xl text-[14px] font-semibold group shadow-sm transition-all duration-300 hover:shadow-md">
-                See V·GUIDE on Your Website
+                Deploy V·TEAMS for Your Business
                 <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>

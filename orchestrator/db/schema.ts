@@ -8,6 +8,7 @@ import {
   boolean,
   index,
   varchar,
+  numeric,
 } from "drizzle-orm/pg-core";
 
 // ── Hotel Configurations (multi-tenant) ──
@@ -116,6 +117,82 @@ export const auditLogs = pgTable(
   ]
 );
 
+// ── Voice Calls (VAPI-powered agents) ──
+export const voiceCalls = pgTable(
+  "voice_calls",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    callId: text("call_id").notNull().unique(),
+    direction: varchar("direction", { length: 16 }).notNull(),
+    callerNumber: text("caller_number"),
+    memberName: text("member_name"),
+    memberEmail: text("member_email"),
+    currentTier: text("current_tier"),
+    targetTier: text("target_tier"),
+    campaignId: text("campaign_id"),
+    status: varchar("status", { length: 32 }).notNull().default("initiated"),
+    outcome: text("outcome"),
+    endedReason: text("ended_reason"),
+    transcript: text("transcript"),
+    recordingUrl: text("recording_url"),
+    durationSeconds: integer("duration_seconds").default(0),
+    costUsd: numeric("cost_usd", { precision: 10, scale: 4 }).default("0"),
+    startedAt: timestamp("started_at", { withTimezone: true }),
+    endedAt: timestamp("ended_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (t) => [
+    index("voice_calls_direction_idx").on(t.direction),
+    index("voice_calls_status_idx").on(t.status),
+    index("voice_calls_outcome_idx").on(t.outcome),
+    index("voice_calls_campaign_idx").on(t.campaignId),
+    index("voice_calls_started_idx").on(t.startedAt),
+  ]
+);
+
+// ── Voice Utterances (from end-of-call report) ──
+export const voiceUtterances = pgTable(
+  "voice_utterances",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    callId: text("call_id")
+      .notNull()
+      .references(() => voiceCalls.callId, { onDelete: "cascade" }),
+    role: varchar("role", { length: 16 }).notNull(),
+    text: text("text").notNull(),
+    sequence: integer("sequence").default(0),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (t) => [index("voice_utterances_call_idx").on(t.callId)]
+);
+
+// ── Voice Events (objections, intents, follow-ups, transfers) ──
+export const voiceEvents = pgTable(
+  "voice_events",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    callId: text("call_id")
+      .notNull()
+      .references(() => voiceCalls.callId, { onDelete: "cascade" }),
+    eventType: varchar("event_type", { length: 64 }).notNull(),
+    payload: jsonb("payload").$type<Record<string, unknown>>().default({}),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (t) => [
+    index("voice_events_call_idx").on(t.callId),
+    index("voice_events_type_idx").on(t.eventType),
+  ]
+);
+
 // ── Type Exports ──
 export type HotelConfig = typeof hotelConfigs.$inferSelect;
 export type NewHotelConfig = typeof hotelConfigs.$inferInsert;
@@ -123,3 +200,10 @@ export type Embed = typeof embeds.$inferSelect;
 export type Session = typeof sessions.$inferSelect;
 export type AuditLog = typeof auditLogs.$inferSelect;
 export type NewAuditLog = typeof auditLogs.$inferInsert;
+export type VoiceCall = typeof voiceCalls.$inferSelect;
+export type NewVoiceCall = typeof voiceCalls.$inferInsert;
+export type VoiceEvent = typeof voiceEvents.$inferSelect;
+export type VoiceUtterance = typeof voiceUtterances.$inferSelect;
+
+// ── Booking Schema (re-export) ──
+export * from "./schema-booking";

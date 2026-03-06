@@ -99,9 +99,9 @@ export function Technology() {
   return (
     <div className="min-h-screen bg-white">
       <Helmet>
-        <title>VoxEngine AI Platform | Voice, Video & Browser Control | Voxaris</title>
-        <meta name="description" content="VoxEngine powers every Voxaris agent — voice AI, video AI, V·GUIDE browser control, and V·MEMORY persistent context. Sub-1-second response time across every interaction." />
-        <meta name="keywords" content="VoxEngine, AI platform, voice AI, video AI agent, V·GUIDE, V·MEMORY, conversational AI technology, AI browser control, sub-second AI response, real-time AI video" />
+        <title>VoxEngine AI Platform | Multi-Agent Orchestration | Voxaris</title>
+        <meta name="description" content="VoxEngine powers every Voxaris agent — voice AI, video AI, V·TEAMS multi-agent orchestration, and V·MEMORY persistent context. Sub-1-second response time across every interaction." />
+        <meta name="keywords" content="VoxEngine, AI platform, voice AI, video AI agent, V·TEAMS, multi-agent AI, V·MEMORY, conversational AI technology, warm transfer AI, sub-second AI response, real-time AI video" />
         <link rel="canonical" href="https://voxaris.io/technology" />
         <meta property="og:title" content="VoxEngine AI Platform | Voxaris" />
         <meta property="og:description" content="One engine powers every conversation. Voice, video, and browser control — sub-1-second response time, persistent memory, real-time video rendering." />
@@ -183,7 +183,7 @@ export function Technology() {
               It's a <strong className="text-carbon-900">unified architecture purpose-built for one thing</strong>: making AI conversations indistinguishable from human ones.
             </p>
             <p>
-              Every component — speech synthesis, natural language understanding, memory, video rendering, browser control — is engineered to work together with zero friction and sub-1-second latency end to end.
+              Every component — speech synthesis, natural language understanding, memory, video rendering, multi-agent orchestration — is engineered to work together with zero friction and sub-1-second latency end to end.
             </p>
             <p>
               The result: AI agents that don't sound like AI. They listen, they remember, they respond in context. And they do it faster than any human on your team.

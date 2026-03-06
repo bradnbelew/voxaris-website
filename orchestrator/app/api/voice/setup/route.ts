@@ -13,16 +13,15 @@ export async function POST(request: NextRequest) {
 
   // Simple auth check — require a setup secret
   const authHeader = request.headers.get("authorization");
-  if (authHeader !== `Bearer ${process.env.SETUP_SECRET ?? ""}`) {
+  if (authHeader !== `Bearer ${process.env.SETUP_SECRET}`) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
     const vapi = getVapiClient();
-
     log.info("Starting VAPI voice agent setup");
 
-    // Create outbound assistant
+    // 1. Create outbound assistant
     const outbound = await vapi.createAssistant(
       OUTBOUND_UPGRADE_CONFIG,
       corrId
@@ -30,7 +29,7 @@ export async function POST(request: NextRequest) {
     log.info({ id: outbound.id }, "Outbound assistant created");
 
     // Note: Inbound uses squad config returned dynamically via assistant-request webhook.
-    // No need to pre-create inbound assistants — the squad is returned inline.
+    // No need to pre-create inbound assistants unless you want persistent IDs.
 
     return NextResponse.json({
       message: "Voice agents configured successfully",

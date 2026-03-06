@@ -17,9 +17,9 @@ export function HomePage() {
   return (
     <div className="min-h-screen bg-white">
       <Helmet>
-        <title>{`Voxaris | V\u00b7GUIDE Embodied AI Agents for Automotive Dealerships`}</title>
-        <meta name="description" content="V\u00b7GUIDE by Voxaris \u2014 embodied video AI agents that greet every website visitor with a face, a voice, and a real conversation. 24/7 lead engagement for automotive dealerships." />
-        <meta name="keywords" content="AI voice agent, AI video agent, V\u00b7GUIDE, automotive AI, dealership AI, conversational AI, missed call recovery, AI BDC agent, virtual sales agent, lead recovery" />
+        <title>{`Voxaris | V·TEAMS Multi-Agent AI Platform for Automotive Dealerships`}</title>
+        <meta name="description" content="V·TEAMS by Voxaris — a coordinated squad of AI voice and video agents that qualify leads, warm-transfer to specialists, and book appointments 24/7." />
+        <meta name="keywords" content="V·TEAMS, multi-agent AI, AI agent squad, warm transfer AI, coordinated AI agents, automotive AI, dealership AI, conversational AI, AI BDC agent, lead qualification" />
         <link rel="canonical" href="https://voxaris.io/" />
       </Helmet>
       <Navbar />

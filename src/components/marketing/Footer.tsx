@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 const footerLinks = {
   product: [
-    { label: 'V·GUIDE', href: '/technology' },
+    { label: 'V·TEAMS', href: '/technology' },
     { label: 'Video AI', href: '/technology' },
     { label: 'Voice AI', href: '/technology' },
     { label: 'Talking Postcards', href: '/talking-postcard' },

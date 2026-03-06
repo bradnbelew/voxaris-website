@@ -264,7 +264,7 @@ export function FloatingMaria() {
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                       <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400" />
                     </span>
-                    V·GUIDE Preview
+                    V·TEAMS Preview
                   </div>
                 )}
               </div>
@@ -273,7 +273,7 @@ export function FloatingMaria() {
               {sessionState !== 'active' && (
                 <div className="p-5">
                   <p className="text-[13px] text-slate-600 leading-relaxed mb-4">
-                    Hi! I'm Maria, your V·GUIDE agent. I can walk you through how I'd work on your website — scrolling, booking, everything. Want to see a live demo?
+                    Hi! I'm Maria, part of your V·TEAMS squad. I handle the first conversation, qualify your lead, and warm-transfer to a specialist when needed.
                   </p>
                   <a href="/book-demo" className="block w-full text-center bg-slate-900 hover:bg-black text-white text-[13px] font-semibold py-3 rounded-xl transition-all duration-300 hover:shadow-lg">
                     Book a Personalized Demo

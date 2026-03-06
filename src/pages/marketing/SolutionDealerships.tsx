@@ -39,8 +39,8 @@ export function SolutionDealerships() {
     <div className="min-h-screen bg-white">
       <Helmet>
         <title>AI BDC Agents for Car Dealerships | Voxaris</title>
-        <meta name="description" content="V·GUIDE + V·SENSE: Photorealistic video + voice AI BDC agents that control your site, book test drives, qualify leads 24/7. Podium/Kenect alternative. \u2014 24/7. Recover missed leads with V\u00b7GUIDE video and voice AI." />
-        <meta name="keywords" content="ai bdc dealership, ai voice agent car dealership, podium alternative dealership, kenect alternative dealership, ai appointment setter dealership, dealership ai video agent, ai test drive booking agent, ai lead qualification dealership, dealersocket ai alternative, 24/7 ai for car dealership, ai bdc software dealership, ai phone agent auto dealer, interactive ai video dealership website, ai sales agent car dealership" />
+        <meta name="description" content="V·TEAMS: Coordinated AI voice and video agents that qualify leads, warm-transfer to specialists, and book test drives 24/7. Podium/Kenect alternative." />
+        <meta name="keywords" content="ai bdc dealership, V·TEAMS multi-agent, warm transfer AI, ai voice agent car dealership, podium alternative dealership, kenect alternative dealership, ai appointment setter dealership, dealership ai video agent, ai test drive booking agent, ai lead qualification dealership, dealersocket ai alternative, 24/7 ai for car dealership, ai bdc software dealership, ai phone agent auto dealer" />
         <link rel="canonical" href="https://voxaris.io/solutions/dealerships" />
         <meta property="og:title" content="AI BDC Agents for Car Dealerships | Voxaris" />
         <meta property="og:description" content="Photorealistic video + voice AI BDC agents that control your dealership site, book test drives, and qualify leads 24/7. Podium/Kenect alternative." />

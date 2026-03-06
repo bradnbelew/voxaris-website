@@ -39,11 +39,11 @@ export function SolutionHospitality() {
     <div className="min-h-screen bg-white">
       <Helmet>
         <title>AI Concierge for Hotels & Resorts | Voxaris</title>
-        <meta name="description" content="V·GUIDE photorealistic AI video concierge controls your site, answers questions & completes direct bookings 24/7. Boost revenue, cut OTA fees." />
-        <meta name="keywords" content="ai concierge hotel website, virtual concierge hotel, ai booking agent hotel, hotel ai concierge, ai direct booking hotel, photorealistic ai concierge hospitality, ai video concierge hotel, 24/7 ai hotel concierge, ai virtual receptionist hotel, deploy ai concierge hotel site, ai that books hotel reservations, reduce ota fees ai concierge, interactive ai video hotel website" />
+        <meta name="description" content="V·TEAMS: a coordinated AI concierge squad that greets guests, answers questions, and completes direct bookings 24/7. Boost revenue, cut OTA fees." />
+        <meta name="keywords" content="ai concierge hotel website, V·TEAMS multi-agent, warm transfer AI, virtual concierge hotel, ai booking agent hotel, hotel ai concierge, ai direct booking hotel, ai concierge hospitality, ai video concierge hotel, 24/7 ai hotel concierge, ai virtual receptionist hotel, deploy ai concierge hotel site, ai that books hotel reservations, reduce ota fees ai concierge" />
         <link rel="canonical" href="https://voxaris.io/solutions/hospitality" />
         <meta property="og:title" content="AI Concierge for Hotels & Resorts | Voxaris" />
-        <meta property="og:description" content="V·GUIDE photorealistic AI video concierge controls your site, answers questions & completes direct bookings 24/7. Boost revenue, cut OTA fees." />
+        <meta property="og:description" content="V·TEAMS: a coordinated AI concierge squad that greets guests, answers questions, and completes direct bookings 24/7. Boost revenue, cut OTA fees." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://voxaris.io/solutions/hospitality" />
         <meta property="og:image" content="https://voxaris.io/og-image.png" />
@@ -148,7 +148,7 @@ export function SolutionHospitality() {
           </motion.div>
 
           <div className="grid gap-4">
-            {/* V·GUIDE */}
+            {/* V·TEAMS */}
             <motion.div
               className="p-8 rounded-2xl bg-white border border-carbon-200"
               initial={{ opacity: 0, y: 20 }}
@@ -160,12 +160,12 @@ export function SolutionHospitality() {
                   <Video className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <span className="text-[10px] font-semibold text-carbon-400 uppercase tracking-[0.15em]">V·GUIDE</span>
-                  <h3 className="text-lg font-bold text-carbon-900">Video AI + Browser Control</h3>
+                  <span className="text-[10px] font-semibold text-carbon-400 uppercase tracking-[0.15em]">V·TEAMS</span>
+                  <h3 className="text-lg font-bold text-carbon-900">Multi-Agent AI Concierge</h3>
                 </div>
               </div>
               <p className="text-carbon-500 text-[15px] leading-[1.8]">
-                A photorealistic AI concierge that appears on your website, visibly scrolls to relevant sections, filters room types, walks guests through amenities, and guides them through the booking form — all while having a natural conversation. It's not a chatbot. It's the digital front desk.
+                A coordinated squad of AI concierges that greets visitors, answers property questions, walks them through room options, and guides them through the booking flow. Each agent has its own personality and expertise — receptionist, specialist, closer — warm-transferring seamlessly as conversations progress. It's not a chatbot. It's the digital front desk team.
               </p>
             </motion.div>
 

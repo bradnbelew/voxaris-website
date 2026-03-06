@@ -208,6 +208,77 @@ export class TavusApiError extends Error {
   }
 }
 
+// ── Arrivia-specific Types ──
+
+interface CreateArriviaConversationRequest {
+  personaId: string;
+  replicaId?: string | undefined;
+  conversationName?: string | undefined;
+  customGreeting?: string | undefined;
+  callbackUrl?: string | undefined;
+  conversationalContext?: string | undefined;
+  properties?: Record<string, unknown> | undefined;
+  maxCallDuration?: number | undefined;
+  memoryStores?: string[] | undefined;
+  documentIds?: string[] | undefined;
+  documentTags?: string[] | undefined;
+}
+
+// ── Extended Client for Arrivia ──
+
+export class ArriviaTavusClient extends TavusClient {
+  /** Create a conversation with Arrivia-specific fields (conversational_context, replica_id) */
+  async createArriviaConversation(
+    request: CreateArriviaConversationRequest,
+    correlationId: string
+  ): Promise<ConversationResponse> {
+    const log = createRequestLogger(correlationId, { service: "tavus-arrivia" });
+    log.info({ personaId: request.personaId }, "Creating Arrivia Tavus conversation");
+
+    return tavusCircuit.execute(() =>
+      withRetry(
+        async () => {
+          const response = await fetch("https://tavusapi.com/v2/conversations", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-api-key": process.env.TAVUS_API_KEY ?? "",
+            },
+            body: JSON.stringify({
+              persona_id: request.personaId,
+              replica_id: request.replicaId,
+              conversation_name: request.conversationName,
+              custom_greeting: request.customGreeting,
+              callback_url: request.callbackUrl,
+              conversational_context: request.conversationalContext,
+              ...(request.memoryStores?.length && { memory_stores: request.memoryStores }),
+              ...(request.documentIds?.length && { document_ids: request.documentIds }),
+              ...(request.documentTags?.length && { document_tags: request.documentTags }),
+              properties: {
+                max_call_duration: request.maxCallDuration ?? 600,
+                participant_left_timeout: 30,
+                participant_absent_timeout: 120,
+                enable_recording: true,
+                enable_transcription: true,
+                language: "english",
+              },
+            }),
+            signal: AbortSignal.timeout(15_000),
+          });
+
+          if (!response.ok) {
+            const body = await response.text();
+            throw new TavusApiError(response.status, body);
+          }
+
+          return (await response.json()) as ConversationResponse;
+        },
+        { maxRetries: 2 }
+      )
+    );
+  }
+}
+
 /** Singleton */
 let _tavusClient: TavusClient | undefined;
 export function getTavusClient(): TavusClient {
@@ -215,4 +286,13 @@ export function getTavusClient(): TavusClient {
     _tavusClient = new TavusClient();
   }
   return _tavusClient;
+}
+
+/** Singleton for Arrivia-specific client */
+let _arriviaTavusClient: ArriviaTavusClient | undefined;
+export function getArriviaTavusClient(): ArriviaTavusClient {
+  if (!_arriviaTavusClient) {
+    _arriviaTavusClient = new ArriviaTavusClient();
+  }
+  return _arriviaTavusClient;
 }

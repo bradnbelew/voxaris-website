@@ -42,12 +42,12 @@ export default function WhyVoxaris() {
   return (
     <Layout>
       <Helmet>
-        <title>Why Voxaris — The First AI Agent That Controls Your Website | Voxaris</title>
-        <meta name="description" content="Unlike chatbots or voice-only AI, V·GUIDE is a photorealistic video agent that navigates your site, fills forms, and books appointments live." />
-        <meta name="keywords" content="why Voxaris, AI video agent, website AI, V·GUIDE, AI vs chatbot, embodied AI agent" />
+        <title>Why Voxaris — Multi-Agent AI Teams That Close Deals | Voxaris</title>
+        <meta name="description" content="V·TEAMS deploys coordinated AI agent squads that qualify leads, warm-transfer to specialists, and book appointments — across voice, video, and outreach." />
+        <meta name="keywords" content="why Voxaris, V·TEAMS, multi-agent AI, warm transfer AI, coordinated AI agents, AI video agent, AI voice agent, AI squad, chatbot alternative" />
         <link rel="canonical" href="https://voxaris.io/why-voxaris" />
-        <meta property="og:title" content="Why Voxaris — The First AI Agent That Controls Your Website | Voxaris" />
-        <meta property="og:description" content="Unlike chatbots or voice-only AI, V·GUIDE is a photorealistic video agent that navigates your site, fills forms, and books appointments live." />
+        <meta property="og:title" content="Why Voxaris — Multi-Agent AI Teams That Close Deals | Voxaris" />
+        <meta property="og:description" content="V·TEAMS deploys coordinated AI agent squads that qualify leads, warm-transfer to specialists, and book appointments — across voice, video, and outreach." />
         <meta property="og:url" content="https://voxaris.io/why-voxaris" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://voxaris.io/og-image.png" />

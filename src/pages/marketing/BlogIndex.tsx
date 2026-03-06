@@ -16,11 +16,11 @@ export function BlogIndex() {
     <div className="min-h-screen bg-white">
       <Helmet>
         <title>Blog | Voxaris — AI Agents, Hospitality, Auto, Legal</title>
-        <meta name="description" content="Insights on embodied AI agents, website engagement, and how V·GUIDE is transforming lead conversion for hotels, dealerships, and law firms." />
-        <meta name="keywords" content="AI agents blog, V·GUIDE, AI for business, hotel AI, dealership AI, law firm AI, conversational AI" />
+        <meta name="description" content="Insights on multi-agent AI, warm transfer technology, and how V·TEAMS is transforming lead conversion for hotels, dealerships, and law firms." />
+        <meta name="keywords" content="AI agents blog, V·TEAMS, multi-agent AI, warm transfer AI, AI for business, hotel AI, dealership AI, law firm AI, conversational AI" />
         <link rel="canonical" href="https://voxaris.io/blog" />
         <meta property="og:title" content="Blog | Voxaris" />
-        <meta property="og:description" content="Insights on embodied AI agents and how V·GUIDE is transforming lead conversion." />
+        <meta property="og:description" content="Insights on multi-agent AI teams and how V·TEAMS is transforming lead conversion." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://voxaris.io/blog" />
         <meta property="og:image" content="https://voxaris.io/og-image.png" />

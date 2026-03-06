@@ -26,16 +26,16 @@ export function TechnologyShowcase() {
             <span className="text-carbon-400">One intelligent ecosystem.</span>
           </h2>
           <p className="text-carbon-400 max-w-md mx-auto text-lg">
-            From first touch to closed deal — every lead now gets a guide that actually works.
+            From first touch to closed deal — every lead now gets an AI team that actually closes.
           </p>
         </motion.div>
 
-        {/* Product grid — V·GUIDE flagship + 3 others */}
+        {/* Product grid — V·TEAMS flagship + 3 others */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-          {/* V·GUIDE — Flagship (spans 5 cols) */}
+          {/* V·TEAMS — Flagship (spans 5 cols) */}
           <motion.div
-            data-feature="V·GUIDE"
+            data-feature="V·TEAMS"
             className="lg:col-span-5 relative bg-white border border-slate-200 rounded-[24px] overflow-hidden group hover:border-slate-300 transition-all duration-500 shadow-[0_0_60px_rgba(148,163,184,0.08)] hover:shadow-[0_0_80px_rgba(148,163,184,0.12)]"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -51,7 +51,7 @@ export function TechnologyShowcase() {
                 loop
                 muted
                 playsInline
-                aria-label="V·GUIDE photorealistic AI video agent controlling a live website in real time"
+                aria-label="V·TEAMS multi-agent AI squad with warm transfers and live engagement"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-white via-white/20 to-transparent" />
               <div className="absolute top-4 left-4 flex items-center gap-2">
@@ -66,14 +66,14 @@ export function TechnologyShowcase() {
 
             {/* Content */}
             <div className="p-8 lg:p-10">
-              <h3 className="text-3xl lg:text-4xl font-bold text-carbon-900 font-display tracking-tight mb-5">V·GUIDE</h3>
+              <h3 className="text-3xl lg:text-4xl font-bold text-carbon-900 font-display tracking-tight mb-5">V·TEAMS</h3>
               <p className="text-carbon-400 text-[15px] leading-relaxed mb-8">
-                The world's first embodied real-time video agent. Add one {'<script>'} tag and watch a photorealistic avatar visibly control your live website — scrolling, filtering, filling forms, and completing bookings while talking naturally with every visitor.
+                A coordinated squad of enterprise AI agents — receptionist, qualifier, specialist, closer — that warm-transfer between each other in real time. Voice, video, and outreach agents working together as one intelligent team.
               </p>
               <div className="pt-6 border-t border-carbon-100 flex items-center justify-between">
-                <span className="text-[12px] text-carbon-300">V·FACE video · Vox DOM control</span>
+                <span className="text-[12px] text-carbon-300">Multi-agent · Warm transfer · CRM sync</span>
                 <Link to="/demo" className="inline-flex items-center gap-1.5 text-[13px] font-medium text-carbon-900 hover:text-carbon-600 transition-colors group/link">
-                  See it move your site
+                  Meet your AI team
                   <ArrowUpRight className="w-3.5 h-3.5 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform" />
                 </Link>
               </div>

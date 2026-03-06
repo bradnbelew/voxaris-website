@@ -1,83 +1,51 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createRequestLogger, logger } from "@/lib/utils/logger";
+import { createRequestLogger } from "@/lib/utils/logger";
 import { correlationId } from "@/lib/utils/id";
 import { handleVoiceToolCall } from "@/lib/voice/tool-handlers";
-import { INBOUND_SQUAD_CONFIG } from "@/lib/voice/assistant-configs";
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { INBOUND_SUPPORT_CONFIG } from "@/lib/voice/assistant-configs";
+import { db } from "@/db";
+import { voiceCalls, voiceUtterances, voiceEvents } from "@/db/schema";
+import { eq } from "drizzle-orm";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
-
-// Supabase is optional — webhook works without it
-function getSupabase(): SupabaseClient | null {
-  const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_KEY;
-  if (!url || !key) return null;
-  return createClient(url, key);
-}
-
-async function dbInsert(table: string, data: Record<string, unknown>): Promise<void> {
-  const sb = getSupabase();
-  if (!sb) return;
-  const { error } = await sb.from(table).insert(data);
-  if (error) logger.warn({ table, error: error.message }, "Supabase insert failed");
-}
-
-async function dbUpdate(
-  table: string,
-  data: Record<string, unknown>,
-  match: Record<string, string>
-): Promise<void> {
-  const sb = getSupabase();
-  if (!sb) return;
-  let query = sb.from(table).update(data);
-  for (const [col, val] of Object.entries(match)) {
-    query = query.eq(col, val);
-  }
-  const { error } = await query;
-  if (error) logger.warn({ table, error: error.message }, "Supabase update failed");
-}
 
 export async function POST(request: NextRequest) {
   const corrId = correlationId();
   const log = createRequestLogger(corrId, { route: "voice-webhook" });
 
   try {
-    const body = (await request.json()) as Record<string, unknown>;
-    const message = body.message as Record<string, unknown> | undefined;
-    const messageType = (message?.type as string) ?? "unknown";
+    const body = await request.json();
+    const messageType = body.message?.type || "unknown";
 
     log.info({ messageType }, "VAPI webhook received");
 
     switch (messageType) {
       // ── Inbound call: return the squad config ──
       case "assistant-request": {
-        const call = message?.call as Record<string, unknown> | undefined;
-        const customer = call?.customer as Record<string, unknown> | undefined;
-
+        const call = body.message.call;
         log.info(
-          { callId: call?.id, from: customer?.number },
-          "Inbound call — returning squad config"
+          { callId: call?.id, from: call?.customer?.number },
+          "Inbound call — returning assistant config"
         );
 
-        await dbInsert("voice_calls", {
-          call_id: (call?.id as string) ?? corrId,
+        await db.insert(voiceCalls).values({
+          callId: call?.id || corrId,
           direction: "inbound",
-          caller_number: (customer?.number as string) ?? null,
+          callerNumber: call?.customer?.number,
           status: "ringing",
-          started_at: new Date().toISOString(),
+          startedAt: new Date(),
         });
 
-        return NextResponse.json({ squad: INBOUND_SQUAD_CONFIG });
+        return NextResponse.json({ assistant: INBOUND_SUPPORT_CONFIG });
       }
 
       // ── Tool calls: execute and return results ──
       case "tool-calls": {
-        const call = message?.call as Record<string, unknown> | undefined;
-        const callId = (call?.id as string) ?? "";
+        const callId = body.message.call?.id || "";
         const toolCalls =
-          (message?.toolCallList as Array<Record<string, unknown>>) ??
-          (message?.toolWithToolCallList as Array<Record<string, unknown>>) ??
+          body.message.toolCallList ||
+          body.message.toolWithToolCallList ||
           [];
 
         log.info(
@@ -86,22 +54,10 @@ export async function POST(request: NextRequest) {
         );
 
         const results = await Promise.all(
-          toolCalls.map(async (tc) => {
-            const toolName =
-              (tc.name as string) ??
-              ((tc.function as Record<string, unknown> | undefined)
-                ?.name as string) ??
-              "";
-            const params =
-              (tc.parameters as Record<string, unknown>) ??
-              ((tc.toolCall as Record<string, unknown> | undefined)
-                ?.parameters as Record<string, unknown>) ??
-              {};
-            const toolCallId =
-              (tc.id as string) ??
-              ((tc.toolCall as Record<string, unknown> | undefined)
-                ?.id as string) ??
-              "";
+          toolCalls.map(async (tc: any) => {
+            const toolName = tc.name || tc.function?.name || "";
+            const params = tc.parameters || tc.toolCall?.parameters || {};
+            const toolCallId = tc.id || tc.toolCall?.id || "";
 
             const result = await handleVoiceToolCall(
               callId,
@@ -123,22 +79,25 @@ export async function POST(request: NextRequest) {
 
       // ── Status updates: track call lifecycle ──
       case "status-update": {
-        const call = message?.call as Record<string, unknown> | undefined;
-        const callId = (call?.id as string) ?? "";
-        const status = (message?.status as string) ?? "";
-
+        const callId = body.message.call?.id || "";
+        const status = body.message.status || "";
         log.info({ callId, status }, "Call status update");
 
         if (status === "in-progress") {
-          await dbUpdate("voice_calls", { status: "active" }, { call_id: callId });
+          await db
+            .update(voiceCalls)
+            .set({ status: "active" })
+            .where(eq(voiceCalls.callId, callId));
         }
 
         if (status === "ended") {
-          await dbUpdate(
-            "voice_calls",
-            { status: "completed", ended_at: new Date().toISOString() },
-            { call_id: callId }
-          );
+          await db
+            .update(voiceCalls)
+            .set({
+              status: "completed",
+              endedAt: new Date(),
+            })
+            .where(eq(voiceCalls.callId, callId));
         }
 
         return NextResponse.json({ ok: true });
@@ -146,42 +105,38 @@ export async function POST(request: NextRequest) {
 
       // ── End-of-call report: store full transcript + cost ──
       case "end-of-call-report": {
-        const call = message?.call as Record<string, unknown> | undefined;
-        const callId = (call?.id as string) ?? "";
-        const endedReason = (message?.endedReason as string) ?? "unknown";
-        const artifact = (message?.artifact as Record<string, unknown>) ?? {};
-        const cost = (message?.cost as number) ?? (call?.cost as number) ?? 0;
+        const callId = body.message.call?.id || "";
+        const endedReason = body.message.endedReason || "unknown";
+        const artifact = body.message.artifact || {};
+        const cost =
+          body.message.cost || body.message.call?.cost || 0;
 
         log.info({ callId, endedReason, cost }, "End-of-call report received");
 
-        await dbUpdate(
-          "voice_calls",
-          {
+        await db
+          .update(voiceCalls)
+          .set({
             status: "completed",
-            ended_at: new Date().toISOString(),
-            ended_reason: endedReason,
-            transcript: (artifact.transcript as string) ?? null,
-            recording_url: (artifact.recordingUrl as string) ?? null,
-            cost_usd: cost,
-            duration_seconds: (call?.duration as number) ?? 0,
-          },
-          { call_id: callId }
-        );
+            endedAt: new Date(),
+            endedReason,
+            transcript: artifact.transcript || null,
+            recordingUrl: artifact.recordingUrl || null,
+            costUsd: String(cost),
+            durationSeconds: body.message.call?.duration || 0,
+          })
+          .where(eq(voiceCalls.callId, callId));
 
-        const messages =
-          (artifact.messages as Array<Record<string, unknown>>) ?? [];
+        // Store individual messages for analysis
+        const messages = artifact.messages || [];
         if (messages.length > 0) {
-          const sb = getSupabase();
-          if (sb) {
-            await sb.from("voice_utterances").insert(
-              messages.map((msg, idx) => ({
-                call_id: callId,
-                role: (msg.role as string) ?? "unknown",
-                text: (msg.message as string) ?? (msg.content as string) ?? "",
-                sequence: idx,
-              }))
-            );
-          }
+          await db.insert(voiceUtterances).values(
+            messages.map((msg: any, idx: number) => ({
+              callId,
+              role: msg.role,
+              text: msg.message || msg.content || "",
+              sequence: idx,
+            }))
+          );
         }
 
         return NextResponse.json({ ok: true });
@@ -194,13 +149,12 @@ export async function POST(request: NextRequest) {
 
       // ── Hang: agent failed to respond ──
       case "hang": {
-        const call = message?.call as Record<string, unknown> | undefined;
-        const callId = (call?.id as string) ?? "";
+        const callId = body.message.call?.id || "";
         log.warn({ callId }, "Agent hang detected — response timeout");
 
-        await dbInsert("voice_events", {
-          call_id: callId,
-          event_type: "hang_detected",
+        await db.insert(voiceEvents).values({
+          callId,
+          eventType: "hang_detected",
           payload: {},
         });
 

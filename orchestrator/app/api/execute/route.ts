@@ -2,6 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { createRequestLogger } from "@/lib/utils/logger";
 import { correlationId } from "@/lib/utils/id";
+import {
+  initiateBookingSchema,
+  searchInventorySchema,
+  selectPackageSchema,
+  generatePurlSchema,
+  bookingStatusSchema,
+} from "@/lib/schemas/tools-booking";
+import { BookingService } from "@/lib/services/booking-service";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -178,7 +186,7 @@ export async function POST(request: NextRequest) {
             const rover = getRoverClient();
             if (rover.isAvailable) {
               const roverResult = await rover.executeAction(
-                { goal: `Scroll to the ${section} section of the page`, maxSteps: 2, timeout: 8000 },
+                { input: `Scroll to the ${section} section of the page`, maxSteps: 2 },
                 corrId
               );
               result.rover_status = roverResult.status;
@@ -358,6 +366,197 @@ export async function POST(request: NextRequest) {
           selector: "#cta, [data-section='cta'], #demo, [data-section='demo']",
           section: "cta",
         });
+        break;
+      }
+
+      // ── Booking Orchestration Tools ──
+
+      case "initiate_booking": {
+        const parsed_ib = initiateBookingSchema.safeParse(tool_input);
+        if (!parsed_ib.success) {
+          result = {
+            success: false,
+            error: "Invalid booking input",
+            details: parsed_ib.error.issues.map((i) => i.message),
+          };
+          break;
+        }
+
+        try {
+          const booking = await BookingService.initiateBooking(
+            parsed_ib.data,
+            conversation_id,
+            corrId
+          );
+
+          result = {
+            success: true,
+            action: "initiate_booking",
+            sessionId: booking.sessionId,
+            message: booking.message,
+            instruction: `Booking session started for ${parsed_ib.data.travelType}. Session ID: ${booking.sessionId}`,
+          };
+        } catch (error) {
+          const msg = error instanceof Error ? error.message : "Unknown error";
+          log.error({ error: msg }, "initiate_booking failed");
+          result = { success: false, error: msg };
+        }
+        break;
+      }
+
+      case "search_inventory": {
+        const parsed_si = searchInventorySchema.safeParse(tool_input);
+        if (!parsed_si.success) {
+          result = {
+            success: false,
+            error: "Invalid search input",
+            details: parsed_si.error.issues.map((i) => i.message),
+          };
+          break;
+        }
+
+        try {
+          const searchResult = await BookingService.searchInventory(
+            parsed_si.data,
+            corrId
+          );
+
+          // Format results for the agent to read back to the member
+          const formattedResults = searchResult.results.map((r, i) => ({
+            option: i + 1,
+            packageId: r.packageId,
+            name: r.name,
+            destination: r.destination,
+            dates: `${r.departureDate} to ${r.returnDate}`,
+            pricePerPerson: `$${r.pricePerPerson.toLocaleString()}`,
+            totalPrice: `$${r.totalPrice.toLocaleString()}`,
+            cabinClass: r.cabinClass ?? "standard",
+            highlights: r.highlights.join(", "),
+            availableSlots: r.availableSlots,
+          }));
+
+          result = {
+            success: true,
+            action: "search_inventory",
+            resultCount: searchResult.totalCount,
+            page: searchResult.page,
+            results: formattedResults,
+            instruction: `Found ${searchResult.totalCount} options. Present the top results to the member and ask which they prefer.`,
+          };
+        } catch (error) {
+          const msg = error instanceof Error ? error.message : "Unknown error";
+          log.error({ error: msg }, "search_inventory failed");
+          result = { success: false, error: msg };
+        }
+        break;
+      }
+
+      case "select_package": {
+        const parsed_sp = selectPackageSchema.safeParse(tool_input);
+        if (!parsed_sp.success) {
+          result = {
+            success: false,
+            error: "Invalid selection input",
+            details: parsed_sp.error.issues.map((i) => i.message),
+          };
+          break;
+        }
+
+        try {
+          const selection = await BookingService.selectPackage(
+            parsed_sp.data,
+            corrId
+          );
+
+          result = {
+            success: selection.success,
+            action: "select_package",
+            message: selection.message,
+            instruction: selection.success
+              ? "Package locked. Ask the member how they'd like to receive their booking link (text, email, or show on screen)."
+              : "Member must confirm selection before proceeding.",
+          };
+        } catch (error) {
+          const msg = error instanceof Error ? error.message : "Unknown error";
+          log.error({ error: msg }, "select_package failed");
+          result = { success: false, error: msg };
+        }
+        break;
+      }
+
+      case "generate_purl": {
+        const parsed_gp = generatePurlSchema.safeParse(tool_input);
+        if (!parsed_gp.success) {
+          result = {
+            success: false,
+            error: "Invalid PURL input",
+            details: parsed_gp.error.issues.map((i) => i.message),
+          };
+          break;
+        }
+
+        try {
+          const purlResult = await BookingService.generatePurl(
+            parsed_gp.data,
+            corrId
+          );
+
+          result = {
+            success: true,
+            action: "generate_purl",
+            purl: purlResult.purl,
+            deliveryMethod: purlResult.deliveryMethod,
+            message: purlResult.message,
+            instruction: "Read the delivery confirmation message to the member. If display mode, the PURL will be shown on screen.",
+          };
+
+          // If delivery method includes display, queue a DOM action
+          // to show the booking link in the conversation UI
+          if (parsed_gp.data.deliveryMethod === "display" || parsed_gp.data.deliveryMethod === "all") {
+            pushAction(conversation_id, {
+              action: "show_booking_link",
+              purl: purlResult.purl,
+              message: purlResult.message,
+            });
+          }
+        } catch (error) {
+          const msg = error instanceof Error ? error.message : "Unknown error";
+          log.error({ error: msg }, "generate_purl failed");
+          result = { success: false, error: msg };
+        }
+        break;
+      }
+
+      case "booking_status": {
+        const parsed_bs = bookingStatusSchema.safeParse(tool_input);
+        if (!parsed_bs.success) {
+          result = {
+            success: false,
+            error: "Invalid status request",
+            details: parsed_bs.error.issues.map((i) => i.message),
+          };
+          break;
+        }
+
+        try {
+          const status = await BookingService.getStatus(
+            parsed_bs.data,
+            corrId
+          );
+
+          result = {
+            success: true,
+            action: "booking_status",
+            status: status.status,
+            sessionId: status.sessionId,
+            message: status.summary,
+            instruction: `Current booking status: ${status.status}. Relay the summary to the member.`,
+          };
+        } catch (error) {
+          const msg = error instanceof Error ? error.message : "Unknown error";
+          log.error({ error: msg }, "booking_status failed");
+          result = { success: false, error: msg };
+        }
         break;
       }
 

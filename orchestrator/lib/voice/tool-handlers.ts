@@ -1,43 +1,7 @@
 import { createRequestLogger } from "@/lib/utils/logger";
-import { logger } from "@/lib/utils/logger";
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
-
-// Supabase is optional — agent works without it, just no persistence
-function getSupabase(): SupabaseClient | null {
-  const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_KEY;
-  if (!url || !key) return null;
-  return createClient(url, key);
-}
-
-/** Fire-and-forget Supabase insert — never blocks the agent */
-async function dbInsert(table: string, data: Record<string, unknown>): Promise<void> {
-  const sb = getSupabase();
-  if (!sb) {
-    logger.debug({ table, data }, "Supabase not configured, skipping insert");
-    return;
-  }
-  const { error } = await sb.from(table).insert(data);
-  if (error) logger.warn({ table, error: error.message }, "Supabase insert failed");
-}
-
-async function dbUpdate(
-  table: string,
-  data: Record<string, unknown>,
-  match: Record<string, string>
-): Promise<void> {
-  const sb = getSupabase();
-  if (!sb) {
-    logger.debug({ table, data }, "Supabase not configured, skipping update");
-    return;
-  }
-  let query = sb.from(table).update(data);
-  for (const [col, val] of Object.entries(match)) {
-    query = query.eq(col, val);
-  }
-  const { error } = await query;
-  if (error) logger.warn({ table, error: error.message }, "Supabase update failed");
-}
+import { db } from "@/db";
+import { voiceCalls, voiceEvents } from "@/db/schema";
+import { eq } from "drizzle-orm";
 
 export async function handleVoiceToolCall(
   callId: string,
@@ -52,28 +16,26 @@ export async function handleVoiceToolCall(
       const phoneNumber = params.phone_number as string | undefined;
       const memberId = params.member_id as string | undefined;
       log.info({ phoneNumber, memberId }, "Looking up member");
+      // TODO: Replace with real Arrivia member API
       return getMockMemberData(phoneNumber, memberId);
     }
 
     case "lookup_member_benefits": {
       const currentTier = params.current_tier as string;
       const targetTier = params.target_tier as string;
-      log.info({ currentTier, targetTier }, "Looking up tier comparison");
       return getTierComparison(currentTier, targetTier);
     }
 
     case "check_upgrade_pricing": {
       const currentTier = params.current_tier as string;
       const targetTier = params.target_tier as string;
-      log.info({ currentTier, targetTier }, "Checking upgrade pricing");
       return getUpgradePricing(currentTier, targetTier);
     }
 
     case "log_objection": {
-      log.info({ type: params.objection_type }, "Logging objection");
-      await dbInsert("voice_events", {
-        call_id: callId,
-        event_type: "objection",
+      await db.insert(voiceEvents).values({
+        callId,
+        eventType: "objection",
         payload: {
           objection_type: params.objection_type,
           objection_text: params.objection_text,
@@ -83,13 +45,17 @@ export async function handleVoiceToolCall(
     }
 
     case "mark_upgrade_intent": {
-      log.info({ confidence: params.confidence }, "Marking upgrade intent");
-      await dbUpdate("voice_calls", { outcome: "upgrade_intent" }, { call_id: callId });
-      await dbInsert("voice_events", {
-        call_id: callId,
-        event_type: "upgrade_intent",
+      await db
+        .update(voiceCalls)
+        .set({ outcome: "upgrade_intent" })
+        .where(eq(voiceCalls.callId, callId));
+
+      await db.insert(voiceEvents).values({
+        callId,
+        eventType: "upgrade_intent",
         payload: { confidence: params.confidence },
       });
+
       return {
         success: true,
         message: "Great! I'll send over the upgrade link right now.",
@@ -98,25 +64,34 @@ export async function handleVoiceToolCall(
 
     case "schedule_follow_up": {
       const preference = params.follow_up_preference as string;
-      log.info({ preference }, "Scheduling follow-up");
-      await dbInsert("voice_events", {
-        call_id: callId,
-        event_type: "follow_up_requested",
+
+      await db.insert(voiceEvents).values({
+        callId,
+        eventType: "follow_up_requested",
         payload: { preference },
       });
-      await dbUpdate("voice_calls", { outcome: "follow_up" }, { call_id: callId });
+
+      await db
+        .update(voiceCalls)
+        .set({ outcome: "follow_up" })
+        .where(eq(voiceCalls.callId, callId));
+
       return { success: true, message: `Follow-up noted: ${preference}` };
     }
 
     case "send_upgrade_link": {
       const method = params.method as string;
       const memberEmail = params.member_email as string | undefined;
+
+      // TODO: Integrate with actual SMS/email service (Twilio SMS, SendGrid, etc.)
       log.info({ method, memberEmail, callId }, "Sending upgrade link");
-      await dbInsert("voice_events", {
-        call_id: callId,
-        event_type: "upgrade_link_sent",
+
+      await db.insert(voiceEvents).values({
+        callId,
+        eventType: "upgrade_link_sent",
         payload: { method, member_email: memberEmail },
       });
+
       return {
         success: true,
         message:
@@ -126,18 +101,85 @@ export async function handleVoiceToolCall(
       };
     }
 
+    case "send_signup_link": {
+      const phoneNumber = params.phone_number as string;
+      log.info({ phoneNumber, callId }, "Sending signup link to non-member");
+
+      // TODO: Integrate with Twilio SMS to send actual signup PURL
+      await db.insert(voiceEvents).values({
+        callId,
+        eventType: "signup_link_sent",
+        payload: { phone_number: phoneNumber },
+      });
+
+      await db
+        .update(voiceCalls)
+        .set({ outcome: "signup_link_sent" })
+        .where(eq(voiceCalls.callId, callId));
+
+      return {
+        success: true,
+        message: "Signup link has been sent via text message.",
+      };
+    }
+
+    case "send_cruise_booking_link": {
+      const method = params.method as string;
+      const destinationInterest = params.destination_interest as string;
+      const memberEmail = params.member_email as string | undefined;
+
+      log.info(
+        { method, destinationInterest, memberEmail, callId },
+        "Sending cruise booking link"
+      );
+
+      // TODO: Integrate with SMS/email service + cruise deal deep link generation
+      await db.insert(voiceEvents).values({
+        callId,
+        eventType: "cruise_link_sent",
+        payload: {
+          method,
+          destination_interest: destinationInterest,
+          member_email: memberEmail,
+        },
+      });
+
+      return {
+        success: true,
+        message:
+          method === "sms"
+            ? `Cruise deals for ${destinationInterest} sent via text!`
+            : `Cruise deals for ${destinationInterest} sent to your email!`,
+      };
+    }
+
+    case "log_call_event": {
+      const eventType = params.event_type as string;
+      const details = params.details as string;
+
+      await db.insert(voiceEvents).values({
+        callId,
+        eventType: `call_event_${eventType}`,
+        payload: { details },
+      });
+
+      return { success: true };
+    }
+
     case "transfer_to_human": {
       const reason = params.reason as string;
       const department = (params.department as string) || "general";
-      log.info({ reason, department }, "Transferring to human");
-      await dbInsert("voice_events", {
-        call_id: callId,
-        event_type: "transfer_to_human",
+
+      await db.insert(voiceEvents).values({
+        callId,
+        eventType: "transfer_to_human",
         payload: { reason, department },
       });
+
+      // TODO: Return actual transfer number based on department
       return {
         success: true,
-        transferNumber: process.env.ARRIVIA_TRANSFER_NUMBER ?? "+18001234567",
+        transferNumber: process.env.ARRIVIA_TRANSFER_NUMBER || "+18001234567",
         message: `Transferring to ${department} team.`,
       };
     }
@@ -149,7 +191,7 @@ export async function handleVoiceToolCall(
   }
 }
 
-// ── Mock Data (replace with real API) ──
+// ── Mock Data (replace with real Arrivia API) ──
 
 function getMockMemberData(
   _phoneNumber?: string,
@@ -158,7 +200,7 @@ function getMockMemberData(
   return {
     found: true,
     member_name: "Sarah",
-    member_id: memberId ?? "ARR-12345",
+    member_id: memberId || "ARR-12345",
     current_tier: "Standard",
     points_balance: "2,450",
     join_date: "2024-03-15",
@@ -209,14 +251,8 @@ function getTierComparison(
   };
 
   return {
-    current: {
-      tier: currentTier,
-      benefits: tiers[currentTier] ?? tiers["Standard"],
-    },
-    target: {
-      tier: targetTier,
-      benefits: tiers[targetTier] ?? tiers["Gold"],
-    },
+    current: { tier: currentTier, benefits: tiers[currentTier] || tiers.Standard },
+    target: { tier: targetTier, benefits: tiers[targetTier] || tiers.Gold },
     key_upgrades: getUpgradeHighlights(currentTier, targetTier),
   };
 }
@@ -282,9 +318,9 @@ function getUpgradePricing(
     },
   };
 
-  const key = `${currentTier}\u2192${targetTier}`;
+  const key = `${currentTier}→${targetTier}`;
   return (
-    pricing[key] ?? {
+    pricing[key] || {
       annual_difference: "Contact a membership specialist for pricing",
       promo: null,
     }

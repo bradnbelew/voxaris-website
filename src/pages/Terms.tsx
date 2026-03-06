@@ -25,13 +25,13 @@ export default function Terms() {
             <p>By accessing or using the Voxaris platform, website, or any services provided by Voxaris LLC ("Voxaris," "we," "us"), you agree to be bound by these Terms of Service. If you do not agree, do not use our services.</p>
 
             <h2 className="text-xl font-semibold text-foreground mt-8">2. Services</h2>
-            <p>Voxaris provides AI-powered video agents, voice agents, and browser-guided interaction technology ("Services"). Services are provided on a subscription basis as detailed in your service agreement.</p>
+            <p>Voxaris provides AI-powered coordinated agent squads, voice agents, video agents, and multi-agent orchestration technology ("Services"). Services are provided on a subscription basis as detailed in your service agreement.</p>
 
             <h2 className="text-xl font-semibold text-foreground mt-8">3. User Obligations</h2>
             <p>You agree to provide accurate information when creating an account or submitting a demo request. You are responsible for maintaining the confidentiality of your account credentials and for all activities under your account.</p>
 
             <h2 className="text-xl font-semibold text-foreground mt-8">4. Intellectual Property</h2>
-            <p>All content, technology, and branding associated with Voxaris — including V·GUIDE, V·FACE, V·SENSE, V·FLOW, and VoxEngine — are the property of Voxaris LLC. You may not reproduce, distribute, or create derivative works without written permission.</p>
+            <p>All content, technology, and branding associated with Voxaris — including V·TEAMS, V·FACE, V·SENSE, V·FLOW, and VoxEngine — are the property of Voxaris LLC. You may not reproduce, distribute, or create derivative works without written permission.</p>
 
             <h2 className="text-xl font-semibold text-foreground mt-8">5. Limitation of Liability</h2>
             <p>Voxaris provides its Services "as is" without warranties of any kind. To the fullest extent permitted by law, Voxaris shall not be liable for any indirect, incidental, or consequential damages arising from your use of the Services.</p>

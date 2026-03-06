@@ -31,12 +31,15 @@ const BRANDS: Record<
   },
 };
 
-function getPersonalizedGreeting(name: string, currentTier: string): string {
+function getPersonalizedGreeting(
+  name: string,
+  currentTier: string,
+  targetTier: string
+): string {
   const greetings = [
-    `Oh hey ${name}! So glad you clicked through — I've been looking forward to chatting with you about some really exciting upgrades we have for our ${currentTier} members.`,
-    `${name}! Welcome, welcome. Okay so I have some amazing news about your ${currentTier} membership that I honestly think you're going to love.`,
-    `Hey ${name}! Oh my gosh, perfect timing. I was just putting together some incredible upgrade options for ${currentTier} members like you and I cannot wait to walk you through them.`,
-    `Hi ${name}! So happy you're here. Listen, I've got some really cool stuff to share with you about taking your ${currentTier} membership to the next level — you're going to want to hear this.`,
+    `Hey ${name}, welcome! I'm your membership advisor and I've been looking at your ${currentTier} account. The ${targetTier} upgrade is honestly a game changer — we're talking bigger discounts, way more points, and access to deals most members never see. So tell me, where are you dreaming about traveling next?`,
+    `${name}, so glad you clicked through! I'm here to walk you through what ${targetTier} looks like compared to your current ${currentTier} plan. Spoiler — it's a pretty massive upgrade. But first, what kind of trips do you love most? Beach, cruise, city exploring?`,
+    `Hey ${name}! Welcome, I'm really excited to chat with you. I've been putting together what the ${targetTier} upgrade means for a ${currentTier} member like you and the benefits are incredible. Before I get into it though — what's been your favorite trip so far?`,
   ];
   return greetings[Math.floor(Math.random() * greetings.length)]!;
 }
@@ -94,14 +97,23 @@ You are on a live video call with ${member_name}. They clicked a personalized li
       "Creating Arrivia conversation"
     );
 
+    // Memory store key: per-member + per-persona for persistent context across sessions
+    const memberKey = (member_email ?? member_name).toLowerCase().replace(/[^a-z0-9]/g, "_");
+    const personaId = process.env.TAVUS_ARRIVIA_UPGRADE_PERSONA_ID!;
+    const memoryStores = [
+      `user_${memberKey}_persona_${personaId}`,
+    ];
+
     const conversation = await tavus.createArriviaConversation(
       {
-        personaId: process.env.TAVUS_ARRIVIA_UPGRADE_PERSONA_ID!,
+        personaId,
         replicaId: process.env.TAVUS_REPLICA_ID,
         conversationName: `arrivia-upgrade-${brand_id}-${Date.now()}`,
-        customGreeting: getPersonalizedGreeting(member_name, current_tier),
+        customGreeting: getPersonalizedGreeting(member_name, current_tier, target_tier),
         // callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/api/arrivia/webhooks/tavus`, // disabled — no tools for now
         conversationalContext,
+        memoryStores,
+        documentTags: ["arrivia-upgrade"],
       },
       corrId
     );

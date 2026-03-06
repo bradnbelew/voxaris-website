@@ -62,7 +62,7 @@ export function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.15, ease }}
             >
-              Meet <span className="font-bold text-slate-900">V·GUIDE</span> — the video agent that actually works on your website.
+              Meet <span className="font-bold text-slate-900">V·TEAMS</span> — your AI workforce that never clocks out.
             </motion.p>
 
             <motion.p
@@ -71,7 +71,7 @@ export function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.2, ease }}
             >
-              A photorealistic avatar that visibly controls your live site — scrolling, clicking, filling forms, and completing bookings — while having a natural conversation with every visitor.
+              A coordinated squad of specialized AI agents — voice, video, and outreach — that qualify leads, warm-transfer between each other, and book appointments 24/7 with zero human intervention.
             </motion.p>
 
             {/* CTAs */}
@@ -111,8 +111,8 @@ export function Hero() {
             >
               {[
                 'Live in days, not months',
-                'Works on any existing website',
-                'Double confirmation on every action',
+                'Warm transfers between specialized agents',
+                'CRM sync on every interaction',
               ].map((item) => (
                 <div key={item} className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
@@ -129,7 +129,7 @@ export function Hero() {
               transition={{ duration: 0.6, delay: 0.8 }}
             >
               <p className="text-[14px] text-slate-400 leading-relaxed italic max-w-md">
-                "I built V·GUIDE because I watched businesses lose leads every night to empty websites. Now every visitor gets a guide who actually helps them."
+                "I built V·TEAMS because no single agent can do it all. A receptionist, a qualifier, a closer — each one purpose-built and warm-transferring seamlessly. That's how you scale without losing the human touch."
               </p>
               <div className="mt-4 flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-[11px] font-bold text-slate-600">E</div>
@@ -141,7 +141,7 @@ export function Hero() {
             </motion.div>
           </div>
 
-          {/* Right — V·GUIDE mock website visual */}
+          {/* Right — V·TEAMS mock website visual */}
           <motion.div
             className="relative flex justify-center lg:justify-end"
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -196,7 +196,7 @@ export function Hero() {
                       loop
                       muted
                       playsInline
-                      aria-label="V·GUIDE AI video agent demonstrating live website control"
+                      aria-label="V·TEAMS multi-agent AI squad demonstrating warm transfer and live engagement"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent" />
                     <div className="absolute bottom-2.5 left-2.5 text-white text-[10px] font-medium flex items-center gap-1.5">
@@ -204,7 +204,7 @@ export function Hero() {
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                         <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400" />
                       </span>
-                      Speaking · Scrolling for you
+                      Speaking · Live agent handoff
                     </div>
                   </div>
 
@@ -216,7 +216,7 @@ export function Hero() {
                     transition={{ delay: 1.2, duration: 0.5 }}
                   >
                     <span className="text-amber-500 text-xs">↻</span>
-                    Vox is moving the page
+                    Transferring to specialist
                   </motion.div>
                 </div>
 
@@ -245,7 +245,7 @@ export function Hero() {
                 </div>
               </div>
 
-              {/* Floating badge — V·GUIDE */}
+              {/* Floating badge — V·TEAMS */}
               <motion.div
                 className="absolute -top-4 -left-4 lg:-left-8 bg-white/95 backdrop-blur-xl rounded-2xl px-5 py-3.5 border border-slate-200/80 shadow-[0_8px_30px_rgba(0,0,0,0.06)]"
                 initial={{ opacity: 0, x: -20, y: 10 }}
@@ -253,7 +253,7 @@ export function Hero() {
                 transition={{ duration: 0.6, delay: 1 }}
               >
                 <div className="text-[9px] text-slate-400 uppercase tracking-[0.2em] mb-1">Powered by</div>
-                <div className="text-lg font-bold text-slate-900 font-display">V·GUIDE</div>
+                <div className="text-lg font-bold text-slate-900 font-display">V·TEAMS</div>
               </motion.div>
 
               {/* Floating badge — early access */}

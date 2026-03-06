@@ -75,7 +75,7 @@ export function VSuiteSection() {
           ))}
         </div>
 
-        {/* V·GUIDE Technology Deep-Dive */}
+        {/* V·TEAMS Technology Deep-Dive */}
         <motion.div
           className="mt-16 border-l-4 border-carbon-300 pl-8 py-2"
           initial={{ opacity: 0, x: -20 }}
@@ -84,17 +84,17 @@ export function VSuiteSection() {
           transition={{ duration: 0.7, delay: 0.2, ease }}
         >
           <h3 className="text-2xl lg:text-3xl font-bold text-carbon-900 font-display tracking-tight mb-5">
-            V·GUIDE — Embodied Website Control
+            V·TEAMS — Multi-Agent Intelligence
           </h3>
           <p className="text-lg text-carbon-500 max-w-2xl leading-relaxed">
-            <span className="font-medium text-carbon-700">V·FACE</span> rendering for photorealistic, emotionally intelligent video avatars (Maria or your own replica) paired with our <span className="font-medium text-carbon-700">Vox</span> engine that gives the agent direct, visible control over your live DOM.
+            A coordinated squad of specialized AI agents working as one unified team. Each agent has its own personality, voice, knowledge base, and specialty — but they share context, communicate seamlessly, and warm-transfer conversations to ensure every lead gets the right agent at the right time.
           </p>
           <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
             {[
-              'Real-time scrolling, filtering, and option selection',
-              'Form filling with customer data',
-              'Visible booking completion',
-              'Double explicit confirmation for every action',
+              'Warm transfer between specialized agents in real time',
+              'Each agent with its own voice, personality, and knowledge base',
+              'Shared memory and context across the entire squad',
+              'CRM auto-sync on every handoff and interaction',
             ].map((item) => (
               <div key={item} className="flex items-start gap-3 text-[14px] text-carbon-500">
                 <span className="text-carbon-300 mt-0.5">↳</span>
@@ -103,7 +103,7 @@ export function VSuiteSection() {
             ))}
           </div>
           <p className="mt-8 text-[11px] uppercase tracking-[0.2em] text-carbon-300 font-medium">
-            Seamlessly layers with V·SENSE voice agents and closes the loop with Talking Postcards.
+            Orchestrates V·FACE video, V·SENSE voice, and Talking Postcards into one unified team.
           </p>
         </motion.div>
 

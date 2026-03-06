@@ -42,7 +42,7 @@ export const batchCallSchema = z.object({
 
 export type BatchCallInput = z.infer<typeof batchCallSchema>;
 
-// ── VAPI Webhook Event (for validation) ──
+// ── VAPI Webhook Event (loose validation — VAPI payloads vary) ──
 
 export const vapiWebhookSchema = z.object({
   message: z.object({
@@ -73,9 +73,7 @@ export const vapiWebhookSchema = z.object({
       .optional(),
     toolCallList: z.array(z.any()).optional(),
     toolWithToolCallList: z.array(z.any()).optional(),
-    role: z.string().optional(),
-    transcript: z.string().optional(),
-    transcriptType: z.string().optional(),
+    cost: z.number().optional(),
   }),
 });
 

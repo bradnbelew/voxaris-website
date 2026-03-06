@@ -39,11 +39,11 @@ export function SolutionWhiteLabel() {
     <div className="min-h-screen bg-white">
       <Helmet>
         <title>White Label AI Video & Voice Agents | Voxaris</title>
-        <meta name="description" content="Resell Voxaris under your brand: photorealistic V·GUIDE video agents + voice. Full white-label, margins up to 70%, white-glove support." />
-        <meta name="keywords" content="white label ai voice agents, white label ai video agent, resell ai agents saas, white label ai concierge, agency white label ai platform, reseller ai video agents, white label photorealistic ai, saas white label ai agents, white label talking postcards, ai agent reseller program, white label browser ai agent, agency ai resell platform" />
+        <meta name="description" content="Resell V·TEAMS under your brand: multi-agent AI squads + voice + video. Full white-label, margins up to 70%, white-glove support." />
+        <meta name="keywords" content="white label ai voice agents, white label multi-agent AI, V·TEAMS reseller, resell ai agents saas, white label ai concierge, agency white label ai platform, reseller ai video agents, white label multi-agent platform, saas white label ai agents, white label talking postcards, ai agent reseller program, agency ai resell platform" />
         <link rel="canonical" href="https://voxaris.io/solutions/white-label" />
         <meta property="og:title" content="White Label AI Video & Voice Agents | Voxaris" />
-        <meta property="og:description" content="Resell Voxaris under your brand: photorealistic V·GUIDE video agents + voice. Full white-label, margins up to 70%." />
+        <meta property="og:description" content="Resell V·TEAMS under your brand: multi-agent AI squads + voice + video. Full white-label, margins up to 70%." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://voxaris.io/solutions/white-label" />
         <meta property="og:image" content="https://voxaris.io/og-image.png" />
@@ -123,7 +123,7 @@ export function SolutionWhiteLabel() {
               Building conversational AI from scratch takes years and millions. Stitching together APIs yourself means you're the one debugging at 2 AM when the voice agent breaks. And your clients don't care how the sausage is made — they want it to work.
             </p>
             <p>
-              Voxaris White Label gives you the <strong className="text-carbon-900">entire VoxEngine stack</strong> — voice, video, V·GUIDE browser control, V·MEMORY, Talking Postcards — deployed under your brand, on your domain, with your pricing. We handle the infrastructure. You handle the client.
+              Voxaris White Label gives you the <strong className="text-carbon-900">entire VoxEngine stack</strong> — voice, video, multi-agent orchestration, V·MEMORY, Talking Postcards — deployed under your brand, on your domain, with your pricing. We handle the infrastructure. You handle the client.
             </p>
           </motion.div>
         </div>
@@ -181,11 +181,11 @@ export function SolutionWhiteLabel() {
                   <Video className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-carbon-900">Video Agents + V·GUIDE</h3>
+                  <h3 className="text-lg font-bold text-carbon-900">Video Agents + Multi-Agent Orchestration</h3>
                 </div>
               </div>
               <p className="text-carbon-500 text-[15px] leading-[1.8]">
-                Photorealistic AI video agents that deploy on any website with a single script tag. V·GUIDE visible browser control — scrolling, clicking, form filling — all in real time while talking to the visitor. Your client's brand, your client's site, your client's concierge.
+                Photorealistic AI video agents that deploy on any website with a single script tag. Multi-agent orchestration with warm transfers — receptionist, specialist, closer — each with their own personality. Real-time video + voice coordination. Your client's brand, your client's site, your client's AI team.
               </p>
             </motion.div>
 

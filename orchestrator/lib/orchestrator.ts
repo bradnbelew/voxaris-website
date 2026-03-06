@@ -9,6 +9,7 @@ import { createRequestLogger } from "@/lib/utils/logger";
 import { correlationId as genCorrelationId } from "@/lib/utils/id";
 import type { SessionState } from "@/lib/schemas/tools";
 import type { HotelConfig } from "@/db/schema";
+import { BOOKING_TOOLS } from "@/lib/tools-booking-defs";
 
 // ── Tool Definitions for Claude ──
 
@@ -168,6 +169,8 @@ const TOOLS: Anthropic.Tool[] = [
       required: ["reason", "context_summary"],
     },
   },
+  // ── Booking Orchestration Tools ──
+  ...BOOKING_TOOLS,
 ];
 
 // ── System Prompt Builder ──

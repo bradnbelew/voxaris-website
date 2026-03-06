@@ -44,12 +44,12 @@ export default function BookDemo() {
   return (
     <Layout>
       <Helmet>
-        <title>Book a Demo — See V·GUIDE AI in Action | Voxaris</title>
-        <meta name="description" content="Schedule a personalized demo. See how V·GUIDE handles lead response, qualification, and appointment booking on your website 24/7." />
-        <meta name="keywords" content="book demo, AI video agent demo, V·GUIDE demo, Voxaris demo, AI website agent, schedule demo" />
+        <title>Book a Demo — See V·TEAMS AI in Action | Voxaris</title>
+        <meta name="description" content="Schedule a personalized demo. See how V·TEAMS handles lead response, qualification, and appointment booking with warm transfers across your squad 24/7." />
+        <meta name="keywords" content="book demo, V·TEAMS demo, multi-agent AI demo, Voxaris demo, AI agent squad, warm transfer AI, schedule demo" />
         <link rel="canonical" href="https://voxaris.io/book-demo" />
-        <meta property="og:title" content="Book a Demo — See V·GUIDE AI in Action | Voxaris" />
-        <meta property="og:description" content="Schedule a personalized demo. See how V·GUIDE handles lead response, qualification, and appointment booking on your website 24/7." />
+        <meta property="og:title" content="Book a Demo — See V·TEAMS AI in Action | Voxaris" />
+        <meta property="og:description" content="Schedule a personalized demo. See how V·TEAMS handles lead response, qualification, and appointment booking with warm transfers across your squad 24/7." />
         <meta property="og:url" content="https://voxaris.io/book-demo" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://voxaris.io/og-image.png" />

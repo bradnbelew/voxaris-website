@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>John & Stacey — Timeshare Review | Voxaris</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  /* ─── RESET & BASE ─── */
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0A0A0A;
+    --bg-subtle: #111111;
+    --bg-card: #141414;
+    --bg-card-hover: #1a1a1a;
+    --silver-bright: #F8FAFC;
+    --silver: #E5E7EB;
+    --silver-muted: #9CA3AF;
+    --silver-dim: #6B7280;
+    --red: #E8352A;
+    --red-glow: rgba(232, 53, 42, 0.35);
+    --red-subtle: rgba(232, 53, 42, 0.12);
+    --slide-w: 1920;
+    --slide-h: 1080;
+    --transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    overflow: hidden;
+    background: var(--bg);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--silver);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ─── VIEWPORT SCALING ─── */
+  #deck {
+    position: fixed; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  #stage {
+    width: calc(var(--slide-w) * 1px);
+    height: calc(var(--slide-h) * 1px);
+    position: relative;
+    transform-origin: center center;
+    overflow: hidden;
+  }
+
+  /* ─── SLIDES ─── */
+  .slide {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    padding: 80px 100px;
+    display: flex; flex-direction: column;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition);
+    background: var(--bg);
+  }
+
+  .slide.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* ─── VOXARIS WATERMARK ─── */
+  .slide::after {
+    content: 'V O X A R I S';
+    position: absolute;
+    bottom: 36px; right: 60px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 6px;
+    color: var(--silver-dim);
+    opacity: 0.5;
+  }
+
+  /* ─── NAVIGATION ─── */
+  #nav-dots {
+    position: fixed;
+    bottom: 32px; left: 50%;
+    transform: translateX(-50%);
+    display: flex; gap: 12px;
+    z-index: 100;
+  }
+
+  .dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--silver-dim);
+    opacity: 0.3;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+  }
+
+  .dot.active {
+    opacity: 1;
+    background: var(--red);
+    box-shadow: 0 0 12px var(--red-glow);
+    transform: scale(1.2);
+  }
+
+  .dot:hover { opacity: 0.7; }
+
+  #slide-counter {
+    position: fixed;
+    bottom: 36px; left: 60px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    color: var(--silver-dim);
+    z-index: 100;
+  }
+
+  /* ─── NAV ARROWS ─── */
+  .nav-arrow {
+    position: fixed;
+    top: 50%; transform: translateY(-50%);
+    width: 48px; height: 48px;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 50%;
+    background: rgba(255,255,255,0.03);
+    color: var(--silver-muted);
+    font-size: 18px;
+    cursor: pointer;
+    z-index: 100;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(8px);
+  }
+
+  .nav-arrow:hover {
+    border-color: rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.06);
+    color: var(--silver-bright);
+  }
+
+  #prev-arrow { left: 24px; }
+  #next-arrow { right: 24px; }
+
+  /* ─── TYPOGRAPHY ─── */
+  .slide-title {
+    font-size: 52px;
+    font-weight: 700;
+    color: var(--silver-bright);
+    letter-spacing: -0.5px;
+    line-height: 1.15;
+    margin-bottom: 8px;
+  }
+
+  .slide-subtitle {
+    font-size: 28px;
+    font-weight: 300;
+    color: var(--silver-muted);
+    letter-spacing: 0.2px;
+    line-height: 1.5;
+  }
+
+  /* ─── RED GLOW STAT ─── */
+  .red-stat {
+    color: var(--red);
+    font-weight: 700;
+    text-shadow: 0 0 40px var(--red-glow), 0 0 80px rgba(232,53,42,0.15);
+  }
+
+  .red-stat-box {
+    background: var(--red-subtle);
+    border: 1px solid rgba(232,53,42,0.2);
+    border-radius: 12px;
+    padding: 24px 40px;
+    text-align: center;
+  }
+
+  /* ─── CARDS ─── */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+    padding: 32px;
+    transition: all 0.3s ease;
+  }
+
+  /* ─── ACCENT LINE ─── */
+  .accent-line {
+    width: 48px; height: 2px;
+    background: linear-gradient(90deg, var(--red), transparent);
+    margin: 16px 0 24px 0;
+  }
+
+  /* ─────────────────────────────────────
+     SLIDE 1 — TITLE / WELCOME
+  ───────────────────────────────────── */
+  #slide-1 {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 100px;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 40%, rgba(232,53,42,0.04) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 50% at 20% 80%, rgba(248,250,252,0.02) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 40% at 80% 20%, rgba(229,231,235,0.015) 0%, transparent 50%),
+      linear-gradient(180deg, #0d0d0d 0%, #0A0A0A 40%, #080808 100%);
+  }
+
+  #slide-1 .deco-line {
+    width: 80px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--silver-dim), transparent);
+    margin: 0 auto 48px auto;
+  }
+
+  #slide-1 .hero-title {
+    font-size: 76px;
+    font-weight: 300;
+    color: var(--silver-bright);
+    letter-spacing: 2px;
+    line-height: 1.1;
+    margin-bottom: 20px;
+  }
+
+  #slide-1 .hero-title span {
+    font-weight: 700;
+  }
+
+  #slide-1 .hero-subtitle {
+    font-size: 30px;
+    font-weight: 300;
+    color: var(--silver-muted);
+    margin-bottom: 16px;
+    letter-spacing: 0.5px;
+  }
+
+  #slide-1 .hero-body {
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--silver-dim);
+    max-width: 700px;
+    margin: 0 auto 60px auto;
+    line-height: 1.6;
+  }
+
+  #slide-1 .hero-footer {
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--silver-dim);
+    opacity: 0.6;
+    max-width: 560px;
+    line-height: 1.7;
+  }
+
+  #slide-1 .deco-bottom {
+    width: 120px; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(232,53,42,0.3), transparent);
+    margin: 40px auto 0 auto;
+  }
+
+  /* ─────────────────────────────────────
+     SLIDE 2 — CURRENT SITUATION
+  ───────────────────────────────────── */
+  #slide-2 {
+    background:
+      radial-gradient(ellipse 70% 50% at 70% 30%, rgba(248,250,252,0.015) 0%, transparent 70%),
+      linear-gradient(170deg, #0d0d0d 0%, #0A0A0A 100%);
+  }
+
+  #slide-2 .columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    flex: 1;
+    margin-top: 16px;
+  }
+
+  #slide-2 .ownership-card {
+    background: var(--bg-card);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 22px 28px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  #slide-2 .ownership-card .icon-circle {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: rgba(248,250,252,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 16px;
+    color: var(--silver-muted);
+  }
+
+  #slide-2 .ownership-card .card-text {
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--silver);
+    line-height: 1.4;
+  }
+
+  #slide-2 .ownership-card .card-text .bracket {
+    color: var(--silver-dim);
+    font-weight: 300;
+  }
+
+  #slide-2 .right-col h3 {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--silver-bright);
+    margin-bottom: 24px;
+  }
+
+  #slide-2 .pain-point {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  #slide-2 .pain-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--red);
+    margin-top: 8px;
+    flex-shrink: 0;
+    box-shadow: 0 0 10px var(--red-glow);
+  }
+
+  #slide-2 .pain-point p {
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--silver);
+    line-height: 1.5;
+  }
+
+  #slide-2 .bottom-stat {
+    margin-top: auto;
+    padding-top: 24px;
+  }
+
+  /* ─────────────────────────────────────
+     SLIDE 3 — LANDSCAPE 2026
+  ───────────────────────────────────── */
+  #slide-3 {
+    background:
+      radial-gradient(ellipse 60% 40% at 30% 60%, rgba(232,53,42,0.03) 0%, transparent 60%),
+      linear-gradient(190deg, #0e0e0e 0%, #0A0A0A 100%);
+  }
+
+  #slide-3 .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin-top: 12px;
+    flex: 0;
+  }
+
+  .stat-card {
+    background: var(--bg-card);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+    padding: 32px 28px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--red), transparent);
+    opacity: 0.4;
+  }
+
+  .stat-card .stat-icon {
+    font-size: 24px;
+    margin-bottom: 16px;
+    display: block;
+    color: var(--red);
+    text-shadow: 0 0 20px var(--red-glow);
+  }
+
+  .stat-card .stat-number {
+    font-size: 38px;
+    font-weight: 800;
+    color: var(--silver-bright);
+    letter-spacing: -1px;
+    line-height: 1.1;
+    margin-bottom: 10px;
+  }
+
+  .stat-card .stat-label {
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--silver-muted);
+    line-height: 1.5;
+  }
+
+  #slide-3 .bottom-stat {
+    margin-top: auto;
+    padding-top: 32px;
+  }
+
+  /* ─────────────────────────────────────
+     SLIDE 4 — V-GUIDE SOLUTION
+  ───────────────────────────────────── */
+  #slide-4 {
+    background:
+      radial-gradient(ellipse 50% 50% at 75% 50%, rgba(232,53,42,0.025) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 25% 40%, rgba(248,250,252,0.01) 0%, transparent 50%),
+      linear-gradient(175deg, #0d0d0d 0%, #0A0A0A 100%);
+  }
+
+  #slide-4 .content-area {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    flex: 1;
+    align-items: center;
+    margin-top: 8px;
+  }
+
+  #slide-4 .capability {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  #slide-4 .cap-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--red);
+    margin-top: 7px;
+    flex-shrink: 0;
+    box-shadow: 0 0 12px var(--red-glow);
+  }
+
+  #slide-4 .capability p {
+    font-size: 21px;
+    font-weight: 400;
+    color: var(--silver);
+    line-height: 1.5;
+  }
+
+  /* Browser mockup */
+  .browser-mock {
+    background: var(--bg-card);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .browser-bar {
+    height: 36px;
+    background: rgba(255,255,255,0.03);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    gap: 8px;
+  }
+
+  .browser-bar span {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+  }
+
+  .browser-bar span:first-child { background: rgba(232,53,42,0.5); }
+  .browser-bar span:nth-child(2) { background: rgba(248,250,252,0.12); }
+  .browser-bar span:nth-child(3) { background: rgba(248,250,252,0.08); }
+
+  .browser-body {
+    height: 320px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 50%, rgba(248,250,252,0.02) 0%, transparent 70%);
+  }
+
+  .browser-body .mock-lines {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    opacity: 0.15;
+  }
+
+  .browser-body .mock-line {
+    height: 6px;
+    border-radius: 3px;
+    background: var(--silver);
+  }
+
+  .browser-body .mock-line:nth-child(1) { width: 240px; }
+  .browser-body .mock-line:nth-child(2) { width: 180px; }
+  .browser-body .mock-line:nth-child(3) { width: 210px; }
+  .browser-body .mock-line:nth-child(4) { width: 160px; }
+
+  /* Maria avatar */
+  .avatar-maria {
+    position: absolute;
+    bottom: 20px; right: 20px;
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--red), #c62b22);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; font-weight: 700;
+    color: white;
+    box-shadow: 0 0 24px var(--red-glow), 0 4px 20px rgba(0,0,0,0.4);
+    animation: pulse-avatar 2.5s ease-in-out infinite;
+  }
+
+  @keyframes pulse-avatar {
+    0%, 100% { box-shadow: 0 0 24px var(--red-glow), 0 4px 20px rgba(0,0,0,0.4); transform: scale(1); }
+    50% { box-shadow: 0 0 40px var(--red-glow), 0 0 60px rgba(232,53,42,0.15), 0 4px 20px rgba(0,0,0,0.4); transform: scale(1.05); }
+  }
+
+  #slide-4 .highlight-box {
+    margin-top: auto;
+    background: linear-gradient(135deg, rgba(232,53,42,0.08), rgba(232,53,42,0.03));
+    border: 1px solid rgba(232,53,42,0.15);
+    border-radius: 12px;
+    padding: 24px 36px;
+    text-align: center;
+  }
+
+  #slide-4 .highlight-box p {
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--silver);
+    line-height: 1.5;
+  }
+
+  #slide-4 .highlight-box strong {
+    color: var(--silver-bright);
+    font-weight: 600;
+  }
+
+  /* ─────────────────────────────────────
+     SLIDE 5 — REAL RESULTS
+  ───────────────────────────────────── */
+  #slide-5 {
+    background:
+      radial-gradient(ellipse 50% 40% at 50% 30%, rgba(248,250,252,0.015) 0%, transparent 60%),
+      linear-gradient(185deg, #0e0e0e 0%, #0A0A0A 100%);
+  }
+
+  #slide-5 .results-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+    margin-top: 8px;
+  }
+
+  .result-card {
+    background: var(--bg-card);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+    padding: 40px 32px;
+    text-align: center;
+    position: relative;
+  }
+
+  .result-card .result-number {
+    font-size: 44px;
+    font-weight: 800;
+    color: var(--silver-bright);
+    letter-spacing: -1px;
+    margin-bottom: 12px;
+    line-height: 1.1;
+  }
+
+  .result-card .result-label {
+    font-size: 17px;
+    font-weight: 400;
+    color: var(--silver-muted);
+    line-height: 1.5;
+  }
+
+  #slide-5 .extra-bullets {
+    display: flex;
+    gap: 40px;
+    margin-top: 28px;
+    justify-content: center;
+  }
+
+  #slide-5 .extra-bullets .bullet-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 19px;
+    color: var(--silver);
+  }
+
+  #slide-5 .extra-bullets .bullet-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--silver-dim);
+    flex-shrink: 0;
+  }
+
+  #slide-5 .quote-block {
+    margin-top: auto;
+    padding-top: 32px;
+    position: relative;
+    text-align: center;
+  }
+
+  .quote-box {
+    background: var(--red-subtle);
+    border: 1px solid rgba(232,53,42,0.18);
+    border-radius: 14px;
+    padding: 36px 60px;
+    position: relative;
+  }
+
+  .quote-box .big-quote {
+    position: absolute;
+    top: -8px; left: 28px;
+    font-size: 80px;
+    font-weight: 800;
+    color: var(--red);
+    opacity: 0.3;
+    line-height: 1;
+    font-family: Georgia, serif;
+  }
+
+  .quote-box .quote-text {
+    font-size: 22px;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--silver);
+    line-height: 1.6;
+    position: relative;
+    z-index: 1;
+  }
+
+  .quote-box .quote-attr {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--silver-dim);
+    margin-top: 14px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ─────────────────────────────────────
+     SLIDE 6 — NEXT STEPS
+  ───────────────────────────────────── */
+  #slide-6 {
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 60%, rgba(232,53,42,0.03) 0%, transparent 60%),
+      linear-gradient(175deg, #0d0d0d 0%, #0A0A0A 100%);
+    align-items: center;
+    text-align: center;
+  }
+
+  #slide-6 .paths {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+    margin-top: 12px;
+    width: 100%;
+    max-width: 1200px;
+  }
+
+  .path-card {
+    background: var(--bg-card);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 44px 32px 36px;
+    text-align: center;
+    position: relative;
+    transition: all 0.3s ease;
+  }
+
+  .path-card:hover {
+    border-color: rgba(232,53,42,0.25);
+    background: var(--bg-card-hover);
+    transform: translateY(-2px);
+  }
+
+  .path-card .path-num {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: 2px solid rgba(232,53,42,0.4);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px auto;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--red);
+    text-shadow: 0 0 16px var(--red-glow);
+  }
+
+  .path-card .path-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--silver-bright);
+    margin-bottom: 12px;
+  }
+
+  .path-card .path-desc {
+    font-size: 17px;
+    font-weight: 400;
+    color: var(--silver-muted);
+    line-height: 1.6;
+  }
+
+  .cta-button {
+    display: inline-block;
+    margin-top: 44px;
+    padding: 20px 56px;
+    background: var(--red);
+    color: white;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 24px var(--red-glow), 0 0 60px rgba(232,53,42,0.1);
+    text-decoration: none;
+  }
+
+  .cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 32px var(--red-glow), 0 0 80px rgba(232,53,42,0.15);
+  }
+
+  #slide-6 .contact-line {
+    margin-top: 28px;
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--silver-dim);
+    letter-spacing: 0.5px;
+  }
+
+  #slide-6 .logo-lockup {
+    margin-top: auto;
+    padding-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 5px;
+    color: var(--silver-dim);
+    opacity: 0.6;
+  }
+
+  #slide-6 .logo-lockup .logo-sep {
+    width: 1px; height: 16px;
+    background: var(--silver-dim);
+    opacity: 0.4;
+  }
+
+  /* ─── PRINT STYLES ─── */
+  @media print {
+    html, body {
+      width: 1920px;
+      height: auto;
+      overflow: visible;
+      background: #0A0A0A;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    #deck { position: static; display: block; }
+
+    #stage {
+      transform: none !important;
+      width: 1920px;
+      height: auto;
+    }
+
+    .slide {
+      position: relative !important;
+      opacity: 1 !important;
+      pointer-events: auto !important;
+      width: 1920px;
+      height: 1080px;
+      page-break-after: always;
+      page-break-inside: avoid;
+      break-after: page;
+    }
+
+    #nav-dots, #slide-counter, .nav-arrow { display: none !important; }
+
+    @page {
+      size: 1920px 1080px;
+      margin: 0;
+    }
+  }
+</style>
+</head>
+<body>
+<div id="deck">
+  <div id="stage">
+
+    <!-- ────────────────── SLIDE 1: TITLE / WELCOME ────────────────── -->
+    <div class="slide active" id="slide-1">
+      <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+        <div class="deco-line"></div>
+        <h1 class="hero-title"><span>John</span> & <span>Stacey</span></h1>
+        <p class="hero-subtitle">Let's Talk About Your Timeshare Future</p>
+        <div style="width:48px; height:1px; background:linear-gradient(90deg, transparent, rgba(232,53,42,0.5), transparent); margin:24px auto 28px;"></div>
+        <p class="hero-body">A personalized review of your ownership + real options for 2026 and beyond</p>
+        <p class="hero-footer">No pressure. No sales pitch. Just clear, honest guidance tailored to you two.</p>
+        <div class="deco-bottom"></div>
+      </div>
+    </div>
+
+    <!-- ────────────────── SLIDE 2: CURRENT SITUATION ────────────────── -->
+    <div class="slide" id="slide-2">
+      <h2 class="slide-title">Where You Stand Today</h2>
+      <div class="accent-line"></div>
+
+      <div class="columns">
+        <!-- Left column -->
+        <div class="left-col">
+          <div class="ownership-card">
+            <div class="icon-circle">&#9670;</div>
+            <div class="card-text">Ownership: <span class="bracket">[X weeks / points]</span> at <span class="bracket">[Resort Name]</span></div>
+          </div>
+          <div class="ownership-card">
+            <div class="icon-circle">&#9650;</div>
+            <div class="card-text">Annual Maintenance Fees: <span class="bracket">$[Amount]</span> &mdash; and rising</div>
+          </div>
+          <div class="ownership-card">
+            <div class="icon-circle">&#9679;</div>
+            <div class="card-text">Recent Usage: <span class="bracket">[Used X weeks / Exchanged X times]</span></div>
+          </div>
+        </div>
+
+        <!-- Right column -->
+        <div class="right-col">
+          <h3>What We Hear from Owners Like You</h3>
+          <div class="pain-point">
+            <div class="pain-dot"></div>
+            <p>Fees increasing faster than usage value</p>
+          </div>
+          <div class="pain-point">
+            <div class="pain-dot"></div>
+            <p>Difficulty booking preferred weeks or locations</p>
+          </div>
+          <div class="pain-point">
+            <div class="pain-dot"></div>
+            <p>Feeling "locked in" with limited flexibility</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bottom-stat">
+        <div class="red-stat-box">
+          <span class="red-stat" style="font-size:32px;">79%</span>
+          <span style="font-size:20px; color:var(--silver); margin-left:12px;">of timeshare owners say they'd consider exiting or upgrading if there was an easier path.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ────────────────── SLIDE 3: LANDSCAPE 2026 ────────────────── -->
+    <div class="slide" id="slide-3">
+      <h2 class="slide-title">What's Changed in the Industry</h2>
+      <p class="slide-subtitle" style="margin-bottom:4px;">The timeshare landscape in 2026</p>
+      <div class="accent-line"></div>
+
+      <div class="stat-grid">
+        <!-- Card 1 -->
+        <div class="stat-card">
+          <span class="stat-icon">&#9650;</span>
+          <div class="stat-number">8&ndash;12%</div>
+          <div class="stat-label">Average annual maintenance fee increase</div>
+        </div>
+        <!-- Card 2 -->
+        <div class="stat-card">
+          <span class="stat-icon">&#9660;</span>
+          <div class="stat-number">0&ndash;20&cent;</div>
+          <div class="stat-label">Resale value per dollar for many legacy resorts</div>
+        </div>
+        <!-- Card 3 -->
+        <div class="stat-card">
+          <span class="stat-icon">&#9888;</span>
+          <div class="stat-number">$180M+</div>
+          <div class="stat-label">Spent by cancellation companies targeting owners last year</div>
+        </div>
+        <!-- Card 4 -->
+        <div class="stat-card">
+          <span class="stat-icon">&#9673;</span>
+          <div class="stat-number">40&ndash;60%</div>
+          <div class="stat-label">Of owners now want more flexibility or an exit</div>
+        </div>
+      </div>
+
+      <div class="bottom-stat" style="padding-top:40px;">
+        <div class="red-stat-box">
+          <span style="font-size:22px; color:var(--silver);">For every <span class="red-stat" style="font-size:28px;">$1,000</span> in rising fees, most owners see <span class="red-stat" style="font-size:28px;">$0&ndash;$200</span> in actual usable value.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ────────────────── SLIDE 4: V-GUIDE SOLUTION ────────────────── -->
+    <div class="slide" id="slide-4">
+      <h2 class="slide-title">How V&middot;GUIDE Changes the Game</h2>
+      <p class="slide-subtitle">The world's first embodied real-time video agent for timeshare owners</p>
+      <div class="accent-line"></div>
+
+      <div class="content-area">
+        <!-- Left: Capabilities -->
+        <div>
+          <div class="capability">
+            <div class="cap-dot"></div>
+            <p>Answer questions about your ownership in real time</p>
+          </div>
+          <div class="capability">
+            <div class="cap-dot"></div>
+            <p>Help you book and use your time more effectively</p>
+          </div>
+          <div class="capability">
+            <div class="cap-dot"></div>
+            <p>Show upgrade or exit options transparently</p>
+          </div>
+          <div class="capability">
+            <div class="cap-dot"></div>
+            <p>Guide you through the entire process &mdash; visually, in real time</p>
+          </div>
+        </div>
+
+        <!-- Right: Browser Mockup -->
+        <div class="browser-mock">
+          <div class="browser-bar">
+            <span></span><span></span><span></span>
+            <div style="flex:1; height:18px; margin-left:16px; background:rgba(255,255,255,0.04); border-radius:4px;"></div>
+          </div>
+          <div class="browser-body">
+            <div class="mock-lines">
+              <div class="mock-line"></div>
+              <div class="mock-line"></div>
+              <div class="mock-line"></div>
+              <div class="mock-line"></div>
+            </div>
+            <div class="avatar-maria">M</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="highlight-box">
+        <p><strong>For John &amp; Stacey:</strong> Turn your ownership into something that works &mdash; or help you move on cleanly.</p>
+      </div>
+    </div>
+
+    <!-- ────────────────── SLIDE 5: REAL RESULTS ────────────────── -->
+    <div class="slide" id="slide-5">
+      <h2 class="slide-title">What Early Partners Are Seeing</h2>
+      <div class="accent-line"></div>
+
+      <div class="results-grid">
+        <div class="result-card">
+          <div class="result-number">6&ndash;30%</div>
+          <div class="result-label">Engagement from visitors who used to bounce</div>
+        </div>
+        <div class="result-card">
+          <div class="result-number">$10K&ndash;$20K<span style="font-size:24px;">/mo</span></div>
+          <div class="result-label">Recovered in previously lost value</div>
+        </div>
+        <div class="result-card">
+          <div class="result-number" style="font-size:36px;">Back in Control</div>
+          <div class="result-label">Owners report no more "locked in" frustration</div>
+        </div>
+      </div>
+
+      <div class="extra-bullets">
+        <div class="bullet-item">
+          <div class="bullet-dot"></div>
+          <span>Faster, easier booking and exchange decisions</span>
+        </div>
+        <div class="bullet-item">
+          <div class="bullet-dot"></div>
+          <span>Clear, transparent guidance on upgrade or exit paths</span>
+        </div>
+      </div>
+
+      <div class="quote-block">
+        <div class="quote-box">
+          <span class="big-quote">&ldquo;</span>
+          <p class="quote-text">Finally, someone was actually there to help us understand our options.</p>
+          <p class="quote-attr">&mdash; Early V&middot;GUIDE Partner</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ────────────────── SLIDE 6: NEXT STEPS ────────────────── -->
+    <div class="slide" id="slide-6">
+      <h2 class="slide-title">Let's Make This Simple</h2>
+      <div class="accent-line" style="margin:12px auto 32px;"></div>
+
+      <div class="paths">
+        <div class="path-card">
+          <div class="path-num">1</div>
+          <div class="path-title">Optimize</div>
+          <div class="path-desc">Better booking + usage with V&middot;GUIDE</div>
+        </div>
+        <div class="path-card">
+          <div class="path-num">2</div>
+          <div class="path-title">Upgrade</div>
+          <div class="path-desc">Move to a more flexible option</div>
+        </div>
+        <div class="path-card">
+          <div class="path-num">3</div>
+          <div class="path-title">Exit</div>
+          <div class="path-desc">Strategic exit with full guidance and support</div>
+        </div>
+      </div>
+
+      <a href="mailto:ethan@voxaris.io?subject=Timeshare%20Call%20Request" class="cta-button">Schedule a 15-Minute Call &mdash; No Obligation</a>
+
+      <p class="contact-line">Ethan Stopperich&ensp;|&ensp;ethan@voxaris.io&ensp;|&ensp;voxaris.io</p>
+
+      <div class="logo-lockup">
+        <span>V O X A R I S</span>
+        <div class="logo-sep"></div>
+        <span>V &middot; G U I D E</span>
+      </div>
+    </div>
+
+  </div><!-- /stage -->
+</div><!-- /deck -->
+
+<!-- NAV ARROWS -->
+<button class="nav-arrow" id="prev-arrow" aria-label="Previous slide">&#8592;</button>
+<button class="nav-arrow" id="next-arrow" aria-label="Next slide">&#8594;</button>
+
+<!-- NAV DOTS -->
+<div id="nav-dots"></div>
+
+<!-- SLIDE COUNTER -->
+<div id="slide-counter">1 / 6</div>
+
+<script>
+(function() {
+  'use strict';
+
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+
+  const dotsContainer = document.getElementById('nav-dots');
+  const counter = document.getElementById('slide-counter');
+  const prevBtn = document.getElementById('prev-arrow');
+  const nextBtn = document.getElementById('next-arrow');
+
+  // Create dots
+  for (let i = 0; i < total; i++) {
+    const dot = document.createElement('button');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+    dot.addEventListener('click', function() { goTo(i); });
+    dotsContainer.appendChild(dot);
+  }
+
+  function goTo(index) {
+    if (index < 0 || index >= total || index === current) return;
+    slides[current].classList.remove('active');
+    dotsContainer.children[current].classList.remove('active');
+    current = index;
+    slides[current].classList.add('active');
+    dotsContainer.children[current].classList.add('active');
+    counter.textContent = (current + 1) + ' / ' + total;
+  }
+
+  function next() { goTo(current + 1); }
+  function prev() { goTo(current - 1); }
+
+  // Keyboard
+  document.addEventListener('keydown', function(e) {
+    switch (e.key) {
+      case 'ArrowRight':
+      case 'ArrowDown':
+      case 'PageDown':
+      case ' ':
+        e.preventDefault();
+        next();
+        break;
+      case 'ArrowLeft':
+      case 'ArrowUp':
+      case 'PageUp':
+        e.preventDefault();
+        prev();
+        break;
+      case 'Home':
+        e.preventDefault();
+        goTo(0);
+        break;
+      case 'End':
+        e.preventDefault();
+        goTo(total - 1);
+        break;
+    }
+  });
+
+  // Arrow buttons
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
+
+  // Viewport scaling
+  function scaleStage() {
+    var stage = document.getElementById('stage');
+    var sw = 1920, sh = 1080;
+    var vw = window.innerWidth, vh = window.innerHeight;
+    var scale = Math.min(vw / sw, vh / sh);
+    stage.style.transform = 'scale(' + scale + ')';
+  }
+
+  window.addEventListener('resize', scaleStage);
+  scaleStage();
+})();
+</script>
+</body>
+</html>

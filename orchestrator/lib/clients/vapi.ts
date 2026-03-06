@@ -1,169 +1,5 @@
-import { createRequestLogger } from "@/lib/utils/logger";
 import { withRetry, CircuitBreaker } from "@/lib/utils/retry";
-
-const VAPI_BASE_URL = "https://api.vapi.ai";
-
-// ── Error ──
-
-export class VapiApiError extends Error {
-  constructor(
-    public readonly status: number,
-    public readonly body: string
-  ) {
-    super(`VAPI API error ${status}: ${body}`);
-    this.name = "VapiApiError";
-  }
-}
-
-// ── Circuit Breaker ──
-
-const vapiCircuit = new CircuitBreaker({
-  name: "vapi-api",
-  failureThreshold: 5,
-  resetTimeoutMs: 30_000,
-});
-
-// ── Client ──
-
-export class VapiClient {
-  private readonly apiKey: string;
-
-  constructor() {
-    this.apiKey = process.env.VAPI_API_KEY ?? "";
-    if (!this.apiKey) {
-      throw new Error("VAPI_API_KEY environment variable is not set");
-    }
-  }
-
-  /** Create a VAPI assistant via API. */
-  async createAssistant(
-    config: VapiAssistantConfig,
-    correlationId: string
-  ): Promise<{ id: string }> {
-    const log = createRequestLogger(correlationId, { service: "vapi" });
-    log.info({ name: config.name }, "Creating VAPI assistant");
-
-    return vapiCircuit.execute(() =>
-      withRetry(
-        async () => {
-          const response = await fetch(`${VAPI_BASE_URL}/assistant`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${this.apiKey}`,
-            },
-            body: JSON.stringify(config),
-            signal: AbortSignal.timeout(15_000),
-          });
-
-          if (!response.ok) {
-            const body = await response.text();
-            throw new VapiApiError(response.status, body);
-          }
-
-          return (await response.json()) as { id: string };
-        },
-        { maxRetries: 2 }
-      )
-    );
-  }
-
-  /** Create an outbound phone call. */
-  async createCall(
-    request: VapiCreateCallRequest,
-    correlationId: string
-  ): Promise<VapiCallResponse> {
-    const log = createRequestLogger(correlationId, { service: "vapi" });
-    log.info(
-      { assistantId: request.assistantId, customer: request.customer?.number },
-      "Creating VAPI outbound call"
-    );
-
-    return vapiCircuit.execute(() =>
-      withRetry(
-        async () => {
-          const response = await fetch(`${VAPI_BASE_URL}/call`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${this.apiKey}`,
-            },
-            body: JSON.stringify(request),
-            signal: AbortSignal.timeout(15_000),
-          });
-
-          if (!response.ok) {
-            const body = await response.text();
-            throw new VapiApiError(response.status, body);
-          }
-
-          return (await response.json()) as VapiCallResponse;
-        },
-        { maxRetries: 2 }
-      )
-    );
-  }
-
-  /** Get call details by ID. */
-  async getCall(
-    callId: string,
-    correlationId: string
-  ): Promise<VapiCallResponse> {
-    const log = createRequestLogger(correlationId, { service: "vapi" });
-    log.info({ callId }, "Fetching VAPI call details");
-
-    return vapiCircuit.execute(() =>
-      withRetry(
-        async () => {
-          const response = await fetch(`${VAPI_BASE_URL}/call/${callId}`, {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${this.apiKey}`,
-            },
-            signal: AbortSignal.timeout(10_000),
-          });
-
-          if (!response.ok) {
-            const body = await response.text();
-            throw new VapiApiError(response.status, body);
-          }
-
-          return (await response.json()) as VapiCallResponse;
-        },
-        { maxRetries: 2 }
-      )
-    );
-  }
-
-  /** List all phone numbers on the account. */
-  async listPhoneNumbers(correlationId: string): Promise<VapiPhoneNumber[]> {
-    const log = createRequestLogger(correlationId, { service: "vapi" });
-    log.info("Listing VAPI phone numbers");
-
-    return vapiCircuit.execute(() =>
-      withRetry(async () => {
-        const response = await fetch(`${VAPI_BASE_URL}/phone-number`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${this.apiKey}`,
-          },
-          signal: AbortSignal.timeout(10_000),
-        });
-
-        if (!response.ok) {
-          const body = await response.text();
-          throw new VapiApiError(response.status, body);
-        }
-
-        return (await response.json()) as VapiPhoneNumber[];
-      })
-    );
-  }
-
-  get isAvailable(): boolean {
-    return vapiCircuit.currentState !== "open";
-  }
-}
+import { createRequestLogger } from "@/lib/utils/logger";
 
 // ── Types ──
 
@@ -180,7 +16,7 @@ export interface VapiAssistantConfig {
     tools?: VapiTool[];
   };
   voice: {
-    provider: "rime";
+    provider: "rime-ai";
     voiceId: string;
     model?: "arcana" | "mist" | "mistv2";
     speed?: number;
@@ -195,6 +31,7 @@ export interface VapiAssistantConfig {
   endCallMessage?: string;
   maxDurationSeconds?: number;
   backgroundSound?: "off" | "office";
+  backchannelingEnabled?: boolean;
   silenceTimeoutSeconds?: number;
   responseDelaySeconds?: number;
   hooks?: VapiHook[];
@@ -211,9 +48,7 @@ export interface VapiTool {
       required?: string[];
     };
   };
-  server?: {
-    url: string;
-  };
+  server?: { url: string };
   async?: boolean;
   messages?: Array<{
     type: "request-start" | "request-complete" | "request-failed";
@@ -293,10 +128,168 @@ export interface VapiPhoneNumber {
   squadId?: string;
 }
 
+// ── Error ──
+
+export class VapiApiError extends Error {
+  constructor(
+    public readonly statusCode: number,
+    public readonly body: string
+  ) {
+    super(`VAPI API error ${statusCode}: ${body}`);
+    this.name = "VapiApiError";
+  }
+}
+
+// ── Circuit Breaker ──
+
+const vapiCircuit = new CircuitBreaker({
+  name: "vapi-api",
+  failureThreshold: 5,
+  resetTimeoutMs: 30_000,
+});
+
+// ── Client ──
+
+export class VapiClient {
+  private readonly apiKey: string;
+  private readonly baseUrl = "https://api.vapi.ai";
+
+  constructor() {
+    this.apiKey = process.env.VAPI_API_KEY ?? "";
+    if (!this.apiKey) {
+      throw new Error("VAPI_API_KEY is required");
+    }
+  }
+
+  /** Create a VAPI assistant via API */
+  async createAssistant(
+    config: VapiAssistantConfig,
+    correlationId: string
+  ): Promise<{ id: string }> {
+    const log = createRequestLogger(correlationId, { service: "vapi" });
+    log.info({ name: config.name }, "Creating VAPI assistant");
+
+    return vapiCircuit.execute(() =>
+      withRetry(
+        async () => {
+          const response = await fetch(`${this.baseUrl}/assistant`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${this.apiKey}`,
+            },
+            body: JSON.stringify(config),
+            signal: AbortSignal.timeout(15_000),
+          });
+
+          if (!response.ok) {
+            const body = await response.text();
+            throw new VapiApiError(response.status, body);
+          }
+
+          return (await response.json()) as { id: string };
+        },
+        { maxRetries: 2 }
+      )
+    );
+  }
+
+  /** Create an outbound phone call */
+  async createCall(
+    request: VapiCreateCallRequest,
+    correlationId: string
+  ): Promise<VapiCallResponse> {
+    const log = createRequestLogger(correlationId, { service: "vapi" });
+    log.info(
+      { assistantId: request.assistantId, customer: request.customer?.number },
+      "Creating VAPI outbound call"
+    );
+
+    return vapiCircuit.execute(() =>
+      withRetry(
+        async () => {
+          const response = await fetch(`${this.baseUrl}/call`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${this.apiKey}`,
+            },
+            body: JSON.stringify(request),
+            signal: AbortSignal.timeout(15_000),
+          });
+
+          if (!response.ok) {
+            const body = await response.text();
+            throw new VapiApiError(response.status, body);
+          }
+
+          return (await response.json()) as VapiCallResponse;
+        },
+        { maxRetries: 2 }
+      )
+    );
+  }
+
+  /** Get call details by ID */
+  async getCall(
+    callId: string,
+    correlationId: string
+  ): Promise<VapiCallResponse> {
+    const log = createRequestLogger(correlationId, { service: "vapi" });
+    log.info({ callId }, "Fetching VAPI call details");
+
+    return vapiCircuit.execute(() =>
+      withRetry(
+        async () => {
+          const response = await fetch(`${this.baseUrl}/call/${callId}`, {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${this.apiKey}`,
+            },
+            signal: AbortSignal.timeout(10_000),
+          });
+
+          if (!response.ok) {
+            const body = await response.text();
+            throw new VapiApiError(response.status, body);
+          }
+
+          return (await response.json()) as VapiCallResponse;
+        },
+        { maxRetries: 2 }
+      )
+    );
+  }
+
+  /** List all phone numbers on the account */
+  async listPhoneNumbers(correlationId: string): Promise<VapiPhoneNumber[]> {
+    const log = createRequestLogger(correlationId, { service: "vapi" });
+    log.info("Listing VAPI phone numbers");
+
+    const response = await fetch(`${this.baseUrl}/phone-number`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${this.apiKey}`,
+      },
+      signal: AbortSignal.timeout(10_000),
+    });
+
+    if (!response.ok) {
+      const body = await response.text();
+      throw new VapiApiError(response.status, body);
+    }
+
+    return (await response.json()) as VapiPhoneNumber[];
+  }
+
+  get isAvailable(): boolean {
+    return vapiCircuit.currentState !== "open";
+  }
+}
+
 // ── Singleton ──
 
 let _vapiClient: VapiClient | undefined;
-
 export function getVapiClient(): VapiClient {
   if (!_vapiClient) {
     _vapiClient = new VapiClient();
