@@ -65,7 +65,7 @@ export function Navbar() {
                       <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${openDropdown === link.label ? 'rotate-180' : ''}`} />
                     </button>
                   ) : (
-                    <Link to={link.href} className={`px-4 py-2 text-[13px] font-medium transition-all duration-200 ${location.pathname === link.href ? 'text-carbon-900' : 'text-carbon-400 hover:text-carbon-700'}`}>
+                    <Link to={link.href} className={`px-4 py-2 text-[13px] font-medium transition-all duration-200 ${location.pathname === link.href ? 'text-gold-600' : 'text-carbon-400 hover:text-carbon-700'}`}>
                       {link.label}
                     </Link>
                   )}
@@ -91,7 +91,7 @@ export function Navbar() {
               ))}
             </div>
             <div className="hidden lg:flex items-center gap-4">
-              <Link to="/book-demo"><Button className="bg-carbon-900 hover:bg-carbon-800 text-white rounded-full px-6 h-9 font-medium text-[13px] group">Book Demo <ArrowRight className="w-3.5 h-3.5 ml-2 group-hover:translate-x-0.5 transition-transform" /></Button></Link>
+              <Link to="/book-demo"><Button className="bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 hover:from-gold-700 hover:via-gold-600 hover:to-gold-700 text-white rounded-full px-6 h-9 font-medium text-[13px] group shadow-gold-sm hover:shadow-gold border border-gold-400/30 transition-all duration-300">Book Demo <ArrowRight className="w-3.5 h-3.5 ml-2 group-hover:translate-x-0.5 transition-transform" /></Button></Link>
             </div>
             <button className="lg:hidden p-2 text-carbon-500" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>{isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}</button>
           </div>
@@ -114,7 +114,7 @@ export function Navbar() {
                 ))}
               </div>
               <div className="p-6 border-t border-carbon-100 space-y-3">
-                <Link to="/book-demo" className="block"><Button className="w-full bg-carbon-900 text-white h-12 rounded-full font-medium">Book Demo <ArrowRight className="w-4 h-4 ml-2" /></Button></Link>
+                <Link to="/book-demo" className="block"><Button className="w-full bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 text-white h-12 rounded-full font-medium border border-gold-400/30 shadow-gold-sm">Book Demo <ArrowRight className="w-4 h-4 ml-2" /></Button></Link>
               </div>
             </div>
           </motion.div>

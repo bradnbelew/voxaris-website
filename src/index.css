@@ -1,6 +1,6 @@
-/* Typography: Satoshi (display + body) via Fontshare, Inter fallback via Google */
+/* Typography: Satoshi (display) via Fontshare, DM Sans (body) via Google */
 @import url('https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,600,700,800,900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..900;1,9..40,400;500&family=JetBrains+Mono:wght@400;500&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -62,11 +62,11 @@
 
   body {
     @apply bg-white text-carbon-900 antialiased;
-    font-family: 'Satoshi', 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: 'Satoshi', 'DM Sans', system-ui, -apple-system, sans-serif;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Satoshi', 'Inter', system-ui, sans-serif;
+    font-family: 'Satoshi', 'DM Sans', system-ui, sans-serif;
     @apply tracking-tight font-bold;
   }
 
@@ -75,7 +75,7 @@
   }
 
   ::selection {
-    background: rgba(0, 0, 0, 0.08);
+    background: rgba(212, 168, 67, 0.18);
     color: #111;
   }
 }
@@ -113,29 +113,29 @@
 
   /* Headlines */
   .headline-hero {
-    font-family: 'Satoshi', 'Inter', system-ui, sans-serif;
+    font-family: 'Satoshi', 'DM Sans', system-ui, sans-serif;
     @apply text-hero font-bold;
   }
 
   .headline-xl {
-    font-family: 'Satoshi', 'Inter', system-ui, sans-serif;
+    font-family: 'Satoshi', 'DM Sans', system-ui, sans-serif;
     @apply text-display font-bold;
   }
 
   .headline-lg {
-    font-family: 'Satoshi', 'Inter', system-ui, sans-serif;
+    font-family: 'Satoshi', 'DM Sans', system-ui, sans-serif;
     @apply text-display-sm font-bold;
   }
 
   .headline-md {
-    font-family: 'Satoshi', 'Inter', system-ui, sans-serif;
+    font-family: 'Satoshi', 'DM Sans', system-ui, sans-serif;
     @apply text-heading font-bold;
   }
 
   /* Eyebrow */
   .eyebrow {
     @apply text-[11px] font-semibold uppercase tracking-[0.25em] text-carbon-400;
-    font-family: 'Satoshi', 'Inter', sans-serif;
+    font-family: 'Satoshi', 'DM Sans', sans-serif;
   }
 
   /* Light divider */
@@ -147,7 +147,7 @@
   /* Stat number */
   .stat-number {
     @apply text-5xl md:text-6xl font-bold text-carbon-900;
-    font-family: 'Satoshi', 'Inter', system-ui, sans-serif;
+    font-family: 'Satoshi', 'DM Sans', system-ui, sans-serif;
   }
 
   /* Grid pattern — light */
@@ -163,6 +163,58 @@
     background: linear-gradient(90deg, transparent, rgba(0,0,0,0.02), transparent);
     background-size: 200% 100%;
     animation: shimmer 3s linear infinite;
+  }
+
+  /* Gold text gradient */
+  .text-gold-gradient {
+    background: linear-gradient(135deg, #d4a843 0%, #f1c578 40%, #d4a843 60%, #b38c36 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Gold shimmer line */
+  .gold-shimmer-line {
+    background: linear-gradient(90deg, transparent, rgba(212,168,67,0.4), transparent);
+    background-size: 200% 100%;
+    animation: gold-shimmer 4s ease-in-out infinite;
+  }
+
+  /* Noise overlay — adds film-grain texture for depth */
+  .noise-overlay::before {
+    content: '';
+    position: absolute;
+    inset: -50%;
+    width: 200%;
+    height: 200%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1;
+    animation: grain 8s steps(10) infinite;
+  }
+
+  /* Gold border accent — left edge */
+  .gold-accent-left {
+    position: relative;
+  }
+  .gold-accent-left::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(180deg, transparent, #d4a843, transparent);
+    border-radius: 1px;
+  }
+
+  /* Card hover with gold tint */
+  .card-gold-hover {
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .card-gold-hover:hover {
+    border-color: rgba(212, 168, 67, 0.2);
+    box-shadow: 0 8px 40px rgba(212, 168, 67, 0.06), 0 0 0 1px rgba(212, 168, 67, 0.08);
   }
 }
 
@@ -224,18 +276,18 @@
 
 /* Scrollbar styling */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #fafafa;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #ddd;
+  background: rgba(0,0,0,0.12);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #bbb;
+  background: rgba(212,168,67,0.4);
 }

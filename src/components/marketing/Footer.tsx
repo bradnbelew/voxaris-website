@@ -51,7 +51,7 @@ export function Footer() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-8 h-8 rounded-lg bg-white/[0.04] border border-white/[0.06] flex items-center justify-center text-white/20 hover:text-white/40 hover:bg-white/[0.08] hover:border-white/[0.10] transition-all duration-200"
+                  className="w-8 h-8 rounded-lg bg-white/[0.04] border border-white/[0.06] flex items-center justify-center text-white/20 hover:text-gold-400 hover:bg-gold-500/[0.08] hover:border-gold-500/[0.15] transition-all duration-200"
                   aria-label={social.label}
                 >
                   <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
@@ -69,7 +69,7 @@ export function Footer() {
               <ul className="space-y-3">
                 {links.map((link) => (
                   <li key={link.label}>
-                    <Link to={link.href} className="text-[13px] text-white/20 hover:text-white/40 transition-colors duration-200">
+                    <Link to={link.href} className="text-[13px] text-white/20 hover:text-gold-400/60 transition-colors duration-200">
                       {link.label}
                     </Link>
                   </li>
@@ -80,7 +80,8 @@ export function Footer() {
         </div>
 
         {/* Bottom */}
-        <div className="mt-16 pt-8 border-t border-white/[0.04] flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="mt-16 pt-8 border-t border-white/[0.04] flex flex-col md:flex-row items-center justify-between gap-4 relative">
+          <div className="absolute top-0 left-1/4 right-1/4 h-px bg-gradient-to-r from-transparent via-gold-500/10 to-transparent" />
           <p className="text-[11px] text-white/10">
             &copy; {new Date().getFullYear()} Voxaris AI. All rights reserved.
           </p>

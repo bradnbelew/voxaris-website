@@ -85,6 +85,20 @@ export default {
         },
         chrome: '#c0c0c0',
         void: '#000000',
+        // Brand gold accent — the Voxaris signature
+        gold: {
+          50: '#fdf8ef',
+          100: '#fbefd6',
+          200: '#f6dcac',
+          300: '#f1c578',
+          400: '#ecae4a',
+          500: '#d4a843',
+          600: '#b38c36',
+          700: '#8c6d2a',
+          800: '#6b5322',
+          900: '#57441d',
+          950: '#312610',
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -94,8 +108,8 @@ export default {
         "3xl": "1.5rem",
       },
       fontFamily: {
-        sans: ['Satoshi', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
-        display: ['Satoshi', 'Inter', 'system-ui', 'sans-serif'],
+        sans: ['DM Sans', 'Satoshi', 'system-ui', '-apple-system', 'sans-serif'],
+        display: ['Satoshi', 'DM Sans', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },
       fontSize: {
@@ -114,6 +128,12 @@ export default {
         'elevated': '0 20px 60px rgba(0,0,0,0.5)',
         'chrome': '0 0 40px rgba(192,192,192,0.06), 0 0 80px rgba(192,192,192,0.03)',
         'inner-glow': 'inset 0 1px 0 rgba(255,255,255,0.05)',
+        'gold-sm': '0 0 20px rgba(212,168,67,0.08)',
+        'gold': '0 0 40px rgba(212,168,67,0.12)',
+        'gold-lg': '0 0 80px rgba(212,168,67,0.15)',
+        'gold-btn': '0 4px 20px rgba(212,168,67,0.25), 0 0 60px rgba(212,168,67,0.10)',
+        'card-luxury': '0 2px 20px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.03)',
+        'card-luxury-hover': '0 8px 40px rgba(0,0,0,0.10), 0 0 0 1px rgba(0,0,0,0.05)',
       },
       keyframes: {
         "accordion-down": {
@@ -148,6 +168,22 @@ export default {
           "0%": { backgroundPosition: "-200% 0" },
           "100%": { backgroundPosition: "200% 0" },
         },
+        "gold-shimmer": {
+          "0%": { backgroundPosition: "200% 0" },
+          "100%": { backgroundPosition: "-200% 0" },
+        },
+        "grain": {
+          "0%, 100%": { transform: "translate(0, 0)" },
+          "10%": { transform: "translate(-5%, -10%)" },
+          "20%": { transform: "translate(-15%, 5%)" },
+          "30%": { transform: "translate(7%, -25%)" },
+          "40%": { transform: "translate(-5%, 25%)" },
+          "50%": { transform: "translate(-15%, 10%)" },
+          "60%": { transform: "translate(15%, 0%)" },
+          "70%": { transform: "translate(0%, 15%)" },
+          "80%": { transform: "translate(3%, 35%)" },
+          "90%": { transform: "translate(-10%, 10%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -158,6 +194,8 @@ export default {
         "pulse-soft": "pulse-soft 3s ease-in-out infinite",
         "scale-in": "scale-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
         "shimmer": "shimmer 3s linear infinite",
+        "gold-shimmer": "gold-shimmer 4s ease-in-out infinite",
+        "grain": "grain 8s steps(10) infinite",
       },
     },
   },
