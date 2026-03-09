@@ -73,7 +73,7 @@ function WhyOneBotFails() {
           viewport={{ once: true }}
           transition={{ duration: 0.7, ease }}
         >
-          <span className="text-[11px] font-semibold text-gold-600 uppercase tracking-[0.2em] mb-4 block">The Problem</span>
+          <span className="text-[11px] font-semibold text-carbon-400 uppercase tracking-[0.2em] mb-4 block">The Problem</span>
           <h2 className="text-3xl sm:text-4xl font-bold text-carbon-900 mb-6 font-display leading-tight">
             A single AI bot trying to do everything
             <br className="hidden sm:block" />
@@ -88,7 +88,7 @@ function WhyOneBotFails() {
           {failures.map((item, i) => (
             <motion.div
               key={i}
-              className="p-6 rounded-2xl bg-white border border-carbon-200 card-gold-hover"
+              className="p-6 rounded-2xl bg-white border border-carbon-200 hover:border-carbon-300 hover:shadow-sm transition-all duration-300"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -156,7 +156,7 @@ function MeetTheTeam() {
           viewport={{ once: true }}
           transition={{ duration: 0.7, ease }}
         >
-          <span className="text-[11px] font-semibold text-gold-600 uppercase tracking-[0.2em] mb-4 block">The V·TEAMS Squad</span>
+          <span className="text-[11px] font-semibold text-carbon-400 uppercase tracking-[0.2em] mb-4 block">The V·TEAMS Squad</span>
           <h2 className="text-3xl sm:text-4xl font-bold text-carbon-900 mb-6 font-display">
             Four specialized agents.
             <br className="hidden sm:block" />
@@ -171,7 +171,7 @@ function MeetTheTeam() {
           {agents.map((agent, i) => (
             <motion.div
               key={agent.role}
-              className="p-7 rounded-2xl bg-carbon-50 border border-carbon-200 card-gold-hover"
+              className="p-7 rounded-2xl bg-carbon-50 border border-carbon-200 hover:border-carbon-300 hover:shadow-sm transition-all duration-300"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -222,7 +222,7 @@ function HandoffFlow() {
           viewport={{ once: true }}
           transition={{ duration: 0.7, ease }}
         >
-          <span className="text-[11px] font-semibold text-gold-500/60 uppercase tracking-[0.2em] mb-4 block">The Handoff</span>
+          <span className="text-[11px] font-semibold text-white/30 uppercase tracking-[0.2em] mb-4 block">The Handoff</span>
           <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6 font-display">
             Every transfer carries
             <br className="hidden sm:block" />
@@ -243,7 +243,7 @@ function HandoffFlow() {
               viewport={{ once: true }}
               transition={{ delay: i * 0.12 }}
             >
-              <div className="text-gold-500/30 text-[40px] font-bold font-display leading-none mb-4">{item.step}</div>
+              <div className="text-white/10 text-[40px] font-bold font-display leading-none mb-4">{item.step}</div>
               <h3 className="text-white font-semibold text-[15px] mb-2">{item.label}</h3>
               <p className="text-white/40 text-[13px] leading-relaxed">{item.desc}</p>
               {item.arrow && (
@@ -266,7 +266,7 @@ function HandoffFlow() {
           <div className="text-[11px] text-white/30 uppercase tracking-widest mb-3">What gets passed on every transfer</div>
           <div className="flex flex-wrap gap-2">
             {['caller_name', 'phone_number', 'intent_primary', 'service_interest', 'appointment_intent', 'budget_context', 'decision_maker', 'timeline', 'notes_summary', 'disposition'].map((field) => (
-              <span key={field} className="px-3 py-1 rounded-full bg-gold-500/[0.06] border border-gold-500/15 text-[11px] text-gold-200/50 font-mono">
+              <span key={field} className="px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 text-[11px] text-white/30 font-mono">
                 {field}
               </span>
             ))}
@@ -298,7 +298,7 @@ function WhatGetsLogged() {
           viewport={{ once: true }}
           transition={{ duration: 0.7, ease }}
         >
-          <span className="text-[11px] font-semibold text-gold-600 uppercase tracking-[0.2em] mb-4 block">CRM Sync</span>
+          <span className="text-[11px] font-semibold text-carbon-400 uppercase tracking-[0.2em] mb-4 block">CRM Sync</span>
           <h2 className="text-3xl sm:text-4xl font-bold text-carbon-900 mb-6 font-display">
             Every call writes to your CRM
             <br className="hidden sm:block" />
@@ -320,7 +320,7 @@ function WhatGetsLogged() {
               transition={{ delay: i * 0.06 }}
             >
               <div className="w-9 h-9 rounded-lg bg-carbon-900 flex items-center justify-center shrink-0 shadow-sm">
-                <item.icon className="w-4 h-4 text-gold-400" />
+                <item.icon className="w-4 h-4 text-white/70" />
               </div>
               <div>
                 <div className="text-[14px] font-semibold text-carbon-800">{item.label}</div>
@@ -353,7 +353,7 @@ function BusinessRealities() {
           viewport={{ once: true }}
           transition={{ duration: 0.7, ease }}
         >
-          <span className="text-[11px] font-semibold text-gold-600 uppercase tracking-[0.2em] mb-4 block">Business Realities</span>
+          <span className="text-[11px] font-semibold text-carbon-400 uppercase tracking-[0.2em] mb-4 block">Business Realities</span>
           <h2 className="text-3xl sm:text-4xl font-bold text-carbon-900 mb-6 font-display">
             Built for the problems
             <br className="hidden sm:block" />
@@ -372,7 +372,7 @@ function BusinessRealities() {
               transition={{ delay: i * 0.08 }}
             >
               <div className="w-10 h-10 rounded-xl bg-carbon-900 flex items-center justify-center shrink-0 shadow-sm">
-                <item.icon className="w-5 h-5 text-gold-400" />
+                <item.icon className="w-5 h-5 text-white/70" />
               </div>
               <div>
                 <h3 className="font-semibold text-carbon-900 mb-1">{item.title}</h3>
@@ -425,7 +425,7 @@ function FAQSection() {
           viewport={{ once: true }}
           transition={{ duration: 0.7, ease }}
         >
-          <span className="text-[11px] font-semibold text-gold-600 uppercase tracking-[0.2em] mb-4 block">FAQ</span>
+          <span className="text-[11px] font-semibold text-carbon-400 uppercase tracking-[0.2em] mb-4 block">FAQ</span>
           <h2 className="text-3xl sm:text-4xl font-bold text-carbon-900 font-display">
             Common questions.
           </h2>
@@ -465,7 +465,6 @@ function FAQItem({ q, a }: { q: string; a: string }) {
 function FinalCTA() {
   return (
     <section className="py-20 lg:py-28 bg-carbon-900 relative overflow-hidden">
-      <div className="absolute inset-0 noise-overlay opacity-20" />
       <div className="max-w-3xl mx-auto px-6 sm:px-8 text-center">
         <motion.h2
           className="text-3xl sm:text-4xl font-bold text-white mb-6 font-display"
@@ -539,7 +538,7 @@ function FinalCTA() {
         >
           {['No credit card required', 'Live in days, not months', 'Cancel anytime'].map((item) => (
             <span key={item} className="flex items-center gap-2">
-              <CheckCircle2 className="w-3.5 h-3.5 text-gold-500/50" />
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500/50" />
               {item}
             </span>
           ))}

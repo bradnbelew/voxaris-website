@@ -173,13 +173,6 @@
     background-clip: text;
   }
 
-  /* Gold shimmer line */
-  .gold-shimmer-line {
-    background: linear-gradient(90deg, transparent, rgba(212,168,67,0.4), transparent);
-    background-size: 200% 100%;
-    animation: gold-shimmer 4s ease-in-out infinite;
-  }
-
   /* Noise overlay — adds film-grain texture for depth */
   .noise-overlay::before {
     content: '';
@@ -193,29 +186,6 @@
     animation: grain 8s steps(10) infinite;
   }
 
-  /* Gold border accent — left edge */
-  .gold-accent-left {
-    position: relative;
-  }
-  .gold-accent-left::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 2px;
-    height: 100%;
-    background: linear-gradient(180deg, transparent, #d4a843, transparent);
-    border-radius: 1px;
-  }
-
-  /* Card hover with gold tint */
-  .card-gold-hover {
-    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-  .card-gold-hover:hover {
-    border-color: rgba(212, 168, 67, 0.2);
-    box-shadow: 0 8px 40px rgba(212, 168, 67, 0.06), 0 0 0 1px rgba(212, 168, 67, 0.08);
-  }
 }
 
 @layer utilities {

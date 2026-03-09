@@ -168,10 +168,6 @@ export default {
           "0%": { backgroundPosition: "-200% 0" },
           "100%": { backgroundPosition: "200% 0" },
         },
-        "gold-shimmer": {
-          "0%": { backgroundPosition: "200% 0" },
-          "100%": { backgroundPosition: "-200% 0" },
-        },
         "grain": {
           "0%, 100%": { transform: "translate(0, 0)" },
           "10%": { transform: "translate(-5%, -10%)" },
@@ -194,7 +190,6 @@ export default {
         "pulse-soft": "pulse-soft 3s ease-in-out infinite",
         "scale-in": "scale-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
         "shimmer": "shimmer 3s linear infinite",
-        "gold-shimmer": "gold-shimmer 4s ease-in-out infinite",
         "grain": "grain 8s steps(10) infinite",
       },
     },

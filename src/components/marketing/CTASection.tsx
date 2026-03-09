@@ -8,13 +8,12 @@ const ease = [0.22, 1, 0.36, 1] as const;
 export function CTASection() {
   return (
     <section data-section="cta" className="relative py-20 lg:py-28 bg-carbon-900 overflow-hidden">
-      {/* Background glow — gold warmth */}
+      {/* Subtle background glow */}
       <div className="absolute inset-0">
         <div
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[600px]"
-          style={{ background: 'radial-gradient(ellipse at 50% 50%, rgba(212,168,67,0.04) 0%, rgba(255,255,255,0.02) 30%, transparent 55%)' }}
+          style={{ background: 'radial-gradient(ellipse at 50% 50%, rgba(255,255,255,0.02) 0%, transparent 55%)' }}
         />
-        <div className="absolute inset-0 noise-overlay opacity-30" />
       </div>
 
       <div className="max-w-[900px] mx-auto px-6 sm:px-8 text-center relative z-10">
@@ -93,7 +92,7 @@ export function CTASection() {
             href="tel:+14077594100"
             className="inline-flex items-center gap-2 text-[15px] font-semibold text-white/80 hover:text-white transition-colors group"
           >
-            <svg className="w-4 h-4 text-gold-400/60 group-hover:text-gold-400 transition-colors" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 text-white/40 group-hover:text-white/60 transition-colors" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
             </svg>
             (407) 759-4100
@@ -110,7 +109,7 @@ export function CTASection() {
         >
           {['No credit card required', 'White-glove onboarding', 'Cancel anytime'].map((item) => (
             <span key={item} className="flex items-center gap-2">
-              <svg className="w-4 h-4 text-gold-500/40" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="w-4 h-4 text-emerald-500/40" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
               {item}
