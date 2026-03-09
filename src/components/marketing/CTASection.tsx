@@ -35,9 +35,9 @@ export function CTASection() {
           viewport={{ once: true }}
           transition={{ delay: 0.1, duration: 0.7, ease }}
         >
-          Your AI agent.
+          Stop losing leads to slow follow-up.
           <br />
-          <span className="text-white/50">Live in days, not months.</span>
+          <span className="text-white/50">Start booking appointments with V·TEAMS.</span>
         </motion.h2>
 
         {/* Sub */}
@@ -48,7 +48,7 @@ export function CTASection() {
           viewport={{ once: true }}
           transition={{ delay: 0.2, duration: 0.7, ease }}
         >
-          White-glove onboarding. A photorealistic AI agent built for your brand and live on your website.
+          See V·TEAMS handle a live call. 15 minutes. No pitch deck. Just a conversation about what this looks like for your business.
         </motion.p>
 
         {/* CTAs */}

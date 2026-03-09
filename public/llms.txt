@@ -1,38 +1,39 @@
 # Voxaris
 
-> Voxaris builds proprietary AI-powered virtual agents for automotive dealerships. Our V·Suite technology — V·INBOUND, V·OUTBOUND, V·CVI, and V·WEB — gives every lead a face, a voice, and a real conversation, 24/7. Founded by Ethan Stopperich, based in Orlando, FL.
+> Voxaris builds V·TEAMS — coordinated squads of specialized AI agents (receptionist, qualifier, specialist, closer) that answer inbound calls, warm-transfer leads with full context, and book appointments 24/7 for any business. Founded by Ethan Stopperich, based in Orlando, FL.
 
-Voxaris is an AI technology company focused on conversational AI for automotive retail. Our flagship product, V·GUIDE, is an embodied AI agent that handles voice calls, video interactions, and chat with realistic face-to-face conversation. We serve car dealerships, helping them recover missed leads, engage after-hours shoppers, and convert more website visitors into appointments.
+Voxaris is an AI technology company focused on multi-agent conversational AI for businesses of all sizes. Our flagship product, V·TEAMS, deploys a coordinated squad of AI agents on every inbound call — each with a focused role, clear handoff triggers, and access to everything the previous agent learned. The primary success metric is booked appointments.
 
-## Products
+## Flagship Product
 
-- [V·INBOUND](https://voxaris.io/how-it-works): AI-powered inbound call handling — answers every call 24/7 with a conversational virtual agent
-- [V·OUTBOUND](https://voxaris.io/how-it-works): Automated outbound follow-up — re-engages missed leads, no-shows, and dormant prospects
-- [V·CVI](https://voxaris.io/technology): Conversational video intelligence — AI-powered video communication for sales and service
-- [V·WEB](https://voxaris.io/technology): Website AI agent — V·GUIDE lives on your website and engages visitors in real-time video conversation
-- [V·GUIDE](https://voxaris.io/demo): Flagship embodied AI agent with face, voice, and personality — the core of the V·Suite
+- [V·TEAMS](https://voxaris.io/): A coordinated squad of specialized AI agents — receptionist, qualifier, specialist, and closer — that answer inbound calls, warm-transfer with full context, and book appointments in real time. No single bot trying to do everything.
+
+## Other Products
+
+- [Talking Postcards](https://voxaris.io/solutions/direct-mail): Personalized QR-to-AI outreach with 8-30% response rates
 
 ## Solutions
 
-- [Auto Dealerships](https://voxaris.io/solutions/dealerships): AI sales agents that answer every inquiry, qualify every lead, and book every appointment
+- [Auto Dealerships](https://voxaris.io/solutions/dealerships): V·TEAMS for inbound dealership sales calls — after-hours, overflow, appointment booking
 - [Contractors](https://voxaris.io/solutions/contractors): AI-powered lead capture and appointment booking for home service contractors
-- [Direct Mail](https://voxaris.io/solutions/direct-mail): Talking Postcards — personalized QR-to-video AI outreach with 8-30% response rates
+- [Direct Mail](https://voxaris.io/solutions/direct-mail): Talking Postcards — personalized QR-to-video AI outreach
 
 ## Resources
 
-- [Blog](https://voxaris.io/blog): Thought leadership on AI in automotive, conversational AI, and dealership technology
-- [How It Works](https://voxaris.io/how-it-works): Platform features and capabilities overview
+- [Demo](https://voxaris.io/demo): Hear V·TEAMS handle a live inbound call
+- [Book a Demo](https://voxaris.io/book-demo): Schedule a personalized V·TEAMS demonstration
+- [Blog](https://voxaris.io/blog): Insights on conversational AI, multi-agent systems, and AI-powered sales
 - [Why Voxaris](https://voxaris.io/why-voxaris): What makes Voxaris different from other AI solutions
-- [Book a Demo](https://voxaris.io/book-demo): Schedule a personalized V·GUIDE demonstration
 
 ## Key Facts
 
 - Founded: 2025
 - Headquarters: Orlando, FL 32835
 - Founder: Ethan Stopperich, President
-- Technology: 100% proprietary — V·Suite built entirely in-house
-- Focus: AI voice agents, video AI agents, and conversational AI for automotive retail
-- Early pilot data: 6-30% response rates, $10-20K/month in recovered revenue per dealership
+- Flagship: V·TEAMS — multi-agent AI squad for inbound calls
+- Works for: Any industry with inbound sales calls
+- Primary metric: Booked appointments
+- Architecture: Specialized AI agents with warm transfers and context preservation
 
 ## Contact
 

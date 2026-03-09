@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { ArrowRight, Phone, Video, PhoneCall, PhoneOff, Zap, Brain, Database, Volume2, VolumeX, Loader2 } from 'lucide-react';
@@ -21,8 +21,8 @@ export function Demo() {
   const [callState, setCallState] = useState<'idle' | 'calling' | 'error'>('idle');
 
   // Inbound phone number
-  const [inboundNumber, setInboundNumber] = useState('');
-  const [inboundNumberFormatted, setInboundNumberFormatted] = useState('');
+  const [inboundNumber] = useState('+18045298912');
+  const [inboundNumberFormatted] = useState('(804) 529-8912');
 
   // Video agent state
   const [videoState, setVideoState] = useState<'preview' | 'connecting' | 'active'>('preview');
@@ -30,29 +30,6 @@ export function Demo() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const videoContainerRef = useRef<HTMLDivElement>(null);
   const callObjectRef = useRef<DailyCall | null>(null);
-
-  // Fetch config on mount
-  useEffect(() => {
-    fetch(`${API_BASE}/api/voxaris/config`)
-      .then((r) => r.json())
-      .then((data) => {
-        if (data.inboundNumber) {
-          setInboundNumber(data.inboundNumber);
-          setInboundNumberFormatted(formatPhoneDisplay(data.inboundNumber));
-        }
-      })
-      .catch(() => {});
-  }, []);
-
-  // Format phone for display: +14075551234 → (407) 555-1234
-  function formatPhoneDisplay(phone: string): string {
-    const digits = phone.replace(/\D/g, '');
-    const national = digits.startsWith('1') ? digits.slice(1) : digits;
-    if (national.length === 10) {
-      return `(${national.slice(0, 3)}) ${national.slice(3, 6)}-${national.slice(6)}`;
-    }
-    return phone;
-  }
 
   const toggleMute = () => {
     if (videoRef.current) {
@@ -141,12 +118,12 @@ export function Demo() {
   return (
     <div className="min-h-screen bg-white">
       <Helmet>
-        <title>Live AI Demo | Talk to Maria | Voxaris</title>
-        <meta name="description" content="Experience Voxaris AI live. Call Maria, get a call back, or start a face-to-face video conversation — all powered by VoxEngine. No scripts, no recordings, just real AI." />
-        <meta name="keywords" content="AI demo, live AI agent, AI voice demo, AI video demo, talk to AI agent, Voxaris demo, VoxEngine demo, conversational AI demo" />
+        <title>Hear V·TEAMS Handle a Dealership Call | Voxaris</title>
+        <meta name="description" content="Experience V·TEAMS live. Get a call from our AI agent, call her yourself, or start a face-to-face video conversation. No scripts. No recordings. Just real AI." />
+        <meta name="keywords" content="V·TEAMS demo, live AI demo, AI dealership demo, AI voice demo, AI video demo, talk to AI agent, Voxaris demo" />
         <link rel="canonical" href="https://voxaris.io/demo" />
-        <meta property="og:title" content="Live AI Demo | Talk to Maria | Voxaris" />
-        <meta property="og:description" content="Don't take our word for it — talk to her. Call Maria, get a callback, or meet her face-to-face in a live video conversation. Powered by VoxEngine." />
+        <meta property="og:title" content="Hear V·TEAMS Handle a Dealership Call | Voxaris" />
+        <meta property="og:description" content="Experience V·TEAMS live — call our AI agent, get a callback, or meet her face-to-face. Powered by V·TEAMS multi-agent coordination." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://voxaris.io/demo" />
         <meta property="og:image" content="https://voxaris.io/og-image.png" />
@@ -329,45 +306,38 @@ export function Demo() {
         </div>
       </section>
 
-      {/* Section 2 — Inbound Call Demo */}
-      <section id="inbound" className="py-24 bg-carbon-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <span className="text-[11px] font-semibold text-carbon-400 uppercase tracking-[0.2em]">Experience 2</span>
-          <h2 className="text-3xl sm:text-4xl font-bold text-carbon-900 mt-3 mb-6 font-display">
-            Or call Maria yourself.
-          </h2>
-          <p className="max-w-2xl mx-auto text-carbon-500 text-lg leading-relaxed mb-4">
-            Want to test her on your terms? Call the number below and experience a live inbound conversation. Ask her anything — what Voxaris does, how the technology works, whether we serve your industry. She'll qualify you, answer your questions, and book a time to talk with Ethan if you're interested.
-          </p>
-          <p className="max-w-2xl mx-auto text-carbon-500 leading-relaxed mb-12">
-            This is what your customers hear when they call your business after hours, during a storm, or when your team is busy closing deals.
-          </p>
+      {/* Section 2 — Inbound Call Demo (only shown when number is available) */}
+      {inboundNumber && (
+        <section id="inbound" className="py-24 bg-carbon-50">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <span className="text-[11px] font-semibold text-carbon-400 uppercase tracking-[0.2em]">Experience 2</span>
+            <h2 className="text-3xl sm:text-4xl font-bold text-carbon-900 mt-3 mb-6 font-display">
+              Or call Maria yourself.
+            </h2>
+            <p className="max-w-2xl mx-auto text-carbon-500 text-lg leading-relaxed mb-4">
+              Test V·TEAMS on your terms. Call the number below and experience a live inbound conversation. This is what your callers hear when they reach your dealership after hours, during overflow, or when your BDC is at capacity.
+            </p>
 
-          <div className="inline-block bg-white rounded-2xl border border-carbon-200 px-12 py-10 shadow-sm">
-            <div className="flex items-center justify-center gap-3 mb-3">
-              <div className="w-10 h-10 rounded-full bg-carbon-900 flex items-center justify-center">
-                <PhoneCall className="w-5 h-5 text-white" />
+            <div className="inline-block bg-white rounded-2xl border border-carbon-200 px-12 py-10 shadow-sm">
+              <div className="flex items-center justify-center gap-3 mb-3">
+                <div className="w-10 h-10 rounded-full bg-carbon-900 flex items-center justify-center">
+                  <PhoneCall className="w-5 h-5 text-white" />
+                </div>
+                <span className="text-sm font-medium text-carbon-500 uppercase tracking-wider">Call Maria</span>
               </div>
-              <span className="text-sm font-medium text-carbon-500 uppercase tracking-wider">Call Maria</span>
-            </div>
-            {inboundNumber ? (
               <a
                 href={`tel:${inboundNumber}`}
                 className="block text-4xl sm:text-5xl font-bold text-carbon-900 font-display hover:text-carbon-700 transition-colors mb-4"
               >
                 {inboundNumberFormatted}
               </a>
-            ) : (
-              <p className="text-4xl sm:text-5xl font-bold text-carbon-300 font-display mb-4">
-                Coming Soon
+              <p className="text-carbon-400 text-sm">
+                Available 24/7 — Maria never takes a day off.
               </p>
-            )}
-            <p className="text-carbon-400 text-sm">
-              Available 24/7 — Maria never takes a day off.
-            </p>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Section 3 — Video Agent Demo */}
       <section id="video" className="py-24 bg-white">
@@ -506,9 +476,9 @@ export function Demo() {
           <p className="text-carbon-400 text-lg mb-10 leading-relaxed">
             Schedule a strategy call with Ethan. He'll walk you through exactly how Voxaris would deploy in your operation — your industry, your workflow, your customers.
           </p>
-          <Link to="/demo">
+          <Link to="/book-demo">
             <Button className="bg-white text-carbon-900 hover:bg-carbon-100 rounded-full px-10 py-6 text-base font-medium shadow-md hover:shadow-lg transition-all">
-              Book a Meeting with Ethan
+              Book a Live V·TEAMS Demo
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </Link>

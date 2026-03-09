@@ -1,16 +1,21 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Play } from 'lucide-react';
+import { ArrowRight, Phone, PhoneCall, Users, Zap, Database } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
-const MARIA_VIDEO = "https://cdn.replica.tavus.io/40242/2fe8396c.mp4";
+const squadMembers = [
+  { role: 'Receptionist', desc: 'Answers instantly, captures intent, routes cleanly', color: 'bg-emerald-500' },
+  { role: 'Qualifier', desc: 'Identifies intent, gathers context and requirements', color: 'bg-blue-500' },
+  { role: 'Specialist', desc: 'Handles consultative questions, reduces hesitation', color: 'bg-amber-500' },
+  { role: 'Closer', desc: 'Secures the appointment, confirms details, syncs CRM', color: 'bg-rose-500' },
+];
 
 export function Hero() {
   return (
     <section data-section="hero" className="relative min-h-screen flex items-center overflow-hidden bg-white pt-20">
-      {/* Background — ultra-subtle silver ambient */}
+      {/* Background */}
       <div className="absolute inset-0">
         <div
           className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[1600px] h-[1000px]"
@@ -37,7 +42,7 @@ export function Hero() {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400/60 opacity-60" />
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
                 </span>
-                <span className="text-[11px] font-semibold text-slate-600 uppercase tracking-[0.15em]">Now in Early Access</span>
+                <span className="text-[11px] font-semibold text-slate-600 uppercase tracking-[0.15em]">AI Sales Teams for Every Business</span>
               </span>
             </motion.div>
 
@@ -48,30 +53,19 @@ export function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.1, ease }}
             >
-              Every lead gets
+              One AI bot is not enough.
               <br />
-              <span className="text-slate-900">a face, a voice,</span>
-              <br />
-              <span className="text-slate-400">a conversation.</span>
+              <span className="text-slate-400">V·TEAMS gives you a full AI sales team.</span>
             </motion.h1>
 
-            {/* Value prop */}
+            {/* Subhead */}
             <motion.p
-              className="text-xl sm:text-[22px] text-slate-600 mb-4 max-w-lg font-medium leading-snug"
+              className="text-lg sm:text-xl text-slate-600 mb-10 max-w-lg leading-relaxed"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.15, ease }}
             >
-              Meet <span className="font-bold text-slate-900">V·TEAMS</span> — your AI workforce that never clocks out.
-            </motion.p>
-
-            <motion.p
-              className="text-[17px] text-slate-400 leading-relaxed mb-10 max-w-lg"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.2, ease }}
-            >
-              A coordinated squad of specialized AI agents — voice, video, and outreach — that qualify leads, warm-transfer between each other, and book appointments 24/7 with zero human intervention.
+              Receptionist, qualifier, specialist, and closer — working together in real time to answer your inbound calls, carry context across every handoff, and book appointments without dropping the lead.
             </motion.p>
 
             {/* CTAs */}
@@ -86,7 +80,7 @@ export function Hero() {
                   size="lg"
                   className="bg-slate-900 hover:bg-black text-white h-14 px-10 text-[15px] font-semibold rounded-full group shadow-[0_4px_24px_rgba(0,0,0,0.12)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.18)] transition-all duration-500 hover:-translate-y-0.5"
                 >
-                  Book a Personalized Demo
+                  Book a Live Demo
                   <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
@@ -96,13 +90,13 @@ export function Hero() {
                   variant="ghost"
                   className="h-14 px-8 text-[15px] text-slate-500 hover:text-slate-700 hover:bg-slate-50 rounded-full group border border-slate-200 hover:border-slate-300 transition-all duration-300"
                 >
-                  <Play className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" />
-                  Watch 45-Second Demo
+                  <Phone className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" />
+                  Hear a Live Call
                 </Button>
               </Link>
             </motion.div>
 
-            {/* Trust points */}
+            {/* Proof strip */}
             <motion.div
               className="mt-10 flex flex-wrap items-center gap-6 text-sm text-slate-400"
               initial={{ opacity: 0 }}
@@ -110,9 +104,10 @@ export function Hero() {
               transition={{ duration: 0.6, delay: 0.6 }}
             >
               {[
+                'Works for any industry',
+                'Warm transfers with full context',
+                'CRM sync in real time',
                 'Live in days, not months',
-                'Warm transfers between specialized agents',
-                'CRM sync on every interaction',
               ].map((item) => (
                 <div key={item} className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
@@ -120,128 +115,91 @@ export function Hero() {
                 </div>
               ))}
             </motion.div>
-
-            {/* Founder note */}
-            <motion.div
-              className="mt-12 pt-8 border-t border-slate-100"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.8 }}
-            >
-              <p className="text-[14px] text-slate-400 leading-relaxed italic max-w-md">
-                "I built V·TEAMS because no single agent can do it all. A receptionist, a qualifier, a closer — each one purpose-built and warm-transferring seamlessly. That's how you scale without losing the human touch."
-              </p>
-              <div className="mt-4 flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-[11px] font-bold text-slate-600">E</div>
-                <div>
-                  <div className="text-[13px] font-semibold text-slate-700">Ethan Stopperich</div>
-                  <div className="text-[11px] text-slate-400">Founder, Voxaris</div>
-                </div>
-              </div>
-            </motion.div>
           </div>
 
-          {/* Right — V·TEAMS mock website visual */}
+          {/* Right — V·TEAMS squad visualization */}
           <motion.div
             className="relative flex justify-center lg:justify-end"
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.4, ease }}
           >
-            <div className="relative w-full max-w-md lg:max-w-[460px]">
+            <div className="relative w-full max-w-md lg:max-w-[480px]">
               {/* Silver glow */}
               <div
                 className="absolute -inset-12 rounded-[4rem] -z-10"
                 style={{ background: 'radial-gradient(ellipse at 50% 50%, rgba(148,163,184,0.15) 0%, transparent 70%)' }}
               />
 
-              {/* Mock website card */}
+              {/* Call flow card */}
               <div className="bg-white rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.08)] overflow-hidden border border-slate-200/80">
-                {/* Browser chrome */}
-                <div className="bg-slate-50 border-b border-slate-200/60 px-4 py-3 flex items-center gap-3">
-                  <div className="flex gap-1.5">
-                    <div className="w-2.5 h-2.5 rounded-full bg-slate-300" />
-                    <div className="w-2.5 h-2.5 rounded-full bg-slate-300" />
-                    <div className="w-2.5 h-2.5 rounded-full bg-slate-300" />
-                  </div>
-                  <div className="flex-1 bg-white rounded-lg px-3 py-1 border border-slate-200/60 text-[10px] text-slate-400 font-mono">
-                    oceanfrontresort.com/book
-                  </div>
-                </div>
-
-                {/* Mock header */}
-                <div className="bg-slate-900 text-white px-5 py-3.5 flex items-center justify-between">
+                {/* Header */}
+                <div className="bg-slate-900 text-white px-6 py-4 flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-7 h-7 bg-white/15 rounded-lg" />
+                    <div className="w-8 h-8 bg-white/15 rounded-lg flex items-center justify-center">
+                      <PhoneCall className="w-4 h-4 text-white" />
+                    </div>
                     <div>
-                      <div className="font-medium text-[12px]">Oceanfront Resort</div>
-                      <div className="text-[9px] opacity-40">Book your escape</div>
+                      <div className="font-medium text-[13px]">Inbound Sales Call</div>
+                      <div className="text-[10px] opacity-50">Acme Corp — After Hours</div>
                     </div>
-                  </div>
-                  <div className="flex gap-4 text-[10px] text-white/40">
-                    <span>Rooms</span>
-                    <span>Dining</span>
-                    <span className="text-white/80 font-medium">Book</span>
-                  </div>
-                </div>
-
-                {/* Maria avatar + control indicator */}
-                <div className="relative aspect-[16/11] bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center overflow-hidden">
-                  {/* Avatar frame */}
-                  <div className="relative w-44 h-44 sm:w-52 sm:h-52 rounded-2xl overflow-hidden shadow-[0_12px_40px_rgba(0,0,0,0.15)] ring-[6px] ring-white/90">
-                    <video
-                      src={MARIA_VIDEO}
-                      className="w-full h-full object-cover"
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      aria-label="V·TEAMS multi-agent AI squad demonstrating warm transfer and live engagement"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent" />
-                    <div className="absolute bottom-2.5 left-2.5 text-white text-[10px] font-medium flex items-center gap-1.5">
-                      <span className="relative flex h-1.5 w-1.5">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400" />
-                      </span>
-                      Speaking · Live agent handoff
-                    </div>
-                  </div>
-
-                  {/* Vox badge */}
-                  <motion.div
-                    className="absolute top-3 right-3 bg-white/95 backdrop-blur-sm text-slate-700 text-[10px] font-medium px-3 py-1.5 rounded-xl shadow-md flex items-center gap-1.5 border border-slate-100"
-                    initial={{ opacity: 0, x: 10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 1.2, duration: 0.5 }}
-                  >
-                    <span className="text-amber-500 text-xs">↻</span>
-                    Transferring to specialist
-                  </motion.div>
-                </div>
-
-                {/* Mock form showing live action */}
-                <div className="px-5 py-4 space-y-3 text-sm border-t border-slate-100">
-                  <div className="flex justify-between items-center">
-                    <div className="text-slate-400 text-[11px]">Dates · Guests</div>
-                    <div className="text-emerald-600 font-medium text-[10px]">Maria selected Mar 15–22</div>
-                  </div>
-                  <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                    <motion.div
-                      className="h-full bg-gradient-to-r from-slate-400 to-slate-600 rounded-full"
-                      initial={{ width: '20%' }}
-                      animate={{ width: '75%' }}
-                      transition={{ duration: 2.5, delay: 1.5, ease: [0.4, 0, 0.2, 1] }}
-                    />
                   </div>
                   <div className="flex items-center gap-2">
-                    <div className="w-3.5 h-3.5 rounded bg-emerald-100 flex items-center justify-center">
-                      <svg className="w-2 h-2 text-emerald-600" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
-                    <span className="text-[10px] text-slate-500">Awaiting guest confirmation</span>
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
+                    </span>
+                    <span className="text-[10px] text-emerald-400 font-medium">Live</span>
                   </div>
+                </div>
+
+                {/* Squad flow */}
+                <div className="px-5 py-5 space-y-3">
+                  {squadMembers.map((member, i) => (
+                    <motion.div
+                      key={member.role}
+                      className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.8 + i * 0.15, duration: 0.5, ease }}
+                    >
+                      <div className={`w-2 h-8 rounded-full ${member.color}`} />
+                      <div className="flex-1 min-w-0">
+                        <div className="text-[12px] font-semibold text-slate-800">{member.role}</div>
+                        <div className="text-[10px] text-slate-400 truncate">{member.desc}</div>
+                      </div>
+                      {i < squadMembers.length - 1 && (
+                        <ArrowRight className="w-3 h-3 text-slate-300 shrink-0" />
+                      )}
+                      {i === squadMembers.length - 1 && (
+                        <div className="text-[9px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full shrink-0">Booked</div>
+                      )}
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Call result */}
+                <div className="px-5 py-4 border-t border-slate-100 bg-slate-50/50">
+                  <div className="flex items-center justify-between text-[11px]">
+                    <div className="flex items-center gap-2 text-slate-400">
+                      <Database className="w-3 h-3" />
+                      CRM synced · Transcript saved
+                    </div>
+                    <div className="text-emerald-600 font-semibold">Appointment confirmed</div>
+                  </div>
+                  <motion.div
+                    className="mt-2 h-1.5 bg-slate-100 rounded-full overflow-hidden"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1.8 }}
+                  >
+                    <motion.div
+                      className="h-full bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-full"
+                      initial={{ width: '0%' }}
+                      animate={{ width: '100%' }}
+                      transition={{ duration: 2, delay: 2, ease: [0.4, 0, 0.2, 1] }}
+                    />
+                  </motion.div>
                 </div>
               </div>
 
@@ -256,16 +214,16 @@ export function Hero() {
                 <div className="text-lg font-bold text-slate-900 font-display">V·TEAMS</div>
               </motion.div>
 
-              {/* Floating badge — early access */}
+              {/* Floating badge — speed */}
               <motion.div
                 className="absolute -bottom-4 -right-4 lg:-right-8 bg-white/95 backdrop-blur-xl rounded-2xl px-5 py-3.5 border border-slate-200/80 shadow-[0_8px_30px_rgba(0,0,0,0.06)]"
                 initial={{ opacity: 0, x: 20, y: -10 }}
                 animate={{ opacity: 1, x: 0, y: 0 }}
                 transition={{ duration: 0.6, delay: 1.1 }}
               >
-                <div className="text-[9px] text-slate-400 uppercase tracking-[0.2em] mb-1">Early Results</div>
-                <div className="text-lg font-bold text-slate-900 font-display">3-4x</div>
-                <div className="text-[9px] text-slate-400">more bookings</div>
+                <div className="text-[9px] text-slate-400 uppercase tracking-[0.2em] mb-1">Answer Time</div>
+                <div className="text-lg font-bold text-slate-900 font-display">&lt; 5s</div>
+                <div className="text-[9px] text-slate-400">24/7/365</div>
               </motion.div>
             </div>
           </motion.div>

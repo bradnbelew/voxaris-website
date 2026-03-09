@@ -6,17 +6,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Calendar, ArrowRight, CheckCircle, Loader2 } from "lucide-react";
+import { ArrowRight, CheckCircle, Loader2, Phone, CalendarCheck, Clock } from "lucide-react";
 import { toast } from "sonner";
 
 export default function BookDemo() {
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
+    name: "",
     phone: "",
     company: "",
-    businessType: "",
+    rooftops: "",
     message: ""
   });
   const [submitted, setSubmitted] = useState(false);
@@ -33,7 +31,7 @@ export default function BookDemo() {
       });
       if (!res.ok) throw new Error('Failed');
       setSubmitted(true);
-      toast.success("Demo request submitted! We'll be in touch within 24 hours.");
+      toast.success("Demo request submitted!");
     } catch {
       toast.error("Something went wrong. Please try again or call 407-759-4100.");
     } finally {
@@ -44,12 +42,12 @@ export default function BookDemo() {
   return (
     <Layout>
       <Helmet>
-        <title>Book a Demo — See V·TEAMS AI in Action | Voxaris</title>
-        <meta name="description" content="Schedule a personalized demo. See how V·TEAMS handles lead response, qualification, and appointment booking with warm transfers across your squad 24/7." />
-        <meta name="keywords" content="book demo, V·TEAMS demo, multi-agent AI demo, Voxaris demo, AI agent squad, warm transfer AI, schedule demo" />
+        <title>Book a V·TEAMS Demo | Voxaris</title>
+        <meta name="description" content="See V·TEAMS handle a live call. 15-minute demo — no pitch deck, just a walkthrough of how V·TEAMS would work for your business." />
+        <meta name="keywords" content="book demo, V·TEAMS demo, AI sales demo, Voxaris demo, AI phone agent demo, AI team demo" />
         <link rel="canonical" href="https://voxaris.io/book-demo" />
-        <meta property="og:title" content="Book a Demo — See V·TEAMS AI in Action | Voxaris" />
-        <meta property="og:description" content="Schedule a personalized demo. See how V·TEAMS handles lead response, qualification, and appointment booking with warm transfers across your squad 24/7." />
+        <meta property="og:title" content="Book a V·TEAMS Demo | Voxaris" />
+        <meta property="og:description" content="See V·TEAMS handle a live call. 15-minute demo — receptionist, qualifier, specialist, closer working together in real time." />
         <meta property="og:url" content="https://voxaris.io/book-demo" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://voxaris.io/og-image.png" />
@@ -68,26 +66,54 @@ export default function BookDemo() {
                 Book a Demo
               </span>
               <h1 className="text-4xl lg:text-display-sm font-semibold text-foreground mb-6">
-                See how Voxaris can transform your operations
+                See V·TEAMS handle a live call.
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed mb-10">
-                Schedule a personalized demo with our team. We'll walk you through how Voxaris handles lead response, qualification, and appointment booking for businesses like yours.
+                15 minutes. No pitch deck. We'll show you exactly how V·TEAMS answers, qualifies, and books appointments for businesses like yours.
               </p>
 
-              <div className="space-y-6">
-                <h3 className="font-semibold text-foreground">What you'll learn:</h3>
+              <div className="space-y-6 mb-10">
+                <h3 className="font-semibold text-foreground">What happens in the demo:</h3>
                 {[
-                  "How Voxaris responds to leads within seconds",
-                  "How Maria handles real sales conversations",
-                  "How appointments flow into your calendar and CRM",
-                  "How to deploy across multiple locations or clients",
-                  "Pricing and implementation timeline"
+                  "Hear V·TEAMS answer a live inbound call",
+                  "See the receptionist → qualifier → closer handoff in action",
+                  "Watch context pass seamlessly across every transfer",
+                  "See how appointments and transcripts sync to your CRM",
+                  "Get your timeline and implementation plan"
                 ].map((item) => (
                   <div key={item} className="flex items-start gap-3">
                     <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                     <span className="text-muted-foreground">{item}</span>
                   </div>
                 ))}
+              </div>
+
+              {/* What happens next */}
+              <div className="bg-muted/50 rounded-2xl p-6 border border-border">
+                <h4 className="font-semibold text-foreground mb-4 text-sm uppercase tracking-wider">What happens next</h4>
+                <div className="space-y-4">
+                  <div className="flex items-start gap-3">
+                    <div className="w-7 h-7 rounded-full bg-foreground text-background flex items-center justify-center text-xs font-bold shrink-0">1</div>
+                    <div>
+                      <div className="text-sm font-medium text-foreground">You submit the form</div>
+                      <div className="text-xs text-muted-foreground">Takes 30 seconds.</div>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-7 h-7 rounded-full bg-foreground text-background flex items-center justify-center text-xs font-bold shrink-0">2</div>
+                    <div>
+                      <div className="text-sm font-medium text-foreground">Ethan reaches out to schedule</div>
+                      <div className="text-xs text-muted-foreground">Same business day, usually within hours.</div>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-7 h-7 rounded-full bg-foreground text-background flex items-center justify-center text-xs font-bold shrink-0">3</div>
+                    <div>
+                      <div className="text-sm font-medium text-foreground">15-minute walkthrough, tailored to your business</div>
+                      <div className="text-xs text-muted-foreground">Your process, your hours, your CRM.</div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </motion.div>
 
@@ -101,48 +127,22 @@ export default function BookDemo() {
                 <div className="bg-card rounded-3xl border border-border p-8 lg:p-10 shadow-elegant">
                   <div className="flex items-center gap-3 mb-8">
                     <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center">
-                      <Calendar className="h-5 w-5 text-primary-foreground" />
+                      <CalendarCheck className="h-5 w-5 text-primary-foreground" />
                     </div>
                     <div>
                       <h2 className="font-semibold text-foreground">Request a Demo</h2>
-                      <p className="text-sm text-muted-foreground">We'll respond within 24 hours</p>
+                      <p className="text-sm text-muted-foreground">Same-day response. Usually within hours.</p>
                     </div>
                   </div>
 
                   <form onSubmit={handleSubmit} className="space-y-5">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="firstName">First Name</Label>
-                        <Input
-                          id="firstName"
-                          placeholder="John"
-                          value={formData.firstName}
-                          onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                          required
-                          className="h-12"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="lastName">Last Name</Label>
-                        <Input
-                          id="lastName"
-                          placeholder="Smith"
-                          value={formData.lastName}
-                          onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                          required
-                          className="h-12"
-                        />
-                      </div>
-                    </div>
-
                     <div className="space-y-2">
-                      <Label htmlFor="email">Work Email</Label>
+                      <Label htmlFor="name">Your Name</Label>
                       <Input
-                        id="email"
-                        type="email"
-                        placeholder="john@company.com"
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        id="name"
+                        placeholder="John Smith"
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         required
                         className="h-12"
                       />
@@ -153,7 +153,7 @@ export default function BookDemo() {
                       <Input
                         id="phone"
                         type="tel"
-                        placeholder="+1 (555) 000-0000"
+                        placeholder="(555) 555-5555"
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                         required
@@ -174,31 +174,24 @@ export default function BookDemo() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="businessType">Business Type</Label>
-                      <select
-                        id="businessType"
-                        value={formData.businessType}
-                        onChange={(e) => setFormData({ ...formData, businessType: e.target.value })}
-                        required
-                        className="flex h-12 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                      >
-                        <option value="">Select your business type</option>
-                        <option value="agency">Marketing Agency</option>
-                        <option value="dealership">Auto Dealership / Dealer Group</option>
-                        <option value="home-services">Home Services</option>
-                        <option value="multi-location">Multi-Location Business</option>
-                        <option value="other">Other</option>
-                      </select>
+                      <Label htmlFor="rooftops">Number of Locations (Optional)</Label>
+                      <Input
+                        id="rooftops"
+                        placeholder="e.g. 3"
+                        value={formData.rooftops}
+                        onChange={(e) => setFormData({ ...formData, rooftops: e.target.value })}
+                        className="h-12"
+                      />
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="message">Anything else we should know? (Optional)</Label>
+                      <Label htmlFor="message">Anything else? (Optional)</Label>
                       <Textarea
                         id="message"
-                        placeholder="Tell us about your current lead management challenges..."
+                        placeholder="Current challenges, questions, timing..."
                         value={formData.message}
                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                        className="min-h-[100px]"
+                        className="min-h-[80px]"
                       />
                     </div>
 
@@ -215,6 +208,10 @@ export default function BookDemo() {
                         </>
                       )}
                     </Button>
+
+                    <p className="text-xs text-center text-muted-foreground pt-2">
+                      Or skip the form — call <a href="tel:+14077594100" className="font-medium text-foreground underline underline-offset-2">(407) 759-4100</a> and talk to our AI agent right now.
+                    </p>
                   </form>
                 </div>
               ) : (
@@ -228,17 +225,16 @@ export default function BookDemo() {
                       <CheckCircle className="h-10 w-10 text-green-600" />
                     </div>
                     <h2 className="text-2xl font-semibold text-foreground mb-3">
-                      Demo Request Received
+                      You're on the list.
                     </h2>
-                    <p className="text-muted-foreground mb-6">
-                      Thank you for your interest in Voxaris. Our team will reach out within 24 hours to schedule your personalized demo.
+                    <p className="text-muted-foreground mb-4">
+                      Ethan will reach out same business day to schedule your demo. Usually within a few hours.
                     </p>
-                    <p className="text-sm text-muted-foreground">
-                      In the meantime, feel free to explore our{" "}
-                      <a href="/how-it-works" className="text-foreground underline">
-                        How It Works
-                      </a>{" "}
-                      page.
+                    <p className="text-sm text-muted-foreground mb-6">
+                      In the meantime, hear V·TEAMS handle a live call on our{" "}
+                      <a href="/demo" className="text-foreground underline underline-offset-2 font-medium">
+                        demo page
+                      </a>.
                     </p>
                   </motion.div>
                 </div>

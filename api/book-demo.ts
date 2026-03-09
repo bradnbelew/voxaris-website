@@ -5,45 +5,70 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { firstName, lastName, email, phone, company, businessType, message } = req.body || {};
+  const { name, firstName, lastName, email, phone, company, rooftops, businessType, message, submitted_at, page_source } = req.body || {};
 
-  if (!firstName || !lastName || !email || !phone || !company || !businessType) {
-    return res.status(400).json({ error: 'Missing required fields' });
+  // Support both old form (firstName/lastName) and new form (name)
+  const fullName = name || `${firstName || ''} ${lastName || ''}`.trim();
+
+  if (!fullName || !phone || !company) {
+    return res.status(400).json({ error: 'Missing required fields: name, phone, company' });
   }
 
-  const submittedAt = new Date().toISOString();
+  const submittedAt = submitted_at || new Date().toISOString();
+  const source = page_source || req.headers.referer || 'unknown';
+  const bType = businessType || rooftops ? `${businessType || 'dealership'} (${rooftops || '?'} rooftops)` : businessType || 'not specified';
 
-  // Log to Vercel function logs for backup
-  console.log('[book-demo]', JSON.stringify({ firstName, lastName, email, phone, company, businessType, message, submittedAt }));
+  // Log to Vercel function logs for backup — always
+  console.log('[book-demo] LEAD:', JSON.stringify({ fullName, email, phone, company, businessType: bType, message, submittedAt, source }));
 
-  // Send notification email via Resend if configured
+  // Send notification email via Resend
   const resendKey = process.env.RESEND_API_KEY;
-  if (resendKey) {
-    try {
-      await fetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${resendKey}`,
-        },
-        body: JSON.stringify({
-          from: 'Voxaris <noreply@voxaris.io>',
-          to: 'ethan@voxaris.io',
-          subject: `New Demo Request: ${company}`,
-          html: `<h2>New Demo Request</h2>
-            <p><strong>Name:</strong> ${firstName} ${lastName}</p>
-            <p><strong>Email:</strong> ${email}</p>
-            <p><strong>Phone:</strong> ${phone}</p>
-            <p><strong>Company:</strong> ${company}</p>
-            <p><strong>Business Type:</strong> ${businessType}</p>
-            <p><strong>Message:</strong> ${message || 'N/A'}</p>
-            <p><strong>Submitted:</strong> ${submittedAt}</p>`,
-        }),
-      });
-    } catch (err) {
-      console.error('[book-demo] Resend email failed:', err);
-    }
+  if (!resendKey) {
+    console.error('[book-demo] CRITICAL: RESEND_API_KEY is not set. Lead will not be emailed.');
+    // Still return success to the user — lead is logged, but flag it
+    return res.status(200).json({ ok: true, submittedAt, warning: 'Email delivery not configured' });
   }
 
-  return res.status(200).json({ ok: true, submittedAt });
+  try {
+    const emailRes = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${resendKey}`,
+      },
+      body: JSON.stringify({
+        from: 'Voxaris <noreply@voxaris.io>',
+        to: 'ethan@voxaris.io',
+        subject: `New Voxaris lead — ${fullName} — ${company} — ${bType}`,
+        html: `
+          <h2 style="margin:0 0 16px;color:#1a1a1a;">New Lead — ${company}</h2>
+          <table style="border-collapse:collapse;width:100%;max-width:500px;">
+            <tr><td style="padding:8px 12px;border-bottom:1px solid #eee;color:#666;width:140px;"><strong>Name</strong></td><td style="padding:8px 12px;border-bottom:1px solid #eee;">${fullName}</td></tr>
+            <tr><td style="padding:8px 12px;border-bottom:1px solid #eee;color:#666;"><strong>Phone</strong></td><td style="padding:8px 12px;border-bottom:1px solid #eee;"><a href="tel:${phone}">${phone}</a></td></tr>
+            ${email ? `<tr><td style="padding:8px 12px;border-bottom:1px solid #eee;color:#666;"><strong>Email</strong></td><td style="padding:8px 12px;border-bottom:1px solid #eee;"><a href="mailto:${email}">${email}</a></td></tr>` : ''}
+            <tr><td style="padding:8px 12px;border-bottom:1px solid #eee;color:#666;"><strong>Company</strong></td><td style="padding:8px 12px;border-bottom:1px solid #eee;">${company}</td></tr>
+            <tr><td style="padding:8px 12px;border-bottom:1px solid #eee;color:#666;"><strong>Business Type</strong></td><td style="padding:8px 12px;border-bottom:1px solid #eee;">${bType}</td></tr>
+            ${message ? `<tr><td style="padding:8px 12px;border-bottom:1px solid #eee;color:#666;"><strong>Message</strong></td><td style="padding:8px 12px;border-bottom:1px solid #eee;">${message}</td></tr>` : ''}
+            <tr><td style="padding:8px 12px;border-bottom:1px solid #eee;color:#666;"><strong>Page</strong></td><td style="padding:8px 12px;border-bottom:1px solid #eee;">${source}</td></tr>
+            <tr><td style="padding:8px 12px;border-bottom:1px solid #eee;color:#666;"><strong>Submitted</strong></td><td style="padding:8px 12px;border-bottom:1px solid #eee;">${submittedAt}</td></tr>
+            <tr><td style="padding:8px 12px;color:#666;"><strong>Source</strong></td><td style="padding:8px 12px;">website-form</td></tr>
+          </table>
+          <p style="margin-top:20px;color:#999;font-size:12px;">This lead was submitted via the Voxaris website. Respond quickly.</p>
+        `,
+      }),
+    });
+
+    if (!emailRes.ok) {
+      const errBody = await emailRes.text();
+      console.error('[book-demo] Resend email failed:', emailRes.status, errBody);
+      // Lead is still logged — return success but note the issue
+      return res.status(200).json({ ok: true, submittedAt, warning: 'Email delivery may have failed' });
+    }
+
+    console.log('[book-demo] Email sent successfully to ethan@voxaris.io');
+    return res.status(200).json({ ok: true, submittedAt });
+  } catch (err) {
+    console.error('[book-demo] Resend email error:', err);
+    return res.status(200).json({ ok: true, submittedAt, warning: 'Email delivery error' });
+  }
 }

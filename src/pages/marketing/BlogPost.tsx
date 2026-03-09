@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Clock } from 'lucide-react';
 import { Navbar, Footer } from '@/components/marketing';
-import { FloatingMaria } from '@/components/marketing/FloatingMaria';
+
 import { blogPosts } from '@/data/blog-posts';
 
 const ease = [0.22, 1, 0.36, 1];
@@ -232,7 +232,6 @@ export function BlogPost() {
         </section>
       </main>
       <Footer />
-      <FloatingMaria />
     </div>
   );
 }
