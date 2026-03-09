@@ -29,7 +29,6 @@ export default function Login() {
     setIsLoading(true);
 
     try {
-      console.log('Starting sign in...');
       toast({ title: 'Signing in...', description: 'Contacting Supabase Auth...' });
       
       const { error, session } = await signIn(email, password);
@@ -45,7 +44,6 @@ export default function Login() {
         return;
       }
 
-      console.log('Sign in success, session:', session);
       toast({ title: 'Success!', description: 'Redirecting to dashboard...' });
 
       // Force navigation immediately

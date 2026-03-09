@@ -38,8 +38,6 @@ export function VoiceProvider({ children }: { children: React.ReactNode }) {
       setIsMicEnabled(true)
       toast({ title: "Voice Mode Active", description: "Listening for commands..." })
       
-      console.log("🚀 Starting Session with Context:", contextVariables);
-
       // Call the Supabase function to create conversation
         const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-tavus-conversation`, {
         method: "POST",
@@ -60,8 +58,7 @@ export function VoiceProvider({ children }: { children: React.ReactNode }) {
       }
 
       const data = await response.json();
-      console.log("✅ Conversation Created:", data);
-      
+
       // Real implementation would be:
       // await daily?.join({ ... })
     } catch (error) {

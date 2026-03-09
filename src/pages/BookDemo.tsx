@@ -14,7 +14,7 @@ export default function BookDemo() {
     name: "",
     phone: "",
     company: "",
-    rooftops: "",
+    locations: "",
     message: ""
   });
   const [submitted, setSubmitted] = useState(false);
@@ -174,12 +174,12 @@ export default function BookDemo() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="rooftops">Number of Locations (Optional)</Label>
+                      <Label htmlFor="locations">Number of Locations (Optional)</Label>
                       <Input
-                        id="rooftops"
+                        id="locations"
                         placeholder="e.g. 3"
-                        value={formData.rooftops}
-                        onChange={(e) => setFormData({ ...formData, rooftops: e.target.value })}
+                        value={formData.locations}
+                        onChange={(e) => setFormData({ ...formData, locations: e.target.value })}
                         className="h-12"
                       />
                     </div>

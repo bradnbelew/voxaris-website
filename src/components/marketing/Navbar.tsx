@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 
 const navLinks = [
   { label: 'Product', href: '/#features' },
-  { label: 'Dealerships', href: '/solutions/dealerships' },
+  { label: 'Industries', href: '/solutions/dealerships' },
   { label: 'Demo', href: '/demo' },
   { label: 'Why Voxaris', href: '/why-voxaris' },
   {

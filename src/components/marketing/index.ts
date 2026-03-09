@@ -1,14 +1,5 @@
 export { Navbar } from './Navbar';
 export { Hero } from './Hero';
-export { FeaturesSection } from './FeaturesSection';
-export { FeatureCard } from './FeatureCard';
-export { TechnologyShowcase } from './TechnologyShowcase';
-export { VSuiteSection } from './VSuiteSection';
-export { ProblemSolution } from './ProblemSolution';
-export { HowItWorks } from './HowItWorks';
 export { CTASection } from './CTASection';
 export { Footer } from './Footer';
-export { StatsSection } from './StatsSection';
-export { VoxarisLogo } from './VoxarisLogo';
-export { ShootingStars } from './backgrounds/ShootingStars';
 export { GradientMesh } from './backgrounds/GradientMesh';

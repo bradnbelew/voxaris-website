@@ -118,11 +118,11 @@ export function Demo() {
   return (
     <div className="min-h-screen bg-white">
       <Helmet>
-        <title>Hear V·TEAMS Handle a Dealership Call | Voxaris</title>
+        <title>Hear V·TEAMS Handle a Live Call | Voxaris</title>
         <meta name="description" content="Experience V·TEAMS live. Get a call from our AI agent, call her yourself, or start a face-to-face video conversation. No scripts. No recordings. Just real AI." />
-        <meta name="keywords" content="V·TEAMS demo, live AI demo, AI dealership demo, AI voice demo, AI video demo, talk to AI agent, Voxaris demo" />
+        <meta name="keywords" content="V·TEAMS demo, live AI demo, AI sales demo, AI voice demo, AI video demo, talk to AI agent, Voxaris demo" />
         <link rel="canonical" href="https://voxaris.io/demo" />
-        <meta property="og:title" content="Hear V·TEAMS Handle a Dealership Call | Voxaris" />
+        <meta property="og:title" content="Hear V·TEAMS Handle a Live Call | Voxaris" />
         <meta property="og:description" content="Experience V·TEAMS live — call our AI agent, get a callback, or meet her face-to-face. Powered by V·TEAMS multi-agent coordination." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://voxaris.io/demo" />
@@ -315,7 +315,7 @@ export function Demo() {
               Or call Maria yourself.
             </h2>
             <p className="max-w-2xl mx-auto text-carbon-500 text-lg leading-relaxed mb-4">
-              Test V·TEAMS on your terms. Call the number below and experience a live inbound conversation. This is what your callers hear when they reach your dealership after hours, during overflow, or when your BDC is at capacity.
+              Test V·TEAMS on your terms. Call the number below and experience a live inbound conversation. This is what your callers hear when they reach your business after hours, during overflow, or when your team is at capacity.
             </p>
 
             <div className="inline-block bg-white rounded-2xl border border-carbon-200 px-12 py-10 shadow-sm">

@@ -48,7 +48,7 @@ export function BlogPost() {
     keywords: post.keywords.join(', '),
     about: {
       '@type': 'Thing',
-      name: 'AI voice agents for automotive dealerships',
+      name: 'AI voice agents and multi-agent AI',
     },
   };
 

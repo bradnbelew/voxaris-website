@@ -24,7 +24,7 @@ const reasons = [
   {
     icon: Users,
     title: "Built for scale",
-    description: "Whether you're an agency with 50 clients or a dealer group with 30 rooftops, Voxaris scales with consistent quality across every deployment."
+    description: "Whether you're an agency with 50 clients or a company with 30 locations, Voxaris scales with consistent quality across every deployment."
   },
   {
     icon: Zap,

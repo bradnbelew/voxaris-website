@@ -9,7 +9,7 @@ const footerLinks = {
     { label: 'Demo', href: '/demo' },
   ],
   solutions: [
-    { label: 'Auto Dealerships', href: '/solutions/dealerships' },
+    { label: 'Industries', href: '/solutions/dealerships' },
     { label: 'Direct Mail', href: '/solutions/direct-mail' },
     { label: 'Hotels & Resorts', href: '/solutions/hospitality' },
     { label: 'Home Services', href: '/solutions/contractors' },

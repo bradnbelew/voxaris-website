@@ -14,7 +14,7 @@ const API_BASE = '';
 
 export function TalkingPostcard() {
   const navigate = useNavigate();
-  const [form, setForm] = useState({ dealership: '', gm: '', highlight: '' });
+  const [form, setForm] = useState({ business: '', gm: '', highlight: '' });
   const [formState, setFormState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -28,7 +28,7 @@ export function TalkingPostcard() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          dealership: form.dealership,
+          dealership: form.business,
           gm_name: form.gm,
           highlight: form.highlight,
         }),
@@ -41,7 +41,7 @@ export function TalkingPostcard() {
         // Redirect to the embed page with session data
         const params = new URLSearchParams({
           url: data.conversation_url,
-          dealership: form.dealership,
+          dealership: form.business,
           name: form.gm,
         });
         navigate(`/talking-postcard/demo?${params.toString()}`);
@@ -49,7 +49,6 @@ export function TalkingPostcard() {
         throw new Error(data.error || 'Could not generate demo');
       }
     } catch (err: any) {
-      console.error('Demo generation error:', err);
       setErrorMsg(err.message || 'Something went wrong. Please try again.');
       setFormState('error');
       setTimeout(() => setFormState('idle'), 4000);
@@ -129,7 +128,7 @@ export function TalkingPostcard() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
               >
-                Enter your dealership name and one inventory highlight.
+                Enter your business name and one key highlight.
                 We'll instantly create a photorealistic video of{' '}
                 <strong className="text-white">your own AI agent</strong> answering real customer leads.
               </motion.p>
@@ -206,9 +205,9 @@ export function TalkingPostcard() {
                     <form onSubmit={handleSubmit} className="space-y-5">
                       <input
                         type="text"
-                        placeholder="Dealership Name *"
-                        value={form.dealership}
-                        onChange={(e) => setForm({ ...form, dealership: e.target.value })}
+                        placeholder="Business Name *"
+                        value={form.business}
+                        onChange={(e) => setForm({ ...form, business: e.target.value })}
                         required
                         className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-6 py-5 text-lg text-white placeholder:text-zinc-500 focus:outline-none focus:border-zinc-500 transition-colors"
                       />
@@ -248,7 +247,7 @@ export function TalkingPostcard() {
                     <h3 className="text-2xl font-bold text-white mb-3">Building your agent...</h3>
                     <p className="text-zinc-500 mb-6 max-w-sm mx-auto">
                       Creating a personalized AI agent for{' '}
-                      <span className="text-white font-medium">{form.dealership}</span>.
+                      <span className="text-white font-medium">{form.business}</span>.
                       You'll be redirected automatically.
                     </p>
                     <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-zinc-800 border border-zinc-700 text-sm text-zinc-400">
