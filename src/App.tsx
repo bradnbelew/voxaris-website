@@ -13,13 +13,13 @@ import {
   SolutionHospitality,
   SolutionDirectMail,
   SolutionWhiteLabel,
-  Technology,
   Demo as MarketingDemo,
   TalkingPostcard,
   TalkingPostcardDemo,
   BlogIndex,
   BlogPost,
 } from "./pages/marketing";
+import Technology from "./pages/Technology";
 import HowItWorks from "./pages/HowItWorks";
 import WhyVoxaris from "./pages/WhyVoxaris";
 import BookDemo from "./pages/BookDemo";

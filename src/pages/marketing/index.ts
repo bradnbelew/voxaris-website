@@ -4,7 +4,6 @@ export { SolutionContractors } from './SolutionContractors';
 export { SolutionHospitality } from './SolutionHospitality';
 export { SolutionDirectMail } from './SolutionDirectMail';
 export { SolutionWhiteLabel } from './SolutionWhiteLabel';
-export { Technology } from './Technology';
 export { Demo } from './Demo';
 export { TalkingPostcard } from './TalkingPostcard';
 export { TalkingPostcardDemo } from './TalkingPostcardDemo';

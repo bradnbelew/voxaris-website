@@ -39,8 +39,8 @@ export function BlogPost() {
         url: 'https://voxaris.io/favicon.png',
       },
     },
-    datePublished: '2026-02-01',
-    dateModified: '2026-02-26',
+    datePublished: post.date,
+    dateModified: post.date,
     mainEntityOfPage: {
       '@type': 'WebPage',
       '@id': canonicalUrl,
@@ -65,7 +65,7 @@ export function BlogPost() {
         <meta property="og:url" content={canonicalUrl} />
         <meta property="og:site_name" content="Voxaris" />
         <meta property="article:author" content={post.author} />
-        <meta property="article:published_time" content="2026-02-01" />
+        <meta property="article:published_time" content={post.date} />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={post.title} />
         <meta name="twitter:description" content={post.description} />

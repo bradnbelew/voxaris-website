@@ -82,19 +82,13 @@
       inputSchema: {
         type: 'object',
         properties: {
-          first_name: { type: 'string', description: 'Visitor first name' },
-          last_name: { type: 'string', description: 'Visitor last name' },
-          email: { type: 'string', description: 'Visitor email address' },
-          phone: { type: 'string', description: 'Visitor phone number (optional)' },
-          company: { type: 'string', description: 'Company or business name (optional)' },
-          business_type: {
-            type: 'string',
-            enum: ['dealership', 'hotel', 'contractor', 'agency', 'other'],
-            description: 'Type of business'
-          },
+          name: { type: 'string', description: 'Visitor full name' },
+          phone: { type: 'string', description: 'Visitor phone number' },
+          company: { type: 'string', description: 'Company or business name' },
+          locations: { type: 'string', description: 'Number of locations (optional)' },
           message: { type: 'string', description: 'Additional message or specific interests (optional)' }
         },
-        required: ['first_name', 'last_name', 'email', 'business_type']
+        required: ['name', 'phone', 'company']
       },
       annotations: { readOnlyHint: false, destructiveHint: false },
       execute: async function (input, client) {
@@ -131,12 +125,10 @@
           }
         };
 
-        fillInput('firstName', input.first_name);
-        fillInput('lastName', input.last_name);
-        fillInput('email', input.email);
-        fillInput('phone', input.phone || '');
-        fillInput('company', input.company || '');
-        fillInput('businessType', input.business_type);
+        fillInput('name', input.name);
+        fillInput('phone', input.phone);
+        fillInput('company', input.company);
+        fillInput('locations', input.locations || '');
         fillInput('message', input.message || '');
 
         var form = document.querySelector('form');
@@ -146,7 +138,7 @@
 
         return ok({
           success: true,
-          message: 'Demo request submitted for ' + input.first_name + ' ' + input.last_name + ' (' + input.email + '). The Voxaris team will follow up within 24 hours.'
+          message: 'Demo request submitted for ' + input.name + ' at ' + input.company + '. Ethan will reach out same business day.'
         });
       }
     });
@@ -170,74 +162,75 @@
       execute: async function (input) {
         var solutions = {
           dealerships: {
-            name: 'V\u00b7GUIDE for Car Dealerships',
-            tagline: 'AI BDC that never sleeps',
-            products: ['V\u00b7GUIDE (video agent on website)', 'V\u00b7SENSE (inbound/outbound voice)', 'V\u00b7OUTBOUND (lead follow-up calls)'],
+            name: 'V\u00b7TEAMS for Car Dealerships',
+            tagline: 'A full AI team that never clocks out',
+            products: ['V\u00b7TEAMS (multi-agent AI squad)', 'Receptionist \u2192 Qualifier \u2192 Specialist \u2192 Closer'],
             features: [
-              'Photorealistic AI video agent greets every website visitor',
-              'Controls the dealership website \u2014 browses inventory, fills forms, books test drives',
-              'Answers phone calls 24/7, qualifies leads, books appointments',
-              'Outbound follow-up on missed leads and internet inquiries',
+              'AI receptionist answers every call 24/7 with warm, natural conversation',
+              'Qualifier agent gathers needs, budget, timeline \u2014 no lead left unscreened',
+              'Specialist agent handles deep product questions with dealership knowledge',
+              'Closer agent books appointments and confirms with the customer',
+              'Warm transfers with full context between every agent \u2014 no caller repeats themselves',
               'CRM integration with DealerSocket, VinSolutions, etc.'
             ],
             ideal_for: 'Dealerships losing leads after hours, slow BDC response, high staff turnover',
-            differentiator: 'Podium/Kenect alternative with actual video presence and browser control'
+            differentiator: 'Not one bot \u2014 a coordinated AI team that handles the full call lifecycle'
           },
           hospitality: {
-            name: 'V\u00b7GUIDE for Hotels & Resorts',
-            tagline: 'AI concierge that books direct',
-            products: ['V\u00b7GUIDE (website concierge)', 'V\u00b7SENSE (voice booking agent)'],
+            name: 'V\u00b7TEAMS for Hotels & Resorts',
+            tagline: 'AI concierge team that books direct',
+            products: ['V\u00b7TEAMS (multi-agent AI squad)', 'Receptionist \u2192 Booking Specialist \u2192 Concierge'],
             features: [
-              'Photorealistic AI concierge on hotel website',
-              'Handles room inquiries, checks availability, processes direct bookings',
+              'AI receptionist handles every inbound call with brand-matched warmth',
+              'Booking specialist checks availability and processes direct reservations',
+              'Concierge agent answers amenity, dining, and activity questions',
               'Multilingual support for international guests',
-              'Answers common questions about amenities, dining, activities',
-              'Reduces OTA dependency by converting direct website traffic'
+              'Reduces OTA dependency by converting direct phone and web traffic'
             ],
             ideal_for: 'Hotels losing direct bookings to OTAs, understaffed front desk',
-            differentiator: 'First AI concierge with a real face that controls the booking engine live'
+            differentiator: 'A full AI front-desk team \u2014 not a single chatbot'
           },
           contractors: {
-            name: 'V\u00b7SENSE for Contractors',
+            name: 'V\u00b7TEAMS for Contractors',
             tagline: 'Never miss another call',
-            products: ['V\u00b7SENSE (24/7 voice answering)', 'V\u00b7OUTBOUND (missed call recovery)'],
+            products: ['V\u00b7TEAMS (multi-agent AI squad)', 'Receptionist \u2192 Qualifier \u2192 Scheduler'],
             features: [
-              'AI answers every call \u2014 nights, weekends, holidays',
-              'Qualifies leads by service type, urgency, location',
-              'Books jobs directly into your calendar',
+              'AI receptionist answers every call \u2014 nights, weekends, holidays',
+              'Qualifier agent screens by service type, urgency, location',
+              'Scheduler agent books jobs directly into your calendar',
               'Sends instant text confirmations to homeowners',
               'Missed call text-back with AI follow-up'
             ],
             ideal_for: 'Plumbers, HVAC, roofers, electricians losing jobs to missed calls',
-            differentiator: 'Built specifically for trades \u2014 understands service urgency and scheduling'
+            differentiator: 'Built specifically for trades \u2014 a team that understands service urgency'
           },
           'direct-mail': {
             name: 'Talking Postcards',
-            tagline: 'Physical mail meets AI video',
-            products: ['Talking Postcards (QR \u2192 AI video)', 'V\u00b7GUIDE (postcard landing page agent)'],
+            tagline: 'Physical mail meets AI conversation',
+            products: ['Talking Postcards (QR \u2192 AI call)', 'V\u00b7TEAMS (postcard response squad)'],
             features: [
-              'Physical postcards with QR codes that launch AI video conversations',
-              'Personalized photorealistic video agent greets each recipient',
-              'Agent qualifies the lead and books appointments on the spot',
+              'Physical postcards with QR codes that launch AI phone conversations',
+              'AI receptionist greets each recipient by name',
+              'Qualifier agent screens the lead and books appointments on the spot',
               '8-30% engagement rate vs 1-2% traditional direct mail',
               'Full analytics \u2014 scan rates, conversation metrics, bookings'
             ],
             ideal_for: 'Any business using direct mail that wants dramatically higher response rates',
-            differentiator: 'Only AI-powered direct mail product with real video conversations'
+            differentiator: 'Only AI-powered direct mail product with real multi-agent phone conversations'
           },
           'white-label': {
-            name: 'White Label AI Agents',
+            name: 'White Label V\u00b7TEAMS',
             tagline: 'Resell Voxaris under your brand',
-            products: ['Full V\u00b7SUITE white-labeled', 'Partner dashboard', 'Custom branding'],
+            products: ['Full V\u00b7TEAMS platform white-labeled', 'Partner dashboard', 'Custom branding'],
             features: [
-              'Deploy V\u00b7GUIDE, V\u00b7SENSE, and Talking Postcards under your brand',
+              'Deploy V\u00b7TEAMS multi-agent squads under your brand',
               'Partner portal for managing client deployments',
               'Up to 70% margins on resold services',
               'White-glove onboarding and technical support',
               'Custom agent personas and branding per client'
             ],
             ideal_for: 'Marketing agencies, SaaS resellers, BPO companies',
-            differentiator: 'Only white-label platform with photorealistic video + voice + browser control'
+            differentiator: 'Only white-label platform with coordinated multi-agent AI voice teams'
           }
         };
 
@@ -256,18 +249,16 @@
       execute: async function () {
         return ok({
           company: 'Voxaris',
-          tagline: 'Photorealistic AI Agents for Every Business',
-          description: 'Voxaris builds AI agents that see, speak, and act. Our V\u00b7GUIDE agents appear as photorealistic video humans on websites, control the browser in real-time, and have natural conversations with visitors. V\u00b7SENSE handles voice calls 24/7.',
+          tagline: 'AI Teams That Answer, Qualify & Close \u2014 24/7',
+          description: 'Voxaris builds V\u00b7TEAMS \u2014 coordinated squads of AI voice agents that handle inbound and outbound calls end-to-end. A receptionist answers, a qualifier screens, a specialist handles deep questions, and a closer books the appointment. Every transfer is warm with full context passed seamlessly.',
           platform: 'VoxEngine',
           products: {
-            'V\u00b7GUIDE': 'Photorealistic AI video agent that appears on websites, has conversations, and controls the browser to navigate, fill forms, and book appointments.',
-            'V\u00b7SENSE': 'AI voice agent for inbound and outbound phone calls. Answers 24/7, qualifies leads, books appointments, sends texts.',
-            'V\u00b7OUTBOUND': 'AI-powered outbound calling for lead follow-up, appointment confirmations, and re-engagement campaigns.',
-            'V\u00b7MEMORY': 'Persistent context system that remembers past interactions across channels for personalized follow-up.',
-            'Talking Postcards': 'Physical postcards with QR codes that launch personalized AI video conversations. 8-30% engagement vs 1-2% industry standard.'
+            'V\u00b7TEAMS': 'Multi-agent AI voice squads with warm transfers. Receptionist \u2192 Qualifier \u2192 Specialist \u2192 Closer working together on every call.',
+            'Talking Postcards': 'Physical postcards with QR codes that launch AI phone conversations. 8-30% engagement vs 1-2% industry standard.'
           },
           industries: ['Car Dealerships', 'Hotels & Resorts', 'Home Services/Contractors', 'Direct Mail', 'White Label/Agencies'],
-          cta: 'Book a demo at /book-demo to see V\u00b7GUIDE in action.',
+          cta: 'Book a demo at /book-demo to see V\u00b7TEAMS handle a live call.',
+          phone: '(407) 759-4100 \u2014 call now to talk to our AI agent',
           website: 'https://voxaris.io'
         });
       }
