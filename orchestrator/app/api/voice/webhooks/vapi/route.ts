@@ -24,9 +24,10 @@ export async function POST(request: NextRequest) {
       // ── Inbound call: return the squad config ──
       case "assistant-request": {
         const call = body.message.call;
+        const phoneNumberId = call?.phoneNumberId || "";
         log.info(
-          { callId: call?.id, from: call?.customer?.number },
-          "Inbound call — returning assistant config"
+          { callId: call?.id, from: call?.customer?.number, phoneNumberId },
+          "Inbound call — routing to correct assistant"
         );
 
         await db.insert(voiceCalls).values({

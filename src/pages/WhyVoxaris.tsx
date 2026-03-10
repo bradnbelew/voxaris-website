@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
-import Layout from "@/components/layout/Layout";
+import { Navbar, Footer } from "@/components/marketing";
 import { Target, Layers, TrendingUp, Users, Zap, BarChart3, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -29,7 +29,7 @@ const reasons = [
   {
     icon: Zap,
     title: "Real AI, not decision trees",
-    description: "Maria handles natural conversations with nuance and intelligence — not scripted robotic responses that frustrate prospects."
+    description: "V·TEAMS agents handle natural conversations with nuance and intelligence — not scripted robotic responses that frustrate prospects."
   },
   {
     icon: BarChart3,
@@ -40,7 +40,8 @@ const reasons = [
 
 export default function WhyVoxaris() {
   return (
-    <Layout>
+    <div className="min-h-screen bg-white">
+      <Navbar />
       <Helmet>
         <title>Why Voxaris — Multi-Agent AI Teams That Close Deals | Voxaris</title>
         <meta name="description" content="V·TEAMS deploys coordinated AI agent squads that qualify leads, warm-transfer to specialists, and book appointments — across voice, video, and outreach." />
@@ -54,7 +55,7 @@ export default function WhyVoxaris() {
         <meta name="twitter:image" content="https://voxaris.io/og-image.png" />
       </Helmet>
       {/* Hero */}
-      <section className="section-padding bg-secondary/30">
+      <section className="pt-32 pb-16 lg:pb-20 bg-secondary/30">
         <div className="container-wide">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -175,6 +176,7 @@ export default function WhyVoxaris() {
           </div>
         </div>
       </section>
-    </Layout>
+      <Footer />
+    </div>
   );
 }

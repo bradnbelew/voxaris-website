@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
-import Layout from "@/components/layout/Layout";
+import { Navbar, Footer } from "@/components/marketing";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,7 +15,8 @@ export default function BookDemo() {
     phone: "",
     company: "",
     locations: "",
-    message: ""
+    message: "",
+    smsConsent: false,
   });
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -40,7 +41,8 @@ export default function BookDemo() {
   };
 
   return (
-    <Layout>
+    <div className="min-h-screen bg-white">
+      <Navbar />
       <Helmet>
         <title>Book a V·TEAMS Demo | Voxaris</title>
         <meta name="description" content="See V·TEAMS handle a live call. 15-minute demo — no pitch deck, just a walkthrough of how V·TEAMS would work for your business." />
@@ -53,7 +55,7 @@ export default function BookDemo() {
         <meta property="og:image" content="https://voxaris.io/og-image.png" />
         <meta name="twitter:image" content="https://voxaris.io/og-image.png" />
       </Helmet>
-      <section className="section-padding min-h-[calc(100vh-5rem)]">
+      <section className="pt-32 pb-20 min-h-[calc(100vh-80px)]">
         <div className="container-wide">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
             {/* Content */}
@@ -195,7 +197,24 @@ export default function BookDemo() {
                       />
                     </div>
 
-                    <Button type="submit" variant="hero" size="xl" className="w-full mt-6" disabled={submitting}>
+                    {/* SMS Consent Checkbox */}
+                    <div className={`flex items-start gap-3 mt-2 p-3 rounded-xl transition-colors duration-200 ${!formData.smsConsent ? 'bg-amber-50/50 border border-amber-200/50' : ''}`}>
+                      <input
+                        type="checkbox"
+                        id="smsConsent"
+                        checked={formData.smsConsent}
+                        onChange={(e) => setFormData({ ...formData, smsConsent: e.target.checked })}
+                        className="mt-1 h-4 w-4 rounded border-border text-primary focus:ring-primary shrink-0"
+                        required
+                      />
+                      <label htmlFor="smsConsent" className="text-xs text-muted-foreground leading-relaxed">
+                        By checking this box, you agree to receive recurring automated text messages and AI-powered phone calls from Voxaris LLC at the phone number provided. Consent is not a condition of purchase. Msg & data rates may apply. Msg frequency varies. Reply STOP to opt out, HELP for help. View our{" "}
+                        <a href="/privacy" className="text-foreground underline underline-offset-2">Privacy Policy</a> and{" "}
+                        <a href="/terms" className="text-foreground underline underline-offset-2">Terms of Service</a>.
+                      </label>
+                    </div>
+
+                    <Button type="submit" variant="hero" size="xl" className="w-full mt-6" disabled={submitting || !formData.smsConsent}>
                       {submitting ? (
                         <>
                           <Loader2 className="h-5 w-5 animate-spin" />
@@ -243,6 +262,7 @@ export default function BookDemo() {
           </div>
         </div>
       </section>
-    </Layout>
+      <Footer />
+    </div>
   );
 }

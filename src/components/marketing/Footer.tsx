@@ -35,9 +35,9 @@ export function Footer() {
           {/* Brand */}
           <div className="col-span-2">
             <Link to="/" className="inline-block mb-5">
-              <img src="/voxaris-logo-white.png" alt="Voxaris AI" className="h-20 w-auto opacity-60" />
+              <img src="/voxaris-logo-white.png" alt="Voxaris AI" className="h-10 w-auto opacity-50" />
             </Link>
-            <p className="text-[13px] text-white/20 mb-8 max-w-xs leading-relaxed">
+            <p className="text-[13px] text-white/40 mb-8 max-w-xs leading-relaxed">
               AI-powered video and voice agents that engage, qualify, and convert
               your leads — 24/7, at scale.
             </p>
@@ -69,7 +69,7 @@ export function Footer() {
               <ul className="space-y-3">
                 {links.map((link) => (
                   <li key={link.label}>
-                    <Link to={link.href} className="text-[13px] text-white/20 hover:text-gold-400/60 transition-colors duration-200">
+                    <Link to={link.href} className="text-[13px] text-white/40 hover:text-gold-400 transition-colors duration-200">
                       {link.label}
                     </Link>
                   </li>
@@ -82,14 +82,14 @@ export function Footer() {
         {/* Bottom */}
         <div className="mt-16 pt-8 border-t border-white/[0.04] flex flex-col md:flex-row items-center justify-between gap-4 relative">
           <div className="absolute top-0 left-1/4 right-1/4 h-px bg-gradient-to-r from-transparent via-gold-500/10 to-transparent" />
-          <p className="text-[11px] text-white/10">
+          <p className="text-[11px] text-white/30">
             &copy; {new Date().getFullYear()} Voxaris AI. All rights reserved.
           </p>
           <div className="flex gap-6">
-            <Link to="/privacy" className="text-[11px] text-white/10 hover:text-white/25 transition-colors">
+            <Link to="/privacy" className="text-[11px] text-white/30 hover:text-white/50 transition-colors">
               Privacy Policy
             </Link>
-            <Link to="/terms" className="text-[11px] text-white/10 hover:text-white/25 transition-colors">
+            <Link to="/terms" className="text-[11px] text-white/30 hover:text-white/50 transition-colors">
               Terms of Service
             </Link>
           </div>

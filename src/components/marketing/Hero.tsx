@@ -68,7 +68,7 @@ export function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.15, ease }}
             >
-              Receptionist, qualifier, specialist, and closer — working together in real time to answer your inbound calls, carry context across every handoff, and book appointments without dropping the lead.
+              Four specialized AI agents. One seamless call. Every lead qualified, warm-transferred with context, and booked — automatically.
             </motion.p>
 
             {/* CTAs */}

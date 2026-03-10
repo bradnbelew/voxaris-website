@@ -42,6 +42,12 @@ export function Navbar() {
 
   return (
     <>
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-white focus:text-carbon-900 focus:rounded-lg focus:shadow-md focus:text-sm focus:font-medium"
+      >
+        Skip to content
+      </a>
       <motion.header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           isScrolled ? 'bg-white/80 backdrop-blur-2xl border-b border-black/[0.04] shadow-[0_1px_3px_rgba(0,0,0,0.04)]' : 'bg-transparent'
@@ -51,7 +57,7 @@ export function Navbar() {
         <nav className="container-wide">
           <div className="flex items-center justify-between h-[80px]">
             <Link to="/" className="flex items-center shrink-0">
-              <img src="/voxaris-logo-white.png" alt="Voxaris AI" className="h-20 w-auto brightness-0" />
+              <img src="/voxaris-logo-white.png" alt="Voxaris AI" className="h-9 w-auto" />
             </Link>
             <div className="hidden lg:flex items-center gap-1">
               {navLinks.map((link) => (
@@ -93,7 +99,7 @@ export function Navbar() {
             <div className="hidden lg:flex items-center gap-4">
               <Link to="/book-demo"><Button className="bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 hover:from-gold-700 hover:via-gold-600 hover:to-gold-700 text-white rounded-full px-6 h-9 font-medium text-[13px] group shadow-gold-sm hover:shadow-gold border border-gold-400/30 transition-all duration-300">Book Demo <ArrowRight className="w-3.5 h-3.5 ml-2 group-hover:translate-x-0.5 transition-transform" /></Button></Link>
             </div>
-            <button className="lg:hidden p-2 text-carbon-500" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>{isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}</button>
+            <button className="lg:hidden p-2 text-carbon-500" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"} aria-expanded={isMobileMenuOpen}>{isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}</button>
           </div>
         </nav>
       </motion.header>

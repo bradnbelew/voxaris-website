@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
-import Layout from "@/components/layout/Layout";
+import { Navbar, Footer } from "@/components/marketing";
 import { Phone, Globe, PhoneOutgoing, CheckSquare, Calendar, Database, Bell, RefreshCw, ArrowRight, Zap, Shield, BarChart3 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -115,7 +115,8 @@ const FeatureCard = ({ feature, index }: { feature: typeof coreFeatures[0], inde
 
 export default function HowItWorks() {
   return (
-    <Layout>
+    <div className="min-h-screen bg-white">
+      <Navbar />
       <Helmet>
         <title>How Voxaris Works | AI-Powered Lead Automation Platform</title>
         <meta name="description" content="Voxaris handles every touchpoint from first contact to confirmed appointment with AI-powered precision. Inbound calls, outbound follow-up, qualification, and booking \u2014 all automated." />
@@ -128,7 +129,7 @@ export default function HowItWorks() {
         <meta property="og:image" content="https://voxaris.io/og-image.png" />
         <meta name="twitter:image" content="https://voxaris.io/og-image.png" />      </Helmet>
       {/* Hero */}
-      <section className="section-padding bg-secondary/30">
+      <section className="pt-32 pb-16 lg:pb-20 bg-secondary/30">
         <div className="container-wide">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -285,6 +286,7 @@ export default function HowItWorks() {
           </Link>
         </div>
       </section>
-    </Layout>
+      <Footer />
+    </div>
   );
 }

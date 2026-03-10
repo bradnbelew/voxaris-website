@@ -1,6 +1,4 @@
-/* Typography: Satoshi (display) via Fontshare, DM Sans (body) via Google */
-@import url('https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,600,700,800,900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..900;1,9..40,400;500&family=JetBrains+Mono:wght@400;500&display=swap');
+/* Typography: Satoshi (display) via Fontshare, DM Sans (body) via Google — loaded in index.html */
 
 @tailwind base;
 @tailwind components;
@@ -186,6 +184,12 @@
     animation: grain 8s steps(10) infinite;
   }
 
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .noise-overlay::before {
+    animation: none;
+  }
 }
 
 @layer utilities {

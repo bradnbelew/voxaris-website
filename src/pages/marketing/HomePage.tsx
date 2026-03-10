@@ -1,18 +1,12 @@
 import { Helmet } from 'react-helmet-async';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight,
   Phone,
-  PhoneCall,
   PhoneOff,
-  UserCheck,
-  MessageSquare,
-  CalendarCheck,
-  Database,
   Clock,
   Users,
-  ShieldCheck,
   AlertTriangle,
   CheckCircle2,
   X,
@@ -39,12 +33,10 @@ export function HomePage() {
         <link rel="canonical" href="https://voxaris.io/" />
       </Helmet>
       <Navbar />
-      <main>
+      <main id="main-content">
         <Hero />
         <WhyOneBotFails />
-        <MeetTheTeam />
         <HandoffFlow />
-        <WhatGetsLogged />
         <BusinessRealities />
         <FAQSection />
         <FinalCTA />
@@ -109,112 +101,57 @@ function WhyOneBotFails() {
   );
 }
 
-/* ── Section: Meet the Team ─────────────────────────────────── */
-function MeetTheTeam() {
-  const agents = [
+/* ── Section: V·TEAMS Live Scene ────────────────────────────── */
+function HandoffFlow() {
+  const lanes = [
     {
       role: 'Receptionist',
+      status: 'Complete',
+      desc: 'Answered instantly, identified sales intent, captured caller details.',
       color: 'bg-emerald-500',
-      icon: PhoneCall,
-      purpose: 'First point of contact. Answers instantly, greets naturally, captures caller name, identifies department and intent, routes cleanly.',
-      mustNot: 'Over-qualify, invent facts, or attempt to close.',
-      success: 'Clean transfer with summary and extracted variables.',
+      borderColor: 'border-emerald-500/30',
+      statusColor: 'text-emerald-400',
+      active: true,
+      live: false,
     },
     {
       role: 'Qualifier',
+      status: 'Complete',
+      desc: 'Confirmed vehicle interest, timing, financing intent, and urgency.',
       color: 'bg-blue-500',
-      icon: UserCheck,
-      purpose: 'Identifies sales intent, gathers requirements, timeline, budget, and decision-maker context. Determines if the caller is ready to book or needs specialist help.',
-      mustNot: 'Ramble, repeat questions already answered, or hard-close prematurely.',
-      success: 'Handoff to specialist or closer with full context.',
+      borderColor: 'border-blue-500/30',
+      statusColor: 'text-blue-400',
+      active: true,
+      live: false,
     },
     {
       role: 'Specialist',
+      status: 'Live now',
+      desc: 'Handling trade-in questions and reducing hesitation before booking.',
       color: 'bg-amber-500',
-      icon: MessageSquare,
-      purpose: 'Handles consultative questions — process, availability, pricing context, service details. Reduces hesitation and moves the caller toward booking.',
-      mustNot: 'Hallucinate details, pricing, or policies. Make up facts.',
-      success: 'Resolves uncertainty and passes to closer with clear recommendation.',
+      borderColor: 'border-amber-500/30',
+      statusColor: 'text-amber-400',
+      active: true,
+      live: true,
     },
     {
       role: 'Closer',
+      status: 'Ready',
+      desc: 'Will confirm appointment time, store location, and sync to CRM.',
       color: 'bg-rose-500',
-      icon: CalendarCheck,
-      purpose: 'Secures the appointment. Confirms date, time, contact details, and location. Explains what happens next. Triggers CRM sync and confirmation.',
-      mustNot: 'Reopen discovery unnecessarily or overtalk once the buyer is ready.',
-      success: 'Booked appointment or clear fallback outcome.',
+      borderColor: 'border-rose-500/30',
+      statusColor: 'text-rose-400',
+      active: false,
+      live: false,
     },
-  ];
-
-  return (
-    <section className="py-20 lg:py-28 bg-white">
-      <div className="max-w-5xl mx-auto px-6 sm:px-8">
-        <motion.div
-          className="text-center mb-14"
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, ease }}
-        >
-          <span className="text-[11px] font-semibold text-carbon-400 uppercase tracking-[0.2em] mb-4 block">The V·TEAMS Squad</span>
-          <h2 className="text-3xl sm:text-4xl font-bold text-carbon-900 mb-6 font-display">
-            Four specialized agents.
-            <br className="hidden sm:block" />
-            <span className="text-carbon-400">One coordinated sales team.</span>
-          </h2>
-          <p className="max-w-2xl mx-auto text-[16px] text-carbon-500 leading-[1.8]">
-            Each agent has a focused job, a clear handoff trigger, and access to everything the previous agent learned. No repeated questions. No dropped context. No dead ends.
-          </p>
-        </motion.div>
-
-        <div className="grid sm:grid-cols-2 gap-5">
-          {agents.map((agent, i) => (
-            <motion.div
-              key={agent.role}
-              className="p-7 rounded-2xl bg-carbon-50 border border-carbon-200 hover:border-carbon-300 hover:shadow-sm transition-all duration-300"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-            >
-              <div className="flex items-center gap-3 mb-5">
-                <div className={`w-10 h-10 rounded-xl ${agent.color} flex items-center justify-center`}>
-                  <agent.icon className="w-5 h-5 text-white" />
-                </div>
-                <h3 className="text-lg font-bold text-carbon-900 font-display">{agent.role}</h3>
-              </div>
-              <p className="text-[14px] text-carbon-600 leading-relaxed mb-4">{agent.purpose}</p>
-              <div className="space-y-2">
-                <div className="flex items-start gap-2">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 mt-0.5 shrink-0" />
-                  <span className="text-[12px] text-carbon-500"><strong className="text-carbon-700">Success:</strong> {agent.success}</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <ShieldCheck className="w-3.5 h-3.5 text-amber-500 mt-0.5 shrink-0" />
-                  <span className="text-[12px] text-carbon-500"><strong className="text-carbon-700">Guardrail:</strong> {agent.mustNot}</span>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ── Section: How the Handoff Works ─────────────────────────── */
-function HandoffFlow() {
-  const steps = [
-    { step: '01', label: 'Call comes in', desc: 'Receptionist answers in under 5 seconds. Greets caller, captures name and intent.', arrow: true },
-    { step: '02', label: 'Intent identified', desc: 'Qualifier gathers requirements, timeline, budget context. Determines readiness.', arrow: true },
-    { step: '03', label: 'Questions resolved', desc: 'Specialist handles consultative questions about process, availability, next steps.', arrow: true },
-    { step: '04', label: 'Appointment booked', desc: 'Closer confirms time, contact details, and location. CRM synced. Confirmation sent.' },
   ];
 
   return (
     <section className="py-20 lg:py-28 bg-carbon-950 relative overflow-hidden">
       <div className="absolute inset-0 noise-overlay opacity-20" />
-      <div className="max-w-5xl mx-auto px-6 sm:px-8">
+      <div className="max-w-5xl mx-auto px-6 sm:px-8 relative z-10">
+
+        {/* Section header */}
         <motion.div
           className="text-center mb-14"
           initial={{ opacity: 0, y: 24 }}
@@ -222,42 +159,138 @@ function HandoffFlow() {
           viewport={{ once: true }}
           transition={{ duration: 0.7, ease }}
         >
-          <span className="text-[11px] font-semibold text-white/30 uppercase tracking-[0.2em] mb-4 block">The Handoff</span>
+          <span className="text-[11px] font-semibold text-white/30 uppercase tracking-[0.2em] mb-4 block">Live Inbound Flow</span>
           <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6 font-display">
-            Every transfer carries
+            Watch a call move through
             <br className="hidden sm:block" />
-            <span className="text-white/40">full context. Zero repetition.</span>
+            <span className="text-white/60">the entire squad in real time.</span>
           </h2>
-          <p className="max-w-2xl mx-auto text-[16px] text-white/40 leading-[1.8]">
-            Caller name, phone number, intent, service interest, appointment readiness, timeline, budget context, decision-maker status, conversation summary — all passed on every handoff.
-          </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-4 gap-4">
-          {steps.map((item, i) => (
+        {/* V·TEAMS Card */}
+        <motion.div
+          className="rounded-2xl bg-white/[0.03] border border-white/10 overflow-hidden"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease }}
+        >
+          {/* Topbar */}
+          <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.06]">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-[10px] font-medium text-white/25 uppercase tracking-[0.15em]">Powered by</span>
+                <span className="text-[13px] font-bold text-gold-500 tracking-wide">V·TEAMS</span>
+              </div>
+              <p className="text-[15px] font-semibold text-white">After-hours dealership sales call</p>
+              <p className="text-[12px] text-white/30 mt-0.5">Northstar Auto Group · Orlando, FL · Active now</p>
+            </div>
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 shrink-0">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse-soft" />
+              <span className="text-[11px] font-semibold text-emerald-400 uppercase tracking-wider">Live</span>
+            </div>
+          </div>
+
+          {/* Flow Grid */}
+          <div className="p-5 sm:p-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              {lanes.map((lane, i) => (
+                <motion.div
+                  key={lane.role}
+                  className={`relative rounded-xl p-4 border transition-all duration-300 ${
+                    lane.live
+                      ? `bg-white/[0.06] ${lane.borderColor} shadow-[0_0_20px_rgba(245,158,11,0.06)]`
+                      : lane.active
+                        ? 'bg-white/[0.04] border-white/[0.08]'
+                        : 'bg-white/[0.02] border-white/[0.05]'
+                  }`}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.3 + i * 0.1 }}
+                >
+                  {/* Accent bar */}
+                  <div className={`absolute top-0 left-4 right-4 h-[2px] rounded-b-full ${lane.color} ${lane.active ? 'opacity-60' : 'opacity-20'}`} />
+
+                  <div className="flex items-center justify-between mb-3 mt-1">
+                    <span className="text-[13px] font-semibold text-white">{lane.role}</span>
+                    <span className={`text-[10px] font-semibold uppercase tracking-wider ${
+                      lane.live ? lane.statusColor : lane.active ? 'text-white/40' : 'text-white/20'
+                    }`}>
+                      {lane.status}
+                    </span>
+                  </div>
+                  <p className={`text-[12px] leading-relaxed ${lane.active ? 'text-white/40' : 'text-white/20'}`}>
+                    {lane.desc}
+                  </p>
+
+                  {/* Arrow between lanes (desktop) */}
+                  {i < lanes.length - 1 && (
+                    <div className="hidden lg:flex absolute top-1/2 -right-[10px] w-5 h-5 items-center justify-center z-10">
+                      <span className={`text-[14px] ${lane.live ? 'text-amber-400/60 animate-pulse-soft' : 'text-white/15'}`}>→</span>
+                    </div>
+                  )}
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Timeline rail */}
             <motion.div
-              key={item.step}
-              className="relative p-6 rounded-2xl bg-white/5 border border-white/10"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              className="mt-5 h-1 rounded-full bg-white/[0.06] overflow-hidden"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.12 }}
+              transition={{ delay: 0.8 }}
             >
-              <div className="text-white/10 text-[40px] font-bold font-display leading-none mb-4">{item.step}</div>
-              <h3 className="text-white font-semibold text-[15px] mb-2">{item.label}</h3>
-              <p className="text-white/40 text-[13px] leading-relaxed">{item.desc}</p>
-              {item.arrow && (
-                <div className="hidden md:flex absolute top-1/2 -right-3 w-6 h-6 items-center justify-center">
-                  <ArrowRight className="w-4 h-4 text-white/20" />
-                </div>
-              )}
+              <motion.div
+                className="h-full rounded-full bg-gradient-to-r from-emerald-500/70 via-blue-500/70 to-amber-500/70"
+                initial={{ width: '0%' }}
+                whileInView={{ width: '68%' }}
+                viewport={{ once: true }}
+                transition={{ delay: 1.0, duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
+              />
             </motion.div>
-          ))}
-        </div>
+          </div>
+
+          {/* Footer */}
+          <div className="px-5 sm:px-6 py-4 border-t border-white/[0.06] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="space-y-3 flex-1 min-w-0">
+              {/* Signal chips */}
+              <div className="flex flex-wrap gap-2">
+                {['CRM synced', 'Transcript saved', 'Warm transfer preserved'].map((chip) => (
+                  <span key={chip} className="px-2.5 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-[10px] font-medium text-white/30 uppercase tracking-wider">
+                    {chip}
+                  </span>
+                ))}
+              </div>
+              {/* Appointment confidence */}
+              <div className="flex items-center gap-3">
+                <span className="text-[11px] text-white/25 uppercase tracking-wider shrink-0">Appointment confidence</span>
+                <div className="flex-1 max-w-[120px] h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
+                  <motion.div
+                    className="h-full rounded-full bg-gold-500/60"
+                    initial={{ width: '0%' }}
+                    whileInView={{ width: '92%' }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 1.2, duration: 1.0, ease }}
+                  />
+                </div>
+                <span className="text-[12px] font-semibold text-gold-500/80">92%</span>
+              </div>
+            </div>
+
+            {/* Metric card */}
+            <div className="text-right shrink-0 pl-4">
+              <span className="text-[10px] text-white/25 uppercase tracking-wider block">Answer time</span>
+              <span className="text-[22px] font-bold text-white leading-none">&lt; 5s</span>
+              <span className="text-[10px] text-white/20 block mt-0.5">24/7/365</span>
+            </div>
+          </div>
+        </motion.div>
 
         {/* Context payload preview */}
         <motion.div
-          className="mt-10 p-6 rounded-2xl bg-white/[0.03] border border-white/10 max-w-2xl mx-auto"
+          className="mt-8 p-6 rounded-2xl bg-white/[0.03] border border-white/[0.08] max-w-2xl mx-auto"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -272,63 +305,25 @@ function HandoffFlow() {
             ))}
           </div>
         </motion.div>
-      </div>
-    </section>
-  );
-}
 
-/* ── Section: What Gets Logged ──────────────────────────────── */
-function WhatGetsLogged() {
-  const logItems = [
-    { icon: Database, label: 'Contact record', desc: 'Created or updated with every call' },
-    { icon: Phone, label: 'Source: inbound call', desc: 'Channel tracked automatically' },
-    { icon: MessageSquare, label: 'Full transcript', desc: 'Every word, every agent, timestamped' },
-    { icon: UserCheck, label: 'Intent + disposition', desc: 'Sales, support, consultation, follow-up' },
-    { icon: CalendarCheck, label: 'Appointment status', desc: 'Booked time, location, confirmed details' },
-    { icon: Users, label: 'Squad path', desc: 'Which agents handled which stage' },
-  ];
-
-  return (
-    <section className="py-20 lg:py-28 bg-white">
-      <div className="max-w-5xl mx-auto px-6 sm:px-8">
+        {/* CTA after the visualization */}
         <motion.div
-          className="mb-14"
-          initial={{ opacity: 0, y: 24 }}
+          className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.7, ease }}
+          transition={{ delay: 0.3 }}
         >
-          <span className="text-[11px] font-semibold text-carbon-400 uppercase tracking-[0.2em] mb-4 block">CRM Sync</span>
-          <h2 className="text-3xl sm:text-4xl font-bold text-carbon-900 mb-6 font-display">
-            Every call writes to your CRM
-            <br className="hidden sm:block" />
-            <span className="text-carbon-400">in real time. Not after.</span>
-          </h2>
-          <p className="max-w-2xl text-[16px] text-carbon-500 leading-[1.8]">
-            Fields are staged during the call so a dropped connection never wipes the record. Successful calls, partial calls, and escalated calls all get logged with full detail.
-          </p>
-        </motion.div>
-
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {logItems.map((item, i) => (
-            <motion.div
-              key={item.label}
-              className="flex items-start gap-4 p-5 rounded-xl bg-carbon-50 border border-carbon-200"
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.06 }}
+          <Link to="/book-demo">
+            <Button
+              size="lg"
+              className="bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 hover:from-gold-500 hover:via-gold-400 hover:to-gold-500 text-white h-12 px-8 text-[14px] font-semibold rounded-full shadow-gold-btn border border-gold-400/30 transition-all duration-500"
             >
-              <div className="w-9 h-9 rounded-lg bg-carbon-900 flex items-center justify-center shrink-0 shadow-sm">
-                <item.icon className="w-4 h-4 text-white/70" />
-              </div>
-              <div>
-                <div className="text-[14px] font-semibold text-carbon-800">{item.label}</div>
-                <div className="text-[12px] text-carbon-400">{item.desc}</div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+              See This Live in a 15-Minute Demo
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
+          </Link>
+        </motion.div>
       </div>
     </section>
   );
@@ -371,8 +366,8 @@ function BusinessRealities() {
               viewport={{ once: true }}
               transition={{ delay: i * 0.08 }}
             >
-              <div className="w-10 h-10 rounded-xl bg-carbon-900 flex items-center justify-center shrink-0 shadow-sm">
-                <item.icon className="w-5 h-5 text-white/70" />
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${i === 0 ? 'bg-gradient-to-br from-gold-600 to-gold-500 shadow-gold-sm' : 'bg-carbon-900 shadow-sm'}`}>
+                <item.icon className="w-5 h-5 text-white" />
               </div>
               <div>
                 <h3 className="font-semibold text-carbon-900 mb-1">{item.title}</h3>
@@ -391,7 +386,7 @@ function FAQSection() {
   const faqs = [
     {
       q: 'How is this different from a single AI phone bot?',
-      a: 'Most AI phone systems use one agent for everything. V·TEAMS uses four specialized agents that hand off to each other with full context — like a real sales team. The receptionist doesn\'t try to close. The closer doesn\'t try to qualify. Each agent does what it\'s built for.',
+      a: 'V·TEAMS uses four specialized agents that hand off with full context — the receptionist doesn\'t try to close, the closer doesn\'t try to qualify. Each agent does what it\'s built for.',
     },
     {
       q: 'Does V·TEAMS integrate with my CRM?',
@@ -448,15 +443,26 @@ function FAQItem({ q, a }: { q: string; a: string }) {
       <button
         className="w-full flex items-center justify-between p-5 text-left hover:bg-carbon-50 transition-colors"
         onClick={() => setOpen(!open)}
+        aria-expanded={open}
       >
         <span className="text-[15px] font-medium text-carbon-800 pr-4">{q}</span>
-        <ChevronDown className={`w-4 h-4 text-carbon-400 shrink-0 transition-transform ${open ? 'rotate-180' : ''}`} />
+        <ChevronDown className={`w-4 h-4 text-carbon-400 shrink-0 transition-transform duration-300 ${open ? 'rotate-180' : ''}`} />
       </button>
-      {open && (
-        <div className="px-5 pb-5 pt-0">
-          <p className="text-[14px] text-carbon-500 leading-relaxed">{a}</p>
-        </div>
-      )}
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            className="overflow-hidden"
+          >
+            <div className="px-5 pb-5 pt-1">
+              <p className="text-[14px] text-carbon-500 leading-relaxed">{a}</p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
@@ -475,11 +481,11 @@ function FinalCTA() {
         >
           Stop losing leads to slow follow-up.
           <br className="hidden sm:block" />
-          <span className="text-white/40">Start booking appointments with V·TEAMS.</span>
+          <span className="text-white/60">Start booking appointments with V·TEAMS.</span>
         </motion.h2>
 
         <motion.p
-          className="text-lg text-white/40 mb-10 max-w-xl mx-auto"
+          className="text-lg text-white/60 mb-10 max-w-xl mx-auto"
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}

@@ -176,10 +176,13 @@ export async function handleVoiceToolCall(
         payload: { reason, department },
       });
 
-      // TODO: Return actual transfer number based on department
+      const transferNumber =
+        process.env.ARRIVIA_TRANSFER_NUMBER ||
+        "+18001234567";
+
       return {
         success: true,
-        transferNumber: process.env.ARRIVIA_TRANSFER_NUMBER || "+18001234567",
+        transferNumber,
         message: `Transferring to ${department} team.`,
       };
     }
