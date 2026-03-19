@@ -16,6 +16,7 @@ import {
   Demo as MarketingDemo,
   TalkingPostcard,
   TalkingPostcardDemo,
+  BuybackPostcardDemo,
   BlogIndex,
   BlogPost,
 } from "./pages/marketing";
@@ -69,6 +70,7 @@ const App = () => (
           <Route path="/book-demo" element={<BookDemo />} />
           <Route path="/talking-postcard" element={<TalkingPostcard />} />
           <Route path="/talking-postcard/demo" element={<TalkingPostcardDemo />} />
+          <Route path="/talking-postcard/buyback" element={<BuybackPostcardDemo />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
 

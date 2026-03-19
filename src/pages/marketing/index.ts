@@ -7,5 +7,6 @@ export { SolutionWhiteLabel } from './SolutionWhiteLabel';
 export { Demo } from './Demo';
 export { TalkingPostcard } from './TalkingPostcard';
 export { TalkingPostcardDemo } from './TalkingPostcardDemo';
+export { BuybackPostcardDemo } from './BuybackPostcardDemo';
 export { BlogIndex } from './BlogIndex';
 export { BlogPost } from './BlogPost';
