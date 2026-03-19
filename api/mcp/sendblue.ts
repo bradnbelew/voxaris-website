@@ -87,7 +87,12 @@ async function sbFetch(path: string, options: RequestInit = {}): Promise<any> {
     headers: { ...SB_HEADERS, ...(options.headers || {}) },
     signal: AbortSignal.timeout(15_000),
   });
-  return resp.json();
+  const text = await resp.text();
+  try {
+    return JSON.parse(text);
+  } catch {
+    throw new Error(`Sendblue returned non-JSON: ${text.slice(0, 100)}`);
+  }
 }
 
 async function executeTool(name: string, args: Record<string, any>): Promise<string> {
@@ -97,10 +102,10 @@ async function executeTool(name: string, args: Record<string, any>): Promise<str
       if (args.media_url) body.media_url = args.media_url;
       if (args.send_style) body.send_style = args.send_style;
       const res = await sbFetch('/send-message', { method: 'POST', body: JSON.stringify(body) });
-      if (res.status === 'QUEUED' || res.status === 'SUCCESS') {
+      if (res.status === 'QUEUED' || res.status === 'SUCCESS' || res.uuid) {
         return `iMessage sent to ${args.number}: "${args.content.slice(0, 50)}${args.content.length > 50 ? '...' : ''}"`;
       }
-      return `Send failed: ${res.message || JSON.stringify(res)}`;
+      return `Send failed: ${res.error_message || res.message || JSON.stringify(res)}`;
     }
 
     case 'send_group_message': {
@@ -110,26 +115,26 @@ async function executeTool(name: string, args: Record<string, any>): Promise<str
       if (res.status === 'QUEUED' || res.status === 'SUCCESS') {
         return `Group message sent to ${args.numbers.length} people: "${args.content.slice(0, 50)}..."`;
       }
-      return `Send failed: ${res.message || JSON.stringify(res)}`;
+      return `Send failed: ${res.error_message || res.message || JSON.stringify(res)}`;
     }
 
     case 'get_messages': {
-      const res = await sbFetch(`/messages?number=${encodeURIComponent(args.number)}&limit=${args.limit || 50}`);
-      const msgs = res.messages || [];
-      if (msgs.length === 0) return `No messages found for ${args.number}.`;
-      return msgs.map((m: any) =>
-        `**${m.is_outbound ? 'Sent' : 'Received'}** (${m.date_sent || 'N/A'}): ${m.content || '[media]'}`
-      ).join('\n');
+      return `Message history is not available on the current Sendblue plan. Use the Sendblue dashboard to view message history.`;
     }
 
     case 'evaluate_service': {
-      const res = await sbFetch('/evaluate-service', { method: 'POST', body: JSON.stringify({ number: args.number }) });
-      return `${args.number}: ${res.is_imessage ? 'iMessage (blue bubble)' : 'SMS (green bubble)'}`;
+      // evaluate-service is a GET endpoint
+      const res = await sbFetch(`/evaluate-service?number=${encodeURIComponent(args.number)}`);
+      const service = res.service || 'unknown';
+      return `${args.number}: ${service === 'iMessage' ? 'iMessage (blue bubble)' : 'SMS (green bubble)'}`;
     }
 
     case 'send_typing_indicator': {
-      const res = await sbFetch('/send-typing-indicator', { method: 'POST', body: JSON.stringify({ number: args.number }) });
-      return res.status === 'QUEUED' ? `Typing indicator sent to ${args.number}` : `Failed: ${res.message || 'unknown error'}`;
+      const res = await sbFetch('/send-typing-indicator', { method: 'POST', body: JSON.stringify({ number: args.number, from_number: SB_FROM }) });
+      if (res.status === 'QUEUED' || res.status === 'SUCCESS') {
+        return `Typing indicator sent to ${args.number}`;
+      }
+      return `Failed: ${res.error_message || res.message || 'unknown error'}`;
     }
 
     default:
