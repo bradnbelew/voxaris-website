@@ -21,6 +21,10 @@ const CAL_HEADERS = {
   'User-Agent': 'Voxaris/1.0',
 };
 
+// Sendblue
+const SB_KEY = process.env.SENDBLUE_API_KEY || '';
+const SB_SECRET = process.env.SENDBLUE_API_SECRET || '';
+
 // GHL
 const GHL_TOKEN = process.env.GHL_ACCESS_TOKEN || '';
 const GHL_LOCATION_ID = process.env.GHL_LOCATION_ID || '';
@@ -87,6 +91,12 @@ async function handleBuybackTool(toolName: string, toolArgs: Record<string, any>
         tags: ['buyback-postcard', 'appointment-booked', 'vip-appraisal'],
         note: `## VIP Appraisal Appointment Booked\n\n**Type:** ${toolArgs.appointment_type || 'Appraisal'}\n**Time:** ${toolArgs.slot_start_iso || 'TBD'}\n**Vehicle:** ${toolArgs.vehicle || 'N/A'}\n**Conversation:** ${cid}\n**Booked:** ${new Date().toLocaleString('en-US')}`,
       }).catch(() => {});
+      // Send confirmation text via Sendblue
+      if (toolArgs.customer_phone) {
+        const dt = toolArgs.slot_start_iso ? new Date(toolArgs.slot_start_iso) : null;
+        const timeStr = dt ? dt.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', timeZone: 'America/New_York' }) + ' at ' + dt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }) : 'your scheduled time';
+        sendblueText(toolArgs.customer_phone, `Hi ${toolArgs.customer_first_name || 'there'}! Your VIP appraisal at Orlando Motors is confirmed for ${timeStr}. Bring your vehicle and any spare keys. See you soon! - Orlando Motors`).catch(() => {});
+      }
       return { success: true, message: `Appointment confirmed for ${toolArgs.customer_first_name}. Tell the customer they are all set and we look forward to seeing them at Orlando Motors. Remind them to bring the mailer and ask for the VIP desk.` };
     }
 
@@ -224,6 +234,10 @@ async function bookCalAppointment(toolArgs: Record<string, any>, cid: string): P
         ghlPush({ firstName: name.split(' ')[0], lastName: name.split(' ').slice(1).join(' '), email, phone, tags: ['business-card-scan', 'strategy-call-booked', 'voxaris-lead'], note: `## Strategy Call Booked\n\n**Time:** ${slot_start_iso}\n**Booking:** ${booking?.uid || 'N/A'}\n**Conversation:** ${cid}` }).catch(() => {});
         const dt = new Date(slot_start_iso);
         const readable = dt.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', timeZone: 'America/New_York' }) + ' at ' + dt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' });
+        // Send confirmation text if phone provided
+        if (phone) {
+          sendblueText(phone, `Hi ${name.split(' ')[0]}! Your Voxaris strategy call is confirmed for ${readable}. You'll get a calendar invite at ${email}. Looking forward to it! - Voxaris Team`).catch(() => {});
+        }
         return { success: true, message: `Strategy call confirmed for ${name} on ${readable}. A confirmation email will be sent to ${email}. Tell them you are excited for them to meet the team!`, booking_id: booking?.uid };
       }
     } catch {}
@@ -272,3 +286,20 @@ async function ghlPush(params: { firstName?: string; lastName?: string; email?: 
 function fmtSlot(date: Date, h: number, m: number): string { const d = new Date(date); d.setHours(h, m, 0, 0); return d.toISOString(); }
 function fmtDay(date: Date): string { return date.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' }); }
 function fmtTime(h: number, m: number): string { const p = h >= 12 ? 'PM' : 'AM'; return `${h > 12 ? h - 12 : h}:${m.toString().padStart(2, '0')} ${p}`; }
+
+// ── Sendblue: Send iMessage/SMS ──
+async function sendblueText(number: string, content: string): Promise<void> {
+  if (!SB_KEY || !SB_SECRET) return;
+  try {
+    const resp = await fetch('https://api.sendblue.co/api/send-message', {
+      method: 'POST',
+      headers: { 'sb-api-key-id': SB_KEY, 'sb-api-secret-key': SB_SECRET, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ number, content }),
+      signal: AbortSignal.timeout(10_000),
+    });
+    const data = await resp.json();
+    console.log(`Sendblue text to ${number}: ${data.status || 'sent'}`);
+  } catch (err: any) {
+    console.warn(`Sendblue failed: ${err.message}`);
+  }
+}
