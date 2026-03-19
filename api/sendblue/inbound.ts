@@ -50,8 +50,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // GHL sends custom data nested under body or as top-level fields
   if (req.query.action === 'send') {
     console.log('Sendblue send body:', JSON.stringify(body).slice(0, 500));
-    const to = body.number || body.phone || body.to || body.contact?.phone || body.customData?.number || body.customData?.phone || '';
-    const msg = body.content || body.message || body.text || body.customData?.content || body.customData?.message || '';
+    // Check body, query params, and every nested path GHL might use
+    const q = req.query || {};
+    const to = body.number || body.phone || body.to || body.contact?.phone || body.customData?.number || body.customData?.phone || (q.number as string) || (q.phone as string) || '';
+    const msg = body.content || body.message || body.text || body.customData?.content || body.customData?.message || (q.content as string) || (q.message as string) || '';
 
     if (!to || !msg) {
       return res.status(400).json({ ok: false, error: 'Missing number and content' });
