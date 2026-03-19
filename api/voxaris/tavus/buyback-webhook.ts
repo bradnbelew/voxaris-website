@@ -8,39 +8,51 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
  */
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const body = req.body || {};
+
+  // Tavus sends conversation_id in multiple places depending on event type
+  const conversationId =
+    body.conversation_id ||
+    body.properties?.conversation_id ||
+    body.cid ||
+    '';
+
+  // Tavus sends tool calls with tool_name/function_name/name and tool_args/arguments/args
+  const toolName = body.tool_name || body.function_name || body.name || '';
+  const toolArgs = body.tool_args || body.tool_input || body.arguments || body.args || {};
   const eventType = body.event_type || body.type || 'unknown';
-  const conversationId = body.conversation_id || '';
 
-  console.log(`Buyback webhook: ${eventType} for ${conversationId}`);
+  console.log(`Buyback webhook: event=${eventType} tool=${toolName} cid=${conversationId}`);
 
+  // If a tool name is present, this is a tool call — handle it regardless of event_type
+  if (toolName) {
+    const result = handleToolCall(toolName, toolArgs);
+    return res.status(200).json({ ok: true, result: JSON.stringify(result) });
+  }
+
+  // Non-tool events (started, ended, utterance, etc.) — just acknowledge
   switch (eventType) {
-    case 'conversation.tool_call':
-    case 'tool_call': {
-      const toolName = body.tool_name || body.function_name || '';
-      const toolInput = body.tool_input || body.arguments || {};
-      const toolCallId = body.tool_call_id || '';
-
-      const result = handleToolCall(toolName, toolInput);
-
-      return res.status(200).json({ tool_call_id: toolCallId, result });
-    }
-
     case 'conversation.started':
     case 'conversation_started':
     case 'conversation.ended':
     case 'conversation_ended':
     case 'conversation.utterance':
     case 'utterance':
-      // Log events but don't block
       console.log(`Buyback event: ${eventType}`, JSON.stringify(body).slice(0, 500));
-      return res.status(200).json({ ok: true });
+      break;
 
     default:
-      return res.status(200).json({ ok: true });
+      console.log(`Buyback unknown event: ${eventType}`, JSON.stringify(body).slice(0, 300));
   }
+
+  return res.status(200).json({ ok: true });
 }
 
 function handleToolCall(toolName: string, toolInput: Record<string, any>): Record<string, any> {

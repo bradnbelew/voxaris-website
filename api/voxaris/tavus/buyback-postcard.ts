@@ -9,8 +9,8 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
  */
 
 const TAVUS_API_KEY = process.env.TAVUS_API_KEY || '';
-const PERSONA_ID = 'p12baf16e19a'; // Ashley - Orlando Motors Buyback
-const REPLICA_ID = 'raf6459c9b82'; // Maria replica
+const PERSONA_ID = 'p12baf16e19a'; // Maria - Orlando Motors VIP Buyback
+const REPLICA_ID = 'raf6459c9b82'; // Default replica
 
 const TAVUS_URLS = ['https://tavusapi.com', 'https://api.tavus.io'];
 
@@ -87,7 +87,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       participant_left_timeout: 30,
       participant_absent_timeout: 120,
       enable_recording: true,
-      enable_transcription: true,
+      enable_closed_captions: true,
       language: 'english',
     },
   });
