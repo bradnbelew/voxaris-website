@@ -70,7 +70,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       // Send typing indicator first for natural feel
       await fetch('https://api.sendblue.co/api/send-typing-indicator', {
         method: 'POST',
-        headers: { 'sb-api-key-id': SB_KEY, 'sb-api-secret-key': SB_SECRET, 'Content-Type': 'application/json' },
+        headers: { 'sb-api-key-id': SB_KEY, 'sb-api-secret-key': SB_SECRET, 'Content-Type': 'application/json', 'User-Agent': 'Voxaris/1.0' },
         body: JSON.stringify({ number: from }),
       });
 
@@ -80,7 +80,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       // Send the reply
       const sendRes = await fetch('https://api.sendblue.co/api/send-message', {
         method: 'POST',
-        headers: { 'sb-api-key-id': SB_KEY, 'sb-api-secret-key': SB_SECRET, 'Content-Type': 'application/json' },
+        headers: { 'sb-api-key-id': SB_KEY, 'sb-api-secret-key': SB_SECRET, 'Content-Type': 'application/json', 'User-Agent': 'Voxaris/1.0' },
         body: JSON.stringify({ number: from, content: reply, from_number: SB_FROM }),
         signal: AbortSignal.timeout(10_000),
       });

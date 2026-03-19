@@ -294,7 +294,7 @@ async function sendblueText(number: string, content: string): Promise<void> {
   try {
     const resp = await fetch('https://api.sendblue.co/api/send-message', {
       method: 'POST',
-      headers: { 'sb-api-key-id': SB_KEY, 'sb-api-secret-key': SB_SECRET, 'Content-Type': 'application/json' },
+      headers: { 'sb-api-key-id': SB_KEY, 'sb-api-secret-key': SB_SECRET, 'Content-Type': 'application/json', 'User-Agent': 'Voxaris/1.0' },
       body: JSON.stringify({ number, content, from_number: fromNumber }),
       signal: AbortSignal.timeout(10_000),
     });

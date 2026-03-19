@@ -14,6 +14,7 @@ const SB_HEADERS = {
   'sb-api-key-id': SB_KEY,
   'sb-api-secret-key': SB_SECRET,
   'Content-Type': 'application/json',
+  'User-Agent': 'Voxaris/1.0',
 };
 
 const TOOLS = [
