@@ -46,17 +46,35 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const body = req.body || {};
 
   // ── GHL webhook mode: ?action=send ──
-  // Simple POST { number, content } to send an iMessage. No MCP wrapper needed.
-  // GHL sends custom data nested under body or as top-level fields
   if (req.query.action === 'send') {
-    console.log('Sendblue send body:', JSON.stringify(body).slice(0, 500));
-    // Check body, query params, and every nested path GHL might use
+    // Log EVERYTHING so we can debug what GHL actually sends
+    console.log('SENDBLUE_SEND_DEBUG:', JSON.stringify({ query: req.query, body, headers: req.headers?.['content-type'] }));
+
+    // Try every possible location GHL might put the data
     const q = req.query || {};
-    const to = body.number || body.phone || body.to || body.contact?.phone || body.customData?.number || body.customData?.phone || (q.number as string) || (q.phone as string) || '';
-    const msg = body.content || body.message || body.text || body.customData?.content || body.customData?.message || (q.content as string) || (q.message as string) || '';
+    const to =
+      body?.number || body?.phone || body?.to ||
+      body?.contact?.phone || body?.contact_phone ||
+      body?.customData?.number || body?.customData?.phone ||
+      (q.number as string) || (q.phone as string) ||
+      (q.to as string) || '';
+    const msg =
+      body?.content || body?.message || body?.text ||
+      body?.customData?.content || body?.customData?.message ||
+      (q.content as string) || (q.message as string) || '';
 
     if (!to || !msg) {
-      return res.status(400).json({ ok: false, error: 'Missing number and content' });
+      // Instead of failing, return the debug info so we can see what GHL sent
+      return res.status(400).json({
+        ok: false,
+        error: 'Missing number and content',
+        debug: {
+          body_keys: Object.keys(body || {}),
+          body_preview: JSON.stringify(body).slice(0, 300),
+          query_keys: Object.keys(q),
+          query_preview: JSON.stringify(q).slice(0, 300),
+        },
+      });
     }
     if (!SB_KEY || !SB_SECRET) {
       return res.status(500).json({ ok: false, error: 'Sendblue not configured' });
