@@ -171,7 +171,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     conversation_name: `Business Card - ${config.name} - ${new Date().toISOString()}`,
     conversational_context: config.context,
     custom_greeting: config.greeting,
-    callback_url: `${CALLBACK_BASE}/api/voxaris/tavus/business-card-webhook`,
+    callback_url: `${CALLBACK_BASE}/api/voxaris/tavus/webhook?type=business-card`,
     properties: {
       max_call_duration: 600,
       participant_left_timeout: 20,
