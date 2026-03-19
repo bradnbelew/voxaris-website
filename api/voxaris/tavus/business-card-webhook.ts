@@ -12,6 +12,12 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 const CAL_API_KEY = process.env.CAL_COM_API_KEY || '';
 const CAL_EVENT_TYPE_ID = process.env.CAL_COM_EVENT_TYPE_ID || '';
 const CAL_API_VERSION = '2024-09-04';
+const CAL_HEADERS = {
+  Authorization: `Bearer ${CAL_API_KEY}`,
+  'cal-api-version': CAL_API_VERSION,
+  'Content-Type': 'application/json',
+  'User-Agent': 'Voxaris/1.0',
+};
 
 // GHL
 const GHL_TOKEN = process.env.GHL_ACCESS_TOKEN || '';
@@ -95,10 +101,7 @@ async function checkCalAvailability(
       `timeZone=America/New_York`;
 
     const resp = await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${CAL_API_KEY}`,
-        'cal-api-version': CAL_API_VERSION,
-      },
+      headers: CAL_HEADERS,
       signal: AbortSignal.timeout(10_000),
     });
 
@@ -186,11 +189,7 @@ async function bookCalAppointment(
     try {
       const resp = await fetch('https://api.cal.com/v2/bookings', {
         method: 'POST',
-        headers: {
-          Authorization: `Bearer ${CAL_API_KEY}`,
-          'Content-Type': 'application/json',
-          'cal-api-version': CAL_API_VERSION,
-        },
+        headers: CAL_HEADERS,
         body: JSON.stringify({
           eventTypeId: parseInt(CAL_EVENT_TYPE_ID),
           start: slot_start_iso,
