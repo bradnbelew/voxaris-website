@@ -44,6 +44,39 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const body = req.body || {};
+
+  // ── GHL webhook mode: ?action=send ──
+  // Simple POST { number, content } to send an iMessage. No MCP wrapper needed.
+  if (req.query.action === 'send') {
+    const to = body.number || body.phone || body.to || '';
+    const msg = body.content || body.message || body.text || '';
+
+    if (!to || !msg) {
+      return res.status(400).json({ ok: false, error: 'Missing number and content' });
+    }
+    if (!SB_KEY || !SB_SECRET) {
+      return res.status(500).json({ ok: false, error: 'Sendblue not configured' });
+    }
+
+    try {
+      const sendRes = await fetch('https://api.sendblue.co/api/send-message', {
+        method: 'POST',
+        headers: { 'sb-api-key-id': SB_KEY, 'sb-api-secret-key': SB_SECRET, 'Content-Type': 'application/json', 'User-Agent': 'Voxaris/1.0' },
+        body: JSON.stringify({ number: to, content: msg, from_number: SB_FROM }),
+        signal: AbortSignal.timeout(10_000),
+      });
+      const text = await sendRes.text();
+      let data: any;
+      try { data = JSON.parse(text); } catch { data = { raw: text }; }
+      console.log(`Sendblue send to ${to}: ${data.status || 'sent'}`);
+      return res.status(200).json({ ok: true, status: data.status || 'sent' });
+    } catch (err: any) {
+      console.error(`Sendblue send failed: ${err.message}`);
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  }
+
+  // ── Normal inbound mode (Sendblue webhook) ──
   const from = body.number || body.from_number || '';
   const content = body.content || body.message || '';
   const mediaUrl = body.media_url || '';
