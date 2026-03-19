@@ -164,7 +164,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       participant_left_timeout: 30,
       participant_absent_timeout: 120,
       enable_recording: true,
-      enable_transcription: true,
+      enable_closed_captions: true,
       language: 'english',
     },
   });
