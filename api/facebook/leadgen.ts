@@ -23,7 +23,8 @@ const FB_GRAPH_VERSION = 'v21.0';
 const SB_KEY = process.env.SENDBLUE_API_KEY || '';
 const SB_SECRET = process.env.SENDBLUE_API_SECRET || '';
 const SB_FROM = process.env.SENDBLUE_FROM_NUMBER || '+13053369541';
-const NOTIFY_NUMBER = process.env.LEAD_NOTIFY_NUMBER || '+14078195809';
+// Notify both Ethan and Mike on new leads
+const NOTIFY_NUMBERS = (process.env.LEAD_NOTIFY_NUMBERS || '+14078195809').split(',').map(n => n.trim());
 
 // GHL
 const GHL_TOKEN = process.env.GHL_ACCESS_TOKEN || '';
@@ -129,7 +130,7 @@ async function fetchLeadDetails(leadgenId: string): Promise<any> {
 }
 
 async function sendNotification(name: string, email: string, phone: string, company: string, formId: string) {
-  if (!SB_KEY || !SB_SECRET || !NOTIFY_NUMBER) return;
+  if (!SB_KEY || !SB_SECRET || NOTIFY_NUMBERS.length === 0) return;
 
   const msg = [
     `New Facebook Lead:`,
@@ -140,21 +141,24 @@ async function sendNotification(name: string, email: string, phone: string, comp
     `Form: ${formId || 'unknown'}`,
   ].filter(Boolean).join('\n');
 
-  try {
-    await fetch('https://api.sendblue.co/api/send-message', {
-      method: 'POST',
-      headers: {
-        'sb-api-key-id': SB_KEY,
-        'sb-api-secret-key': SB_SECRET,
-        'Content-Type': 'application/json',
-        'User-Agent': 'Voxaris/1.0',
-      },
-      body: JSON.stringify({ number: NOTIFY_NUMBER, content: msg, from_number: SB_FROM }),
-      signal: AbortSignal.timeout(10_000),
-    });
-    console.log(`Sendblue notification sent to ${NOTIFY_NUMBER}`);
-  } catch (err: any) {
-    console.warn(`Sendblue notification failed: ${err.message}`);
+  // Text both Ethan and Mike
+  for (const number of NOTIFY_NUMBERS) {
+    try {
+      await fetch('https://api.sendblue.co/api/send-message', {
+        method: 'POST',
+        headers: {
+          'sb-api-key-id': SB_KEY,
+          'sb-api-secret-key': SB_SECRET,
+          'Content-Type': 'application/json',
+          'User-Agent': 'Voxaris/1.0',
+        },
+        body: JSON.stringify({ number, content: msg, from_number: SB_FROM }),
+        signal: AbortSignal.timeout(10_000),
+      });
+      console.log(`Lead notification sent to ${number}`);
+    } catch (err: any) {
+      console.warn(`Notification to ${number} failed: ${err.message}`);
+    }
   }
 }
 
