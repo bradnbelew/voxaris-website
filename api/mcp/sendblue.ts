@@ -9,6 +9,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 const SB_KEY = process.env.SENDBLUE_API_KEY || '';
 const SB_SECRET = process.env.SENDBLUE_API_SECRET || '';
+const SB_FROM = process.env.SENDBLUE_FROM_NUMBER || '+13053369541';
 const SB_HEADERS = {
   'sb-api-key-id': SB_KEY,
   'sb-api-secret-key': SB_SECRET,
@@ -91,7 +92,7 @@ async function sbFetch(path: string, options: RequestInit = {}): Promise<any> {
 async function executeTool(name: string, args: Record<string, any>): Promise<string> {
   switch (name) {
     case 'send_imessage': {
-      const body: any = { number: args.number, content: args.content };
+      const body: any = { number: args.number, content: args.content, from_number: SB_FROM };
       if (args.media_url) body.media_url = args.media_url;
       if (args.send_style) body.send_style = args.send_style;
       const res = await sbFetch('/send-message', { method: 'POST', body: JSON.stringify(body) });
@@ -102,7 +103,7 @@ async function executeTool(name: string, args: Record<string, any>): Promise<str
     }
 
     case 'send_group_message': {
-      const body: any = { numbers: args.numbers, content: args.content };
+      const body: any = { numbers: args.numbers, content: args.content, from_number: SB_FROM };
       if (args.media_url) body.media_url = args.media_url;
       const res = await sbFetch('/send-group-message', { method: 'POST', body: JSON.stringify(body) });
       if (res.status === 'QUEUED' || res.status === 'SUCCESS') {

@@ -12,6 +12,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 const SB_KEY = process.env.SENDBLUE_API_KEY || '';
 const SB_SECRET = process.env.SENDBLUE_API_SECRET || '';
+const SB_FROM = process.env.SENDBLUE_FROM_NUMBER || '+13053369541';
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY || process.env.OPENAI_API_KEY || '';
 
 // GHL for contact lookup/creation
@@ -80,7 +81,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const sendRes = await fetch('https://api.sendblue.co/api/send-message', {
         method: 'POST',
         headers: { 'sb-api-key-id': SB_KEY, 'sb-api-secret-key': SB_SECRET, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ number: from, content: reply }),
+        body: JSON.stringify({ number: from, content: reply, from_number: SB_FROM }),
         signal: AbortSignal.timeout(10_000),
       });
       const sendData = await sendRes.json();

@@ -290,11 +290,12 @@ function fmtTime(h: number, m: number): string { const p = h >= 12 ? 'PM' : 'AM'
 // ── Sendblue: Send iMessage/SMS ──
 async function sendblueText(number: string, content: string): Promise<void> {
   if (!SB_KEY || !SB_SECRET) return;
+  const fromNumber = process.env.SENDBLUE_FROM_NUMBER || '+13053369541';
   try {
     const resp = await fetch('https://api.sendblue.co/api/send-message', {
       method: 'POST',
       headers: { 'sb-api-key-id': SB_KEY, 'sb-api-secret-key': SB_SECRET, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ number, content }),
+      body: JSON.stringify({ number, content, from_number: fromNumber }),
       signal: AbortSignal.timeout(10_000),
     });
     const data = await resp.json();
