@@ -65,6 +65,7 @@ export function BuybackPostcardDemo() {
   const [searchParams] = useSearchParams();
   const [state, setState] = useState<PageState>('idle');
   const [conversationUrl, setConversationUrl] = useState<string | null>(null);
+  const [conversationId, setConversationId] = useState<string | null>(null);
 
   // Parse PURL params or use demo defaults
   const firstName = searchParams.get('fn') || DEMO_DEFAULTS.firstName;
@@ -98,6 +99,7 @@ export function BuybackPostcardDemo() {
       const data = await res.json();
       if (data.success && data.conversation_url) {
         setConversationUrl(data.conversation_url);
+        setConversationId(data.conversation_id || null);
         setState('live');
       } else {
         throw new Error(data.error || 'Could not start conversation');
@@ -310,6 +312,8 @@ export function BuybackPostcardDemo() {
                     <CVIProvider>
                       <Conversation
                         conversationUrl={conversationUrl}
+                        conversationId={conversationId || undefined}
+                        webhookType="buyback"
                         onLeave={handleEnd}
                         className="w-full h-full"
                       />

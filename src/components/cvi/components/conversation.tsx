@@ -13,11 +13,13 @@ import { Mic, MicOff, Video, VideoOff, PhoneOff, Loader2, Monitor } from 'lucide
 
 interface ConversationProps {
   conversationUrl: string;
+  conversationId?: string;
+  webhookType?: 'buyback' | 'business-card' | string;
   onLeave?: () => void;
   className?: string;
 }
 
-export function Conversation({ conversationUrl, onLeave, className }: ConversationProps) {
+export function Conversation({ conversationUrl, conversationId, webhookType, onLeave, className }: ConversationProps) {
   const daily = useDaily();
   const localSessionId = useLocalSessionId();
   const remoteParticipantIds = useParticipantIds({ filter: 'remote' });
@@ -27,9 +29,10 @@ export function Conversation({ conversationUrl, onLeave, className }: Conversati
   const [isMicMuted, setIsMicMuted] = useState(false);
   const [isCamOff, setIsCamOff] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
+
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
   const localVideoRef = useRef<HTMLVideoElement>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // Get remote participant's video/audio
   const remoteId = remoteParticipantIds[0];
@@ -47,12 +50,19 @@ export function Conversation({ conversationUrl, onLeave, className }: Conversati
     }
   }, [remoteVideoTrack?.track]);
 
-  // Handle remote audio stream
+  // Handle remote audio stream (with cleanup to prevent leaks)
   useEffect(() => {
     if (remoteAudioTrack?.track) {
       const audio = new Audio();
       audio.srcObject = new MediaStream([remoteAudioTrack.track]);
       audio.play().catch(console.error);
+      audioRef.current = audio;
+
+      return () => {
+        audio.pause();
+        audio.srcObject = null;
+        audioRef.current = null;
+      };
     }
   }, [remoteAudioTrack?.track]);
 
@@ -111,12 +121,95 @@ export function Conversation({ conversationUrl, onLeave, className }: Conversati
     onLeave?.();
   });
 
+  // Listen for remote participant leaving (avatar disconnected)
+  useDailyEvent('participant-left', (event) => {
+    if (event?.participant && !event.participant.local) {
+      onLeave?.();
+    }
+  });
+
   // Listen for errors
   useDailyEvent('error', (event) => {
     console.error('Daily error:', event);
     setError('Connection error occurred');
     setIsJoining(false);
   });
+
+  // ── Tool Call Handler ──
+  // Tavus sends tool calls via Daily app-message, NOT webhooks.
+  // We catch them here, execute via our server API, and send results back.
+  useDailyEvent('app-message', useCallback((event: any) => {
+    if (!daily || !event?.data) return;
+
+    const msg = event.data;
+    const eventType = msg.event_type || msg.type || '';
+
+    // Only handle tool calls
+    if (eventType !== 'conversation.tool_call') return;
+
+    const props = msg.properties || {};
+    const toolName = props.name || '';
+    const toolArgsRaw = props.arguments || '{}';
+    const convId = msg.conversation_id || conversationId || '';
+
+    console.log(`[Tool Call] ${toolName}`, toolArgsRaw);
+
+    // Parse arguments (Tavus sends them as a JSON string)
+    let toolArgs: Record<string, unknown> = {};
+    try {
+      toolArgs = typeof toolArgsRaw === 'string' ? JSON.parse(toolArgsRaw) : toolArgsRaw;
+    } catch {
+      toolArgs = {};
+    }
+
+    // Execute the tool via our server webhook
+    const type = webhookType || 'business-card';
+    fetch(`/api/voxaris/tavus/webhook?type=${type}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        conversation_id: convId,
+        tool_name: toolName,
+        tool_args: toolArgs,
+        event_type: 'conversation.tool_call',
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        // Parse the result — our webhook returns { ok: true, result: "JSON string" }
+        let resultText = '';
+        try {
+          const parsed = typeof data.result === 'string' ? JSON.parse(data.result) : data.result;
+          resultText = parsed?.message || parsed?.guidance || JSON.stringify(parsed);
+        } catch {
+          resultText = data.result || 'Tool executed successfully.';
+        }
+
+        console.log(`[Tool Result] ${toolName}:`, resultText);
+
+        // Send result back to Tavus via conversation.echo
+        daily.sendAppMessage({
+          message_type: 'conversation',
+          event_type: 'conversation.echo',
+          conversation_id: convId,
+          properties: {
+            text: resultText,
+          },
+        }, '*');
+      })
+      .catch((err) => {
+        console.error(`[Tool Error] ${toolName}:`, err);
+        // Send error back so the avatar can recover
+        daily.sendAppMessage({
+          message_type: 'conversation',
+          event_type: 'conversation.echo',
+          conversation_id: convId,
+          properties: {
+            text: `I had trouble with that. Let me help you another way.`,
+          },
+        }, '*');
+      });
+  }, [daily, conversationId, webhookType]));
 
   const handleLeave = useCallback(async () => {
     if (daily) {

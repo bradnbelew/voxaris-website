@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Loader2, ArrowRight, RotateCcw, Sparkles } from 'lucide-react';
@@ -36,6 +37,7 @@ export function BusinessCardAgent({ persona }: { persona: string }) {
 
   const [state, setState] = useState<'idle' | 'loading' | 'live' | 'ended'>('idle');
   const [conversationUrl, setConversationUrl] = useState<string | null>(null);
+  const [conversationId, setConversationId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const startSession = useCallback(async () => {
@@ -53,6 +55,7 @@ export function BusinessCardAgent({ persona }: { persona: string }) {
 
       if (data.success && data.conversation_url) {
         setConversationUrl(data.conversation_url);
+        setConversationId(data.conversation_id || null);
         setState('live');
       } else {
         setError('Could not start session. Please try again.');
@@ -70,6 +73,17 @@ export function BusinessCardAgent({ persona }: { persona: string }) {
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
+      <Helmet>
+        <title>{config.name} — Talk to Our AI Agent Live | Voxaris</title>
+        <meta name="description" content={`Meet Maria, Voxaris's AI video agent. ${config.name} invited you to experience the future of website engagement — live, in real time.`} />
+        <link rel="canonical" href={`https://voxaris.io/${config.slug}`} />
+        <meta property="og:title" content={`${config.name} — Talk to Our AI Agent Live | Voxaris`} />
+        <meta property="og:description" content={`${config.name} invited you to experience Voxaris's AI video agent. See it live — no downloads, no forms.`} />
+        <meta property="og:url" content={`https://voxaris.io/${config.slug}`} />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://voxaris.io/og-image.png" />
+        <meta name="twitter:image" content="https://voxaris.io/og-image.png" />
+      </Helmet>
       <Navbar />
 
       {/* Main content */}
@@ -296,6 +310,8 @@ export function BusinessCardAgent({ persona }: { persona: string }) {
                 <CVIProvider>
                   <Conversation
                     conversationUrl={conversationUrl}
+                    conversationId={conversationId || undefined}
+                    webhookType="business-card"
                     onLeave={handleLeave}
                     className="w-full h-full rounded-2xl"
                   />
