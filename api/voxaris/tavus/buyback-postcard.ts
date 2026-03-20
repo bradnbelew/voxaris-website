@@ -10,7 +10,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
  */
 
 const TAVUS_API_KEY = process.env.TAVUS_API_KEY || '';
-const PERSONA_ID = 'p12baf16e19a'; // Maria - Orlando Motors VIP Buyback
+const PERSONA_ID = 'p12baf16e19a'; // Julia Home - Orlando Motors VIP Buyback
 const REPLICA_ID = 'raf6459c9b82'; // Default replica
 
 const TAVUS_URLS = ['https://tavusapi.com', 'https://api.tavus.io'];

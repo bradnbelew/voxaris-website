@@ -270,7 +270,7 @@ export function Conversation({ conversationUrl, conversationId, webhookType, onL
             className="absolute inset-0 flex flex-col items-center justify-center bg-ink"
           >
             <Loader2 className="w-10 h-10 text-white animate-spin mb-4" />
-            <p className="text-white/70 text-sm">Connecting to Maria...</p>
+            <p className="text-white/70 text-sm">Connecting...</p>
           </motion.div>
         )}
       </AnimatePresence>
