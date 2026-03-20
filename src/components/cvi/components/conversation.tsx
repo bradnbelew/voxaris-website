@@ -83,7 +83,11 @@ export function Conversation({ conversationUrl, conversationId, webhookType, onL
         setIsJoining(true);
         setError(null);
         
-        await daily.join({ url: conversationUrl });
+        await daily.join({
+          url: conversationUrl,
+          startVideoOff: false,
+          startAudioOff: false,
+        });
         
         // Enable noise cancellation
         await daily.updateInputSettings({
@@ -180,7 +184,7 @@ export function Conversation({ conversationUrl, conversationId, webhookType, onL
         let resultText = '';
         try {
           const parsed = typeof data.result === 'string' ? JSON.parse(data.result) : data.result;
-          resultText = parsed?.message || parsed?.guidance || JSON.stringify(parsed);
+          resultText = parsed?.message || (typeof parsed === 'string' ? parsed : JSON.stringify(parsed));
         } catch {
           resultText = data.result || 'Tool executed successfully.';
         }

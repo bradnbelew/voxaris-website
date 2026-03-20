@@ -142,7 +142,9 @@ function getBuybackAvailability(toolInput: Record<string, any>): Record<string, 
     }
   }
 
-  return { ok: true, appointment_type: toolInput.appointment_type || 'appraisal', duration_minutes: 15, slots: slots.slice(0, 4), guidance: 'Present 2-3 options. Let the customer pick.' };
+  const topSlots = slots.slice(0, 3);
+  const slotList = topSlots.map(s => s.human_readable).join(', or ');
+  return { ok: true, message: `Available times for a 15-minute appraisal: ${slotList}.`, slots: topSlots };
 }
 
 // ═══════════════════════════════════════════════════
@@ -207,7 +209,8 @@ async function checkCalAvailability(toolArgs: Record<string, any>): Promise<Reco
     if (pref === 'morning') filtered = allSlots.filter(s => { const h = new Date(s.start).getUTCHours(); return h >= 13 && h < 17; });
     else if (pref === 'afternoon') filtered = allSlots.filter(s => { const h = new Date(s.start).getUTCHours(); return h >= 17 && h < 22; });
 
-    return { ok: true, source: 'cal.com', slots: (filtered.length > 0 ? filtered : allSlots).slice(0, 4), guidance: 'Present 2-3 options naturally.' };
+    const finalSlots = (filtered.length > 0 ? filtered : allSlots).slice(0, 3);
+    return { ok: true, message: `Available times: ${finalSlots.map(s => s.human_readable).join(', or ')}.`, slots: finalSlots };
   } catch {
     return getStaticBusinessSlots(toolArgs);
   }
@@ -260,7 +263,8 @@ function getStaticBusinessSlots(toolArgs: Record<string, any>): Record<string, a
       slots.push({ start: d2.toISOString(), human_readable: `${fmtDay(d2)} at ${fmtTime(h!, m!)}` });
     }
   }
-  return { ok: true, source: 'static', slots: slots.slice(0, 4), guidance: 'Present 2-3 options naturally.' };
+  const finalSlots = slots.slice(0, 3);
+  return { ok: true, message: `Available times: ${finalSlots.map(s => s.human_readable).join(', or ')}.`, slots: finalSlots };
 }
 
 // ═══════════════════════════════════════════════════
