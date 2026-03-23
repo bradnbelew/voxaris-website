@@ -79,15 +79,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const memberName = convProps.member_name || convProps.customer_name || '';
     const bookedAppt = body._booked || false; // We'll track this via tags
 
-    // If conversation ended without booking, tag as no-appointment for follow-up workflow
+    // Tag contact with conversation outcome + duration in GHL
     // (If they booked, the book_appointment handler already tagged them appointment-booked)
     if (memberName) {
-      // Add conversation-completed tag — GHL workflows can trigger off this
       ghlPush({
         firstName: memberName.split(' ')[0],
         lastName: memberName.split(' ').slice(1).join(' '),
         tags: ['buyback-conversation-completed', `duration-${Math.round(durationSec / 60)}min`],
         note: `## Buyback Conversation Completed\n\n**Duration:** ${Math.round(durationSec)} seconds\n**Conversation ID:** ${conversationId}\n**Ended:** ${new Date().toLocaleString('en-US')}`,
+        customFields: [
+          { key: 'contact.conversation_duration', field_value: `${Math.round(durationSec)}s` },
+          { key: 'contact.conversation_outcome', field_value: 'No Appointment' },
+        ],
       }).catch(() => {});
     }
 
@@ -115,6 +118,11 @@ async function handleBuybackTool(toolName: string, toolArgs: Record<string, any>
         email: toolArgs.customer_email,
         tags: ['buyback-postcard', 'appointment-booked', 'vip-appraisal'],
         note: `## VIP Appraisal Appointment Booked\n\n**Type:** ${toolArgs.appointment_type || 'Appraisal'}\n**Time:** ${toolArgs.slot_start_iso || 'TBD'}\n**Vehicle:** ${toolArgs.vehicle || 'N/A'}\n**Conversation:** ${cid}\n**Booked:** ${new Date().toLocaleString('en-US')}`,
+        customFields: [
+          { key: 'contact.appointment_time', field_value: toolArgs.slot_start_iso || '' },
+          { key: 'contact.conversation_outcome', field_value: 'Appointment Booked' },
+          { key: 'contact.vehicle_full', field_value: toolArgs.vehicle || '' },
+        ],
       }).catch(() => {});
       // Send confirmation text to customer via Sendblue
       const dt = toolArgs.slot_start_iso ? new Date(toolArgs.slot_start_iso) : null;
@@ -298,12 +306,22 @@ function getStaticBusinessSlots(toolArgs: Record<string, any>): Record<string, a
 // SHARED HELPERS
 // ═══════════════════════════════════════════════════
 
-async function ghlPush(params: { firstName?: string; lastName?: string; email?: string; phone?: string; tags?: string[]; note?: string }) {
+async function ghlPush(params: { firstName?: string; lastName?: string; email?: string; phone?: string; tags?: string[]; note?: string; customFields?: Array<{ key: string; field_value: string }> }) {
   if (!GHL_TOKEN || !GHL_LOCATION_ID) return;
   try {
+    const body: Record<string, any> = {
+      firstName: params.firstName || undefined,
+      lastName: params.lastName || undefined,
+      email: params.email || undefined,
+      phone: params.phone || undefined,
+      tags: params.tags,
+      source: 'Voxaris AI Agent',
+      locationId: GHL_LOCATION_ID,
+    };
+    if (params.customFields?.length) body.customFields = params.customFields;
     const contactRes = await fetch('https://services.leadconnectorhq.com/contacts/', {
       method: 'POST', headers: GHL_HEADERS_BASE,
-      body: JSON.stringify({ firstName: params.firstName || undefined, lastName: params.lastName || undefined, email: params.email || undefined, phone: params.phone || undefined, tags: params.tags, source: 'Voxaris AI Agent', locationId: GHL_LOCATION_ID }),
+      body: JSON.stringify(body),
     });
     if (contactRes.ok) {
       const cid = (await contactRes.json())?.contact?.id;
