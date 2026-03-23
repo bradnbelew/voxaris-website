@@ -24,6 +24,8 @@ const CAL_HEADERS = {
 // Sendblue
 const SB_KEY = process.env.SENDBLUE_API_KEY || '';
 const SB_SECRET = process.env.SENDBLUE_API_SECRET || '';
+const SB_FROM = process.env.SENDBLUE_FROM_NUMBER || '+13053369541';
+const NOTIFY_NUMBER = process.env.LEAD_NOTIFY_NUMBERS || '+14078195809';
 
 // GHL
 const GHL_TOKEN = process.env.GHL_ACCESS_TOKEN || '';
@@ -69,6 +71,29 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   // Non-tool events
   console.log(`Tavus event [${webhookType}]: ${eventType}`, JSON.stringify(body).slice(0, 500));
+
+  // Handle conversation end — tag outcome in GHL
+  if (webhookType === 'buyback' && (eventType === 'conversation_ended' || eventType === 'conversation.ended')) {
+    const durationSec = body.duration_seconds || body.properties?.duration_seconds || 0;
+    const convProps = body.properties || {};
+    const memberName = convProps.member_name || convProps.customer_name || '';
+    const bookedAppt = body._booked || false; // We'll track this via tags
+
+    // If conversation ended without booking, tag as no-appointment for follow-up workflow
+    // (If they booked, the book_appointment handler already tagged them appointment-booked)
+    if (memberName) {
+      // Add conversation-completed tag — GHL workflows can trigger off this
+      ghlPush({
+        firstName: memberName.split(' ')[0],
+        lastName: memberName.split(' ').slice(1).join(' '),
+        tags: ['buyback-conversation-completed', `duration-${Math.round(durationSec / 60)}min`],
+        note: `## Buyback Conversation Completed\n\n**Duration:** ${Math.round(durationSec)} seconds\n**Conversation ID:** ${conversationId}\n**Ended:** ${new Date().toLocaleString('en-US')}`,
+      }).catch(() => {});
+    }
+
+    console.log(`Buyback conversation ended: ${conversationId} duration=${durationSec}s`);
+  }
+
   return res.status(200).json({ ok: true });
 }
 
@@ -91,12 +116,14 @@ async function handleBuybackTool(toolName: string, toolArgs: Record<string, any>
         tags: ['buyback-postcard', 'appointment-booked', 'vip-appraisal'],
         note: `## VIP Appraisal Appointment Booked\n\n**Type:** ${toolArgs.appointment_type || 'Appraisal'}\n**Time:** ${toolArgs.slot_start_iso || 'TBD'}\n**Vehicle:** ${toolArgs.vehicle || 'N/A'}\n**Conversation:** ${cid}\n**Booked:** ${new Date().toLocaleString('en-US')}`,
       }).catch(() => {});
-      // Send confirmation text via Sendblue
+      // Send confirmation text to customer via Sendblue
+      const dt = toolArgs.slot_start_iso ? new Date(toolArgs.slot_start_iso) : null;
+      const timeStr = dt ? dt.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', timeZone: 'America/New_York' }) + ' at ' + dt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }) : 'your scheduled time';
       if (toolArgs.customer_phone) {
-        const dt = toolArgs.slot_start_iso ? new Date(toolArgs.slot_start_iso) : null;
-        const timeStr = dt ? dt.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', timeZone: 'America/New_York' }) + ' at ' + dt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }) : 'your scheduled time';
         sendblueText(toolArgs.customer_phone, `Hi ${toolArgs.customer_first_name || 'there'}! Your VIP appraisal at Orlando Motors is confirmed for ${timeStr}. Bring your vehicle and any spare keys. See you soon! - Orlando Motors`).catch(() => {});
       }
+      // Notify owner
+      notifyOwner(`Appt booked: ${toolArgs.customer_first_name || ''}${toolArgs.customer_last_name ? ' ' + toolArgs.customer_last_name : ''} — ${timeStr}${toolArgs.vehicle ? ' (' + toolArgs.vehicle + ')' : ''}`).catch(() => {});
       return { success: true, message: `Appointment confirmed for ${toolArgs.customer_first_name}. Tell the customer they are all set and we look forward to seeing them at Orlando Motors. Remind them to bring the mailer and ask for the VIP desk.` };
     }
 
@@ -291,10 +318,23 @@ function fmtSlot(date: Date, h: number, m: number): string { const d = new Date(
 function fmtDay(date: Date): string { return date.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' }); }
 function fmtTime(h: number, m: number): string { const p = h >= 12 ? 'PM' : 'AM'; return `${h > 12 ? h - 12 : h}:${m.toString().padStart(2, '0')} ${p}`; }
 
+// ── Notify owner via iMessage ──
+async function notifyOwner(message: string): Promise<void> {
+  if (!SB_KEY || !SB_SECRET) return;
+  try {
+    await fetch('https://api.sendblue.co/api/send-message', {
+      method: 'POST',
+      headers: { 'sb-api-key-id': SB_KEY, 'sb-api-secret-key': SB_SECRET, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ number: NOTIFY_NUMBER, content: message, from_number: SB_FROM }),
+      signal: AbortSignal.timeout(10_000),
+    });
+  } catch {}
+}
+
 // ── Sendblue: Send iMessage/SMS ──
 async function sendblueText(number: string, content: string): Promise<void> {
   if (!SB_KEY || !SB_SECRET) return;
-  const fromNumber = process.env.SENDBLUE_FROM_NUMBER || '+13053369541';
+  const fromNumber = SB_FROM;
   try {
     const resp = await fetch('https://api.sendblue.co/api/send-message', {
       method: 'POST',

@@ -21,6 +21,12 @@ const CALLBACK_BASE = (process.env.CALLBACK_BASE_URL || 'https://www.voxaris.io'
 const GHL_TOKEN = process.env.GHL_ACCESS_TOKEN || '';
 const GHL_LOCATION_ID = process.env.GHL_LOCATION_ID || '';
 
+// Sendblue (notifications)
+const SB_KEY = process.env.SENDBLUE_API_KEY || '';
+const SB_SECRET = process.env.SENDBLUE_API_SECRET || '';
+const SB_FROM = process.env.SENDBLUE_FROM_NUMBER || '+13053369541';
+const NOTIFY_NUMBER = process.env.LEAD_NOTIFY_NUMBERS || '+14078195809';
+
 // ── GHL: Create contact + note on conversation start ──
 async function pushToGHL(params: {
   firstName: string;
@@ -198,9 +204,25 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     conversationId: result.data.conversation_id,
   }).catch(() => {});
 
+  // 3. Notify Ethan via iMessage
+  notifyOwner(`New postcard scan: ${name}${lastName ? ` ${lastName}` : ''} — ${v}`).catch(() => {});
+
   return res.status(200).json({
     success: true,
     conversation_id: result.data.conversation_id,
     conversation_url: result.data.conversation_url,
   });
+}
+
+// ── Send iMessage notification to owner ──
+async function notifyOwner(message: string): Promise<void> {
+  if (!SB_KEY || !SB_SECRET) return;
+  try {
+    await fetch('https://api.sendblue.co/api/send-message', {
+      method: 'POST',
+      headers: { 'sb-api-key-id': SB_KEY, 'sb-api-secret-key': SB_SECRET, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ number: NOTIFY_NUMBER, content: message, from_number: SB_FROM }),
+      signal: AbortSignal.timeout(10_000),
+    });
+  } catch {}
 }
