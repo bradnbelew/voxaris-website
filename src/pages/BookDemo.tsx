@@ -44,12 +44,12 @@ export default function BookDemo() {
     <div className="min-h-screen bg-white">
       <Navbar />
       <Helmet>
-        <title>Book a V·TEAMS Demo | Voxaris</title>
-        <meta name="description" content="See V·TEAMS handle a live call. 15-minute demo — no pitch deck, just a walkthrough of how V·TEAMS would work for your business." />
-        <meta name="keywords" content="book demo, V·TEAMS demo, AI sales demo, Voxaris demo, AI phone agent demo, AI team demo" />
+        <title>Book a Voxaris AI Demo | Voxaris</title>
+        <meta name="description" content="See Voxaris AI handle a live call. 15-minute demo — no pitch deck, just a walkthrough of how Voxaris AI would work for your business." />
+        <meta name="keywords" content="book demo, Voxaris AI demo, AI sales demo, Voxaris demo, AI phone agent demo, AI team demo" />
         <link rel="canonical" href="https://voxaris.io/book-demo" />
-        <meta property="og:title" content="Book a V·TEAMS Demo | Voxaris" />
-        <meta property="og:description" content="See V·TEAMS handle a live call. 15-minute demo — receptionist, qualifier, specialist, closer working together in real time." />
+        <meta property="og:title" content="Book a Voxaris AI Demo | Voxaris" />
+        <meta property="og:description" content="See Voxaris AI handle a live call. 15-minute demo — receptionist, qualifier, specialist, closer working together in real time." />
         <meta property="og:url" content="https://voxaris.io/book-demo" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://voxaris.io/og-image.png" />
@@ -68,16 +68,16 @@ export default function BookDemo() {
                 Book a Demo
               </span>
               <h1 className="text-4xl lg:text-display-sm font-semibold text-foreground mb-6">
-                See V·TEAMS handle a live call.
+                See Voxaris AI handle a live call.
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed mb-10">
-                15 minutes. No pitch deck. We'll show you exactly how V·TEAMS answers, qualifies, and books appointments for businesses like yours.
+                15 minutes. No pitch deck. We'll show you exactly how Voxaris AI answers, qualifies, and books appointments for businesses like yours.
               </p>
 
               <div className="space-y-6 mb-10">
                 <h3 className="font-semibold text-foreground">What happens in the demo:</h3>
                 {[
-                  "Hear V·TEAMS answer a live inbound call",
+                  "Hear Voxaris AI answer a live inbound call",
                   "See the receptionist → qualifier → closer handoff in action",
                   "Watch context pass seamlessly across every transfer",
                   "See how appointments and transcripts sync to your CRM",
@@ -250,7 +250,7 @@ export default function BookDemo() {
                       Ethan will reach out same business day to schedule your demo. Usually within a few hours.
                     </p>
                     <p className="text-sm text-muted-foreground mb-6">
-                      In the meantime, hear V·TEAMS handle a live call on our{" "}
+                      In the meantime, hear Voxaris AI handle a live call on our{" "}
                       <a href="/demo" className="text-foreground underline underline-offset-2 font-medium">
                         demo page
                       </a>.

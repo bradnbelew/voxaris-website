@@ -35,9 +35,9 @@ export function CTASection() {
           viewport={{ once: true }}
           transition={{ delay: 0.1, duration: 0.7, ease }}
         >
-          Stop losing leads to slow follow-up.
+          Your mailer should book the appointment.
           <br />
-          <span className="text-white/50">Start booking appointments with V·TEAMS.</span>
+          <span className="text-white/50">Not just announce the offer.</span>
         </motion.h2>
 
         {/* Sub */}
@@ -48,7 +48,7 @@ export function CTASection() {
           viewport={{ once: true }}
           transition={{ delay: 0.2, duration: 0.7, ease }}
         >
-          See V·TEAMS handle a live call. 15 minutes. No pitch deck. Just a conversation about what this looks like for your business.
+          See a Talking Postcard in action. Watch our AI agent greet a customer by name, reference their vehicle, and book the appraisal — live.
         </motion.p>
 
         {/* CTAs */}
@@ -59,12 +59,12 @@ export function CTASection() {
           viewport={{ once: true }}
           transition={{ delay: 0.3, duration: 0.7, ease }}
         >
-          <Link to="/book-demo">
+          <Link to="/talking-postcard">
             <Button
               size="lg"
               className="bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 hover:from-gold-500 hover:via-gold-400 hover:to-gold-500 text-white h-14 px-10 text-[15px] font-semibold rounded-full group shadow-gold-btn hover:shadow-[0_8px_32px_rgba(212,168,67,0.35)] transition-all duration-500 hover:-translate-y-0.5 border border-gold-400/30"
             >
-              Book a Demo
+              See It In Action
               <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
           </Link>
@@ -74,7 +74,7 @@ export function CTASection() {
               variant="ghost"
               className="text-white/60 hover:text-white hover:bg-white/[0.06] h-14 px-8 text-[15px] font-medium rounded-full border border-white/20 hover:border-white/30 transition-all duration-300"
             >
-              Talk to Sales
+              Book a Demo
             </Button>
           </Link>
         </motion.div>

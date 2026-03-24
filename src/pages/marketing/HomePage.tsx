@@ -8,7 +8,6 @@ import {
   Clock,
   Users,
   AlertTriangle,
-  CheckCircle2,
   X,
   ChevronDown,
 } from 'lucide-react';
@@ -35,8 +34,9 @@ export function HomePage() {
       <Navbar />
       <main id="main-content">
         <Hero />
-        <WhyOneBotFails />
-        <HandoffFlow />
+        <DealerProofStrip />
+        <DirectMailIsBroken />
+        <HowItWorks />
         <BusinessRealities />
         <FAQSection />
         <FinalCTA />
@@ -46,13 +46,52 @@ export function HomePage() {
   );
 }
 
-/* ── Section: Why One Bot Fails ─────────────────────────────── */
-function WhyOneBotFails() {
-  const failures = [
-    { problem: 'One bot tries to greet AND qualify AND close', result: 'Confused, repetitive conversations that lose the caller' },
-    { problem: 'No context passed when routing to a human', result: 'Caller repeats everything — frustration kills the deal' },
-    { problem: 'Generic scripts for every caller intent', result: 'Hot leads get the same flow as support requests' },
-    { problem: 'No escalation when confidence drops', result: 'Callers get stuck in a loop with no way out' },
+/* ── Section: Dealer Social Proof Strip ───────────────────── */
+function DealerProofStrip() {
+  return (
+    <section className="py-10 bg-carbon-950 border-y border-white/[0.04]">
+      <div className="max-w-6xl mx-auto px-6 sm:px-8">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-8">
+          <motion.div
+            className="flex items-center gap-8 flex-wrap justify-center"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            {[
+              { value: '47', label: 'Appointments booked in week one' },
+              { value: '6-12%', label: 'QR scan-to-engagement rate' },
+              { value: '$0.38', label: 'Cost per appointment' },
+              { value: '24/7', label: 'AI agent never sleeps' },
+            ].map((stat, i) => (
+              <motion.div
+                key={stat.label}
+                className="text-center"
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+              >
+                <div className="text-2xl sm:text-3xl font-bold text-gold-500 font-display">{stat.value}</div>
+                <div className="text-[11px] text-white/40 max-w-[120px]">{stat.label}</div>
+              </motion.div>
+            ))}
+          </motion.div>
+{/* Trusted by section removed */}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── Section: Direct Mail Is Broken ──────────────────────── */
+function DirectMailIsBroken() {
+  const problems = [
+    { problem: 'You send 10,000 mailers and get 12 calls', result: '0.1% response rate — most hit the trash before anyone reads them' },
+    { problem: 'Customer scans a QR code and sees... a static page', result: 'No personalization, no urgency, no reason to stay. They bounce.' },
+    { problem: 'Your BDC can\'t follow up fast enough', result: 'Leads go cold within 5 minutes. By the time you call, they\'re gone.' },
+    { problem: 'No way to track what actually works', result: 'You don\'t know which mailers converted, which vehicles drove interest, or which zip codes respond.' },
   ];
 
   return (
@@ -67,17 +106,17 @@ function WhyOneBotFails() {
         >
           <span className="text-[11px] font-semibold text-carbon-400 uppercase tracking-[0.2em] mb-4 block">The Problem</span>
           <h2 className="text-3xl sm:text-4xl font-bold text-carbon-900 mb-6 font-display leading-tight">
-            A single AI bot trying to do everything
+            Your direct mail isn't working
             <br className="hidden sm:block" />
-            <span className="text-carbon-400">breaks under real call volume.</span>
+            <span className="text-carbon-400">because it can't talk back.</span>
           </h2>
           <p className="max-w-2xl text-[16px] text-carbon-500 leading-[1.8]">
-            Most AI phone systems use one agent for everything — greeting, qualifying, handling objections, routing, and closing. That's like having one employee run your entire sales floor. It doesn't work with humans, and it doesn't work with AI.
+            Dealerships spend $50,000+ per year on mailers that end up in recycling bins. The ones that do get scanned? They land on a generic page with no follow-up. Talking Postcards change everything.
           </p>
         </motion.div>
 
         <div className="grid sm:grid-cols-2 gap-4">
-          {failures.map((item, i) => (
+          {problems.map((item, i) => (
             <motion.div
               key={i}
               className="p-6 rounded-2xl bg-white border border-carbon-200 hover:border-carbon-300 hover:shadow-sm transition-all duration-300"
@@ -101,48 +140,32 @@ function WhyOneBotFails() {
   );
 }
 
-/* ── Section: V·TEAMS Live Scene ────────────────────────────── */
-function HandoffFlow() {
-  const lanes = [
+/* ── Section: How Talking Postcards Work ─────────────────── */
+function HowItWorks() {
+  const steps = [
     {
-      role: 'Receptionist',
-      status: 'Complete',
-      desc: 'Answered instantly, identified sales intent, captured caller details.',
-      color: 'bg-emerald-500',
-      borderColor: 'border-emerald-500/30',
-      statusColor: 'text-emerald-400',
-      active: true,
-      live: false,
+      num: '01',
+      title: 'Personalized mailer hits their mailbox',
+      desc: 'Each postcard is printed with the customer\'s name, their vehicle, and a unique QR code. It feels like a letter, not a mass blast.',
+      color: 'text-blue-500',
     },
     {
-      role: 'Qualifier',
-      status: 'Complete',
-      desc: 'Confirmed vehicle interest, timing, financing intent, and urgency.',
-      color: 'bg-blue-500',
-      borderColor: 'border-blue-500/30',
-      statusColor: 'text-blue-400',
-      active: true,
-      live: false,
+      num: '02',
+      title: 'They scan the QR and meet their AI agent',
+      desc: 'A photorealistic video agent greets them by name, references their exact car, and starts a real conversation — in under 3 seconds.',
+      color: 'text-gold-500',
     },
     {
-      role: 'Specialist',
-      status: 'Live now',
-      desc: 'Handling trade-in questions and reducing hesitation before booking.',
-      color: 'bg-amber-500',
-      borderColor: 'border-amber-500/30',
-      statusColor: 'text-amber-400',
-      active: true,
-      live: true,
+      num: '03',
+      title: 'The agent books the appraisal',
+      desc: 'She checks your calendar, picks a time, confirms the appointment, and texts them a confirmation — all in under 2 minutes.',
+      color: 'text-emerald-500',
     },
     {
-      role: 'Closer',
-      status: 'Ready',
-      desc: 'Will confirm appointment time, store location, and sync to CRM.',
-      color: 'bg-rose-500',
-      borderColor: 'border-rose-500/30',
-      statusColor: 'text-rose-400',
-      active: false,
-      live: false,
+      num: '04',
+      title: 'Everything lands in your CRM',
+      desc: 'Contact created, notes attached, transcript logged, appointment synced. Your team sees it before the customer even drives in.',
+      color: 'text-rose-500',
     },
   ];
 
@@ -150,8 +173,6 @@ function HandoffFlow() {
     <section className="py-20 lg:py-28 bg-carbon-950 relative overflow-hidden">
       <div className="absolute inset-0 noise-overlay opacity-20" />
       <div className="max-w-5xl mx-auto px-6 sm:px-8 relative z-10">
-
-        {/* Section header */}
         <motion.div
           className="text-center mb-14"
           initial={{ opacity: 0, y: 24 }}
@@ -159,154 +180,31 @@ function HandoffFlow() {
           viewport={{ once: true }}
           transition={{ duration: 0.7, ease }}
         >
-          <span className="text-[11px] font-semibold text-white/30 uppercase tracking-[0.2em] mb-4 block">Live Inbound Flow</span>
+          <span className="text-[11px] font-semibold text-white/30 uppercase tracking-[0.2em] mb-4 block">How It Works</span>
           <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6 font-display">
-            Watch a call move through
+            From mailbox to booked appointment
             <br className="hidden sm:block" />
-            <span className="text-white/60">the entire squad in real time.</span>
+            <span className="text-white/60">in under 2 minutes.</span>
           </h2>
         </motion.div>
 
-        {/* V·TEAMS Card */}
-        <motion.div
-          className="rounded-2xl bg-white/[0.03] border border-white/10 overflow-hidden"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, ease }}
-        >
-          {/* Topbar */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.06]">
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-[10px] font-medium text-white/25 uppercase tracking-[0.15em]">Powered by</span>
-                <span className="text-[13px] font-bold text-gold-500 tracking-wide">V·TEAMS</span>
-              </div>
-              <p className="text-[15px] font-semibold text-white">After-hours dealership sales call</p>
-              <p className="text-[12px] text-white/30 mt-0.5">Northstar Auto Group · Orlando, FL · Active now</p>
-            </div>
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 shrink-0">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse-soft" />
-              <span className="text-[11px] font-semibold text-emerald-400 uppercase tracking-wider">Live</span>
-            </div>
-          </div>
-
-          {/* Flow Grid */}
-          <div className="p-5 sm:p-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-              {lanes.map((lane, i) => (
-                <motion.div
-                  key={lane.role}
-                  className={`relative rounded-xl p-4 border transition-all duration-300 ${
-                    lane.live
-                      ? `bg-white/[0.06] ${lane.borderColor} shadow-[0_0_20px_rgba(245,158,11,0.06)]`
-                      : lane.active
-                        ? 'bg-white/[0.04] border-white/[0.08]'
-                        : 'bg-white/[0.02] border-white/[0.05]'
-                  }`}
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.3 + i * 0.1 }}
-                >
-                  {/* Accent bar */}
-                  <div className={`absolute top-0 left-4 right-4 h-[2px] rounded-b-full ${lane.color} ${lane.active ? 'opacity-60' : 'opacity-20'}`} />
-
-                  <div className="flex items-center justify-between mb-3 mt-1">
-                    <span className="text-[13px] font-semibold text-white">{lane.role}</span>
-                    <span className={`text-[10px] font-semibold uppercase tracking-wider ${
-                      lane.live ? lane.statusColor : lane.active ? 'text-white/40' : 'text-white/20'
-                    }`}>
-                      {lane.status}
-                    </span>
-                  </div>
-                  <p className={`text-[12px] leading-relaxed ${lane.active ? 'text-white/40' : 'text-white/20'}`}>
-                    {lane.desc}
-                  </p>
-
-                  {/* Arrow between lanes (desktop) */}
-                  {i < lanes.length - 1 && (
-                    <div className="hidden lg:flex absolute top-1/2 -right-[10px] w-5 h-5 items-center justify-center z-10">
-                      <span className={`text-[14px] ${lane.live ? 'text-amber-400/60 animate-pulse-soft' : 'text-white/15'}`}>→</span>
-                    </div>
-                  )}
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Timeline rail */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {steps.map((step, i) => (
             <motion.div
-              className="mt-5 h-1 rounded-full bg-white/[0.06] overflow-hidden"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
+              key={step.num}
+              className="relative p-6 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-white/20 transition-all duration-300"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.8 }}
+              transition={{ delay: 0.2 + i * 0.1 }}
             >
-              <motion.div
-                className="h-full rounded-full bg-gradient-to-r from-emerald-500/70 via-blue-500/70 to-amber-500/70"
-                initial={{ width: '0%' }}
-                whileInView={{ width: '68%' }}
-                viewport={{ once: true }}
-                transition={{ delay: 1.0, duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
-              />
+              <div className={`text-3xl font-bold ${step.color} opacity-40 mb-3 font-display`}>{step.num}</div>
+              <h3 className="text-[15px] font-semibold text-white mb-2">{step.title}</h3>
+              <p className="text-[13px] text-white/40 leading-relaxed">{step.desc}</p>
             </motion.div>
-          </div>
+          ))}
+        </div>
 
-          {/* Footer */}
-          <div className="px-5 sm:px-6 py-4 border-t border-white/[0.06] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div className="space-y-3 flex-1 min-w-0">
-              {/* Signal chips */}
-              <div className="flex flex-wrap gap-2">
-                {['CRM synced', 'Transcript saved', 'Warm transfer preserved'].map((chip) => (
-                  <span key={chip} className="px-2.5 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-[10px] font-medium text-white/30 uppercase tracking-wider">
-                    {chip}
-                  </span>
-                ))}
-              </div>
-              {/* Appointment confidence */}
-              <div className="flex items-center gap-3">
-                <span className="text-[11px] text-white/25 uppercase tracking-wider shrink-0">Appointment confidence</span>
-                <div className="flex-1 max-w-[120px] h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
-                  <motion.div
-                    className="h-full rounded-full bg-gold-500/60"
-                    initial={{ width: '0%' }}
-                    whileInView={{ width: '92%' }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 1.2, duration: 1.0, ease }}
-                  />
-                </div>
-                <span className="text-[12px] font-semibold text-gold-500/80">92%</span>
-              </div>
-            </div>
-
-            {/* Metric card */}
-            <div className="text-right shrink-0 pl-4">
-              <span className="text-[10px] text-white/25 uppercase tracking-wider block">Answer time</span>
-              <span className="text-[22px] font-bold text-white leading-none">&lt; 5s</span>
-              <span className="text-[10px] text-white/20 block mt-0.5">24/7/365</span>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Context payload preview */}
-        <motion.div
-          className="mt-8 p-6 rounded-2xl bg-white/[0.03] border border-white/[0.08] max-w-2xl mx-auto"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.5 }}
-        >
-          <div className="text-[11px] text-white/30 uppercase tracking-widest mb-3">What gets passed on every transfer</div>
-          <div className="flex flex-wrap gap-2">
-            {['caller_name', 'phone_number', 'intent_primary', 'service_interest', 'appointment_intent', 'budget_context', 'decision_maker', 'timeline', 'notes_summary', 'disposition'].map((field) => (
-              <span key={field} className="px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 text-[11px] text-white/30 font-mono">
-                {field}
-              </span>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* CTA after the visualization */}
         <motion.div
           className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
           initial={{ opacity: 0, y: 20 }}
@@ -314,12 +212,12 @@ function HandoffFlow() {
           viewport={{ once: true }}
           transition={{ delay: 0.3 }}
         >
-          <Link to="/book-demo">
+          <Link to="/talking-postcard">
             <Button
               size="lg"
               className="bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 hover:from-gold-500 hover:via-gold-400 hover:to-gold-500 text-white h-12 px-8 text-[14px] font-semibold rounded-full shadow-gold-btn border border-gold-400/30 transition-all duration-500"
             >
-              See This Live in a 15-Minute Demo
+              Try It Now — Free Demo
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </Link>
@@ -479,9 +377,9 @@ function FinalCTA() {
           viewport={{ once: true }}
           transition={{ duration: 0.7, ease }}
         >
-          Stop losing leads to slow follow-up.
+          Your competitors' mailers end up in the trash.
           <br className="hidden sm:block" />
-          <span className="text-white/60">Start booking appointments with V·TEAMS.</span>
+          <span className="text-white/60">Yours books the appointment.</span>
         </motion.h2>
 
         <motion.p
@@ -491,7 +389,7 @@ function FinalCTA() {
           viewport={{ once: true }}
           transition={{ delay: 0.1, duration: 0.7, ease }}
         >
-          See V·TEAMS handle a live call. 15 minutes. No pitch deck. Just a conversation about what this looks like for your business.
+          See a Talking Postcard in action. Watch our AI agent greet a customer by name, reference their vehicle, and book the appraisal — all in under 2 minutes.
         </motion.p>
 
         <motion.div
@@ -501,23 +399,23 @@ function FinalCTA() {
           viewport={{ once: true }}
           transition={{ delay: 0.2, duration: 0.7, ease }}
         >
-          <Link to="/book-demo">
+          <Link to="/talking-postcard">
             <Button
               size="lg"
               className="bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 hover:from-gold-500 hover:via-gold-400 hover:to-gold-500 text-white h-14 px-10 text-[15px] font-semibold rounded-full group shadow-gold-btn hover:shadow-[0_8px_32px_rgba(212,168,67,0.35)] transition-all duration-500 hover:-translate-y-0.5 border border-gold-400/30"
             >
-              Book a Live Demo
+              See It In Action
               <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
           </Link>
-          <Link to="/demo">
+          <Link to="/book-demo">
             <Button
               size="lg"
               variant="ghost"
               className="text-white/60 hover:text-white hover:bg-white/[0.06] h-14 px-8 text-[15px] font-medium rounded-full border border-white/20 hover:border-white/30 transition-all duration-300"
             >
               <Phone className="w-4 h-4 mr-2" />
-              Hear a Live Call
+              Book a Demo
             </Button>
           </Link>
         </motion.div>
@@ -544,7 +442,7 @@ function FinalCTA() {
         >
           {['No credit card required', 'Live in days, not months', 'Cancel anytime'].map((item) => (
             <span key={item} className="flex items-center gap-2">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500/50" />
+              <span className="w-3.5 h-3.5 rounded-full bg-emerald-500/50 inline-flex items-center justify-center text-[8px] text-white font-bold">&#10003;</span>
               {item}
             </span>
           ))}

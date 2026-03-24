@@ -76,7 +76,7 @@ export function SolutionDealerships() {
             transition={{ delay: 0.3 }}
           >
             <Link to="/book-demo">
-              <Button size="lg" className="bg-carbon-900 hover:bg-carbon-800 text-white px-8 h-12 rounded-full font-medium group">
+              <Button size="lg" className="bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 hover:from-gold-700 hover:via-gold-600 hover:to-gold-700 text-white px-8 h-12 rounded-full font-medium group shadow-gold-btn border border-gold-400/30">
                 Book a Demo
                 <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-0.5 transition-transform" />
               </Button>

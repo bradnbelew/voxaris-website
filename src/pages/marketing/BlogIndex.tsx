@@ -57,7 +57,7 @@ export function BlogIndex() {
             >
               <Link
                 to={`/blog/${featured.slug}`}
-                className="group block bg-slate-50 rounded-3xl overflow-hidden border border-slate-100 hover:border-slate-200 transition-all duration-500 hover:shadow-lg"
+                className="group block bg-slate-50 rounded-3xl overflow-hidden border border-slate-100 hover:border-slate-200 transition-all duration-500 hover:shadow-lg cursor-pointer"
               >
                 <div className="p-8 sm:p-12 lg:p-16">
                   <div className="flex items-center gap-3 mb-6">
@@ -97,7 +97,7 @@ export function BlogIndex() {
                 >
                   <Link
                     to={`/blog/${post.slug}`}
-                    className="group block h-full bg-white rounded-2xl border border-slate-100 hover:border-slate-200 p-8 sm:p-10 transition-all duration-500 hover:shadow-md"
+                    className="group block h-full bg-white rounded-2xl border border-slate-100 hover:border-slate-200 p-8 sm:p-10 transition-all duration-500 hover:shadow-md cursor-pointer hover:-translate-y-0.5"
                   >
                     <div className="flex items-center gap-3 mb-5">
                       <span className="text-[11px] font-semibold text-slate-900 bg-slate-100 px-3 py-1.5 rounded-full uppercase tracking-wider">

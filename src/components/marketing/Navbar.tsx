@@ -5,15 +5,15 @@ import { Menu, X, ChevronDown, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const navLinks = [
-  { label: 'Product', href: '/#features' },
-  { label: 'Industries', href: '/solutions/dealerships' },
+  { label: 'Talking Postcards', href: '/talking-postcard' },
+  { label: 'Dealerships', href: '/solutions/dealerships' },
+  { label: 'How It Works', href: '/how-it-works' },
   { label: 'Demo', href: '/demo' },
-  { label: 'Why Voxaris', href: '/why-voxaris' },
   {
     label: 'More',
     href: '#',
     dropdown: [
-      { label: 'Direct Mail', href: '/solutions/direct-mail', desc: 'Talking Postcards that convert' },
+      { label: 'Direct Mail', href: '/solutions/direct-mail', desc: 'AI-powered mailers that convert' },
       { label: 'Hotels & Resorts', href: '/solutions/hospitality', desc: 'AI concierge for direct bookings' },
       { label: 'Home Services', href: '/solutions/contractors', desc: 'Lead capture & booking' },
       { label: 'White Label', href: '/solutions/white-label', desc: 'Your brand, our AI engine' },
@@ -57,7 +57,7 @@ export function Navbar() {
         <nav className="container-wide">
           <div className="flex items-center justify-between h-[80px]">
             <Link to="/" className="flex items-center shrink-0">
-              <img src="/voxaris-logo-white.png" alt="Voxaris AI" className="h-9 w-auto" />
+              <img src="/voxaris-logo-white.png" alt="Voxaris AI" className="h-14 w-auto" />
             </Link>
             <div className="hidden lg:flex items-center gap-1">
               {navLinks.map((link) => (

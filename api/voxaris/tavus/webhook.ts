@@ -24,7 +24,7 @@ const CAL_HEADERS = {
 // Sendblue
 const SB_KEY = process.env.SENDBLUE_API_KEY || '';
 const SB_SECRET = process.env.SENDBLUE_API_SECRET || '';
-const SB_FROM = process.env.SENDBLUE_FROM_NUMBER || '+13053369541';
+const SB_FROM = process.env.SENDBLUE_BUYBACK_FROM || process.env.SENDBLUE_FROM_NUMBER || '+13214744152';
 const NOTIFY_NUMBER = process.env.LEAD_NOTIFY_NUMBERS || '+14078195809';
 
 // GHL
@@ -35,6 +35,53 @@ const GHL_HEADERS_BASE = {
   Version: '2021-07-28',
   'Content-Type': 'application/json',
 };
+const GHL_WEBHOOK_URL = 'https://services.leadconnectorhq.com/hooks/euXH15G0pqPgr497kAL2/webhook-trigger/6730dcb6-748c-4323-a525-65b972384f7a';
+
+// Dealership config
+const DEALERSHIP = { name: 'Orlando Motors', phone: '(407) 555-0193', address: '7820 International Drive, Orlando, FL 32819' };
+
+// ── Clean phone number from STT garbled input ──
+function cleanPhoneNumber(raw: string): string {
+  if (!raw) return '';
+  let digits = raw.replace(/[^\d+]/g, '');
+  // US numbers: 10 digits, or 11 with leading 1, or 12 with +1
+  if (digits.startsWith('+1') && digits.length > 12) digits = digits.substring(0, 12);
+  else if (digits.startsWith('1') && digits.length > 11) digits = digits.substring(0, 11);
+  else if (digits.length > 10 && !digits.startsWith('+') && !digits.startsWith('1')) digits = digits.substring(0, 10);
+  if (digits.length === 10 && !digits.startsWith('+')) digits = '+1' + digits;
+  else if (digits.length === 11 && digits.startsWith('1')) digits = '+' + digits;
+  return digits;
+}
+
+// Campaign expiry (default 7 days)
+function getCampaignExpiry(): string {
+  const days = parseInt(process.env.CAMPAIGN_DURATION_DAYS || '7', 10);
+  const expiry = new Date();
+  expiry.setDate(expiry.getDate() + days);
+  expiry.setHours(23, 59, 59, 0);
+  return expiry.toISOString();
+}
+
+// Fire data to GHL inbound webhook (master workflow trigger)
+async function fireGhlWebhook(payload: Record<string, any>): Promise<void> {
+  try {
+    const res = await fetch(GHL_WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ...payload,
+        campaign_expiry: payload.campaign_expiry || getCampaignExpiry(),
+        timestamp: new Date().toISOString(),
+        location_id: GHL_LOCATION_ID,
+      }),
+      signal: AbortSignal.timeout(10_000),
+    });
+    if (!res.ok) console.error(`GHL webhook failed: ${res.status}`);
+    else console.log(`GHL webhook fired: ${payload.event_type}`);
+  } catch (err: any) {
+    console.error(`GHL webhook error: ${err.message}`);
+  }
+}
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -72,29 +119,251 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Non-tool events
   console.log(`Tavus event [${webhookType}]: ${eventType}`, JSON.stringify(body).slice(0, 500));
 
-  // Handle conversation end — tag outcome in GHL
-  if (webhookType === 'buyback' && (eventType === 'conversation_ended' || eventType === 'conversation.ended')) {
+  // Handle conversation end — full GHL data capture
+  if (eventType === 'conversation_ended' || eventType === 'conversation.ended') {
+    console.log(`[webhook] conversation.ended received: ${conversationId}`);
+
     const durationSec = body.duration_seconds || body.properties?.duration_seconds || 0;
     const convProps = body.properties || {};
-    const memberName = convProps.member_name || convProps.customer_name || '';
-    const bookedAppt = body._booked || false; // We'll track this via tags
+    const convContext = body.conversational_context || '';
 
-    // Tag contact with conversation outcome + duration in GHL
-    // (If they booked, the book_appointment handler already tagged them appointment-booked)
-    if (memberName) {
-      ghlPush({
-        firstName: memberName.split(' ')[0],
-        lastName: memberName.split(' ').slice(1).join(' '),
-        tags: ['buyback-conversation-completed', `duration-${Math.round(durationSec / 60)}min`],
-        note: `## Buyback Conversation Completed\n\n**Duration:** ${Math.round(durationSec)} seconds\n**Conversation ID:** ${conversationId}\n**Ended:** ${new Date().toLocaleString('en-US')}`,
-        customFields: [
-          { key: 'contact.conversation_duration', field_value: `${Math.round(durationSec)}s` },
-          { key: 'contact.conversation_outcome', field_value: 'No Appointment' },
-        ],
-      }).catch(() => {});
+    // Extract all available fields from properties or top-level body
+    const memberName = convProps.member_name || convProps.customer_name || body.customer_name || '';
+    const firstName = memberName ? memberName.split(' ')[0] : '';
+    const lastName = memberName ? memberName.split(' ').slice(1).join(' ') : '';
+    const phone = convProps.customer_phone || convProps.phone || body.phone || '';
+    const email = convProps.customer_email || convProps.email || body.email || '';
+    const vehicle = convProps.vehicle || convProps.vehicle_full || body.vehicle || '';
+    const campaignType = convProps.campaign_type || convProps.campaignType || 'buyback';
+    const recordId = convProps.record_id || convProps.recordId || '';
+    const scannedAt = convProps.postcard_scanned_at || convProps.scanned_at || '';
+
+    // Extract transcript
+    const transcript: Array<{ role: string; content: string; timestamp?: string }> = body.transcript || body.messages || [];
+    const hasTranscript = Array.isArray(transcript) && transcript.length > 0;
+    console.log(`[webhook] Transcript entries: ${hasTranscript ? transcript.length : 0}`);
+
+    // Extract tool calls made during conversation
+    const toolCalls: Array<Record<string, any>> = body.tool_calls || body.tools_used || [];
+    const hasToolCalls = Array.isArray(toolCalls) && toolCalls.length > 0;
+    console.log(`[webhook] Tool calls made: ${hasToolCalls ? toolCalls.length : 0}`);
+
+    // Determine dynamic outcome based on tool calls
+    const toolNames = toolCalls.map((t: any) => t.name || t.tool_name || t.function_name || '');
+    let callOutcome = 'not_interested';
+    let appointmentScheduled = false;
+    let appointmentDetails = '';
+
+    if (toolNames.includes('book_appointment')) {
+      callOutcome = 'appointment_booked';
+      appointmentScheduled = true;
+      const bookCall = toolCalls.find((t: any) => (t.name || t.tool_name || '') === 'book_appointment');
+      const bookArgs = bookCall?.input || bookCall?.arguments || bookCall?.tool_input || {};
+      appointmentDetails = `${bookArgs.appointment_type || 'VIP appraisal'} — ${bookArgs.appointment_date || bookArgs.slot_start_iso || 'TBD'}`;
+    } else if (toolNames.includes('transfer_to_human')) {
+      callOutcome = 'transfer_requested';
+    } else if (toolNames.includes('log_lead') || toolNames.includes('log_interested_lead')) {
+      callOutcome = 'interested';
+    } else if (durationSec < 15) {
+      callOutcome = 'no_answer';
     }
 
-    console.log(`Buyback conversation ended: ${conversationId} duration=${durationSec}s`);
+    console.log(`[webhook] Outcome: ${callOutcome}, appointment: ${appointmentScheduled}`);
+
+    // Build tags
+    const tags = [
+      'talking-postcard',
+      campaignType,
+      'tavus-conversation',
+      `outcome-${callOutcome}`,
+      `duration-${Math.round(durationSec / 60)}min`,
+      ...(appointmentScheduled ? ['appointment-booked'] : []),
+    ];
+
+    // Build custom fields
+    const customFields = [
+      { key: 'contact.vehicle_full', field_value: vehicle },
+      { key: 'contact.conversation_id', field_value: conversationId },
+      { key: 'contact.conversation_duration', field_value: `${Math.round(durationSec)}s` },
+      { key: 'contact.conversation_outcome', field_value: callOutcome },
+      { key: 'contact.appointment_scheduled', field_value: appointmentScheduled ? 'true' : 'false' },
+      { key: 'contact.appointment_details', field_value: appointmentDetails },
+      { key: 'contact.postcard_scanned_at', field_value: scannedAt || new Date().toISOString() },
+      { key: 'contact.campaign_type', field_value: campaignType },
+      { key: 'contact.record_id', field_value: recordId },
+      { key: 'contact.direction', field_value: 'tavus_video' },
+    ];
+
+    // Build summary note
+    const durationMin = Math.round(durationSec / 60);
+    const toolCallSummary = hasToolCalls
+      ? toolCalls.map((t: any) => `- ${t.name || t.tool_name || 'unknown'}`).join('\n')
+      : '- None';
+
+    const summaryNote =
+      `## Talking Postcard Call Summary\n\n` +
+      `**Customer:** ${memberName || 'Unknown'}\n` +
+      `**Vehicle:** ${vehicle || 'Not specified'}\n` +
+      `**Duration:** ${durationMin} minute${durationMin !== 1 ? 's' : ''} (${durationSec}s)\n` +
+      `**Outcome:** ${callOutcome}\n` +
+      `**Appointment:** ${appointmentScheduled ? `Booked — ${appointmentDetails}` : 'Not booked'}\n` +
+      `**Tool calls made:**\n${toolCallSummary}\n\n` +
+      `**Campaign:** ${campaignType}\n` +
+      `**Record ID:** ${recordId || 'N/A'}\n` +
+      `**Conversation ID:** ${conversationId}\n` +
+      `**Scanned at:** ${scannedAt || 'N/A'}\n` +
+      `**Call ended:** ${new Date().toLocaleString('en-US')}`;
+
+    // Build transcript note
+    const notes = [summaryNote];
+    if (hasTranscript) {
+      const transcriptLines = transcript.map((t: any) => {
+        const role = (t.role || 'unknown').toUpperCase();
+        const content = t.content || t.text || t.message || '';
+        return `**${role}:** ${content}`;
+      }).join('\n\n');
+
+      notes.push(
+        `## Conversation Transcript\n\n` +
+        `**Conversation ID:** ${conversationId}\n` +
+        `**Entries:** ${transcript.length}\n\n` +
+        `---\n\n${transcriptLines}`
+      );
+    }
+
+    // Upsert contact with everything (fire-and-forget)
+    ghlUpsert({
+      firstName,
+      lastName,
+      phone,
+      email,
+      tags,
+      source: 'Talking Postcard QR Scan',
+      customFields,
+      notes,
+    }).catch(() => {});
+
+    // Fire GHL inbound webhook with full data
+    fireGhlWebhook({
+      event_type: 'conversation_ended',
+      first_name: firstName,
+      last_name: lastName,
+      phone,
+      email,
+      vehicle,
+      outcome: callOutcome,
+      appointment_scheduled: appointmentScheduled,
+      appointment_details: appointmentDetails,
+      duration_seconds: durationSec,
+      campaign_type: campaignType,
+      record_id: recordId,
+      direction: 'tavus_video',
+      source: 'tavus_video',
+      conversation_id: conversationId,
+      tool_calls: toolNames,
+      has_transcript: hasTranscript,
+      tags,
+    }).catch(() => {});
+
+    // Notify owner
+    const outcomeEmoji = appointmentScheduled ? '✅' : callOutcome === 'transfer_requested' ? '🔄' : callOutcome === 'interested' ? '👀' : '📞';
+    notifyOwner(`${outcomeEmoji} Call ended: ${memberName || 'Unknown'} — ${vehicle || 'N/A'} — ${durationMin}min — ${callOutcome}${appointmentScheduled ? ' — ' + appointmentDetails : ''}`).catch(() => {});
+
+    // ═══════════════════════════════════════════════════
+    // AUTO FOLLOW-UP: Outcome-based customer texts
+    // Goal: get the customer to the dealership
+    // ═══════════════════════════════════════════════════
+    const custName = firstName || 'there';
+    const veh = vehicle || 'your vehicle';
+
+    if (phone) {
+      switch (callOutcome) {
+        case 'appointment_booked': {
+          // Immediate confirmation — make it easy to show up
+          sendblueText(phone,
+            `Hey ${custName}! Your VIP appraisal at Orlando Motors is confirmed — ${appointmentDetails}. ` +
+            `Bring your ${veh} and any spare keys. We're at ${DEALERSHIP.address}. ` +
+            `Ask for the VIP desk when you arrive! See you soon.`
+          ).catch(() => {});
+
+          // Schedule a reminder via GHL webhook (GHL workflow handles the timing)
+          fireGhlWebhook({
+            event_type: 'follow_up_appointment_reminder',
+            first_name: firstName,
+            phone,
+            vehicle: veh,
+            appointment_details: appointmentDetails,
+            conversation_id: conversationId,
+            follow_up_type: 'appointment_confirmation',
+          }).catch(() => {});
+          console.log(`[follow-up] appointment_booked: confirmation text sent to ${phone}`);
+          break;
+        }
+
+        case 'interested': {
+          // They talked but didn't book — soft nudge
+          sendblueText(phone,
+            `Hey ${custName}, great chatting with you! That VIP offer on your ${veh} is still on the table. ` +
+            `If you want to lock in a quick 15-min appraisal, just reply here or call us at ${DEALERSHIP.phone}. ` +
+            `The offer's good through Friday — no pressure at all.`
+          ).catch(() => {});
+
+          // Tell GHL to start warm nurture sequence
+          fireGhlWebhook({
+            event_type: 'follow_up_warm_lead',
+            first_name: firstName,
+            phone,
+            email,
+            vehicle: veh,
+            conversation_id: conversationId,
+            follow_up_type: 'warm_nurture',
+          }).catch(() => {});
+          console.log(`[follow-up] interested: soft nudge sent to ${phone}`);
+          break;
+        }
+
+        case 'no_answer': {
+          // Scanned but didn't really engage — re-engage
+          sendblueText(phone,
+            `Hey ${custName}! Looks like you checked out your VIP mailer — nice. ` +
+            `We've got a strong offer on your ${veh} right now. ` +
+            `Tap here to chat with us when you have a sec, or call ${DEALERSHIP.phone}. ` +
+            `Offer expires Friday!`
+          ).catch(() => {});
+
+          // Tell GHL to start re-engage sequence
+          fireGhlWebhook({
+            event_type: 'follow_up_reengage',
+            first_name: firstName,
+            phone,
+            vehicle: veh,
+            conversation_id: conversationId,
+            follow_up_type: 'reengage_no_show',
+          }).catch(() => {});
+          console.log(`[follow-up] no_answer: re-engage text sent to ${phone}`);
+          break;
+        }
+
+        case 'transfer_requested': {
+          // Team already notified — just confirm to customer
+          sendblueText(phone,
+            `Hey ${custName}, thanks for your patience! Someone from Orlando Motors will be calling you shortly. ` +
+            `If you need us sooner, call ${DEALERSHIP.phone} directly.`
+          ).catch(() => {});
+          console.log(`[follow-up] transfer_requested: confirmation sent to ${phone}`);
+          break;
+        }
+
+        default:
+          // not_interested — don't text them
+          console.log(`[follow-up] ${callOutcome}: no follow-up sent (opted out or not interested)`);
+          break;
+      }
+    } else {
+      console.log(`[follow-up] No phone number available, skipping customer follow-up`);
+    }
+
+    console.log(`[webhook] conversation.ended fully processed: ${conversationId} outcome=${callOutcome} duration=${durationSec}s`);
   }
 
   return res.status(200).json({ ok: true });
@@ -111,27 +380,56 @@ async function handleBuybackTool(toolName: string, toolArgs: Record<string, any>
 
     case 'book_appointment': {
       console.log('Buyback appointment:', JSON.stringify(toolArgs));
+      // Clean phone number — STT often garbles digit sequences
+      const cleanedPhone = cleanPhoneNumber(toolArgs.customer_phone || '');
+      console.log(`[book_appointment] Phone cleaned: "${toolArgs.customer_phone}" → "${cleanedPhone}"`);
+
+      const dt = toolArgs.slot_start_iso ? new Date(toolArgs.slot_start_iso) : null;
+      const timeStr = dt ? dt.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', timeZone: 'America/New_York' }) + ' at ' + dt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }) : 'your scheduled time';
+      const hoursUntilAppt = dt ? (dt.getTime() - Date.now()) / (1000 * 60 * 60) : 999;
+      const isSameDay = hoursUntilAppt < 24;
+
+      // Push to GHL REST API
       ghlPush({
         firstName: toolArgs.customer_first_name,
         lastName: toolArgs.customer_last_name,
-        phone: toolArgs.customer_phone,
+        phone: cleanedPhone,
         email: toolArgs.customer_email,
-        tags: ['buyback-postcard', 'appointment-booked', 'vip-appraisal'],
-        note: `## VIP Appraisal Appointment Booked\n\n**Type:** ${toolArgs.appointment_type || 'Appraisal'}\n**Time:** ${toolArgs.slot_start_iso || 'TBD'}\n**Vehicle:** ${toolArgs.vehicle || 'N/A'}\n**Conversation:** ${cid}\n**Booked:** ${new Date().toLocaleString('en-US')}`,
+        tags: ['buyback-postcard', 'appointment-booked', 'vip-appraisal', 'booked-via-video', ...(isSameDay ? ['same-day-appt'] : [])],
+        note: `## VIP Appraisal Appointment Booked\n\n**Type:** ${toolArgs.appointment_type || 'Appraisal'}\n**Time:** ${timeStr}\n**Vehicle:** ${toolArgs.vehicle || 'N/A'}\n**Same-day:** ${isSameDay ? 'Yes' : 'No'}\n**Conversation:** ${cid}\n**Booked:** ${new Date().toLocaleString('en-US')}`,
         customFields: [
           { key: 'contact.appointment_time', field_value: toolArgs.slot_start_iso || '' },
+          { key: 'contact.appointment_readable', field_value: timeStr },
           { key: 'contact.conversation_outcome', field_value: 'Appointment Booked' },
           { key: 'contact.vehicle_full', field_value: toolArgs.vehicle || '' },
+          { key: 'contact.direction', field_value: 'tavus_video' },
+          { key: 'contact.same_day_appt', field_value: isSameDay ? 'true' : 'false' },
         ],
       }).catch(() => {});
+
+      // Fire to GHL inbound webhook (master workflow trigger)
+      fireGhlWebhook({
+        event_type: 'appointment_booked',
+        first_name: toolArgs.customer_first_name,
+        last_name: toolArgs.customer_last_name,
+        phone: cleanedPhone,
+        email: toolArgs.customer_email,
+        vehicle: toolArgs.vehicle,
+        appointment_time: toolArgs.slot_start_iso,
+        appointment_readable: timeStr,
+        outcome: 'Appointment Booked',
+        direction: 'tavus_video',
+        source: 'tavus_video',
+        same_day: isSameDay,
+        tags: ['buyback-postcard', 'appointment-booked', 'vip-appraisal', 'booked-via-video'],
+      }).catch(() => {});
+
       // Send confirmation text to customer via Sendblue
-      const dt = toolArgs.slot_start_iso ? new Date(toolArgs.slot_start_iso) : null;
-      const timeStr = dt ? dt.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', timeZone: 'America/New_York' }) + ' at ' + dt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }) : 'your scheduled time';
-      if (toolArgs.customer_phone) {
-        sendblueText(toolArgs.customer_phone, `Hi ${toolArgs.customer_first_name || 'there'}! Your VIP appraisal at Orlando Motors is confirmed for ${timeStr}. Bring your vehicle and any spare keys. See you soon! - Orlando Motors`).catch(() => {});
+      if (cleanedPhone) {
+        sendblueText(cleanedPhone, `Hi ${toolArgs.customer_first_name || 'there'}! Your VIP appraisal at Orlando Motors is confirmed for ${timeStr}. Bring your vehicle and any spare keys. ${DEALERSHIP.address}. Ask for the VIP desk! — Orlando Motors`).catch(() => {});
       }
       // Notify owner
-      notifyOwner(`Appt booked: ${toolArgs.customer_first_name || ''}${toolArgs.customer_last_name ? ' ' + toolArgs.customer_last_name : ''} — ${timeStr}${toolArgs.vehicle ? ' (' + toolArgs.vehicle + ')' : ''}`).catch(() => {});
+      notifyOwner(`✅ Appt booked (video): ${toolArgs.customer_first_name || ''}${toolArgs.customer_last_name ? ' ' + toolArgs.customer_last_name : ''} — ${timeStr}${toolArgs.vehicle ? ' (' + toolArgs.vehicle + ')' : ''}${isSameDay ? ' ⚡ SAME DAY' : ''}`).catch(() => {});
       return { success: true, message: `Appointment confirmed for ${toolArgs.customer_first_name}. Tell the customer they are all set and we look forward to seeing them at Orlando Motors. Remind them to bring the mailer and ask for the VIP desk.` };
     }
 
@@ -144,6 +442,18 @@ async function handleBuybackTool(toolName: string, toolArgs: Record<string, any>
         email: toolArgs.email,
         tags: ['buyback-postcard', 'lead-captured'],
         note: `## Lead Captured via Buyback Postcard\n\n**Interest:** ${toolArgs.interest || 'Vehicle buyback'}\n**Notes:** ${toolArgs.notes || 'None'}\n**Conversation:** ${cid}`,
+      }).catch(() => {});
+      fireGhlWebhook({
+        event_type: 'lead_captured',
+        first_name: toolArgs.first_name,
+        last_name: toolArgs.last_name,
+        phone: toolArgs.phone,
+        email: toolArgs.email,
+        vehicle: toolArgs.vehicle,
+        outcome: 'Lead Captured',
+        direction: 'tavus_video',
+        source: 'tavus_video',
+        tags: ['buyback-postcard', 'lead-captured'],
       }).catch(() => {});
       return { success: true, message: 'Contact info saved.' };
     }
@@ -158,7 +468,22 @@ async function handleBuybackTool(toolName: string, toolArgs: Record<string, any>
 
 function getBuybackAvailability(toolInput: Record<string, any>): Record<string, any> {
   const now = new Date();
+  const currentHour = now.getHours();
   const slots: Array<{ start: string; human_readable: string }> = [];
+
+  // Same-day slots if before 4PM
+  if (currentHour < 16 && toolInput.preferred_time_of_day !== 'morning') {
+    const today = new Date(now);
+    const day = today.getDay();
+    if (day !== 0) { // not Sunday
+      if (currentHour < 14) {
+        slots.push({ start: fmtSlot(today, 14, 0), human_readable: `Today at 2:00 PM` });
+      } else if (currentHour < 16) {
+        const nextHour = currentHour + 1;
+        slots.push({ start: fmtSlot(today, nextHour, 0), human_readable: `Today at ${fmtTime(nextHour, 0)}` });
+      }
+    }
+  }
 
   for (let d = 1; d <= 7 && slots.length < 6; d++) {
     const date = new Date(now);
@@ -306,30 +631,116 @@ function getStaticBusinessSlots(toolArgs: Record<string, any>): Record<string, a
 // SHARED HELPERS
 // ═══════════════════════════════════════════════════
 
-async function ghlPush(params: { firstName?: string; lastName?: string; email?: string; phone?: string; tags?: string[]; note?: string; customFields?: Array<{ key: string; field_value: string }> }) {
-  if (!GHL_TOKEN || !GHL_LOCATION_ID) return;
+// ── GHL: Search contact by phone, return ID if found ──
+async function ghlSearchByPhone(phone: string): Promise<string | null> {
+  if (!phone || !GHL_TOKEN) return null;
   try {
-    const body: Record<string, any> = {
-      firstName: params.firstName || undefined,
-      lastName: params.lastName || undefined,
-      email: params.email || undefined,
-      phone: params.phone || undefined,
-      tags: params.tags,
-      source: 'Voxaris AI Agent',
-      locationId: GHL_LOCATION_ID,
-    };
-    if (params.customFields?.length) body.customFields = params.customFields;
-    const contactRes = await fetch('https://services.leadconnectorhq.com/contacts/', {
-      method: 'POST', headers: GHL_HEADERS_BASE,
-      body: JSON.stringify(body),
+    const params = new URLSearchParams({ query: phone, locationId: GHL_LOCATION_ID });
+    const resp = await fetch(`https://services.leadconnectorhq.com/contacts/search/duplicate?${params}`, {
+      headers: GHL_HEADERS_BASE,
+      signal: AbortSignal.timeout(10_000),
     });
-    if (contactRes.ok) {
-      const cid = (await contactRes.json())?.contact?.id;
-      if (cid && params.note) {
-        await fetch(`https://services.leadconnectorhq.com/contacts/${cid}/notes`, { method: 'POST', headers: GHL_HEADERS_BASE, body: JSON.stringify({ body: params.note, userId: null }) });
+    if (resp.ok) {
+      const data = await resp.json();
+      const contactId = data?.contact?.id;
+      if (contactId) {
+        console.log(`[ghl-upsert] Found existing contact by phone ${phone}: ${contactId}`);
+        return contactId;
       }
     }
-  } catch {}
+  } catch (err: any) {
+    console.warn(`[ghl-upsert] Search by phone failed: ${err.message}`);
+  }
+  return null;
+}
+
+// ── GHL: Upsert contact (search by phone first, update if found, create if not) ──
+async function ghlUpsert(params: {
+  firstName?: string; lastName?: string; email?: string; phone?: string;
+  tags?: string[]; source?: string;
+  customFields?: Array<{ key: string; field_value: string }>;
+  notes?: string[];  // array of note bodies to attach
+}): Promise<string | null> {
+  if (!GHL_TOKEN || !GHL_LOCATION_ID) {
+    console.warn('[ghl-upsert] GHL credentials not set, skipping');
+    return null;
+  }
+
+  try {
+    // 1. Search for existing contact by phone
+    let contactId = params.phone ? await ghlSearchByPhone(params.phone) : null;
+
+    if (contactId) {
+      // 2a. UPDATE existing contact
+      console.log(`[ghl-upsert] Updating existing contact ${contactId}`);
+      const updateBody: Record<string, any> = {};
+      if (params.firstName) updateBody.firstName = params.firstName;
+      if (params.lastName) updateBody.lastName = params.lastName;
+      if (params.email) updateBody.email = params.email;
+      if (params.tags?.length) updateBody.tags = params.tags;
+      if (params.customFields?.length) updateBody.customFields = params.customFields;
+
+      await fetch(`https://services.leadconnectorhq.com/contacts/${contactId}`, {
+        method: 'PUT',
+        headers: GHL_HEADERS_BASE,
+        body: JSON.stringify(updateBody),
+        signal: AbortSignal.timeout(10_000),
+      }).catch((err) => console.warn(`[ghl-upsert] Update failed: ${err.message}`));
+    } else {
+      // 2b. CREATE new contact
+      console.log(`[ghl-upsert] Creating new contact: ${params.firstName} ${params.lastName}`);
+      const createBody: Record<string, any> = {
+        firstName: params.firstName || undefined,
+        lastName: params.lastName || undefined,
+        email: params.email || undefined,
+        phone: params.phone || undefined,
+        tags: params.tags,
+        source: params.source || 'Voxaris AI Agent',
+        locationId: GHL_LOCATION_ID,
+      };
+      if (params.customFields?.length) createBody.customFields = params.customFields;
+
+      const contactRes = await fetch('https://services.leadconnectorhq.com/contacts/', {
+        method: 'POST',
+        headers: GHL_HEADERS_BASE,
+        body: JSON.stringify(createBody),
+        signal: AbortSignal.timeout(10_000),
+      });
+      if (contactRes.ok) {
+        contactId = (await contactRes.json())?.contact?.id;
+        console.log(`[ghl-upsert] Contact created: ${contactId}`);
+      } else {
+        const errText = await contactRes.text();
+        console.warn(`[ghl-upsert] Create failed ${contactRes.status}: ${errText}`);
+        return null;
+      }
+    }
+
+    // 3. Attach notes
+    if (contactId && params.notes?.length) {
+      for (const noteBody of params.notes) {
+        await fetch(`https://services.leadconnectorhq.com/contacts/${contactId}/notes`, {
+          method: 'POST',
+          headers: GHL_HEADERS_BASE,
+          body: JSON.stringify({ body: noteBody, userId: null }),
+          signal: AbortSignal.timeout(10_000),
+        }).catch((err) => console.warn(`[ghl-upsert] Note failed: ${err.message}`));
+      }
+    }
+
+    return contactId;
+  } catch (err: any) {
+    console.warn(`[ghl-upsert] Failed: ${err.message}`);
+    return null;
+  }
+}
+
+// ── Legacy wrapper for backward compat (uses upsert now) ──
+async function ghlPush(params: { firstName?: string; lastName?: string; email?: string; phone?: string; tags?: string[]; note?: string; customFields?: Array<{ key: string; field_value: string }> }) {
+  await ghlUpsert({
+    ...params,
+    notes: params.note ? [params.note] : [],
+  });
 }
 
 function fmtSlot(date: Date, h: number, m: number): string { const d = new Date(date); d.setHours(h, m, 0, 0); return d.toISOString(); }

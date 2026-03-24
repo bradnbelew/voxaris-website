@@ -68,11 +68,13 @@ export function Conversation({ conversationUrl, conversationId, webhookType, onL
 
   // Handle local video stream (self-view)
   useEffect(() => {
+    console.log('[Conversation] Local video track:', localVideoTrack?.state, localVideoTrack?.track ? 'has track' : 'no track');
     if (localVideoTrack?.track && localVideoRef.current) {
       const stream = new MediaStream([localVideoTrack.track]);
       localVideoRef.current.srcObject = stream;
+      console.log('[Conversation] Self-view stream attached');
     }
-  }, [localVideoTrack?.track]);
+  }, [localVideoTrack?.state, localVideoTrack?.track]);
 
   // Join the call
   useEffect(() => {
@@ -246,19 +248,19 @@ export function Conversation({ conversationUrl, conversationId, webhookType, onL
         className="w-full h-full object-cover"
       />
 
-      {/* Self-View Preview */}
-      {isJoined && !isCamOff && (
+      {/* Self-View Preview — show when joined OR when we have a local video track */}
+      {(isJoined || localVideoTrack?.track) && !isCamOff && (
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="absolute top-4 right-4 w-32 h-24 rounded-lg overflow-hidden border-2 border-white/20 shadow-lg"
+          className="absolute top-4 right-4 w-32 h-24 sm:w-36 sm:h-28 rounded-xl overflow-hidden border-2 border-white/20 shadow-lg z-20"
         >
           <video
             ref={localVideoRef}
             autoPlay
             playsInline
             muted
-            className="w-full h-full object-cover mirror"
+            className="w-full h-full object-cover"
             style={{ transform: 'scaleX(-1)' }}
           />
         </motion.div>

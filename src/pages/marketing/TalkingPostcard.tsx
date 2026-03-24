@@ -7,10 +7,10 @@ import {
   Sparkles,
   Loader2,
 } from 'lucide-react';
+import { Navbar, Footer } from '@/components/marketing';
 
-// Use the Vercel serverless function on the same domain (not the Render backend)
 const API_BASE = '';
-
+const ease = [0.22, 1, 0.36, 1] as const;
 
 export function TalkingPostcard() {
   const navigate = useNavigate();
@@ -38,7 +38,6 @@ export function TalkingPostcard() {
       const data = await res.json();
 
       if (data.success && data.conversation_url) {
-        // Redirect to the embed page with session data
         const params = new URLSearchParams({
           url: data.conversation_url,
           dealership: form.business,
@@ -56,7 +55,7 @@ export function TalkingPostcard() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
+    <div className="min-h-screen bg-white">
       <Helmet>
         <title>Talking Postcards — AI Video on Direct Mail | Voxaris</title>
         <meta name="description" content="QR-code postcards that launch a live AI video conversation. Bridge offline marketing to online engagement with photorealistic AI." />
@@ -70,83 +69,80 @@ export function TalkingPostcard() {
         <meta name="twitter:image" content="https://voxaris.io/og-image.png" />
       </Helmet>
 
-      {/* ═══════════════════════════════════════════════════
-          HERO — Dark, punchy, Hormozi Grand Slam
-         ═══════════════════════════════════════════════════ */}
-      <section
-        id="top"
-        className="relative min-h-screen flex items-center overflow-hidden"
-        style={{ background: 'linear-gradient(135deg, #0a0a0a 0%, #111111 100%)' }}
-      >
-        {/* Subtle radial glow */}
-        <div className="absolute inset-0 pointer-events-none">
+      <Navbar />
+
+      {/* ── HERO ── */}
+      <section className="relative min-h-screen flex items-center overflow-hidden bg-white pt-20">
+        {/* Background */}
+        <div className="absolute inset-0">
           <div
-            className="absolute top-[20%] left-1/2 -translate-x-1/2 w-[1200px] h-[800px] opacity-20"
-            style={{ background: 'radial-gradient(ellipse at 50% 40%, rgba(255,255,255,0.04) 0%, transparent 60%)' }}
+            className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[1600px] h-[1000px]"
+            style={{ background: 'radial-gradient(ellipse at 50% 35%, rgba(212,168,67,0.04) 0%, rgba(148,163,184,0.04) 30%, transparent 60%)' }}
           />
+          <div className="absolute inset-0 grid-pattern opacity-[0.02]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-white via-transparent to-white/80" />
+          <div className="absolute inset-0 noise-overlay opacity-40" />
         </div>
 
-        <div className="relative z-10 max-w-6xl mx-auto px-6 w-full py-24 md:py-32">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
+        <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 w-full py-12 lg:py-0">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
 
             {/* Left — Copy */}
-            <div>
-              {/* Eyebrow badge */}
+            <div className="max-w-xl">
+              {/* Badge */}
               <motion.div
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.6, ease }}
                 className="mb-8"
               >
-                <span className="inline-flex items-center gap-3 bg-zinc-900 border border-zinc-800 px-5 py-2.5 rounded-full">
+                <span className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full border border-gold-200/60 bg-gold-50/50 backdrop-blur-sm shadow-gold-sm">
                   <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400/60 opacity-60" />
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold-400/60 opacity-60" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-gold-500" />
                   </span>
-                  <span className="uppercase tracking-[0.2em] text-[11px] font-semibold text-zinc-400">Instant &bull; Personalized &bull; Real</span>
+                  <span className="text-[11px] font-semibold text-gold-700 uppercase tracking-[0.15em]">Instant &bull; Personalized &bull; Real</span>
                 </span>
               </motion.div>
 
               {/* Headline */}
               <motion.h1
-                className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tighter leading-[0.95] mb-8"
+                className="headline-hero text-slate-900 mb-6 overflow-hidden"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.8, delay: 0.1, ease }}
               >
-                Watch your AI agent
-                <br />
-                <span className="text-white">book appointments</span>
-                <br />
-                <span className="text-zinc-500">while you sleep.</span>
+                Watch your AI agent{' '}
+                <span className="text-gold-gradient">book appointments</span>{' '}
+                <span className="text-slate-400">while you sleep.</span>
               </motion.h1>
 
               {/* Sub */}
               <motion.p
-                className="text-xl sm:text-2xl text-zinc-400 max-w-lg leading-relaxed mb-10"
+                className="text-lg sm:text-xl text-slate-600 max-w-lg leading-relaxed mb-8"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.7, delay: 0.15, ease }}
               >
-                Enter your business name and one key highlight.
+                Enter your dealership name and one key highlight.
                 We'll instantly create a photorealistic video of{' '}
-                <strong className="text-white">your own AI agent</strong> answering real customer leads.
+                <strong className="text-slate-800">your own AI agent</strong> answering real customer leads.
               </motion.p>
 
               {/* Trust signals */}
               <motion.div
-                className="flex flex-wrap items-center gap-8 text-sm text-zinc-400"
-                initial={{ opacity: 0, y: 30 }}
+                className="flex flex-wrap items-center gap-6 text-sm text-slate-400 mb-8"
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.7, delay: 0.25, ease }}
               >
                 {[
                   'No credit card',
                   '45-second setup',
                   '6%+ response rate',
                 ].map((text) => (
-                  <span key={text} className="flex items-center gap-3">
-                    <span className="w-5 h-5 bg-emerald-500 rounded-full flex items-center justify-center text-[10px] text-white font-bold shrink-0">
+                  <span key={text} className="flex items-center gap-2">
+                    <span className="w-5 h-5 bg-gold-500 rounded-full flex items-center justify-center text-[10px] text-white font-bold shrink-0">
                       &#10003;
                     </span>
                     {text}
@@ -156,22 +152,22 @@ export function TalkingPostcard() {
 
               {/* Metrics */}
               <motion.div
-                className="mt-14 pt-10 border-t border-zinc-800 flex items-center gap-10"
+                className="pt-8 border-t border-slate-200 flex items-center gap-8"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.6, delay: 0.7 }}
+                transition={{ duration: 0.6, delay: 0.5 }}
               >
                 {[
                   { value: '6-12%', label: 'Response rate' },
                   { value: '<3s', label: 'First response' },
                   { value: '47', label: 'Appts week one' },
                 ].map((stat, i) => (
-                  <div key={stat.label} className="flex items-center gap-10">
+                  <div key={stat.label} className="flex items-center gap-8">
                     <div>
-                      <div className="text-2xl font-bold text-white tracking-tight">{stat.value}</div>
-                      <div className="text-[11px] text-zinc-500 mt-1 tracking-wide uppercase">{stat.label}</div>
+                      <div className="text-2xl sm:text-3xl font-bold text-slate-900 font-display tracking-tight">{stat.value}</div>
+                      <div className="text-[11px] text-slate-400 mt-1 tracking-wide uppercase">{stat.label}</div>
                     </div>
-                    {i < 2 && <div className="w-px h-8 bg-zinc-800" />}
+                    {i < 2 && <div className="w-px h-8 bg-slate-200" />}
                   </div>
                 ))}
               </motion.div>
@@ -182,34 +178,40 @@ export function TalkingPostcard() {
               className="relative"
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 1, delay: 0.4, ease }}
             >
-              <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 sm:p-10">
+              {/* Glow behind card */}
+              <div
+                className="absolute -inset-8 rounded-[3rem] -z-10"
+                style={{ background: 'radial-gradient(ellipse at 50% 50%, rgba(212,168,67,0.06) 0%, transparent 60%)' }}
+              />
+
+              <div className="bg-white rounded-3xl shadow-card-luxury border border-slate-200/80 p-8 sm:p-10">
                 {formState === 'idle' || formState === 'error' ? (
                   <>
                     <div className="text-center mb-6">
-                      <span className="inline-block bg-white text-black text-[11px] font-bold px-4 py-1.5 rounded-full uppercase tracking-wider">
+                      <span className="inline-block bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 text-white text-[11px] font-bold px-4 py-1.5 rounded-full uppercase tracking-wider">
                         Response Time &lt;3s
                       </span>
                     </div>
-                    <h2 className="text-3xl font-bold text-center mb-8 tracking-tight">
+                    <h2 className="text-3xl font-bold text-center mb-8 tracking-tight text-slate-900 font-display">
                       Get Your Free Demo
                     </h2>
 
                     {formState === 'error' && (
-                      <div className="mb-4 p-3 rounded-2xl bg-red-500/10 border border-red-500/20 text-sm text-red-400 text-center">
+                      <div className="mb-4 p-3 rounded-2xl bg-red-50 border border-red-200 text-sm text-red-600 text-center">
                         {errorMsg}
                       </div>
                     )}
 
-                    <form onSubmit={handleSubmit} className="space-y-5">
+                    <form onSubmit={handleSubmit} className="space-y-4">
                       <input
                         type="text"
-                        placeholder="Business Name *"
+                        placeholder="Dealership Name *"
                         value={form.business}
                         onChange={(e) => setForm({ ...form, business: e.target.value })}
                         required
-                        className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-6 py-5 text-lg text-white placeholder:text-zinc-500 focus:outline-none focus:border-zinc-500 transition-colors"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 text-[16px] text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-gold-400 focus:ring-2 focus:ring-gold-100 transition-all"
                       />
                       <input
                         type="text"
@@ -217,7 +219,7 @@ export function TalkingPostcard() {
                         value={form.gm}
                         onChange={(e) => setForm({ ...form, gm: e.target.value })}
                         required
-                        className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-6 py-5 text-lg text-white placeholder:text-zinc-500 focus:outline-none focus:border-zinc-500 transition-colors"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 text-[16px] text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-gold-400 focus:ring-2 focus:ring-gold-100 transition-all"
                       />
                       <textarea
                         rows={3}
@@ -225,34 +227,34 @@ export function TalkingPostcard() {
                         value={form.highlight}
                         onChange={(e) => setForm({ ...form, highlight: e.target.value })}
                         required
-                        className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-6 py-5 text-lg text-white placeholder:text-zinc-500 focus:outline-none focus:border-zinc-500 transition-colors resize-none"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 text-[16px] text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-gold-400 focus:ring-2 focus:ring-gold-100 transition-all resize-none"
                       />
                       <button
                         type="submit"
-                        className="w-full bg-white hover:bg-zinc-100 text-black font-semibold text-lg py-5 rounded-2xl flex items-center justify-center gap-3 transition-all duration-300 hover:shadow-[0_8px_30px_rgba(255,255,255,0.1)] hover:-translate-y-0.5"
+                        className="w-full bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 hover:from-gold-700 hover:via-gold-600 hover:to-gold-700 text-white font-semibold text-[16px] py-4 rounded-2xl flex items-center justify-center gap-3 transition-all duration-500 shadow-gold-btn hover:shadow-[0_8px_32px_rgba(212,168,67,0.30)] hover:-translate-y-0.5 border border-gold-400/30"
                       >
                         Generate My Free AI Agent Demo
                         <ArrowRight className="w-5 h-5" />
                       </button>
                     </form>
-                    <p className="text-center text-[11px] text-zinc-600 mt-5">
+                    <p className="text-center text-[11px] text-slate-400 mt-5">
                       Takes 45 seconds &bull; No credit card &bull; Instant video
                     </p>
                   </>
                 ) : (
                   <div className="text-center py-12">
-                    <div className="w-16 h-16 mx-auto rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center mb-5">
-                      <Loader2 className="w-8 h-8 text-zinc-400 animate-spin" />
+                    <div className="w-16 h-16 mx-auto rounded-full bg-gold-50 border border-gold-200 flex items-center justify-center mb-5">
+                      <Loader2 className="w-8 h-8 text-gold-500 animate-spin" />
                     </div>
-                    <h3 className="text-2xl font-bold text-white mb-3">Building your agent...</h3>
-                    <p className="text-zinc-500 mb-6 max-w-sm mx-auto">
+                    <h3 className="text-2xl font-bold text-slate-900 mb-3 font-display">Building your agent...</h3>
+                    <p className="text-slate-500 mb-6 max-w-sm mx-auto">
                       Creating a personalized AI agent for{' '}
-                      <span className="text-white font-medium">{form.business}</span>.
+                      <span className="text-slate-900 font-medium">{form.business}</span>.
                       You'll be redirected automatically.
                     </p>
-                    <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-zinc-800 border border-zinc-700 text-sm text-zinc-400">
-                      <Sparkles className="w-4 h-4 text-emerald-400 animate-pulse" />
-                      Configuring V&middot;FACE agent...
+                    <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gold-50 border border-gold-200/60 text-sm text-gold-700">
+                      <Sparkles className="w-4 h-4 text-gold-500 animate-pulse" />
+                      Configuring your AI agent...
                     </span>
                   </div>
                 )}
@@ -260,18 +262,12 @@ export function TalkingPostcard() {
             </motion.div>
           </div>
         </div>
+
+        {/* Bottom fade */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent to-white" />
       </section>
 
-      {/* Minimal footer */}
-      <footer className="py-8 border-t border-zinc-800">
-        <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <span className="text-zinc-600 text-sm">&copy; {new Date().getFullYear()} Voxaris AI. All rights reserved.</span>
-          <div className="flex items-center gap-6">
-            <Link to="/" className="text-zinc-600 hover:text-zinc-400 text-sm transition-colors">Home</Link>
-            <Link to="/book-demo" className="text-zinc-600 hover:text-zinc-400 text-sm transition-colors">Book Demo</Link>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

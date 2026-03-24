@@ -167,7 +167,7 @@ export function Demo() {
             transition={{ delay: 0.3 }}
           >
             <a href="#outbound">
-              <Button className="bg-carbon-900 hover:bg-carbon-800 text-white rounded-full px-8 py-6 text-base font-medium shadow-sm hover:shadow-md transition-all">
+              <Button className="bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 hover:from-gold-700 hover:via-gold-600 hover:to-gold-700 text-white rounded-full px-8 py-6 text-base font-medium shadow-gold-btn hover:shadow-[0_8px_32px_rgba(212,168,67,0.30)] border border-gold-400/30 transition-all">
                 Get a Call from Maria
                 <Phone className="w-4 h-4 ml-2" />
               </Button>

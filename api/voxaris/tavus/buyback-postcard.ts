@@ -24,8 +24,28 @@ const GHL_LOCATION_ID = process.env.GHL_LOCATION_ID || '';
 // Sendblue (notifications)
 const SB_KEY = process.env.SENDBLUE_API_KEY || '';
 const SB_SECRET = process.env.SENDBLUE_API_SECRET || '';
-const SB_FROM = process.env.SENDBLUE_FROM_NUMBER || '+13053369541';
+const SB_FROM = process.env.SENDBLUE_BUYBACK_FROM || process.env.SENDBLUE_FROM_NUMBER || '+13214744152';
 const NOTIFY_NUMBER = process.env.LEAD_NOTIFY_NUMBERS || '+14078195809';
+const GHL_WEBHOOK_URL = 'https://services.leadconnectorhq.com/hooks/euXH15G0pqPgr497kAL2/webhook-trigger/6730dcb6-748c-4323-a525-65b972384f7a';
+
+function getCampaignExpiry(): string {
+  const days = parseInt(process.env.CAMPAIGN_DURATION_DAYS || '7', 10);
+  const expiry = new Date();
+  expiry.setDate(expiry.getDate() + days);
+  expiry.setHours(23, 59, 59, 0);
+  return expiry.toISOString();
+}
+
+async function fireGhlWebhook(payload: Record<string, any>): Promise<void> {
+  try {
+    await fetch(GHL_WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...payload, campaign_expiry: payload.campaign_expiry || getCampaignExpiry(), timestamp: new Date().toISOString(), location_id: GHL_LOCATION_ID }),
+      signal: AbortSignal.timeout(10_000),
+    });
+  } catch {}
+}
 
 // ── GHL: Create contact + note on conversation start ──
 async function pushToGHL(params: {
@@ -154,17 +174,25 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const name = firstName || 'there';
   const v = vehicle || 'your vehicle';
 
-  const customGreeting = `Hey ${name}! Oh awesome, you scanned the mailer! I'm Maria with Orlando Motors. So we sent you that VIP offer on your ${v} — those are super popular right now. Do you still have it?`;
+  // Rotate greetings to avoid repetitive patterns (per Tavus prompting guide)
+  const greetings = [
+    `Hey ${name}! Oh awesome, you scanned the mailer! I'm Maria with Orlando Motors. So we sent you that VIP offer on your ${v} — those are super popular right now. Do you still have it?`,
+    `Hey ${name}! Great to see you. I'm Maria over at Orlando Motors. I see you got our VIP mailer about your ${v} — those are in really high demand. You still driving it?`,
+    `Hi ${name}! Thanks for checking out the mailer. I'm Maria at Orlando Motors. We put together that VIP offer specifically for your ${v} because the market for them is really strong right now. Still have it?`,
+  ];
+  const customGreeting = greetings[Math.floor(Math.random() * greetings.length)]!;
 
+  // Conversational context follows Tavus Prompting Playbook: factual context only,
+  // no behavioral instructions (those live in the system prompt layer).
   const conversationalContext = [
     `You are speaking with ${name}${lastName ? ` ${lastName}` : ''}.`,
-    vehicle ? `They own a ${vehicle}. Reference this vehicle specifically to show personalization.` : '',
-    `Campaign type: VIP buyback. This customer scanned a QR code on their personalized VIP buyback mailer.`,
+    vehicle ? `They own a ${vehicle}.` : '',
+    `This customer scanned a QR code on their personalized VIP buyback mailer.`,
     phone ? `Customer phone on file: ${phone}.` : '',
-    `Your goal: Greet them warmly, confirm they still have the vehicle, build value around the current market for their car, and book a no-pressure 15-minute VIP appraisal at Orlando Motors.`,
-    `VIP offer expires Friday — create natural urgency without being pushy.`,
-    `Dealership hours: Mon-Sat 9AM-8PM, Sun 11AM-6PM.`,
-    `Address: 7820 International Drive, Orlando, FL 32819. Ask for the VIP desk.`,
+    `Dealership: Orlando Motors. Address: 7820 International Drive, Orlando, FL 32819.`,
+    `Hours: Mon-Sat 9AM-8PM, Sun 11AM-6PM.`,
+    `The VIP offer referenced on the mailer has a limited window.`,
+    `When they arrive: bring the mailer and any spare keys, ask for the VIP desk.`,
   ].filter(Boolean).join(' ');
 
   // 1. Create Tavus session
@@ -192,7 +220,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
   }
 
-  // 2. Push to GHL (fire-and-forget — don't block the response)
+  // 2. Push to GHL REST API (fire-and-forget)
   pushToGHL({
     firstName: firstName || '',
     lastName: lastName || '',
@@ -204,8 +232,22 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     conversationId: result.data.conversation_id,
   }).catch(() => {});
 
-  // 3. Notify Ethan via iMessage
-  notifyOwner(`New postcard scan: ${name}${lastName ? ` ${lastName}` : ''} — ${v}`).catch(() => {});
+  // 3. Fire GHL inbound webhook (master workflow trigger)
+  fireGhlWebhook({
+    event_type: 'postcard_scanned',
+    first_name: firstName || '',
+    last_name: lastName || '',
+    phone: phone || '',
+    email: email || '',
+    vehicle: vehicle || '',
+    source: 'tavus_video',
+    direction: 'tavus_video',
+    conversation_id: result.data.conversation_id,
+    tags: ['buyback-postcard', 'vip-mailer', 'talking-postcard', 'postcard-scanned'],
+  }).catch(() => {});
+
+  // 4. Notify Ethan via iMessage
+  notifyOwner(`📬 New postcard scan: ${name}${lastName ? ` ${lastName}` : ''} — ${v}`).catch(() => {});
 
   return res.status(200).json({
     success: true,
