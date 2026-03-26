@@ -24,10 +24,11 @@ export function TalkingPostcard() {
     setErrorMsg('');
 
     try {
-      const res = await fetch(`${API_BASE}/api/voxaris/tavus/talking-postcard`, {
+      const res = await fetch(`${API_BASE}/api/voxaris/tavus/sessions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          type: 'talking-postcard',
           dealership: form.business,
           gm_name: form.gm,
           highlight: form.highlight,

@@ -45,10 +45,10 @@ export function BusinessCardAgent({ persona }: { persona: string }) {
     setError(null);
 
     try {
-      const res = await fetch('/api/voxaris/tavus/business-card', {
+      const res = await fetch('/api/voxaris/tavus/sessions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ persona: config.slug }),
+        body: JSON.stringify({ type: 'business-card', persona: config.slug }),
       });
 
       const data = await res.json();

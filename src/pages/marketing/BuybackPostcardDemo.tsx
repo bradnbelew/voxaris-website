@@ -47,10 +47,10 @@ export function BuybackPostcardDemo() {
   const startConversation = useCallback(async () => {
     setState('loading');
     try {
-      const res = await fetch('/api/voxaris/tavus/buyback-postcard', {
+      const res = await fetch('/api/voxaris/tavus/sessions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ firstName, lastName, vehicle, campaignType, recordId, phone, email }),
+        body: JSON.stringify({ type: 'buyback', firstName, lastName, vehicle, campaignType, recordId, phone, email }),
       });
       if (!res.ok) throw new Error('Failed to create session');
       const data = await res.json();
