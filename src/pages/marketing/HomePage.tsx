@@ -48,6 +48,7 @@ export function HomePage() {
         <DealerProofStrip />
         <DirectMailIsBroken />
         <HowItWorks />
+        <VideoDemo />
         <BusinessRealities />
         <FAQSection />
         <FinalCTA />
@@ -232,6 +233,68 @@ function HowItWorks() {
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </Link>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+/* ── Section: Video Demo ───────────────────────────────────── */
+function VideoDemo() {
+  return (
+    <section className="py-20 lg:py-28 bg-white">
+      <div className="max-w-5xl mx-auto px-6 sm:px-8">
+        <motion.div
+          className="text-center mb-12"
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease }}
+        >
+          <span className="text-[11px] font-semibold text-gold-600 uppercase tracking-[0.2em] mb-4 block">See It In Action</span>
+          <h2 className="text-3xl sm:text-4xl font-bold text-carbon-900 mb-4 font-display">
+            Watch an AI agent handle a live call.
+          </h2>
+          <p className="text-lg text-carbon-400 max-w-2xl mx-auto">
+            This is Julia — a Voxaris AI agent built for a dealership buyback campaign. Watch her qualify a lead, answer objections, and book the appointment in under 2 minutes.
+          </p>
+        </motion.div>
+
+        <motion.div
+          className="relative rounded-2xl overflow-hidden shadow-[0_25px_60px_rgba(0,0,0,0.12)] border border-carbon-200/60"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease }}
+        >
+          <video
+            controls
+            preload="metadata"
+            poster="/julia-avatar-still.jpg"
+            className="w-full aspect-video bg-carbon-900"
+          >
+            <source src="/julia-demo.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </motion.div>
+
+        <motion.div
+          className="flex flex-wrap justify-center gap-6 mt-8 text-sm text-carbon-400"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.3, duration: 0.6 }}
+        >
+          {[
+            'Real AI agent — not a recording',
+            'Sub-second response time',
+            'Books directly to CRM',
+          ].map((item) => (
+            <div key={item} className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-gold-500" />
+              {item}
+            </div>
+          ))}
         </motion.div>
       </div>
     </section>
