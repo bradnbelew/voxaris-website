@@ -114,7 +114,7 @@ export function BuybackPostcardDemo() {
               <div className="flex items-center justify-between px-5 py-3">
                 <img
                   src="/voxaris-logo-white.png"
-                  alt="Voxaris AI"
+                  alt="Voxaris — AI-powered voice and video agents for business"
                   className="h-4 opacity-50"
                 />
                 <div className="flex items-center gap-1.5 bg-white/10 backdrop-blur-md px-3 py-1 rounded-full">
@@ -247,7 +247,7 @@ export function BuybackPostcardDemo() {
             <div className="relative z-10 flex flex-col items-center gap-6 px-6 max-w-sm w-full text-center">
               <img
                 src="/voxaris-logo-white.png"
-                alt="Voxaris AI"
+                alt="Voxaris — AI-powered voice and video agents for business"
                 className="h-5 opacity-30"
               />
 

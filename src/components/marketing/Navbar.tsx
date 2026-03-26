@@ -57,7 +57,7 @@ export function Navbar() {
         <nav className="container-wide">
           <div className="flex items-center justify-between h-[80px]">
             <Link to="/" className="flex items-center shrink-0">
-              <img src="/voxaris-logo-white.png" alt="Voxaris AI" className="h-14 w-auto" />
+              <img src="/voxaris-logo-white.png" alt="Voxaris — AI-powered voice and video agents for business" className="h-14 w-auto" />
             </Link>
             <div className="hidden lg:flex items-center gap-1">
               {navLinks.map((link) => (

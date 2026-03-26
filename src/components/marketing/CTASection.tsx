@@ -24,7 +24,7 @@ export function CTASection() {
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
         >
-          <img src="/voxaris-logo-white.png" alt="Voxaris AI" className="h-32 w-auto opacity-60" />
+          <img src="/voxaris-logo-white.png" alt="Voxaris — AI-powered voice and video agents for business" className="h-32 w-auto opacity-60" />
         </motion.div>
 
         {/* Headline */}

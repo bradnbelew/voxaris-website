@@ -30,6 +30,17 @@ export function HomePage() {
         <meta name="description" content="V·TEAMS — a coordinated squad of AI agents (receptionist, qualifier, specialist, closer) that answer your inbound calls, warm-transfer with full context, and book appointments 24/7." />
         <meta name="keywords" content="V·TEAMS, multi-agent AI, AI agent squad, warm transfer AI, coordinated AI agents, AI sales team, inbound call AI, appointment booking AI, lead qualification, AI phone agent" />
         <link rel="canonical" href="https://voxaris.io/" />
+        <meta property="og:title" content="V·TEAMS by Voxaris | AI Sales Team for Inbound Calls" />
+        <meta property="og:description" content="V·TEAMS — a coordinated squad of AI agents that answer your inbound calls, warm-transfer with full context, and book appointments 24/7." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://voxaris.io/" />
+        <meta property="og:image" content="https://voxaris.io/og-image.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="V·TEAMS by Voxaris | AI Sales Team for Inbound Calls" />
+        <meta name="twitter:description" content="V·TEAMS — a coordinated squad of AI agents that answer your inbound calls, warm-transfer with full context, and book appointments 24/7." />
+        <meta name="twitter:image" content="https://voxaris.io/og-image.png" />
       </Helmet>
       <Navbar />
       <main id="main-content">

@@ -10,20 +10,39 @@ Voxaris is an AI technology company focused on multi-agent conversational AI for
 
 ## Other Products
 
-- [Talking Postcards](https://voxaris.io/solutions/direct-mail): Personalized QR-to-AI outreach with 8-30% response rates
+- [Talking Postcards](https://voxaris.io/solutions/direct-mail): Personalized QR-to-AI outreach with 8-30% response rates. A QR code on a direct mail piece launches a live AI video agent conversation.
 
-## Solutions
+## Solutions by Industry
 
-- [Auto Dealerships](https://voxaris.io/solutions/dealerships): V·TEAMS for inbound dealership sales calls — after-hours, overflow, appointment booking
-- [Contractors](https://voxaris.io/solutions/contractors): AI-powered lead capture and appointment booking for home service contractors
-- [Direct Mail](https://voxaris.io/solutions/direct-mail): Talking Postcards — personalized QR-to-video AI outreach
+- [Auto Dealerships](https://voxaris.io/solutions/dealerships): V·TEAMS for inbound dealership sales calls — after-hours, overflow, BDC replacement, appointment booking, CRM sync
+- [Contractors & Home Services](https://voxaris.io/solutions/contractors): AI-powered lead capture and appointment booking for roofers, HVAC, plumbers, and home service companies
+- [Hotels & Hospitality](https://voxaris.io/solutions/hospitality): AI video concierge for hotel websites — guides guests through bookings, answers questions, increases direct reservations
+- [Direct Mail](https://voxaris.io/solutions/direct-mail): Talking Postcards — personalized QR-to-video AI outreach that bridges offline marketing to online engagement
+- [White Label Partners](https://voxaris.io/solutions/white-label): Full white-label AI agent platform for agencies, BPOs, and technology partners to resell under their own brand
+
+## How V·TEAMS Works
+
+1. **Receptionist Agent** — Answers every inbound call in under 5 seconds, 24/7/365. Greets callers, identifies intent, and routes to the right specialist.
+2. **Qualifier Agent** — Asks targeted questions to determine if the caller is a qualified lead. Gathers contact info, timeline, budget signals.
+3. **Specialist Agent** — Handles detailed product/service questions with industry-specific knowledge. Addresses objections and builds value.
+4. **Closer Agent** — Secures the appointment. Confirms date, time, and contact details. Syncs everything to your CRM in real time.
+
+Each handoff is a warm transfer — the next agent picks up with full context. The caller never repeats themselves.
+
+## Technology Stack
+
+- **V·FACE**: Neural video rendering engine for photorealistic AI avatars
+- **V·SENSE**: Voice perception system with sub-500ms response latency
+- **V·FLOW**: Multi-agent orchestration engine that manages handoffs, context, and routing
 
 ## Resources
 
 - [Demo](https://voxaris.io/demo): Hear V·TEAMS handle a live inbound call
 - [Book a Demo](https://voxaris.io/book-demo): Schedule a personalized V·TEAMS demonstration
 - [Blog](https://voxaris.io/blog): Insights on conversational AI, multi-agent systems, and AI-powered sales
-- [Why Voxaris](https://voxaris.io/why-voxaris): What makes Voxaris different from other AI solutions
+- [How It Works](https://voxaris.io/how-it-works): Technical overview of V·TEAMS features and capabilities
+- [Why Voxaris](https://voxaris.io/why-voxaris): What makes Voxaris different from chatbots, single-bot AI, and traditional answering services
+- [Technology](https://voxaris.io/technology): Deep dive into V·FACE, V·SENSE, and V·FLOW
 
 ## Key Facts
 
@@ -31,9 +50,14 @@ Voxaris is an AI technology company focused on multi-agent conversational AI for
 - Headquarters: Orlando, FL 32835
 - Founder: Ethan Stopperich, President
 - Flagship: V·TEAMS — multi-agent AI squad for inbound calls
-- Works for: Any industry with inbound sales calls
+- Works for: Any industry with inbound sales calls (auto dealerships, contractors, healthcare, legal, real estate, professional services)
 - Primary metric: Booked appointments
 - Architecture: Specialized AI agents with warm transfers and context preservation
+- Differentiator: Not a single chatbot — a coordinated squad where each agent has one job and does it well
+
+## Competitive Positioning
+
+Voxaris is NOT a chatbot, not a single-voice IVR, and not an answering service. V·TEAMS is a multi-agent AI system where specialized agents collaborate on every call. Unlike competitors that use one bot for everything, Voxaris assigns the right specialist for each stage of the conversation. This results in higher qualification rates, better caller experience, and more booked appointments.
 
 ## Contact
 
@@ -42,3 +66,4 @@ Voxaris is an AI technology company focused on multi-agent conversational AI for
 - Website: https://voxaris.io
 - LinkedIn: https://www.linkedin.com/company/voxaris
 - Instagram: https://www.instagram.com/voxaris_ai/
+- GitHub: https://github.com/ethanstopperich1-rgb

@@ -11,6 +11,15 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: Slackbot
+Allow: /
+
+User-agent: Discordbot
+Allow: /
+
 # AI / LLM Crawlers — DO NOT BLOCK
 User-agent: GPTBot
 Allow: /
@@ -18,7 +27,13 @@ Allow: /
 User-agent: OAI-SearchBot
 Allow: /
 
+User-agent: ChatGPT-User
+Allow: /
+
 User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
 Allow: /
 
 User-agent: Anthropic-AI
@@ -33,11 +48,48 @@ Allow: /
 User-agent: Google-Extended
 Allow: /
 
+User-agent: GoogleOther
+Allow: /
+
 User-agent: Bytespider
 Allow: /
 
-# Default
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: Diffbot
+Allow: /
+
+User-agent: YouBot
+Allow: /
+
+User-agent: Meta-ExternalAgent
+Allow: /
+
+User-agent: Meta-ExternalFetcher
+Allow: /
+
+User-agent: PhindBot
+Allow: /
+
+User-agent: AdsBot-Google
+Allow: /
+
+# Default — allow everything
 User-agent: *
 Allow: /
+
+# Block dashboard/admin/auth (not public content)
+User-agent: *
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /login
+Disallow: /register
 
 Sitemap: https://voxaris.io/sitemap.xml

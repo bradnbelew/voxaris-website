@@ -398,7 +398,7 @@ export function BusinessCardAgent({ persona }: { persona: string }) {
         <div className="container-wide py-12">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
             <Link to="/">
-              <img src="/voxaris-logo-white.png" alt="Voxaris AI" className="h-12 w-auto opacity-40" />
+              <img src="/voxaris-logo-white.png" alt="Voxaris — AI-powered voice and video agents for business" className="h-12 w-auto opacity-40" />
             </Link>
             <div className="flex flex-wrap items-center justify-center gap-6">
               {[

@@ -69,6 +69,8 @@ export function BlogPost() {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={post.title} />
         <meta name="twitter:description" content={post.description} />
+        <meta property="og:image" content="https://voxaris.io/og-image.png" />
+        <meta name="twitter:image" content="https://voxaris.io/og-image.png" />
         <script type="application/ld+json">
           {JSON.stringify(articleJsonLd)}
         </script>
