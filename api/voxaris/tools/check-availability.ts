@@ -48,7 +48,13 @@ function parseDateRange(requested: string): { startDate: string; endDate: string
   const lower = (requested || '').toLowerCase().trim();
 
   if (lower === 'today') {
-    // keep target as today
+    // Start today, but include tomorrow as fallback in case today's slots passed
+    const endTarget = new Date(now);
+    endTarget.setDate(endTarget.getDate() + 1);
+    return {
+      startDate: now.toISOString().split('T')[0]!,
+      endDate: endTarget.toISOString().split('T')[0]!,
+    };
   } else if (lower === 'tomorrow') {
     target.setDate(target.getDate() + 1);
   } else if (['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'].includes(lower)) {
@@ -205,27 +211,52 @@ function pickTwoSlots(slots: string[], preferDate: string): string[] {
   return picked;
 }
 
+// ── Current time in Orlando (ET) ──
+function nowET(): Date {
+  return new Date(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }));
+}
+
 // ── Fallback: generate slots from dealership hours ──
 function buildDefaultSlots(startDate: string, endDate: string, timePref: string): string[] {
   const slots: string[] = [];
   const start = new Date(startDate + 'T00:00:00');
   const end = new Date(endDate + 'T23:59:59');
+  const now = nowET();
+  const currentHour = now.getHours();
+  const currentMinutes = now.getMinutes();
+  const todayStr = now.toISOString().split('T')[0]!;
 
   for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
     const dayOfWeek = d.getDay();
-    const dayName = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+    const dateStr = d.toISOString().split('T')[0]!;
+    const isToday = dateStr === todayStr;
+    const dayName = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', timeZone: 'America/New_York' });
 
+    // Build candidate slots for this day
+    const candidates: { label: string; hour: number }[] = [];
     if (dayOfWeek === 0) {
-      // Sunday: 11AM-6PM — 1 morning-ish, 1 afternoon
-      slots.push(`${dayName} at 11:00 AM`, `${dayName} at 2:00 PM`);
+      // Sunday: 11AM-6PM
+      candidates.push({ label: `${dayName} at 11:00 AM`, hour: 11 });
+      candidates.push({ label: `${dayName} at 2:00 PM`, hour: 14 });
     } else {
-      // Mon-Sat: 9AM-8PM — 1 morning, 1 afternoon
-      slots.push(`${dayName} at 10:00 AM`, `${dayName} at 2:00 PM`);
+      // Mon-Sat: 9AM-8PM
+      candidates.push({ label: `${dayName} at 10:00 AM`, hour: 10 });
+      candidates.push({ label: `${dayName} at 2:00 PM`, hour: 14 });
     }
-    // Only generate for the first matching day (prefer same-day)
+
+    // If today, only keep slots at least 1 hour from now
+    for (const c of candidates) {
+      if (isToday && (c.hour <= currentHour || (c.hour === currentHour + 1 && currentMinutes > 30))) {
+        continue; // slot already passed or too soon
+      }
+      slots.push(c.label);
+    }
+
+    // Once we have 2 slots, stop
     if (slots.length >= 2) break;
   }
 
+  // If today had no valid slots, we'll have grabbed tomorrow's
   return slots.slice(0, 2);
 }
 

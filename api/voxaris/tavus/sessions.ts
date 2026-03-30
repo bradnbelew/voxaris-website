@@ -277,7 +277,11 @@ async function handleBuyback(req: VercelRequest, res: VercelResponse) {
   ];
   const customGreeting = greetings[Math.floor(Math.random() * greetings.length)]!;
 
+  // Inject current date/time so the agent knows what "today" and "this afternoon" mean
+  const nowET = new Date().toLocaleString('en-US', { timeZone: 'America/New_York', weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+
   const conversationalContext = [
+    `Current date and time: ${nowET} (Eastern).`,
     `You are speaking with ${name}${lastName ? ` ${lastName}` : ''}.`,
     vehicle ? `They own a ${vehicle}.` : '',
     `This customer scanned a QR code on their personalized VIP buyback mailer.`,
