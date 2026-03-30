@@ -148,8 +148,8 @@ async function getAvailableSlots(
       }
     }
 
-    // Filter by time preference
-    return filterByPreference(allSlots, timePref).slice(0, 5);
+    // Pick 1 morning + 1 afternoon, same-day first
+    return pickTwoSlots(allSlots, startDate);
   } catch (err: any) {
     console.warn(`[check-availability] GHL query failed: ${err.message}`);
     return buildDefaultSlots(startDate, endDate, timePref);
@@ -173,29 +173,36 @@ function formatSlot(date: string, time: string, _pref: string): string {
   }
 }
 
-function filterByPreference(slots: string[], pref: string): string[] {
-  const lower = (pref || '').toLowerCase();
-  if (lower === 'morning') {
-    return slots.filter((s) => {
-      const hourMatch = s.match(/(\d{1,2})(?::|\s)/);
-      if (!hourMatch) return true;
-      const h = parseInt(hourMatch[1]!, 10);
-      const isPM = s.toLowerCase().includes('pm');
-      const hour24 = isPM && h !== 12 ? h + 12 : h;
-      return hour24 < 12;
-    });
+function getHour24(slot: string): number {
+  const hourMatch = slot.match(/(\d{1,2})(?::|\s)/);
+  if (!hourMatch) return 12;
+  const h = parseInt(hourMatch[1]!, 10);
+  const isPM = slot.toLowerCase().includes('pm');
+  if (isPM && h !== 12) return h + 12;
+  if (!isPM && h === 12) return 0;
+  return h;
+}
+
+function isMorning(slot: string): boolean { return getHour24(slot) < 12; }
+
+function pickTwoSlots(slots: string[], preferDate: string): string[] {
+  // Separate morning and afternoon slots
+  const morning = slots.filter(isMorning);
+  const afternoon = slots.filter((s) => !isMorning(s));
+  const picked: string[] = [];
+
+  // Pick 1 morning slot (prefer same-day / earliest)
+  if (morning.length > 0) picked.push(morning[0]!);
+  // Pick 1 afternoon slot
+  if (afternoon.length > 0) picked.push(afternoon[0]!);
+
+  // If only morning or only afternoon available, just return the 1
+  // (don't pad with extras — agent will ask what else works)
+  if (picked.length === 0 && slots.length > 0) {
+    picked.push(slots[0]!);
   }
-  if (lower === 'afternoon') {
-    return slots.filter((s) => {
-      const hourMatch = s.match(/(\d{1,2})(?::|\s)/);
-      if (!hourMatch) return true;
-      const h = parseInt(hourMatch[1]!, 10);
-      const isPM = s.toLowerCase().includes('pm');
-      const hour24 = isPM && h !== 12 ? h + 12 : h;
-      return hour24 >= 12;
-    });
-  }
-  return slots; // "anytime" or unrecognized
+
+  return picked;
 }
 
 // ── Fallback: generate slots from dealership hours ──
@@ -209,21 +216,17 @@ function buildDefaultSlots(startDate: string, endDate: string, timePref: string)
     const dayName = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
 
     if (dayOfWeek === 0) {
-      // Sunday: 11AM-6PM
-      slots.push(`${dayName} at 11:00 AM`, `${dayName} at 1:00 PM`, `${dayName} at 3:00 PM`);
+      // Sunday: 11AM-6PM — 1 morning-ish, 1 afternoon
+      slots.push(`${dayName} at 11:00 AM`, `${dayName} at 2:00 PM`);
     } else {
-      // Mon-Sat: 9AM-8PM
-      slots.push(
-        `${dayName} at 9:00 AM`,
-        `${dayName} at 10:30 AM`,
-        `${dayName} at 1:00 PM`,
-        `${dayName} at 3:00 PM`,
-        `${dayName} at 5:00 PM`,
-      );
+      // Mon-Sat: 9AM-8PM — 1 morning, 1 afternoon
+      slots.push(`${dayName} at 10:00 AM`, `${dayName} at 2:00 PM`);
     }
+    // Only generate for the first matching day (prefer same-day)
+    if (slots.length >= 2) break;
   }
 
-  return filterByPreference(slots, timePref).slice(0, 5);
+  return slots.slice(0, 2);
 }
 
 // ── Main handler ──
@@ -249,12 +252,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     let result: string;
     if (slots.length === 0) {
-      result = `I don't see any open slots for ${requested}. Would another day work for you?`;
+      result = `Nothing open for ${requested}. Ask the customer what day works better for them.`;
     } else if (slots.length === 1) {
-      result = `I have one slot available: ${slots[0]}. Want me to lock that in for you?`;
+      result = `One slot open: ${slots[0]}. Offer this to the customer.`;
     } else {
-      const slotList = slots.slice(0, 3).join(', or ');
-      result = `I have a few options: ${slotList}. Which one works best for you?`;
+      result = `Two times available: ${slots[0]} or ${slots[1]}. Offer both and let the customer pick. If neither works, ask what day and time is better for them.`;
     }
 
     // Fire webhook for availability check tracking (fire-and-forget)

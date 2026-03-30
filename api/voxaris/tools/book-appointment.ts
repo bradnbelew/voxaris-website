@@ -332,9 +332,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       tags: ['vip-appraisal', 'talking-postcard', 'booked'],
     }).catch(() => {});
 
-    // Return clean result (strip any XML/emotion tags)
-    const resultMsg = cleanResponse(props.response_to_user) ||
-      `Appointment confirmed for ${firstName || 'you'}. Tell the customer they are all set and we look forward to seeing them at Orlando Motors. Remind them to bring the mailer and ask for the VIP desk.`;
+    // Return tool result for the agent to relay naturally
+    const resultMsg = `Appointment confirmed for ${firstName || 'the customer'} on ${time}. They should bring their mailer and any spare keys, and ask for the VIP desk when they arrive.`;
 
     return res.status(200).json({
       tool_call_id: tool_call_id || '',
