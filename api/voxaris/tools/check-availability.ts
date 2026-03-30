@@ -41,19 +41,30 @@ interface CheckAvailabilityProps {
 }
 
 // ── Parse a natural-language date into a start/end ISO range ──
+// Get today's date string in ET (YYYY-MM-DD)
+function todayET(): string {
+  return new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' }); // en-CA = YYYY-MM-DD
+}
+
+// Get a Date object anchored to ET "today" at midnight
+function etNow(): Date {
+  const dateStr = todayET(); // e.g. "2026-03-30"
+  return new Date(dateStr + 'T12:00:00'); // noon to avoid DST edge cases
+}
+
 function parseDateRange(requested: string): { startDate: string; endDate: string } {
-  const now = new Date();
-  let target = new Date(now);
+  const today = todayET();
+  let target = new Date(today + 'T12:00:00');
 
   const lower = (requested || '').toLowerCase().trim();
 
   if (lower === 'today') {
-    // Start today, but include tomorrow as fallback in case today's slots passed
-    const endTarget = new Date(now);
+    // Start today, include tomorrow as fallback in case today's slots passed
+    const endTarget = new Date(target);
     endTarget.setDate(endTarget.getDate() + 1);
     return {
-      startDate: now.toISOString().split('T')[0]!,
-      endDate: endTarget.toISOString().split('T')[0]!,
+      startDate: today,
+      endDate: endTarget.toLocaleDateString('en-CA', { timeZone: 'America/New_York' }),
     };
   } else if (lower === 'tomorrow') {
     target.setDate(target.getDate() + 1);
@@ -68,23 +79,22 @@ function parseDateRange(requested: string): { startDate: string; endDate: string
     if (daysAhead <= 0) daysAhead += 7;
     target.setDate(target.getDate() + daysAhead);
   } else if (lower.includes('this week')) {
-    // Return rest of the week
-    const endOfWeek = new Date(now);
+    const endOfWeek = new Date(target);
     const daysUntilSunday = 7 - endOfWeek.getDay();
     endOfWeek.setDate(endOfWeek.getDate() + daysUntilSunday);
     return {
-      startDate: now.toISOString().split('T')[0]!,
-      endDate: endOfWeek.toISOString().split('T')[0]!,
+      startDate: today,
+      endDate: endOfWeek.toLocaleDateString('en-CA', { timeZone: 'America/New_York' }),
     };
   } else if (lower.includes('next week')) {
-    const startNext = new Date(now);
+    const startNext = new Date(target);
     const daysUntilMonday = (8 - startNext.getDay()) % 7 || 7;
     startNext.setDate(startNext.getDate() + daysUntilMonday);
     const endNext = new Date(startNext);
     endNext.setDate(endNext.getDate() + 6);
     return {
-      startDate: startNext.toISOString().split('T')[0]!,
-      endDate: endNext.toISOString().split('T')[0]!,
+      startDate: startNext.toLocaleDateString('en-CA', { timeZone: 'America/New_York' }),
+      endDate: endNext.toLocaleDateString('en-CA', { timeZone: 'America/New_York' }),
     };
   } else {
     // Try parsing as a date string — guard against bogus parses (e.g. epoch)
@@ -97,7 +107,7 @@ function parseDateRange(requested: string): { startDate: string; endDate: string
     }
   }
 
-  const dateStr = target.toISOString().split('T')[0]!;
+  const dateStr = target.toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
   return { startDate: dateStr, endDate: dateStr };
 }
 
@@ -224,11 +234,11 @@ function buildDefaultSlots(startDate: string, endDate: string, timePref: string)
   const now = nowET();
   const currentHour = now.getHours();
   const currentMinutes = now.getMinutes();
-  const todayStr = now.toISOString().split('T')[0]!;
+  const todayStr = todayET();
 
   for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
     const dayOfWeek = d.getDay();
-    const dateStr = d.toISOString().split('T')[0]!;
+    const dateStr = d.toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
     const isToday = dateStr === todayStr;
     const dayName = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', timeZone: 'America/New_York' });
 
