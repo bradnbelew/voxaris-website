@@ -44,8 +44,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(403).json({ error: 'Verification failed' });
   }
 
-  // POST = Lead form submission
+  // POST = Lead form submission OR PURL generation
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+  // ── Route: ?action=buyback-purl → Generate personalized PURL for buyback demo ──
+  if (req.query.action === 'buyback-purl') {
+    return handleBuybackPurl(req, res);
+  }
 
   const body = req.body;
   console.log('Facebook leadgen webhook:', JSON.stringify(body).slice(0, 500));
@@ -184,6 +189,130 @@ async function sendWelcomeMessage(phone: string, name: string) {
   } catch (err: any) {
     console.warn(`Welcome message failed: ${err.message}`);
   }
+}
+
+// ── Buyback PURL Generator ──
+// Called via POST /api/facebook/leadgen?action=buyback-purl
+// GHL workflow calls this with lead data, gets back a personalized link
+const BASE_URL = (process.env.CALLBACK_BASE_URL || 'https://www.voxaris.io').trim();
+const GHL_WEBHOOK_URL = 'https://services.leadconnectorhq.com/hooks/euXH15G0pqPgr497kAL2/webhook-trigger/6730dcb6-748c-4323-a525-65b972384f7a';
+
+async function handleBuybackPurl(req: VercelRequest, res: VercelResponse) {
+  const {
+    firstName = '',
+    lastName = '',
+    phone = '',
+    email = '',
+    vehicle = '',
+    campaignType = 'buyback',
+    adName = '',
+    adSetName = '',
+    formName = '',
+  } = req.body || {};
+
+  const recordId = `FB-${Date.now()}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`;
+
+  console.log(`[buyback-purl] New lead: ${firstName} ${lastName} — ${vehicle} — ad: ${adName}`);
+
+  // Build personalized URL
+  const query = new URLSearchParams();
+  if (firstName) query.set('fn', firstName);
+  if (lastName) query.set('ln', lastName);
+  if (vehicle) query.set('v', vehicle);
+  if (phone) query.set('ph', phone);
+  if (email) query.set('em', email);
+  query.set('ct', campaignType || 'buyback');
+  query.set('rid', recordId);
+  query.set('src', 'fb');
+  const purl = `${BASE_URL}/talking-postcard/buyback?${query.toString()}`;
+
+  // Push to GHL with PURL and facebook-lead tags
+  if (GHL_TOKEN && GHL_LOCATION_ID) {
+    const ghlHeaders = {
+      Authorization: `Bearer ${GHL_TOKEN}`,
+      Version: '2021-07-28',
+      'Content-Type': 'application/json',
+    };
+
+    try {
+      const contactRes = await fetch('https://services.leadconnectorhq.com/contacts/', {
+        method: 'POST',
+        headers: ghlHeaders,
+        body: JSON.stringify({
+          firstName: firstName || undefined,
+          lastName: lastName || undefined,
+          phone: phone || undefined,
+          email: email || undefined,
+          tags: ['facebook-lead', 'buyback-postcard', 'vip-mailer', 'fb-ad-lead'],
+          source: `Facebook Ad: ${adName || 'Buyback Campaign'}`,
+          customFields: [
+            { key: 'contact.vehicle_full', field_value: vehicle || '' },
+            { key: 'contact.campaign_type', field_value: campaignType || 'buyback' },
+            { key: 'contact.record_id', field_value: recordId },
+            { key: 'contact.purl', field_value: purl },
+            { key: 'contact.lead_source', field_value: 'facebook_ad' },
+            { key: 'contact.fb_ad_name', field_value: adName || '' },
+            { key: 'contact.lead_captured_at', field_value: new Date().toISOString() },
+          ],
+          locationId: GHL_LOCATION_ID,
+        }),
+        signal: AbortSignal.timeout(10_000),
+      });
+
+      if (contactRes.ok) {
+        const cid = (await contactRes.json())?.contact?.id;
+        console.log(`[buyback-purl] GHL contact: ${cid}`);
+
+        if (cid) {
+          // Add note
+          await fetch(`https://services.leadconnectorhq.com/contacts/${cid}/notes`, {
+            method: 'POST',
+            headers: ghlHeaders,
+            body: JSON.stringify({
+              body: `## Facebook Ad Lead — Buyback Campaign\n\n**Name:** ${firstName} ${lastName}\n**Phone:** ${phone || 'N/A'}\n**Email:** ${email || 'N/A'}\n**Vehicle:** ${vehicle || 'N/A'}\n**Ad:** ${adName || 'Unknown'}\n**PURL:** ${purl}\n**Captured:** ${new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })} ET`,
+              userId: null,
+            }),
+            signal: AbortSignal.timeout(10_000),
+          }).catch(() => {});
+        }
+      }
+    } catch (err: any) {
+      console.warn(`[buyback-purl] GHL push failed: ${err.message}`);
+    }
+  }
+
+  // Fire GHL master workflow webhook
+  try {
+    await fetch(GHL_WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        event_type: 'facebook_lead_received',
+        first_name: firstName,
+        last_name: lastName,
+        phone, email, vehicle,
+        campaign_type: campaignType,
+        ad_name: adName,
+        ad_set_name: adSetName,
+        form_name: formName,
+        purl, record_id: recordId,
+        source: 'facebook_ad',
+        tags: ['facebook-lead', 'buyback-postcard', 'vip-mailer', 'fb-ad-lead'],
+        timestamp: new Date().toISOString(),
+        location_id: GHL_LOCATION_ID,
+      }),
+      signal: AbortSignal.timeout(10_000),
+    });
+  } catch {}
+
+  return res.status(200).json({
+    success: true,
+    purl,
+    record_id: recordId,
+    lead: { firstName, lastName, phone, email, vehicle, campaignType },
+    // Ready-to-use SMS template for GHL workflow
+    sms_template: `Hey ${firstName || 'there'}! Your VIP appraisal for your ${vehicle || 'vehicle'} is ready. Tap to meet Maria from Orlando Motors: ${purl}`,
+  });
 }
 
 async function pushToGHL(name: string, email: string, phone: string, company: string, leadgenId: string) {
