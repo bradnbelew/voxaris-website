@@ -229,8 +229,8 @@ function nowET(): Date {
 // ── Fallback: generate slots from dealership hours ──
 function buildDefaultSlots(startDate: string, endDate: string, timePref: string): string[] {
   const slots: string[] = [];
-  const start = new Date(startDate + 'T00:00:00');
-  const end = new Date(endDate + 'T23:59:59');
+  const start = new Date(startDate + 'T12:00:00'); // noon UTC avoids ET day-rollback
+  const end = new Date(endDate + 'T12:00:00');
   const now = nowET();
   const currentHour = now.getHours();
   const currentMinutes = now.getMinutes();
