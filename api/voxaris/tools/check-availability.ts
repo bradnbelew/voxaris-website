@@ -313,7 +313,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(200).json({
       tool_call_id: tool_call_id || '',
       result,
-      _debug: { server_today: todayET(), server_now_et: nowET().toISOString(), startDate, endDate, v: 3 },
     });
   } catch (err: any) {
     console.error(`[check-availability] Handler error: ${err.message}`);
