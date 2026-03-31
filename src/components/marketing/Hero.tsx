@@ -136,42 +136,47 @@ export function Hero() {
             </motion.div>
           </div>
 
-          {/* Right — Handwritten mailer image */}
+          {/* Right — Julia AI agent video */}
           <motion.div
             className="relative flex justify-center lg:justify-end"
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.4, ease }}
           >
-            <div className="relative w-full max-w-md lg:max-w-[480px]">
-              {/* Glow behind image */}
+            <div className="relative w-full max-w-md lg:max-w-[440px]">
+              {/* Glow */}
               <div
-                className="absolute -inset-12 rounded-[4rem] -z-10"
-                style={{ background: 'radial-gradient(ellipse at 50% 50%, rgba(212,168,67,0.10) 0%, rgba(148,163,184,0.06) 40%, transparent 70%)' }}
+                className="absolute -inset-10 rounded-[3rem] -z-10"
+                style={{ background: 'radial-gradient(ellipse at 50% 50%, rgba(212,168,67,0.08) 0%, rgba(148,163,184,0.04) 40%, transparent 70%)' }}
               />
 
-              {/* The actual handwritten mailer */}
-              <div className="rounded-2xl overflow-hidden shadow-[0_25px_60px_rgba(0,0,0,0.12)] hover:shadow-[0_30px_70px_rgba(0,0,0,0.18)] transition-shadow duration-500 border border-slate-200/60">
-                <img
-                  src="/handwritten-mailer.png"
-                  alt="Handwritten Talking Postcard — personalized buyback letter with QR code that launches a live AI video agent conversation"
-                  className="w-full h-auto"
-                  loading="eager"
-                />
+              {/* Video container */}
+              <div className="rounded-2xl overflow-hidden shadow-[0_25px_60px_rgba(0,0,0,0.12)] border border-slate-200/60">
+                <video
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  poster="/julia-avatar-still.jpg"
+                  className="w-full aspect-[4/5] object-cover bg-slate-900"
+                >
+                  <source src="/julia-avatar.mp4" type="video/mp4" />
+                </video>
               </div>
 
-              {/* Floating badge — response rate (removed — duplicated in metrics row) */}
-
-              {/* Floating badge — speed */}
+              {/* Name badge */}
               <motion.div
-                className="absolute -bottom-4 -right-4 lg:-right-8 bg-white/95 backdrop-blur-xl rounded-2xl px-5 py-3.5 border border-slate-200/80 shadow-[0_8px_30px_rgba(0,0,0,0.06)]"
-                initial={{ opacity: 0, x: 20, y: -10 }}
-                animate={{ opacity: 1, x: 0, y: 0 }}
-                transition={{ duration: 0.6, delay: 1.1 }}
+                className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-xl rounded-full px-5 py-2.5 border border-slate-200/80 shadow-[0_8px_30px_rgba(0,0,0,0.06)] flex items-center gap-2.5"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 1 }}
               >
-                <div className="text-[9px] text-slate-400 uppercase tracking-[0.2em] mb-1">Time to Appt</div>
-                <div className="text-lg font-bold text-slate-900 font-display">Under 2 min</div>
-                <div className="text-[9px] text-slate-400">Scan → Booked</div>
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400/60" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                </span>
+                <span className="text-[13px] font-semibold text-slate-900">Julia</span>
+                <span className="text-[11px] text-slate-400">AI Sales Agent</span>
               </motion.div>
             </div>
           </motion.div>
