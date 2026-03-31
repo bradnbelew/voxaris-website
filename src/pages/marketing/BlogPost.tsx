@@ -78,7 +78,7 @@ export function BlogPost() {
       <Navbar />
       <main>
         {/* Header */}
-        <section className="pt-32 pb-12 lg:pt-40 lg:pb-16">
+        <section className="pt-28 pb-12 lg:pt-40 lg:pb-16">
           <div className="container-narrow px-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}

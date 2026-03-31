@@ -19,7 +19,7 @@ const metrics = [
 
 export function Hero() {
   return (
-    <section data-section="hero" className="relative min-h-screen flex items-center overflow-hidden bg-white pt-20">
+    <section data-section="hero" className="relative min-h-screen flex items-center overflow-hidden bg-white pt-16">
       {/* Background */}
       <div className="absolute inset-0">
         <div
@@ -75,17 +75,15 @@ export function Hero() {
 
             {/* Metrics row */}
             <motion.div
-              className="flex items-center gap-6 mb-8"
+              className="flex items-center gap-5 sm:gap-6 mb-8"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.25, ease }}
             >
               {metrics.map((m, i) => (
                 <div key={m.label} className="flex flex-col">
-                  <div className="text-2xl sm:text-3xl font-bold text-slate-900 font-display">{m.value}</div>
-                  <div className="text-xs text-slate-500 font-medium">{m.label}</div>
-                  <div className="text-[10px] text-slate-400">{m.sub}</div>
-                  {i < metrics.length - 1 && <div className="hidden" />}
+                  <div className="text-xl sm:text-2xl font-bold text-slate-900 font-display">{m.value}</div>
+                  <div className="text-[11px] text-slate-500 font-medium">{m.label}</div>
                 </div>
               ))}
             </motion.div>
@@ -120,19 +118,18 @@ export function Hero() {
 
             {/* Proof strip */}
             <motion.div
-              className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-slate-400"
+              className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-[13px] text-slate-400"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.6 }}
             >
               {[
-                'Built for auto dealers',
-                'Works with any DMS / CRM',
+                'Works with any CRM',
                 'Live in 48 hours',
                 'No contracts',
               ].map((item) => (
-                <div key={item} className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-gold-500" />
+                <div key={item} className="flex items-center gap-1.5">
+                  <span className="w-1 h-1 rounded-full bg-gold-500" />
                   {item}
                 </div>
               ))}
@@ -163,17 +160,7 @@ export function Hero() {
                 />
               </div>
 
-              {/* Floating badge — response rate */}
-              <motion.div
-                className="absolute -top-4 -left-4 lg:-left-8 bg-white/95 backdrop-blur-xl rounded-2xl px-5 py-3.5 border border-gold-200/40 shadow-[0_8px_30px_rgba(212,168,67,0.08)]"
-                initial={{ opacity: 0, x: -20, y: 10 }}
-                animate={{ opacity: 1, x: 0, y: 0 }}
-                transition={{ duration: 0.6, delay: 1 }}
-              >
-                <div className="text-[9px] text-slate-400 uppercase tracking-[0.2em] mb-1">Response Rate</div>
-                <div className="text-lg font-bold text-gold-gradient font-display">6-12%</div>
-                <div className="text-[9px] text-slate-400">vs 0.5% email</div>
-              </motion.div>
+              {/* Floating badge — response rate (removed — duplicated in metrics row) */}
 
               {/* Floating badge — speed */}
               <motion.div

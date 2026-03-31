@@ -129,7 +129,7 @@ export default function HowItWorks() {
         <meta property="og:image" content="https://voxaris.io/og-image.png" />
         <meta name="twitter:image" content="https://voxaris.io/og-image.png" />      </Helmet>
       {/* Hero */}
-      <section className="pt-32 pb-16 lg:pb-20 bg-secondary/30">
+      <section className="pt-28 pb-16 lg:pb-20 bg-secondary/30">
         <div className="container-wide">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

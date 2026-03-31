@@ -18,7 +18,7 @@ export default function Privacy() {
       </Helmet>
       <Navbar />
       <main id="main-content">
-        <section className="section-padding pt-32">
+        <section className="section-padding pt-28">
           <div className="container-wide max-w-3xl">
             <h1 className="text-4xl font-semibold text-foreground mb-4">Privacy Policy</h1>
             <p className="text-sm text-muted-foreground mb-10">Last updated: March 9, 2026</p>

@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight,
-  Phone,
   PhoneOff,
   Clock,
   Users,
@@ -61,37 +60,26 @@ export function HomePage() {
 /* ── Section: Dealer Social Proof Strip ───────────────────── */
 function DealerProofStrip() {
   return (
-    <section className="py-10 bg-carbon-950 border-y border-white/[0.04]">
-      <div className="max-w-6xl mx-auto px-6 sm:px-8">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-8">
-          <motion.div
-            className="flex items-center gap-8 flex-wrap justify-center"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            {[
-              { value: '47', label: 'Appointments booked in week one' },
-              { value: '6-12%', label: 'QR scan-to-engagement rate' },
-              { value: '$0.38', label: 'Cost per appointment' },
-              { value: '24/7', label: 'AI agent never sleeps' },
-            ].map((stat, i) => (
-              <motion.div
-                key={stat.label}
-                className="text-center"
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-              >
-                <div className="text-2xl sm:text-3xl font-bold text-gold-500 font-display">{stat.value}</div>
-                <div className="text-[11px] text-white/40 max-w-[120px]">{stat.label}</div>
-              </motion.div>
-            ))}
-          </motion.div>
-{/* Trusted by section removed */}
-        </div>
+    <section className="py-6 bg-carbon-950 border-y border-white/[0.04]">
+      <div className="max-w-5xl mx-auto px-6 sm:px-8">
+        <motion.div
+          className="flex items-center justify-center gap-6 sm:gap-12 flex-wrap"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          {[
+            { value: '$0.38', label: 'Cost per appointment' },
+            { value: '24/7', label: 'Always on' },
+            { value: '<2 min', label: 'Scan to booked' },
+          ].map((stat) => (
+            <div key={stat.label} className="flex items-center gap-2 text-center">
+              <span className="text-lg sm:text-xl font-bold text-gold-500 font-display">{stat.value}</span>
+              <span className="text-[11px] text-white/40">{stat.label}</span>
+            </div>
+          ))}
+        </motion.div>
       </div>
     </section>
   );
@@ -218,7 +206,7 @@ function HowItWorks() {
         </div>
 
         <motion.div
-          className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
+          className="mt-8 flex justify-center"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -226,11 +214,11 @@ function HowItWorks() {
         >
           <Link to="/talking-postcard">
             <Button
-              size="lg"
-              className="bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 hover:from-gold-500 hover:via-gold-400 hover:to-gold-500 text-white h-12 px-8 text-[14px] font-semibold rounded-full shadow-gold-btn border border-gold-400/30 transition-all duration-500"
+              size="default"
+              className="bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 hover:from-gold-500 hover:via-gold-400 hover:to-gold-500 text-white px-6 text-[13px] font-semibold rounded-full shadow-gold-sm border border-gold-400/30 transition-all duration-300"
             >
-              Try It Now — Free Demo
-              <ArrowRight className="w-4 h-4 ml-2" />
+              Try It Now
+              <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
             </Button>
           </Link>
         </motion.div>
@@ -442,10 +430,10 @@ function FAQItem({ q, a }: { q: string; a: string }) {
 /* ── Section: Final CTA ──────────────────────────────────────── */
 function FinalCTA() {
   return (
-    <section className="py-20 lg:py-28 bg-carbon-900 relative overflow-hidden">
+    <section className="py-16 lg:py-24 bg-carbon-900">
       <div className="max-w-3xl mx-auto px-6 sm:px-8 text-center">
         <motion.h2
-          className="text-3xl sm:text-4xl font-bold text-white mb-6 font-display"
+          className="text-3xl sm:text-4xl font-bold text-white mb-5 font-display"
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -453,21 +441,21 @@ function FinalCTA() {
         >
           Your competitors' mailers end up in the trash.
           <br className="hidden sm:block" />
-          <span className="text-white/60">Yours books the appointment.</span>
+          <span className="text-white/50">Yours books the appointment.</span>
         </motion.h2>
 
         <motion.p
-          className="text-lg text-white/60 mb-10 max-w-xl mx-auto"
+          className="text-base text-white/50 mb-8 max-w-md mx-auto"
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.1, duration: 0.7, ease }}
         >
-          See a Talking Postcard in action. Watch our AI agent greet a customer by name, reference their vehicle, and book the appraisal — all in under 2 minutes.
+          See a Talking Postcard in action — live AI, real conversation, booked appointment.
         </motion.p>
 
         <motion.div
-          className="flex flex-col sm:flex-row items-center justify-center gap-4"
+          className="flex flex-col sm:flex-row items-center justify-center gap-3"
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -476,7 +464,7 @@ function FinalCTA() {
           <Link to="/talking-postcard">
             <Button
               size="lg"
-              className="bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 hover:from-gold-500 hover:via-gold-400 hover:to-gold-500 text-white h-14 px-10 text-[15px] font-semibold rounded-full group shadow-gold-btn hover:shadow-[0_8px_32px_rgba(212,168,67,0.35)] transition-all duration-500 hover:-translate-y-0.5 border border-gold-400/30"
+              className="bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 hover:from-gold-500 hover:via-gold-400 hover:to-gold-500 text-white h-12 px-8 text-[14px] font-semibold rounded-full group shadow-gold-btn border border-gold-400/30 transition-all duration-500"
             >
               See It In Action
               <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -486,41 +474,22 @@ function FinalCTA() {
             <Button
               size="lg"
               variant="ghost"
-              className="text-white/60 hover:text-white hover:bg-white/[0.06] h-14 px-8 text-[15px] font-medium rounded-full border border-white/20 hover:border-white/30 transition-all duration-300"
+              className="text-white/50 hover:text-white hover:bg-white/[0.06] h-12 px-6 text-[14px] rounded-full border border-white/15 transition-all duration-300"
             >
-              <Phone className="w-4 h-4 mr-2" />
               Book a Demo
             </Button>
           </Link>
         </motion.div>
 
-        <motion.div
-          className="flex items-center justify-center gap-3 mt-8"
+        <motion.p
+          className="mt-6 text-[13px] text-white/25"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 0.4 }}
         >
-          <span className="text-[14px] text-white/30">Or call our AI agent now:</span>
-          <a href="tel:+14077594100" className="text-[15px] font-semibold text-white/70 hover:text-white transition-colors">
-            (407) 759-4100
-          </a>
-        </motion.div>
-
-        <motion.div
-          className="flex flex-wrap items-center justify-center gap-8 mt-10 text-[13px] text-white/30"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.5 }}
-        >
-          {['No credit card required', 'Live in days, not months', 'Cancel anytime'].map((item) => (
-            <span key={item} className="flex items-center gap-2">
-              <span className="w-3.5 h-3.5 rounded-full bg-emerald-500/50 inline-flex items-center justify-center text-[8px] text-white font-bold">&#10003;</span>
-              {item}
-            </span>
-          ))}
-        </motion.div>
+          No credit card required &middot; Live in days &middot; Cancel anytime
+        </motion.p>
       </div>
     </section>
   );

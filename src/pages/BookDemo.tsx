@@ -55,7 +55,7 @@ export default function BookDemo() {
         <meta property="og:image" content="https://voxaris.io/og-image.png" />
         <meta name="twitter:image" content="https://voxaris.io/og-image.png" />
       </Helmet>
-      <section className="pt-32 pb-20 min-h-[calc(100vh-80px)]">
+      <section className="pt-28 pb-20 min-h-[calc(100vh-64px)]">
         <div className="container-wide">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
             {/* Content */}

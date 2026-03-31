@@ -5,7 +5,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { name, firstName, lastName, email, phone, company, rooftops, businessType, message, submitted_at, page_source } = req.body || {};
+  const { name, firstName, lastName, email, phone, company, rooftops, locations, businessType, message, smsConsent, submitted_at, page_source } = req.body || {};
 
   // Support both old form (firstName/lastName) and new form (name)
   const fullName = name || `${firstName || ''} ${lastName || ''}`.trim();
@@ -20,6 +20,47 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   // Log to Vercel function logs for backup — always
   console.log('[book-demo] LEAD:', JSON.stringify({ fullName, email, phone, company, businessType: bType, message, submittedAt, source }));
+
+  // ── Create GoHighLevel Contact ──────────────────────────────
+  const ghlToken = process.env.GHL_ACCESS_TOKEN;
+  const ghlLocationId = process.env.GHL_LOCATION_ID;
+  if (ghlToken && ghlLocationId) {
+    try {
+      const nameParts = fullName.split(' ');
+      const ghlBody: Record<string, unknown> = {
+        firstName: nameParts[0] || fullName,
+        lastName: nameParts.slice(1).join(' ') || '',
+        phone,
+        companyName: company,
+        source: 'Website - Book Demo',
+        tags: ['website-demo-request'],
+        locationId: ghlLocationId,
+      };
+      if (email) ghlBody.email = email;
+
+      const ghlRes = await fetch('https://services.leadconnectorhq.com/contacts/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${ghlToken}`,
+          'Version': '2021-07-28',
+        },
+        body: JSON.stringify(ghlBody),
+      });
+
+      if (ghlRes.ok) {
+        const ghlData = await ghlRes.json();
+        console.log('[book-demo] GHL contact created:', ghlData?.contact?.id);
+      } else {
+        const ghlErr = await ghlRes.text();
+        console.error('[book-demo] GHL contact creation failed:', ghlRes.status, ghlErr);
+      }
+    } catch (ghlErr) {
+      console.error('[book-demo] GHL error:', ghlErr);
+    }
+  } else {
+    console.warn('[book-demo] GHL_ACCESS_TOKEN or GHL_LOCATION_ID not set — skipping GHL contact creation');
+  }
 
   // Send notification email via Resend
   const resendKey = process.env.RESEND_API_KEY;

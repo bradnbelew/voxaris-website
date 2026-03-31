@@ -28,7 +28,7 @@ export function BlogIndex() {
       <Navbar />
       <main>
         {/* Hero */}
-        <section className="pt-32 pb-16 lg:pt-40 lg:pb-20">
+        <section className="pt-28 pb-16 lg:pt-40 lg:pb-20">
           <div className="container-editorial px-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}

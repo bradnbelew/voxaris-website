@@ -29,7 +29,7 @@ export function SolutionContractors() {
       <Navbar />
 
       {/* Hero */}
-      <section className="relative pt-32 pb-20 overflow-hidden bg-carbon-50">
+      <section className="relative pt-28 pb-20 overflow-hidden bg-carbon-50">
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-carbon-200 mb-8"
