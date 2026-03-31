@@ -144,40 +144,37 @@ export function Hero() {
             transition={{ duration: 1, delay: 0.4, ease }}
           >
             <div className="relative w-full max-w-md lg:max-w-[440px]">
-              {/* Glow */}
+              {/* Glow behind */}
               <div
-                className="absolute -inset-10 rounded-[3rem] -z-10"
-                style={{ background: 'radial-gradient(ellipse at 50% 50%, rgba(212,168,67,0.08) 0%, rgba(148,163,184,0.04) 40%, transparent 70%)' }}
+                className="absolute -inset-8 rounded-[3rem] -z-10"
+                style={{ background: 'radial-gradient(ellipse at 50% 50%, rgba(212,168,67,0.06) 0%, rgba(148,163,184,0.03) 40%, transparent 70%)' }}
               />
 
-              {/* Video container */}
-              <div className="rounded-2xl overflow-hidden shadow-[0_25px_60px_rgba(0,0,0,0.12)] border border-slate-200/60">
+              {/* Video card — matches site card style */}
+              <div className="rounded-2xl overflow-hidden bg-white border border-carbon-200 shadow-card-luxury hover:shadow-card-luxury-hover transition-shadow duration-500">
+                {/* Top bar */}
+                <div className="flex items-center gap-2 px-4 py-3 border-b border-carbon-100 bg-carbon-50/50">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400/60" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                  </span>
+                  <span className="text-[12px] font-semibold text-carbon-700">Julia</span>
+                  <span className="text-[11px] text-carbon-400">AI Sales Agent</span>
+                  <span className="ml-auto text-[10px] text-carbon-300 uppercase tracking-wider">Live</span>
+                </div>
+
+                {/* Video */}
                 <video
                   autoPlay
                   loop
                   muted
                   playsInline
                   poster="/julia-avatar-still.jpg"
-                  className="w-full aspect-[4/5] object-cover bg-slate-900"
+                  className="w-full aspect-[4/5] object-cover bg-carbon-900"
                 >
                   <source src="/julia-avatar.mp4" type="video/mp4" />
                 </video>
               </div>
-
-              {/* Name badge */}
-              <motion.div
-                className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-xl rounded-full px-5 py-2.5 border border-slate-200/80 shadow-[0_8px_30px_rgba(0,0,0,0.06)] flex items-center gap-2.5"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 1 }}
-              >
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400/60" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-                </span>
-                <span className="text-[13px] font-semibold text-slate-900">Julia</span>
-                <span className="text-[11px] text-slate-400">AI Sales Agent</span>
-              </motion.div>
             </div>
           </motion.div>
         </div>
