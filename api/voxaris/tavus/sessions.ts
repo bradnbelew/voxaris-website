@@ -298,7 +298,7 @@ async function handleBuyback(req: VercelRequest, res: VercelResponse) {
     conversation_name: `buyback-postcard--${name}--${Date.now()}`,
     conversational_context: conversationalContext,
     custom_greeting: customGreeting,
-    callback_url: `${CALLBACK_BASE}/api/voxaris/tavus/webhook?type=buyback`,
+    // callback_url removed — demo mode, no tool calls
     properties: {
       max_call_duration: 600,
       participant_left_timeout: 30,
