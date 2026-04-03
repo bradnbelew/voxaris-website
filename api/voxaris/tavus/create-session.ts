@@ -3,12 +3,13 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 /**
  * POST /api/voxaris/tavus/create-session
  *
- * Creates a Tavus CVI conversation for the FloatingMaria widget.
- * Pushes visitor event to GHL.
- * Returns { conversation_url } for embedding in a Daily iframe.
+ * Creates a Tavus CVI conversation for the FloatingMaria website widget.
+ * This is the WEBSITE persona — NOT the buyback postcard flow.
+ * For the postcard, use create-postcard-session.ts.
  */
 
-const PERSONA_ID = process.env.TAVUS_PERSONA_ID || 'p40793780aaa';
+// Website widget persona (Maria) — separate from buyback persona
+const PERSONA_ID = process.env.TAVUS_PERSONA_ID || 'p12baf16e19a';
 const CALLBACK_BASE = (process.env.CALLBACK_BASE_URL || 'https://www.voxaris.io').trim();
 const TAVUS_URLS = ['https://tavusapi.com', 'https://api.tavus.io'];
 
@@ -19,7 +20,6 @@ const GHL_LOCATION_ID = process.env.GHL_LOCATION_ID || '';
 // ── GHL push (fire-and-forget) ──
 async function pushToGHL(conversationId: string, source: string) {
   if (!GHL_TOKEN || !GHL_LOCATION_ID) return;
-
   try {
     const contactRes = await fetch('https://services.leadconnectorhq.com/contacts/', {
       method: 'POST',
@@ -38,8 +38,8 @@ async function pushToGHL(conversationId: string, source: string) {
         ],
         locationId: GHL_LOCATION_ID,
       }),
+      signal: AbortSignal.timeout(10_000),
     });
-
     if (contactRes.ok) {
       const data = await contactRes.json();
       console.log(`GHL contact from Maria widget: ${data?.contact?.id}`);
@@ -49,8 +49,8 @@ async function pushToGHL(conversationId: string, source: string) {
   }
 }
 
-// ── Tavus session creation with domain fallback ──
-async function createTavusSession(body: Record<string, any>): Promise<any> {
+// ── Tavus session creation with dual-endpoint fallback ──
+async function createTavusSession(body: Record<string, any>): Promise<{ success: boolean; data?: any; error?: string }> {
   const TAVUS_API_KEY = (process.env.TAVUS_API_KEY || '').trim();
 
   for (const baseUrl of TAVUS_URLS) {
