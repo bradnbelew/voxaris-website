@@ -7,6 +7,11 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
  * Receives PURL params (first_name, vehicle, dealership_name, etc.) from the
  * postcard scan landing page and injects them as conversational_context.
  *
+ * KEY FIX: tool_url is now set so Tavus knows where to POST tool calls.
+ * Without this, the agent fires book_appointment / check_availability but
+ * Tavus has no endpoint to call — tool calls silently fail and GHL never
+ * receives anything.
+ *
  * All slot generation uses America/New_York time to avoid UTC offset bugs.
  * Returns { conversation_id, conversation_url } — redirect the customer there.
  */
@@ -17,10 +22,10 @@ const TAVUS_URLS = ['https://tavusapi.com', 'https://api.tavus.io'];
 
 // Dealership config — set these per dealer in env or pass via PURL params
 const DEFAULT_DEALERSHIP = {
-  name: process.env.DEALERSHIP_NAME || 'Orlando Motors',
+  name:    process.env.DEALERSHIP_NAME    || 'Orlando Motors',
   address: process.env.DEALERSHIP_ADDRESS || '7820 International Drive, Orlando, FL 32819',
-  hours: process.env.DEALERSHIP_HOURS || 'Mon–Sat 9 AM–7 PM, Sun 11 AM–5 PM',
-  phone: process.env.DEALERSHIP_PHONE || '(407) 555-0193',
+  hours:   process.env.DEALERSHIP_HOURS   || 'Mon–Sat 9 AM–7 PM, Sun 11 AM–5 PM',
+  phone:   process.env.DEALERSHIP_PHONE   || '(407) 555-0193',
 };
 
 // ── Build the conversational context injected into the Tavus persona ──
@@ -95,21 +100,21 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   // ── Parse PURL params from request body ──
-  const body = req.body || {};
-  const firstName = (body.first_name || body.firstName || '').trim();
-  const lastName = (body.last_name || body.lastName || '').trim();
-  const vehicleYear = (body.vehicle_year || body.year || '').trim();
-  const vehicleMake = (body.vehicle_make || body.make || '').trim();
-  const vehicleModel = (body.vehicle_model || body.model || '').trim();
-  const vehicle = body.vehicle || [vehicleYear, vehicleMake, vehicleModel].filter(Boolean).join(' ');
-  const phone = (body.phone || body.customer_phone || '').trim();
-  const recordId = (body.record_id || body.recordId || '').trim();
-  const campaignId = (body.campaign_id || 'buyback-postcard').trim();
+  const body           = req.body || {};
+  const firstName      = (body.first_name     || body.firstName     || '').trim();
+  const lastName       = (body.last_name      || body.lastName      || '').trim();
+  const vehicleYear    = (body.vehicle_year   || body.year          || '').trim();
+  const vehicleMake    = (body.vehicle_make   || body.make          || '').trim();
+  const vehicleModel   = (body.vehicle_model  || body.model         || '').trim();
+  const vehicle        = body.vehicle || [vehicleYear, vehicleMake, vehicleModel].filter(Boolean).join(' ');
+  const phone          = (body.phone          || body.customer_phone || '').trim();
+  const recordId       = (body.record_id      || body.recordId      || '').trim();
+  const campaignId     = (body.campaign_id    || 'buyback-postcard').trim();
 
   // Per-dealer overrides via body (for multi-dealer deployments)
-  const dealershipName = (body.dealership_name || DEFAULT_DEALERSHIP.name).trim();
+  const dealershipName    = (body.dealership_name    || DEFAULT_DEALERSHIP.name).trim();
   const dealershipAddress = (body.dealership_address || DEFAULT_DEALERSHIP.address).trim();
-  const dealershipHours = (body.dealership_hours || DEFAULT_DEALERSHIP.hours).trim();
+  const dealershipHours   = (body.dealership_hours   || DEFAULT_DEALERSHIP.hours).trim();
 
   if (!firstName || !vehicle) {
     return res.status(400).json({ error: 'first_name and vehicle are required' });
@@ -131,29 +136,39 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const conversationName = `buyback-postcard-${firstName.toLowerCase()}-${Date.now()}`;
 
   const result = await createTavusSession({
-    persona_id: BUYBACK_PERSONA_ID,
-    conversation_name: conversationName,
+    persona_id:            BUYBACK_PERSONA_ID,
+    conversation_name:     conversationName,
     conversational_context: conversationalContext,
+
+    // ── THE CRITICAL FIX ──
+    // This tells Tavus where to POST every tool call (book_appointment,
+    // check_availability, log_lead, transfer_to_human). Without this field,
+    // Tavus fires the tool internally and silently discards the result —
+    // nothing reaches GHL.
+    tool_url: `${CALLBACK_BASE}/api/voxaris/tools/tool-router`,
+
+    // Conversation lifecycle events (started, ended, participant_left, etc.)
     callback_url: `${CALLBACK_BASE}/api/voxaris/tavus/webhook?type=buyback`,
+
     properties: {
       // PURL data — available in webhook as body.properties
-      first_name: firstName,
-      last_name: lastName || undefined,
+      first_name:          firstName,
+      last_name:           lastName  || undefined,
       vehicle,
-      phone: phone || undefined,
-      record_id: recordId || undefined,
-      campaign_type: 'buyback',
-      campaign_id: campaignId,
-      dealership_name: dealershipName,
-      dealership_address: dealershipAddress,
+      phone:               phone     || undefined,
+      record_id:           recordId  || undefined,
+      campaign_type:       'buyback',
+      campaign_id:         campaignId,
+      dealership_name:     dealershipName,
+      dealership_address:  dealershipAddress,
       postcard_scanned_at: scannedAt,
       // Session settings
-      max_call_duration: 600,
-      participant_left_timeout: 30,
-      participant_absent_timeout: 120,
-      enable_recording: true,
-      enable_closed_captions: true,
-      language: 'english',
+      max_call_duration:           600,
+      participant_left_timeout:    30,
+      participant_absent_timeout:  120,
+      enable_recording:            true,
+      enable_closed_captions:      true,
+      language:                    'english',
     },
   });
 
@@ -165,8 +180,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   console.log(`[postcard-session] Ready: ${result.data.conversation_id} | ${firstName} | ${vehicle}`);
 
   return res.status(200).json({
-    conversation_id: result.data.conversation_id,
+    conversation_id:  result.data.conversation_id,
     conversation_url: result.data.conversation_url,
-    customer: { firstName, vehicle },
+    customer:         { firstName, vehicle },
   });
 }
