@@ -136,7 +136,7 @@ export function Hero() {
             </motion.div>
           </div>
 
-          {/* Right — AI agent avatar */}
+          {/* Right — Julia AI agent video */}
           <motion.div
             className="relative flex justify-center lg:justify-end"
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -150,7 +150,7 @@ export function Hero() {
                 style={{ background: 'radial-gradient(ellipse at 50% 50%, rgba(212,168,67,0.06) 0%, rgba(148,163,184,0.03) 40%, transparent 70%)' }}
               />
 
-              {/* Agent card */}
+              {/* Video card — matches site card style */}
               <div className="rounded-2xl overflow-hidden bg-white border border-carbon-200 shadow-card-luxury hover:shadow-card-luxury-hover transition-shadow duration-500">
                 {/* Top bar */}
                 <div className="flex items-center gap-2 px-4 py-3 border-b border-carbon-100 bg-carbon-50/50">
@@ -158,17 +158,22 @@ export function Hero() {
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400/60" />
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
                   </span>
-                  <span className="text-[12px] font-semibold text-carbon-700">AI Agent</span>
-                  <span className="text-[11px] text-carbon-400">VIP Specialist</span>
+                  <span className="text-[12px] font-semibold text-carbon-700">Julia</span>
+                  <span className="text-[11px] text-carbon-400">AI Sales Agent</span>
                   <span className="ml-auto text-[10px] text-carbon-300 uppercase tracking-wider">Live</span>
                 </div>
 
-                {/* Avatar image */}
-                <img
-                  src="/buyback-agent-avatar.png"
-                  alt="AI video agent for automotive dealership lead conversion"
-                  className="w-full aspect-[4/5] object-cover object-top bg-carbon-50"
-                />
+                {/* Video */}
+                <video
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  poster="/julia-avatar-still.jpg"
+                  className="w-full aspect-[4/5] object-cover bg-carbon-900"
+                >
+                  <source src="/julia-avatar.mp4" type="video/mp4" />
+                </video>
               </div>
             </div>
           </motion.div>
