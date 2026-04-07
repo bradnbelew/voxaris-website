@@ -263,7 +263,7 @@ async function handleBusinessCard(req: VercelRequest, res: VercelResponse) {
 // ═══════════════════════════════════════════════════════════════════════
 
 const BUYBACK_PERSONA_ID = 'p12baf16e19a';
-const BUYBACK_REPLICA_ID = 'raf6459c9b82';
+const BUYBACK_REPLICA_ID = 'rf4e9d9790f0';
 
 async function handleBuyback(req: VercelRequest, res: VercelResponse) {
   const { firstName, lastName, vehicle, campaignType, recordId, phone, email } = req.body || {};
