@@ -21,7 +21,7 @@ const DEALERSHIP = {
   phone: '(407) 555-0193',
 };
 
-// Gradient avatar placeholder — used when /julia-avatar-still.jpg is missing
+// Gradient avatar placeholder — used when /buyback-agent-avatar.png is missing
 function AvatarPlaceholder({ name }: { name: string }) {
   const initials = name.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2);
   return (
@@ -77,7 +77,7 @@ export function BuybackPostcardDemo() {
     const img = new Image();
     img.onload = () => setAvatarLoaded(true);
     img.onerror = () => setAvatarLoaded(false);
-    img.src = '/julia-avatar-still.jpg';
+    img.src = '/buyback-agent-avatar.png';
   }, []);
 
   const startConversation = useCallback(async () => {
@@ -137,7 +137,7 @@ export function BuybackPostcardDemo() {
             {/* Background — photo or gradient placeholder */}
             {avatarLoaded ? (
               <img
-                src="/julia-avatar-still.jpg"
+                src="/buyback-agent-avatar.png"
                 alt=""
                 className="absolute inset-0 w-full h-full object-cover"
               />
@@ -258,7 +258,7 @@ export function BuybackPostcardDemo() {
             {/* Dim avatar in background */}
             {avatarLoaded && (
               <img
-                src="/julia-avatar-still.jpg"
+                src="/buyback-agent-avatar.png"
                 alt=""
                 className="absolute inset-0 w-full h-full object-cover"
                 style={{ opacity: 0.15, filter: 'blur(8px)' }}
