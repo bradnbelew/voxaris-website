@@ -374,92 +374,107 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 // ═══════════════════════════════════════════════════
 
 async function handleBuybackTool(toolName: string, toolArgs: Record<string, any>, cid: string): Promise<Record<string, any>> {
+  const N8N_INTAKE = 'https://estopperich.app.n8n.cloud/webhook/voxaris-booking-intake';
+
+  async function fireN8n(url: string, payload: Record<string, any>): Promise<void> {
+    try {
+      const r = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+        signal: AbortSignal.timeout(10_000),
+      });
+      console.log(`[n8n] ${url.split('/').pop()}: ${r.status}`);
+    } catch (e: any) {
+      console.error(`[n8n] ${url.split('/').pop()} error: ${e.message}`);
+    }
+  }
+
   switch (toolName) {
     case 'check_availability':
       return getBuybackAvailability(toolArgs);
 
     case 'book_appointment': {
       console.log('Buyback appointment:', JSON.stringify(toolArgs));
-      // Clean phone number — STT often garbles digit sequences
       const cleanedPhone = cleanPhoneNumber(toolArgs.customer_phone || '');
       console.log(`[book_appointment] Phone cleaned: "${toolArgs.customer_phone}" → "${cleanedPhone}"`);
 
       const dt = toolArgs.slot_start_iso ? new Date(toolArgs.slot_start_iso) : null;
       const timeStr = dt ? dt.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', timeZone: 'America/New_York' }) + ' at ' + dt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }) : 'your scheduled time';
-      const hoursUntilAppt = dt ? (dt.getTime() - Date.now()) / (1000 * 60 * 60) : 999;
-      const isSameDay = hoursUntilAppt < 24;
+      const isSameDay = dt ? (dt.getTime() - Date.now()) / (1000 * 60 * 60) < 24 : false;
 
-      // Push to GHL REST API
-      ghlPush({
-        firstName: toolArgs.customer_first_name,
-        lastName: toolArgs.customer_last_name,
-        phone: cleanedPhone,
-        email: toolArgs.customer_email,
-        tags: ['buyback-postcard', 'appointment-booked', 'vip-appraisal', 'booked-via-video', ...(isSameDay ? ['same-day-appt'] : [])],
-        note: `## VIP Appraisal Appointment Booked\n\n**Type:** ${toolArgs.appointment_type || 'Appraisal'}\n**Time:** ${timeStr}\n**Vehicle:** ${toolArgs.vehicle || 'N/A'}\n**Same-day:** ${isSameDay ? 'Yes' : 'No'}\n**Conversation:** ${cid}\n**Booked:** ${new Date().toLocaleString('en-US')}`,
-        customFields: [
-          { key: 'contact.appointment_time', field_value: toolArgs.slot_start_iso || '' },
-          { key: 'contact.appointment_readable', field_value: timeStr },
-          { key: 'contact.conversation_outcome', field_value: 'Appointment Booked' },
-          { key: 'contact.vehicle_full', field_value: toolArgs.vehicle || '' },
-          { key: 'contact.direction', field_value: 'tavus_video' },
-          { key: 'contact.same_day_appt', field_value: isSameDay ? 'true' : 'false' },
-        ],
-      }).catch(() => {});
-
-      // Fire to GHL inbound webhook (master workflow trigger)
-      fireGhlWebhook({
+      // Fire everything to n8n — single source of truth
+      fireN8n(N8N_INTAKE, {
+        booking_id: `BK-${Date.now()}`,
         event_type: 'appointment_booked',
-        first_name: toolArgs.customer_first_name,
-        last_name: toolArgs.customer_last_name,
+        campaign_id: `CAMP-BUYBACK-${new Date().getFullYear()}`,
+        dealer_id: 'DLR-ORLANDO-001',
+        dealer_name: DEALERSHIP.name,
+        customer_first_name: toolArgs.customer_first_name || '',
+        customer_last_name: toolArgs.customer_last_name || '',
+        customer_full_name: `${toolArgs.customer_first_name || ''} ${toolArgs.customer_last_name || ''}`.trim(),
         phone: cleanedPhone,
-        email: toolArgs.customer_email,
-        vehicle: toolArgs.vehicle,
-        appointment_time: toolArgs.slot_start_iso,
-        appointment_readable: timeStr,
-        outcome: 'Appointment Booked',
-        direction: 'tavus_video',
-        source: 'tavus_video',
+        email: toolArgs.customer_email || '',
+        vehicle: toolArgs.vehicle || '',
+        vehicle_year: (toolArgs.vehicle || '').split(' ')[0] || '',
+        vehicle_make: (toolArgs.vehicle || '').split(' ')[1] || '',
+        vehicle_model: (toolArgs.vehicle || '').split(' ').slice(2).join(' ') || '',
+        appointment_date: dt ? dt.toISOString().split('T')[0] : '',
+        appointment_time: dt ? dt.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'America/New_York' }) : '',
+        appointment_time_readable: timeStr,
+        appointment_timezone: 'America/New_York',
+        appointment_type: toolArgs.appointment_type || 'appraisal',
+        appointment_summary: `VIP appraisal — ${toolArgs.vehicle || 'vehicle'} — ${timeStr}`,
+        slot_start_iso: toolArgs.slot_start_iso || '',
         same_day: isSameDay,
-        tags: ['buyback-postcard', 'appointment-booked', 'vip-appraisal', 'booked-via-video'],
-      }).catch(() => {});
+        ai_agent_name: 'Buyback VIP Agent',
+        transcript_summary: toolArgs.notes || '',
+        consent_status: 'opted_in',
+        requested_at: new Date().toISOString(),
+        raw_conversation_id: cid,
+      });
 
-      // Send confirmation text to customer via Sendblue
-      if (cleanedPhone) {
-        sendblueText(cleanedPhone, `Hi ${toolArgs.customer_first_name || 'there'}! Your VIP appraisal at Orlando Motors is confirmed for ${timeStr}. Bring your vehicle and any spare keys. ${DEALERSHIP.address}. Ask for the VIP desk! — Orlando Motors`).catch(() => {});
-      }
-      // Notify owner
-      notifyOwner(`✅ Appt booked (video): ${toolArgs.customer_first_name || ''}${toolArgs.customer_last_name ? ' ' + toolArgs.customer_last_name : ''} — ${timeStr}${toolArgs.vehicle ? ' (' + toolArgs.vehicle + ')' : ''}${isSameDay ? ' ⚡ SAME DAY' : ''}`).catch(() => {});
-      return { success: true, message: `Appointment confirmed for ${toolArgs.customer_first_name}. Tell the customer they are all set and we look forward to seeing them at Orlando Motors. Remind them to bring the mailer and ask for the VIP desk.` };
+      return { success: true, message: `Appointment confirmed for ${toolArgs.customer_first_name}. Tell the customer they are all set and we look forward to seeing them at ${DEALERSHIP.name}. Remind them to bring the mailer and ask for the VIP desk.` };
     }
 
     case 'log_lead': {
       console.log('Buyback lead:', JSON.stringify(toolArgs));
-      ghlPush({
-        firstName: toolArgs.first_name,
-        lastName: toolArgs.last_name,
-        phone: toolArgs.phone,
-        email: toolArgs.email,
-        tags: ['buyback-postcard', 'lead-captured'],
-        note: `## Lead Captured via Buyback Postcard\n\n**Interest:** ${toolArgs.interest || 'Vehicle buyback'}\n**Notes:** ${toolArgs.notes || 'None'}\n**Conversation:** ${cid}`,
-      }).catch(() => {});
-      fireGhlWebhook({
+      fireN8n(N8N_INTAKE, {
+        booking_id: `LEAD-${Date.now()}`,
         event_type: 'lead_captured',
-        first_name: toolArgs.first_name,
-        last_name: toolArgs.last_name,
-        phone: toolArgs.phone,
-        email: toolArgs.email,
-        vehicle: toolArgs.vehicle,
-        outcome: 'Lead Captured',
-        direction: 'tavus_video',
-        source: 'tavus_video',
-        tags: ['buyback-postcard', 'lead-captured'],
-      }).catch(() => {});
+        dealer_id: 'DLR-ORLANDO-001',
+        dealer_name: DEALERSHIP.name,
+        customer_first_name: toolArgs.first_name || '',
+        customer_last_name: toolArgs.last_name || '',
+        customer_full_name: `${toolArgs.first_name || ''} ${toolArgs.last_name || ''}`.trim(),
+        phone: cleanPhoneNumber(toolArgs.phone || ''),
+        email: toolArgs.email || '',
+        vehicle: toolArgs.vehicle || '',
+        appointment_summary: `Lead captured: ${toolArgs.interest || 'Vehicle buyback'}`,
+        ai_agent_name: 'Buyback VIP Agent',
+        transcript_summary: toolArgs.notes || '',
+        requested_at: new Date().toISOString(),
+        raw_conversation_id: cid,
+      });
       return { success: true, message: 'Contact info saved.' };
     }
 
-    case 'transfer_to_human':
-      return { success: true, message: 'Let the customer know they can reach Orlando Motors directly at (407) 555-0193.', phone: '(407) 555-0193' };
+    case 'transfer_to_human': {
+      fireN8n(N8N_INTAKE, {
+        booking_id: `XFER-${Date.now()}`,
+        event_type: 'transfer_requested',
+        dealer_id: 'DLR-ORLANDO-001',
+        dealer_name: DEALERSHIP.name,
+        customer_first_name: toolArgs.customer_first_name || '',
+        customer_full_name: toolArgs.customer_first_name || '',
+        phone: cleanPhoneNumber(toolArgs.customer_phone || ''),
+        appointment_summary: `Transfer requested: ${toolArgs.reason || 'Customer requested live agent'}`,
+        ai_agent_name: 'Buyback VIP Agent',
+        raw_conversation_id: cid,
+        requested_at: new Date().toISOString(),
+      });
+      return { success: true, message: `Let the customer know they can reach ${DEALERSHIP.name} directly at ${DEALERSHIP.phone}.`, phone: DEALERSHIP.phone };
+    }
 
     default:
       return { success: false, error: `Unknown tool: ${toolName}` };
