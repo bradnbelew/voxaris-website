@@ -267,30 +267,44 @@ const BUYBACK_REPLICA_ID = 'rf4e9d9790f0';
 
 async function handleBuyback(req: VercelRequest, res: VercelResponse) {
   const { firstName, lastName, vehicle, campaignType, recordId, phone, email } = req.body || {};
-  const name = firstName || 'there';
-  const v = vehicle || 'your vehicle';
+
+  // PURL input sanitization — prevent prompt injection via URL params
+  function sanitize(val: string, maxLen = 60): string {
+    if (!val) return '';
+    return val.replace(/[^\w\s\-'.]/g, '').trim().slice(0, maxLen);
+  }
+  function sanitizeVehicle(val: string): string {
+    if (!val) return '';
+    return val.replace(/[^\w\s\-]/g, '').trim().slice(0, 80);
+  }
+
+  const name = sanitize(firstName) || 'there';
+  const ln = sanitize(lastName);
+  const v = sanitizeVehicle(vehicle) || 'your vehicle';
 
   const greetings = [
-    `Hey ${name}! Oh awesome, you scanned the mailer! I'm Maria with Orlando Motors. So we sent you that VIP offer on your ${v} — those are super popular right now. Do you still have it?`,
-    `Hey ${name}! Great to see you. I'm Maria over at Orlando Motors. I see you got our VIP mailer about your ${v} — those are in really high demand. You still driving it?`,
-    `Hi ${name}! Thanks for checking out the mailer. I'm Maria at Orlando Motors. We put together that VIP offer specifically for your ${v} because the market for them is really strong right now. Still have it?`,
+    `Hey ${name}! Glad you checked out the mailer. I'm Maria over at Orlando Motors — we put that VIP offer together specifically for your ${v}. You still driving it?`,
+    `Hi ${name}! Thanks for scanning the QR code. I'm Maria at Orlando Motors. We've got a strong offer on ${v}s right now — do you still have yours?`,
+    `Hey ${name}! I'm Maria with Orlando Motors. So you got our VIP mailer — those offers on ${v}s are really popular right now. Still got it?`,
   ];
   const customGreeting = greetings[Math.floor(Math.random() * greetings.length)]!;
 
-  // Inject current date/time so the agent knows what "today" and "this afternoon" mean
   const nowET = new Date().toLocaleString('en-US', { timeZone: 'America/New_York', weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit' });
 
   const conversationalContext = [
     `Current date and time: ${nowET} (Eastern).`,
-    `You are speaking with ${name}${lastName ? ` ${lastName}` : ''}.`,
-    vehicle ? `They own a ${vehicle}.` : '',
+    `You are speaking with ${name}${ln ? ` ${ln}` : ''}.`,
+    v !== 'your vehicle' ? `They own a ${v}.` : '',
     `This customer scanned a QR code on their personalized VIP buyback mailer.`,
-    phone ? `Customer phone on file: ${phone}.` : '',
+    phone ? `Customer phone on file: ${sanitize(phone, 20)}.` : '',
     `Dealership: Orlando Motors. Address: 7820 International Drive, Orlando, FL 32819.`,
     `Hours: Mon-Sat 9AM-8PM, Sun 11AM-6PM.`,
     `The VIP offer referenced on the mailer has a limited window.`,
     `When they arrive: bring the mailer and any spare keys, ask for the VIP desk.`,
   ].filter(Boolean).join(' ');
+
+  // Webhook URL for tool calls — Tavus sends tool_call events here
+  const callbackUrl = `https://www.voxaris.io/api/voxaris/tavus/webhook?type=buyback`;
 
   const result = await createTavusSession({
     replica_id: BUYBACK_REPLICA_ID,
@@ -298,7 +312,7 @@ async function handleBuyback(req: VercelRequest, res: VercelResponse) {
     conversation_name: `buyback-postcard--${name}--${Date.now()}`,
     conversational_context: conversationalContext,
     custom_greeting: customGreeting,
-    // callback_url removed — demo mode, no tool calls
+    callback_url: callbackUrl,
     properties: {
       max_call_duration: 600,
       participant_left_timeout: 30,

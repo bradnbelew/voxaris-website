@@ -390,6 +390,22 @@ async function handleBuybackTool(toolName: string, toolArgs: Record<string, any>
     }
   }
 
+  // Parse vehicle string safely — handles multi-word makes like "Land Rover", "Grand Cherokee"
+  function parseVehicle(v: string): { year: string; make: string; model: string } {
+    if (!v) return { year: '', make: '', model: '' };
+    const parts = v.trim().split(/\s+/);
+    const year = /^\d{4}$/.test(parts[0] || '') ? parts.shift()! : '';
+    // Known multi-word makes
+    const multiWordMakes = ['Land Rover', 'Alfa Romeo', 'Aston Martin', 'Mercedes Benz', 'Mercedes-Benz'];
+    const rest = parts.join(' ');
+    for (const mw of multiWordMakes) {
+      if (rest.toLowerCase().startsWith(mw.toLowerCase())) {
+        return { year, make: mw, model: rest.slice(mw.length).trim() };
+      }
+    }
+    return { year, make: parts[0] || '', model: parts.slice(1).join(' ') };
+  }
+
   switch (toolName) {
     case 'check_availability':
       return getBuybackAvailability(toolArgs);
@@ -397,17 +413,14 @@ async function handleBuybackTool(toolName: string, toolArgs: Record<string, any>
     case 'book_appointment': {
       console.log('Buyback appointment:', JSON.stringify(toolArgs));
       const cleanedPhone = cleanPhoneNumber(toolArgs.customer_phone || '');
-      console.log(`[book_appointment] Phone cleaned: "${toolArgs.customer_phone}" → "${cleanedPhone}"`);
-
       const dt = toolArgs.slot_start_iso ? new Date(toolArgs.slot_start_iso) : null;
       const timeStr = dt ? dt.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', timeZone: 'America/New_York' }) + ' at ' + dt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }) : 'your scheduled time';
       const isSameDay = dt ? (dt.getTime() - Date.now()) / (1000 * 60 * 60) < 24 : false;
+      const veh = parseVehicle(toolArgs.vehicle || '');
 
-      // Fire everything to n8n — single source of truth
       fireN8n(N8N_INTAKE, {
         booking_id: `BK-${Date.now()}`,
         event_type: 'appointment_booked',
-        campaign_id: `CAMP-BUYBACK-${new Date().getFullYear()}`,
         dealer_id: 'DLR-ORLANDO-001',
         dealer_name: DEALERSHIP.name,
         customer_first_name: toolArgs.customer_first_name || '',
@@ -416,25 +429,25 @@ async function handleBuybackTool(toolName: string, toolArgs: Record<string, any>
         phone: cleanedPhone,
         email: toolArgs.customer_email || '',
         vehicle: toolArgs.vehicle || '',
-        vehicle_year: (toolArgs.vehicle || '').split(' ')[0] || '',
-        vehicle_make: (toolArgs.vehicle || '').split(' ')[1] || '',
-        vehicle_model: (toolArgs.vehicle || '').split(' ').slice(2).join(' ') || '',
+        vehicle_year: veh.year,
+        vehicle_make: veh.make,
+        vehicle_model: veh.model,
         appointment_date: dt ? dt.toISOString().split('T')[0] : '',
         appointment_time: dt ? dt.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'America/New_York' }) : '',
         appointment_time_readable: timeStr,
         appointment_timezone: 'America/New_York',
-        appointment_type: toolArgs.appointment_type || 'appraisal',
+        appointment_type: 'appraisal',
         appointment_summary: `VIP appraisal — ${toolArgs.vehicle || 'vehicle'} — ${timeStr}`,
         slot_start_iso: toolArgs.slot_start_iso || '',
         same_day: isSameDay,
         ai_agent_name: 'Buyback VIP Agent',
         transcript_summary: toolArgs.notes || '',
-        consent_status: 'opted_in',
         requested_at: new Date().toISOString(),
         raw_conversation_id: cid,
       });
 
-      return { success: true, message: `Appointment confirmed for ${toolArgs.customer_first_name}. Tell the customer they are all set and we look forward to seeing them at ${DEALERSHIP.name}. Remind them to bring the mailer and ask for the VIP desk.` };
+      // Data-only result — let the agent express confirmation naturally
+      return { success: true, customer_name: toolArgs.customer_first_name, time: timeStr, dealership: DEALERSHIP.name, address: DEALERSHIP.address, reminder: 'bring mailer and spare keys, ask for VIP desk' };
     }
 
     case 'log_lead': {
@@ -445,8 +458,7 @@ async function handleBuybackTool(toolName: string, toolArgs: Record<string, any>
         dealer_id: 'DLR-ORLANDO-001',
         dealer_name: DEALERSHIP.name,
         customer_first_name: toolArgs.first_name || '',
-        customer_last_name: toolArgs.last_name || '',
-        customer_full_name: `${toolArgs.first_name || ''} ${toolArgs.last_name || ''}`.trim(),
+        customer_full_name: toolArgs.first_name || '',
         phone: cleanPhoneNumber(toolArgs.phone || ''),
         email: toolArgs.email || '',
         vehicle: toolArgs.vehicle || '',
@@ -456,9 +468,10 @@ async function handleBuybackTool(toolName: string, toolArgs: Record<string, any>
         requested_at: new Date().toISOString(),
         raw_conversation_id: cid,
       });
-      return { success: true, message: 'Contact info saved.' };
+      return { success: true, saved: true };
     }
 
+    case 'provide_dealer_contact':
     case 'transfer_to_human': {
       fireN8n(N8N_INTAKE, {
         booking_id: `XFER-${Date.now()}`,
@@ -473,7 +486,7 @@ async function handleBuybackTool(toolName: string, toolArgs: Record<string, any>
         raw_conversation_id: cid,
         requested_at: new Date().toISOString(),
       });
-      return { success: true, message: `Let the customer know they can reach ${DEALERSHIP.name} directly at ${DEALERSHIP.phone}.`, phone: DEALERSHIP.phone };
+      return { success: true, dealership_phone: DEALERSHIP.phone, dealership_name: DEALERSHIP.name };
     }
 
     default:
@@ -484,42 +497,59 @@ async function handleBuybackTool(toolName: string, toolArgs: Record<string, any>
 function getBuybackAvailability(toolInput: Record<string, any>): Record<string, any> {
   const now = new Date();
   const currentHour = now.getHours();
-  const slots: Array<{ start: string; human_readable: string }> = [];
+  const morning: Array<{ start: string; human_readable: string }> = [];
+  const afternoon: Array<{ start: string; human_readable: string }> = [];
 
-  // Same-day slots if before 4PM
-  if (currentHour < 16 && toolInput.preferred_time_of_day !== 'morning') {
+  // Same-day afternoon slot if before 4PM
+  if (currentHour < 16) {
     const today = new Date(now);
     const day = today.getDay();
-    if (day !== 0) { // not Sunday
-      if (currentHour < 14) {
-        slots.push({ start: fmtSlot(today, 14, 0), human_readable: `Today at 2:00 PM` });
-      } else if (currentHour < 16) {
-        const nextHour = currentHour + 1;
-        slots.push({ start: fmtSlot(today, nextHour, 0), human_readable: `Today at ${fmtTime(nextHour, 0)}` });
+    if (day !== 0) {
+      const nextAfternoon = Math.max(currentHour + 1, 14);
+      if (nextAfternoon < 17) {
+        afternoon.push({ start: fmtSlot(today, nextAfternoon, 0), human_readable: `Today at ${fmtTime(nextAfternoon, 0)}` });
       }
     }
   }
 
-  for (let d = 1; d <= 7 && slots.length < 6; d++) {
+  // Same-day morning slot if before noon
+  if (currentHour < 11) {
+    const today = new Date(now);
+    const day = today.getDay();
+    if (day !== 0 && day !== 6) {
+      const nextMorning = Math.max(currentHour + 1, 9);
+      if (nextMorning < 12) {
+        morning.push({ start: fmtSlot(today, nextMorning, 30), human_readable: `Today at ${fmtTime(nextMorning, 30)}` });
+      }
+    }
+  }
+
+  // Fill from upcoming days
+  for (let d = 1; d <= 7 && (morning.length < 1 || afternoon.length < 1); d++) {
     const date = new Date(now);
     date.setDate(date.getDate() + d);
     const day = date.getDay();
     if (day === 0) continue;
-    if (day === 6) {
-      slots.push({ start: fmtSlot(date, 10, 0), human_readable: `${fmtDay(date)} at 10:00 AM` });
-      continue;
+    if (morning.length < 1) {
+      morning.push({ start: fmtSlot(date, day === 6 ? 10 : 9, 30), human_readable: `${fmtDay(date)} at ${fmtTime(day === 6 ? 10 : 9, 30)}` });
     }
-    const times = toolInput.preferred_time_of_day === 'morning' ? [[9, 30], [10, 0]]
-      : toolInput.preferred_time_of_day === 'afternoon' ? [[14, 0], [15, 30]]
-      : [[10, 0], [14, 0]];
-    for (const [h, m] of times) {
-      slots.push({ start: fmtSlot(date, h!, m!), human_readable: `${fmtDay(date)} at ${fmtTime(h!, m!)}` });
+    if (afternoon.length < 1) {
+      afternoon.push({ start: fmtSlot(date, 14, 0), human_readable: `${fmtDay(date)} at 2:00 PM` });
     }
   }
 
-  const topSlots = slots.slice(0, 3);
-  const slotList = topSlots.map(s => s.human_readable).join(', or ');
-  return { ok: true, message: `Available times for a 15-minute appraisal: ${slotList}.`, slots: topSlots };
+  // Return exactly 2 slots — one morning, one afternoon (matches prompt instruction)
+  const pref = toolInput.preferred_time_of_day;
+  let slots: Array<{ start: string; human_readable: string }>;
+  if (pref === 'morning') {
+    slots = [...morning.slice(0, 1), ...afternoon.slice(0, 1)];
+  } else if (pref === 'afternoon') {
+    slots = [...afternoon.slice(0, 1), ...morning.slice(0, 1)];
+  } else {
+    slots = [...morning.slice(0, 1), ...afternoon.slice(0, 1)];
+  }
+
+  return { ok: true, slots };
 }
 
 // ═══════════════════════════════════════════════════
