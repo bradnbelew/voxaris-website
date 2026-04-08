@@ -197,24 +197,29 @@ export default function BookDemo() {
                       />
                     </div>
 
-                    {/* SMS Consent Checkbox */}
-                    <div className={`flex items-start gap-3 mt-2 p-3 rounded-xl transition-colors duration-200 ${!formData.smsConsent ? 'bg-amber-50/50 border border-amber-200/50' : ''}`}>
+                    {/* SMS Consent — optional, not required to submit */}
+                    <div className="flex items-start gap-3 mt-2 p-3 rounded-xl" data-consent="sms-optin" data-required="false">
                       <input
                         type="checkbox"
                         id="smsConsent"
+                        name="sms_consent"
+                        aria-label="SMS consent checkbox — optional"
+                        aria-required="false"
                         checked={formData.smsConsent}
                         onChange={(e) => setFormData({ ...formData, smsConsent: e.target.checked })}
                         className="mt-1 h-4 w-4 rounded border-border text-primary focus:ring-primary shrink-0"
-                        required
                       />
                       <label htmlFor="smsConsent" className="text-xs text-muted-foreground leading-relaxed">
-                        By checking this box, you agree to receive recurring automated text messages and AI-powered phone calls from Voxaris LLC at the phone number provided. Consent is not a condition of purchase. Msg & data rates may apply. Msg frequency varies. Reply STOP to opt out, HELP for help. View our{" "}
-                        <a href="/privacy" className="text-foreground underline underline-offset-2">Privacy Policy</a> and{" "}
-                        <a href="/terms" className="text-foreground underline underline-offset-2">Terms of Service</a>.
+                        I consent to receive recurring automated marketing and promotional text messages, service notifications, appointment reminders, and AI-powered phone calls from Voxaris LLC at the phone number provided. Consent is not a condition of purchase. Message & data rates may apply. Message frequency varies. Text STOP to opt out, text HELP for help.
                       </label>
                     </div>
+                    <p className="text-xs text-muted-foreground mt-1 ml-10">
+                      <a href="/privacy" className="text-foreground underline underline-offset-2">Privacy Policy</a>
+                      {" · "}
+                      <a href="/terms" className="text-foreground underline underline-offset-2">Terms of Service</a>
+                    </p>
 
-                    <Button type="submit" variant="hero" size="xl" className="w-full mt-6" disabled={submitting || !formData.smsConsent}>
+                    <Button type="submit" variant="hero" size="xl" className="w-full mt-6" disabled={submitting}>
                       {submitting ? (
                         <>
                           <Loader2 className="h-5 w-5 animate-spin" />

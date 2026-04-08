@@ -208,5 +208,22 @@
     <script src="/webmcp-tools.js" defer></script>
     <!-- Apollo.io Website Visitor Tracking -->
     <script>function initApollo(){var n=Math.random().toString(36).substring(7),o=document.createElement("script");o.src="https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache="+n,o.async=!0,o.defer=!0,o.onload=function(){window.trackingFunctions.onLoad({appId:"6995bb3783f06d001920f2f4"})},document.head.appendChild(o)}initApollo();</script>
+    <!-- A2P/10DLC Compliance: SMS opt-in disclosure for crawlers that cannot render JS/React SPA -->
+    <noscript>
+      <div id="sms-optin-disclosure" style="max-width:600px;margin:40px auto;padding:20px;font-family:sans-serif;">
+        <h2>Request a Demo — Voxaris AI</h2>
+        <form action="/api/book-demo" method="POST">
+          <label>Your Name <input type="text" name="name" required></label><br>
+          <label>Phone Number <input type="tel" name="phone" required></label><br>
+          <label>Company Name <input type="text" name="company"></label><br>
+          <label style="display:flex;gap:8px;align-items:flex-start;margin-top:12px;">
+            <input type="checkbox" name="sms_consent" aria-required="false" value="yes">
+            <span style="font-size:12px;">I consent to receive recurring automated marketing and promotional text messages, service notifications, appointment reminders, and AI-powered phone calls from Voxaris LLC at the phone number provided. Consent is not a condition of purchase. Message &amp; data rates may apply. Message frequency varies. Text STOP to opt out, text HELP for help.</span>
+          </label>
+          <p style="font-size:11px;margin-top:8px;"><a href="/privacy">Privacy Policy</a> · <a href="/terms">Terms of Service</a></p>
+          <button type="submit">Request Demo</button>
+        </form>
+      </div>
+    </noscript>
   </body>
 </html>
