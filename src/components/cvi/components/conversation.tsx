@@ -223,12 +223,11 @@ export function Conversation({
           initial={{ opacity: 0, scale: 0.85 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3, duration: 0.35 }}
-          className="absolute bottom-28 right-4 w-[88px] h-[120px] rounded-2xl overflow-hidden z-20"
+          className="absolute bottom-28 right-4 w-[100px] h-[140px] rounded-2xl overflow-hidden z-20"
           style={{
             boxShadow: '0 2px 16px rgba(0,0,0,0.6)',
             border: '1.5px solid rgba(255,255,255,0.15)',
           }}
-          style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
         >
           <video
             ref={localVideoRef}
