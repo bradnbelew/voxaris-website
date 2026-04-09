@@ -209,12 +209,13 @@ export function Conversation({
       style={{ background: '#000' }}
       onClick={isJoined ? resetControlsTimer : undefined}
     >
-      {/* ── Remote video (AI agent — fills the frame) ── */}
+      {/* ── Remote video (AI agent — zoomed out slightly to show more of the frame) ── */}
       <video
         ref={remoteVideoRef}
         autoPlay
         playsInline
-        className="w-full h-full object-cover"
+        className="w-full h-full object-contain"
+        style={{ background: '#000' }}
       />
 
       {/* ── Self-view — bottom-right, above controls, mirrored ── */}
