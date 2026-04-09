@@ -125,7 +125,9 @@ export function Conversation({
     setIsJoining(false);
   });
 
-  // ── Tool Call Handler ──
+  // ── Tool Call Handler (Tavus Interactions Protocol) ──
+  // Tavus dispatches tool calls via Daily.js data channel as 'conversation.tool_call' events.
+  // We catch them here, route to our webhook, and send results back via 'conversation.tool_call_result'.
   useDailyEvent('app-message', useCallback((event: any) => {
     if (!daily || !event?.data) return;
     const msg = event.data;
@@ -135,7 +137,10 @@ export function Conversation({
     const props = msg.properties || {};
     const toolName = props.name || '';
     const toolArgsRaw = props.arguments || '{}';
+    const toolCallId = props.tool_call_id || msg.tool_call_id || '';
     const convId = msg.conversation_id || conversationId || '';
+
+    console.log(`[CVI] Tool call: ${toolName}`, toolArgsRaw);
 
     let toolArgs: Record<string, unknown> = {};
     try { toolArgs = typeof toolArgsRaw === 'string' ? JSON.parse(toolArgsRaw) : toolArgsRaw; }
@@ -149,30 +154,43 @@ export function Conversation({
         conversation_id: convId,
         tool_name: toolName,
         tool_args: toolArgs,
+        tool_call_id: toolCallId,
         event_type: 'conversation.tool_call',
       }),
     })
       .then((res) => res.json())
       .then((data) => {
-        let resultText = '';
+        // Extract the result — webhook returns { ok: true, result: JSON.stringify({...}) }
+        let resultObj: Record<string, unknown> = {};
         try {
-          const parsed = typeof data.result === 'string' ? JSON.parse(data.result) : data.result;
-          resultText = parsed?.message || (typeof parsed === 'string' ? parsed : JSON.stringify(parsed));
-        } catch { resultText = data.result || 'Done.'; }
+          resultObj = typeof data.result === 'string' ? JSON.parse(data.result) : (data.result || data);
+        } catch { resultObj = data; }
 
+        console.log(`[CVI] Tool result for ${toolName}:`, resultObj);
+
+        // Send result back to Tavus via the Interactions Protocol
         daily.sendAppMessage({
           message_type: 'conversation',
-          event_type: 'conversation.echo',
+          event_type: 'conversation.tool_call_result',
           conversation_id: convId,
-          properties: { text: resultText },
+          properties: {
+            tool_call_id: toolCallId,
+            name: toolName,
+            result: JSON.stringify(resultObj),
+          },
         }, '*');
       })
-      .catch(() => {
+      .catch((err) => {
+        console.error(`[CVI] Tool call failed: ${toolName}`, err);
         daily.sendAppMessage({
           message_type: 'conversation',
-          event_type: 'conversation.echo',
+          event_type: 'conversation.tool_call_result',
           conversation_id: convId,
-          properties: { text: "I had trouble with that. Let me help you another way." },
+          properties: {
+            tool_call_id: toolCallId,
+            name: toolName,
+            result: JSON.stringify({ success: false, error: 'Tool execution failed' }),
+          },
         }, '*');
       });
   }, [daily, conversationId, webhookType]));
