@@ -38,7 +38,7 @@ const GHL_HEADERS_BASE = {
 const GHL_WEBHOOK_URL = 'https://services.leadconnectorhq.com/hooks/euXH15G0pqPgr497kAL2/webhook-trigger/6730dcb6-748c-4323-a525-65b972384f7a';
 
 // Dealership config
-const DEALERSHIP = { name: 'Orlando Motors', phone: '(407) 555-0193', address: '7820 International Drive, Orlando, FL 32819' };
+const DEALERSHIP = { name: 'Orlando Motors', phone: '(407) 289-0294', address: '7820 International Drive, Orlando, FL 32819' };
 
 // ── Clean phone number from STT garbled input ──
 function cleanPhoneNumber(raw: string): string {

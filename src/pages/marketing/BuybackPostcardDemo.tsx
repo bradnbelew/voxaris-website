@@ -18,7 +18,7 @@ const DEMO_DEFAULTS = {
 const DEALERSHIP = {
   name: 'Orlando Motors',
   agentName: 'Maria',
-  phone: '(407) 555-0193',
+  phone: '(407) 289-0294',
 };
 
 // Gradient avatar placeholder — used when /buyback-agent-avatar.png is missing
