@@ -31,7 +31,7 @@ const fadeUp = (delay = 0) => ({
 
 export function HomePage() {
   return (
-    <div className="min-h-screen bg-carbon-950">
+    <div className="min-h-screen" style={{ background: '#030303' }}>
       <Helmet>
         <title>Voxaris | AI Agents for Calls, Hiring, Direct Mail & Web Presence</title>
         <meta name="description" content="Four AI products in one platform: V·TEAMS answers inbound calls 24/7, Talking Postcards convert direct mail, AI Hiring Agents screen candidates, and Presence builds + optimizes your web presence." />
