@@ -10,3 +10,5 @@ export { TalkingPostcardDemo } from './TalkingPostcardDemo';
 export { BuybackPostcardDemo } from './BuybackPostcardDemo';
 export { BlogIndex } from './BlogIndex';
 export { BlogPost } from './BlogPost';
+export { HiringAgents } from './HiringAgents';
+export { Presence } from './Presence';
