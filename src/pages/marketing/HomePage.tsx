@@ -1,6 +1,8 @@
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { NumberTicker } from '@/components/magicui/number-ticker';
+import { BorderBeam } from '@/components/magicui/border-beam';
 import {
   ArrowRight,
   Users,
@@ -248,11 +250,11 @@ function SolutionsBento() {
    Stats Strip
 ══════════════════════════════════════════════ */
 function StatsStrip() {
-  const stats = [
-    { value: '10×', label: 'More candidates screened' },
-    { value: '6–12%', label: 'Direct mail response rate' },
-    { value: '< 5s', label: 'Average call answer time' },
-    { value: '48h', label: 'Average launch time' },
+  const stats: Array<{ num: number; prefix?: string; suffix: string; label: string }> = [
+    { num: 10, suffix: '×', label: 'More candidates screened' },
+    { num: 12, suffix: '%', label: 'Direct mail response rate' },
+    { num: 5, prefix: '<', suffix: 's', label: 'Average call answer time' },
+    { num: 48, suffix: 'h', label: 'Average launch time' },
   ];
 
   return (
@@ -264,7 +266,11 @@ function StatsStrip() {
         >
           {stats.map((s) => (
             <div key={s.label} className="flex items-center gap-3">
-              <span className="text-[22px] font-light text-gold-400 font-display">{s.value}</span>
+              <span className="text-[22px] font-light text-gold-400 font-display tabular-nums">
+                {s.prefix}
+                <NumberTicker value={s.num} className="text-gold-400" />
+                {s.suffix}
+              </span>
               <span className="text-[11px] text-white/30 max-w-[80px] leading-tight font-mono uppercase tracking-wide">{s.label}</span>
             </div>
           ))}
@@ -356,10 +362,11 @@ function HowItAll() {
 
         {/* Bundle callout */}
         <motion.div
-          className="mt-10 p-6 border border-gold-500/20 bg-gold-500/[0.04] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5"
+          className="mt-10 relative p-6 border border-gold-500/20 bg-gold-500/[0.04] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 overflow-hidden"
           style={{ borderRadius: '6px' }}
           {...fadeUp(0.3)}
         >
+          <BorderBeam size={80} duration={8} colorFrom="#d4a843" colorTo="rgba(212,168,67,0)" />
           <div>
             <div className="flex items-center gap-2 mb-1.5">
               <Star className="w-3.5 h-3.5 text-gold-400" strokeWidth={1.5} />

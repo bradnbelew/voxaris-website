@@ -180,6 +180,25 @@ export default {
           "80%": { transform: "translate(3%, 35%)" },
           "90%": { transform: "translate(-10%, 10%)" },
         },
+        "aurora": {
+          "0%": { backgroundPosition: "0% 50%" },
+          "50%": { backgroundPosition: "100% 50%" },
+          "100%": { backgroundPosition: "0% 50%" },
+        },
+        "shiny-text": {
+          "0%, 90%, 100%": { backgroundPosition: "calc(-100% - var(--shiny-width)) 0" },
+          "30%, 60%": { backgroundPosition: "calc(100% + var(--shiny-width)) 0" },
+        },
+        "meteor": {
+          "0%": { transform: "rotate(var(--angle)) translateX(0)", opacity: "1" },
+          "70%": { opacity: "1" },
+          "100%": { transform: "rotate(var(--angle)) translateX(-500px)", opacity: "0" },
+        },
+        "shine": {
+          "0%": { backgroundPosition: "0% 0%" },
+          "50%": { backgroundPosition: "100% 100%" },
+          "100%": { backgroundPosition: "0% 0%" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -191,6 +210,10 @@ export default {
         "scale-in": "scale-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
         "shimmer": "shimmer 3s linear infinite",
         "grain": "grain 8s steps(10) infinite",
+        "aurora": "aurora 10s ease infinite",
+        "shiny-text": "shiny-text 8s infinite",
+        "meteor": "meteor 5s linear infinite",
+        "shine": "shine 4s linear infinite",
       },
     },
   },
