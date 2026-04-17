@@ -1,10 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import {
-  ArrowRight, Users, Phone, BarChart3, CheckCircle2,
-  Clock, Zap, Shield, Star,
-} from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { Navbar, Footer } from '@/components/marketing';
 
 const ease = [0.22, 1, 0.36, 1] as const;
@@ -15,184 +12,338 @@ const fadeUp = (delay = 0) => ({
   transition: { duration: 0.7, delay, ease },
 });
 
+const ACCENT = '#60a5fa'; // blue-400
+
 export function SolutionHiringIntelligence() {
   return (
     <div className="min-h-screen bg-black">
       <Helmet>
-        <title>Hiring Intelligence | Voxaris — AI That Video-Interviews Every Applicant</title>
+        <title>Hiring Intelligence | Voxaris — AI Video-Interviews Every Applicant</title>
         <meta name="description" content="An AI video agent interviews every applicant the moment they apply, scores fit, surfaces strengths and concerns, and hands you a ranked shortlist with recordings you can replay." />
         <link rel="canonical" href="https://voxaris.io/solutions/hiring-intelligence" />
         <meta property="og:title" content="Hiring Intelligence | Voxaris" />
-        <meta property="og:description" content="Stop losing great hires to slow screening. AI calls every applicant in minutes — consistent interviews, automatic scoring, ranked shortlists." />
+        <meta property="og:description" content="Stop losing great hires to slow screening. AI video-interviews every applicant — consistent questions, automatic scoring, ranked shortlists." />
         <meta property="og:url" content="https://voxaris.io/solutions/hiring-intelligence" />
         <meta property="og:image" content="https://voxaris.io/og-image.png" />
       </Helmet>
 
       <Navbar />
       <main id="main-content">
-        <HeroSection />
+        <Hero />
         <ProblemSection />
         <HowItWorks />
         <FeatureGrid />
-        <CTAB />
+        <BottomCTA />
       </main>
       <Footer />
     </div>
   );
 }
 
-function HeroSection() {
+function TopStrip() {
   return (
-    <section className="relative pt-32 pb-20 overflow-hidden">
+    <div className="relative z-10 border-b border-white/[0.06]">
+      <div className="max-w-[1400px] mx-auto px-6 lg:px-12 py-4 flex items-center justify-between gap-6">
+        <div className="flex items-center gap-3">
+          <span className="h-1.5 w-1.5 rounded-full" style={{ background: ACCENT }} />
+          <span className="text-[10.5px] font-mono uppercase tracking-[0.2em] text-white/50">
+            Voxaris · Hiring Intelligence
+          </span>
+        </div>
+        <div className="hidden md:flex items-center gap-6 text-[10.5px] font-mono uppercase tracking-[0.2em] text-white/30">
+          <span>01 / 04</span>
+          <span>Interviews on autopilot</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Hero() {
+  return (
+    <section className="relative overflow-hidden bg-black">
+      {/* Background */}
       <div className="absolute inset-0 pointer-events-none">
         <div
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px]"
-          style={{ background: 'radial-gradient(ellipse at 50% -10%, rgba(59,130,246,0.12) 0%, rgba(59,130,246,0.03) 35%, transparent 65%)' }}
+          className="absolute -top-40 -left-40 w-[900px] h-[800px] rotate-12"
+          style={{
+            background:
+              'radial-gradient(ellipse at 30% 30%, rgba(96,165,250,0.12) 0%, rgba(96,165,250,0.03) 35%, transparent 65%)',
+          }}
         />
-        <div className="absolute inset-0 noise-overlay opacity-[0.08]" />
+        <div
+          className="absolute inset-0 opacity-[0.025]"
+          style={{
+            backgroundImage:
+              'linear-gradient(rgba(255,255,255,0.9) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.9) 1px, transparent 1px)',
+            backgroundSize: '80px 80px',
+          }}
+        />
       </div>
 
-      <div className="max-w-5xl mx-auto px-6 sm:px-8 relative z-10">
-        <motion.div
-          className="max-w-3xl"
-          initial={{ opacity: 0, y: 32 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease }}
-        >
-          <div className="flex items-center gap-2 mb-6">
-            <div className="w-8 h-8 rounded-xl bg-blue-500/10 flex items-center justify-center">
-              <Users className="w-4 h-4 text-blue-400" strokeWidth={1.5} />
+      <TopStrip />
+
+      <div className="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12 pt-14 lg:pt-20 pb-20">
+        <div className="grid lg:grid-cols-[1.15fr_1fr] gap-10 lg:gap-16 items-start">
+          {/* LEFT */}
+          <div>
+            <motion.h1
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease }}
+              className="text-white leading-[0.94] tracking-[-0.04em]"
+              style={{ fontSize: 'clamp(2.5rem, 6.5vw, 5.75rem)', fontWeight: 500 }}
+            >
+              Every applicant
+              <br />
+              <span className="italic font-editorial" style={{ color: ACCENT, fontWeight: 400 }}>
+                interviewed.
+              </span>{' '}
+              <span className="text-white/55">Only the best</span>
+              <br />
+              <span className="text-white/55">land on your desk.</span>
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2, ease }}
+              className="mt-8 text-[16px] sm:text-[17px] text-white/55 leading-[1.6] max-w-xl"
+            >
+              The moment someone applies, an AI video agent interviews them. It scores fit,
+              writes up strengths and concerns, and hands you a ranked shortlist with full
+              recordings. Your team only sits down with candidates worth their time.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.35 }}
+              className="mt-9 flex flex-col sm:flex-row items-start sm:items-center gap-4"
+            >
+              <Link to="/book-demo">
+                <button className="group relative flex items-center gap-3 h-[58px] pl-7 pr-5 rounded-none border border-gold-400/60 bg-gold-500 hover:bg-gold-400 text-black text-[14px] font-semibold tracking-tight transition-all duration-200 hover:translate-x-[-2px] hover:translate-y-[-2px] shadow-[4px_4px_0_0_rgba(212,168,67,0.35)] hover:shadow-[6px_6px_0_0_rgba(212,168,67,0.5)]">
+                  See it live
+                  <ArrowUpRight className="w-5 h-5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" strokeWidth={2} />
+                </button>
+              </Link>
+              <a
+                href="tel:+14077594100"
+                className="text-[12px] font-mono text-white/45 hover:text-white/80 tracking-wide transition-colors"
+              >
+                or call (407) 759-4100 →
+              </a>
+            </motion.div>
+
+            {/* Stats rail */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.7, delay: 0.5 }}
+              className="mt-14 grid grid-cols-4 gap-5 pt-7 border-t border-white/[0.08] max-w-xl"
+            >
+              {[
+                { n: '< 5m', l: 'First call' },
+                { n: '10×', l: 'Screened' },
+                { n: '80%', l: 'Time saved' },
+                { n: '100%', l: 'Contacted' },
+              ].map((s) => (
+                <div key={s.l}>
+                  <div
+                    className="text-[26px] lg:text-[32px] font-editorial italic leading-none mb-2"
+                    style={{ color: ACCENT, fontWeight: 400 }}
+                  >
+                    {s.n}
+                  </div>
+                  <div className="text-[10px] font-mono uppercase tracking-[0.15em] text-white/35">
+                    {s.l}
+                  </div>
+                </div>
+              ))}
+            </motion.div>
+          </div>
+
+          {/* RIGHT — candidate dashboard mockup */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, delay: 0.25, ease }}
+            className="relative lg:pt-8"
+          >
+            {/* Peek card */}
+            <div
+              className="absolute top-[-16px] right-[-22px] w-[80%] aspect-[4/3] bg-carbon-900 border border-white/[0.08] rotate-3 opacity-50"
+              style={{ boxShadow: '0 20px 60px -10px rgba(0,0,0,0.8)' }}
+              aria-hidden
+            />
+
+            {/* Polaroid front — dashboard card */}
+            <div
+              className="relative bg-[#f5f0e6] p-4 pb-9 -rotate-2"
+              style={{ boxShadow: '0 30px 80px -15px rgba(0,0,0,0.95)' }}
+            >
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <span className="h-2 w-2 rounded-full" style={{ background: ACCENT }} />
+                  <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-carbon-700">
+                    Candidate · complete
+                  </span>
+                </div>
+                <span className="text-[10px] font-mono text-carbon-500 tabular-nums">00:12:47</span>
+              </div>
+
+              <div className="bg-carbon-950 aspect-[4/3] p-5 flex flex-col justify-between">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <div className="w-10 h-10 rounded-full bg-blue-500/20 border border-blue-400/40 flex items-center justify-center text-[14px] font-medium text-blue-300 mb-3">
+                      SM
+                    </div>
+                    <div className="text-[14px] font-medium text-white">Sarah M.</div>
+                    <div className="text-[11px] text-white/50">Sales Representative</div>
+                  </div>
+                  <div className="text-right">
+                    <div
+                      className="text-[44px] font-editorial italic leading-none"
+                      style={{ color: ACCENT, fontWeight: 400 }}
+                    >
+                      94
+                    </div>
+                    <div className="text-[9px] font-mono text-white/40 uppercase tracking-[0.15em] mt-1">
+                      fit score
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    { l: 'Experience', v: '9/10' },
+                    { l: 'Availability', v: '10/10' },
+                    { l: 'Fit', v: '9/10' },
+                  ].map((x) => (
+                    <div key={x.l} className="border-t border-white/10 pt-2">
+                      <div className="text-[14px] font-light text-white tabular-nums">{x.v}</div>
+                      <div className="text-[9px] font-mono text-white/35 uppercase tracking-wider mt-0.5">
+                        {x.l}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="inline-flex items-center gap-2 px-2.5 py-1 bg-emerald-500/15 border border-emerald-500/30 rounded w-fit">
+                  <span className="text-[9px] font-mono text-emerald-300 uppercase tracking-[0.15em]">
+                    ✓ Strong hire
+                  </span>
+                </div>
+              </div>
+
+              <div className="mt-3 flex items-baseline justify-between">
+                <span
+                  className="font-editorial italic text-[18px] text-carbon-900 leading-none"
+                  style={{ fontWeight: 400 }}
+                >
+                  AI interview complete
+                </span>
+                <span className="text-[10px] font-mono text-carbon-500 uppercase tracking-wider">
+                  recording available
+                </span>
+              </div>
             </div>
-            <span className="text-[10px] font-mono text-blue-400/70 uppercase tracking-[0.15em]">Hiring Intelligence</span>
-          </div>
+          </motion.div>
+        </div>
+      </div>
 
-          <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-light text-white leading-[1.05] tracking-[-0.03em] mb-6">
-            Every applicant interviewed.
-            <br />
-            <span className="text-blue-400">Only the best land on your desk.</span>
-          </h1>
-
-          <p className="text-[17px] text-white/50 leading-[1.8] mb-8 max-w-2xl">
-            The moment someone applies, an AI video agent interviews them. It scores fit,
-            writes up strengths and concerns, and hands you a ranked shortlist with full
-            recordings you can replay. Your team only sits down with the candidates worth
-            their time.
-          </p>
-
-          <div className="flex flex-wrap gap-4">
-            <Link to="/book-demo">
-              <button className="flex items-center gap-2 px-7 h-12 rounded-full bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 text-white text-[14px] font-semibold border border-gold-400/30 shadow-gold-sm transition-all duration-300 hover:-translate-y-0.5 group">
-                See it live <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-              </button>
-            </Link>
-          </div>
-        </motion.div>
-
-        <motion.div
-          className="mt-14 flex flex-wrap gap-10"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.3, ease }}
+      {/* Ticker */}
+      <div className="relative z-10 border-y border-white/[0.08] bg-black/40 backdrop-blur-sm overflow-hidden">
+        <div
+          className="flex py-3.5"
+          style={{
+            maskImage: 'linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)',
+          }}
         >
-          {[
-            { value: '< 5 min', label: 'Time to first call' },
-            { value: '10×', label: 'More candidates screened' },
-            { value: '80%', label: 'Time saved on screening' },
-            { value: '100%', label: 'Applicants contacted' },
-          ].map((s) => (
-            <div key={s.label}>
-              <div className="text-[22px] font-light text-blue-400">{s.value}</div>
-              <div className="text-[10px] font-mono text-white/25 uppercase tracking-wider mt-0.5">{s.label}</div>
+          {[0, 1].map((dup) => (
+            <div
+              key={dup}
+              className="flex shrink-0 items-center gap-10 pr-10 animate-marquee"
+              style={{ ['--gap' as string]: '2.5rem' }}
+            >
+              {[
+                '· Application received',
+                '· Video interview scheduled',
+                '· Candidate scored 94/100',
+                '· Full transcript available',
+                '· Ranked shortlist updated',
+                '· Zero ghosted applicants',
+                '· Strong hire flagged',
+              ].map((t, i) => (
+                <span
+                  key={`${dup}-${i}`}
+                  className="text-[11px] font-mono uppercase tracking-[0.2em] text-white/40 whitespace-nowrap"
+                >
+                  {t}
+                </span>
+              ))}
             </div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );
 }
 
 function ProblemSection() {
+  const problems = [
+    '57% of applicants drop off if not contacted within a week',
+    'Manually screening 100 applicants takes 8–12 hours',
+    'Inconsistent questions mean inconsistent hires',
+    'The best candidates apply somewhere else while you sift resumes',
+  ];
+
   return (
-    <section className="py-20 bg-carbon-950">
-      <div className="max-w-6xl mx-auto px-6 sm:px-8">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+    <section className="py-24 lg:py-28 bg-[#fafafa]">
+      <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
+        <div className="grid lg:grid-cols-[1fr_1.1fr] gap-10 lg:gap-16 items-start">
           <motion.div {...fadeUp()}>
-            <span className="eyebrow mb-3 block">The problem</span>
-            <h2 className="text-3xl font-light text-white mb-5">
-              Great candidates are falling through
-              <span className="text-white/35"> your hiring cracks.</span>
+            <span className="text-[10.5px] font-mono uppercase tracking-[0.22em] text-carbon-500 mb-5 block">
+              The problem
+            </span>
+            <h2
+              className="text-carbon-900 leading-[0.98] tracking-[-0.035em]"
+              style={{ fontSize: 'clamp(2.25rem, 5vw, 4.25rem)', fontWeight: 500 }}
+            >
+              Great hires are
+              <br />
+              <span className="italic font-editorial text-carbon-400" style={{ fontWeight: 400 }}>
+                slipping through
+              </span>
+              <br />
+              the cracks.
             </h2>
-            <p className="text-[15px] text-white/45 leading-relaxed mb-6">
-              Most businesses face the same problem: too many applicants to call, not enough time to screen
-              them all manually. So the best candidates either apply somewhere else or give up waiting to hear back.
-            </p>
-            <ul className="space-y-3">
-              {[
-                '57% of candidates drop off if not contacted within a week',
-                'Manually screening 100 applicants takes 8–12 hours',
-                'Inconsistent interviews mean inconsistent hires',
-                'Great candidates get overlooked because of resume bias',
-              ].map((item) => (
-                <li key={item} className="flex items-start gap-3 text-[13px] text-white/45">
-                  <span className="w-1.5 h-1.5 rounded-full bg-white/20 shrink-0 mt-2" />
-                  {item}
-                </li>
-              ))}
-            </ul>
           </motion.div>
 
-          <motion.div className="space-y-4" {...fadeUp(0.1)}>
-            {/* Mock candidate card */}
-            <div className="rounded-2xl border border-blue-500/15 bg-white/[0.03] p-5">
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-[11px] font-mono text-white/30 uppercase tracking-wider">Interview complete</span>
-                <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-full">Strong hire</span>
-              </div>
-              <div className="flex items-start gap-3">
-                <div className="w-9 h-9 rounded-full bg-blue-500/10 border border-blue-500/15 flex items-center justify-center text-[13px] font-medium text-blue-400 shrink-0">SM</div>
-                <div>
-                  <div className="text-[14px] font-medium text-white">Sarah M.</div>
-                  <div className="text-[11px] text-white/35">Applying for: Sales Representative</div>
-                </div>
-                <div className="ml-auto text-right">
-                  <div className="text-[24px] font-light text-blue-400">94</div>
-                  <div className="text-[10px] font-mono text-white/25">fit score</div>
-                </div>
-              </div>
-              <div className="mt-4 grid grid-cols-3 gap-3">
-                {[
-                  { label: 'Experience', score: '9/10' },
-                  { label: 'Availability', score: '10/10' },
-                  { label: 'Fit', score: '9/10' },
-                ].map((s) => (
-                  <div key={s.label} className="text-center p-2.5 rounded-xl bg-white/[0.03]">
-                    <div className="text-[13px] font-light text-white">{s.score}</div>
-                    <div className="text-[10px] text-white/25 font-mono">{s.label}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-[11px] font-mono text-white/25 uppercase tracking-wider">Today's pipeline</span>
-                <span className="text-[10px] font-mono text-white/20">12 screened · 3 shortlisted</span>
-              </div>
-              <div className="space-y-2">
-                {[
-                  { name: 'Sarah M.', score: 94, tag: 'Strong hire', color: 'text-emerald-400', tagBg: 'bg-emerald-500/10 border-emerald-500/20' },
-                  { name: 'James R.', score: 87, tag: 'Consider', color: 'text-blue-400', tagBg: 'bg-blue-500/10 border-blue-500/20' },
-                  { name: 'Priya K.', score: 91, tag: 'Strong hire', color: 'text-emerald-400', tagBg: 'bg-emerald-500/10 border-emerald-500/20' },
-                ].map((c) => (
-                  <div key={c.name} className="flex items-center justify-between">
-                    <span className="text-[12px] text-white/55">{c.name}</span>
-                    <div className="flex items-center gap-2">
-                      <span className={`text-[12px] font-light ${c.color}`}>{c.score}</span>
-                      <span className={`text-[9px] font-semibold px-2 py-0.5 rounded-full border ${c.tagBg} ${c.color}`}>{c.tag}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+          <motion.div {...fadeUp(0.15)} className="lg:pt-4">
+            <p className="text-[16px] text-carbon-600 leading-relaxed mb-9 max-w-lg">
+              Most businesses face the same problem: too many applicants to call, not enough time
+              to screen them all. So the best candidates either apply somewhere else or give up
+              waiting.
+            </p>
+            <ul className="space-y-4">
+              {problems.map((p, i) => (
+                <motion.li
+                  key={p}
+                  {...fadeUp(0.2 + i * 0.06)}
+                  className="flex items-start gap-4 py-4 border-b border-carbon-200"
+                >
+                  <span
+                    className="text-[20px] font-editorial italic leading-none shrink-0"
+                    style={{ color: ACCENT, fontWeight: 400 }}
+                  >
+                    0{i + 1}
+                  </span>
+                  <span className="text-[15px] text-carbon-700 leading-snug">{p}</span>
+                </motion.li>
+              ))}
+            </ul>
           </motion.div>
         </div>
       </div>
@@ -202,37 +353,43 @@ function ProblemSection() {
 
 function HowItWorks() {
   const steps = [
-    { num: '01', icon: Phone, title: 'Applicant submits', desc: 'Someone applies to your open role. The AI agent reaches out to schedule a video interview — usually within the hour.' },
-    { num: '02', icon: Users, title: 'AI conducts interview', desc: 'A structured video interview — same questions, same tone, every time. No bias, no fatigue. Every call recorded.' },
-    { num: '03', icon: BarChart3, title: 'Scores automatically', desc: 'The AI scores experience, fit, and qualifications against your criteria, and writes up the strengths and concerns.' },
-    { num: '04', icon: Star, title: 'You see the shortlist', desc: 'Your dashboard shows ranked candidates with recordings, transcripts, scores, and an AI recommendation on each one.' },
+    { n: '01', t: 'Applicant submits', d: 'Someone applies to your open role. The AI agent reaches out to schedule a video interview — usually within the hour.' },
+    { n: '02', t: 'AI conducts the interview', d: 'A structured video interview — same questions, same tone, every time. No bias, no fatigue. Every call recorded.' },
+    { n: '03', t: 'Scores automatically', d: 'The AI scores experience, fit, and qualifications against your criteria, and writes up the strengths and concerns.' },
+    { n: '04', t: 'You see the shortlist', d: 'Your dashboard shows ranked candidates with recordings, transcripts, scores, and an AI recommendation on each.' },
   ];
 
   return (
-    <section className="py-20 lg:py-28 bg-black">
-      <div className="max-w-6xl mx-auto px-6 sm:px-8">
-        <motion.div className="text-center mb-14" {...fadeUp()}>
-          <span className="eyebrow mb-3 block">How it works</span>
-          <h2 className="text-3xl sm:text-4xl font-light text-white">
-            Apply. Call. Score. Hire.
+    <section className="py-24 lg:py-32 bg-black">
+      <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
+        <motion.div {...fadeUp()} className="mb-14">
+          <span className="text-[10.5px] font-mono uppercase tracking-[0.22em] text-white/40 mb-5 block">
+            How it works
+          </span>
+          <h2
+            className="text-white leading-[0.98] tracking-[-0.035em] max-w-3xl"
+            style={{ fontSize: 'clamp(2.25rem, 5vw, 4.25rem)', fontWeight: 500 }}
+          >
+            Apply. <span className="italic font-editorial" style={{ color: ACCENT, fontWeight: 400 }}>Interview.</span>{' '}
+            Score. <span className="italic font-editorial text-white/55" style={{ fontWeight: 400 }}>Hire.</span>
           </h2>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {steps.map((step, i) => (
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-px bg-white/[0.06] border border-white/[0.06]">
+          {steps.map((s, i) => (
             <motion.div
-              key={step.num}
-              className="p-6 rounded-2xl bg-white/[0.03] border border-white/[0.06] hover:border-blue-500/20 transition-all duration-300"
+              key={s.n}
               {...fadeUp(i * 0.08)}
+              className="bg-black p-8 hover:bg-white/[0.02] transition-colors"
             >
-              <div className="flex items-center gap-3 mb-5">
-                <div className="w-9 h-9 rounded-xl bg-blue-500/10 flex items-center justify-center">
-                  <step.icon className="w-4 h-4 text-blue-400" strokeWidth={1.5} />
-                </div>
-                <span className="text-[11px] font-mono text-blue-400/40">{step.num}</span>
+              <div
+                className="text-[60px] font-editorial italic leading-none mb-6"
+                style={{ color: ACCENT, fontWeight: 400, opacity: 0.8 }}
+              >
+                {s.n}
               </div>
-              <h3 className="text-[14px] font-semibold text-white mb-2">{step.title}</h3>
-              <p className="text-[12px] text-white/35 leading-relaxed">{step.desc}</p>
+              <h3 className="text-[16px] font-medium text-white mb-2.5">{s.t}</h3>
+              <p className="text-[13px] text-white/40 leading-relaxed">{s.d}</p>
             </motion.div>
           ))}
         </div>
@@ -243,34 +400,46 @@ function HowItWorks() {
 
 function FeatureGrid() {
   const features = [
-    { icon: Clock, title: 'Calls in under 5 minutes', desc: 'The moment an application comes in, the AI agent calls. No delays, no scheduling, no human bottleneck.' },
-    { icon: Zap, title: 'Consistent every time', desc: 'Every candidate gets the exact same interview experience. No good days, no bad days — just consistent data.' },
-    { icon: BarChart3, title: 'Ranked dashboard', desc: 'See every candidate ranked by fit score. Full transcripts, audio recordings, and AI analysis included.' },
-    { icon: Shield, title: 'Built-in escalation', desc: 'Edge cases get flagged for human review. Nothing slips through the cracks.' },
+    { t: 'Calls in under 5 minutes', d: 'The moment an application lands, the AI agent calls. No delays. No human bottleneck.' },
+    { t: 'Consistent, every time', d: 'Every candidate gets the exact same interview. No good days, no bad days — just clean data.' },
+    { t: 'Ranked dashboard', d: 'See every candidate ranked by fit score. Full transcripts, audio, and AI analysis per candidate.' },
+    { t: 'Built-in escalation', d: 'Edge cases get flagged for human review. Nothing slips through.' },
   ];
 
   return (
-    <section className="py-20 bg-carbon-950">
-      <div className="max-w-6xl mx-auto px-6 sm:px-8">
-        <motion.div className="mb-14" {...fadeUp()}>
-          <span className="eyebrow mb-3 block">Features</span>
-          <h2 className="text-3xl font-light text-white">Built for businesses that hire at volume.</h2>
+    <section className="py-24 lg:py-32 bg-[#fafafa]">
+      <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
+        <motion.div {...fadeUp()} className="mb-14 max-w-2xl">
+          <span className="text-[10.5px] font-mono uppercase tracking-[0.22em] text-carbon-500 mb-5 block">
+            The features
+          </span>
+          <h2
+            className="text-carbon-900 leading-[0.98] tracking-[-0.035em]"
+            style={{ fontSize: 'clamp(2.25rem, 5vw, 4.25rem)', fontWeight: 500 }}
+          >
+            Built for teams
+            <br />
+            <span className="italic font-editorial text-carbon-400" style={{ fontWeight: 400 }}>
+              that hire at volume.
+            </span>
+          </h2>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 gap-5">
+        <div className="grid md:grid-cols-2 gap-5">
           {features.map((f, i) => (
             <motion.div
-              key={f.title}
-              className="p-6 rounded-2xl bg-white/[0.03] border border-white/[0.07] hover:border-blue-500/15 transition-all duration-300 flex gap-5"
-              {...fadeUp(i * 0.08)}
+              key={f.t}
+              {...fadeUp(i * 0.07)}
+              className="p-8 bg-white border border-carbon-200 rounded-xl hover:border-carbon-400 transition-colors"
             >
-              <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center shrink-0">
-                <f.icon className="w-4.5 h-4.5 text-blue-400" strokeWidth={1.5} />
+              <div
+                className="text-[22px] font-editorial italic mb-4"
+                style={{ color: ACCENT, fontWeight: 400 }}
+              >
+                ↳
               </div>
-              <div>
-                <h3 className="text-[14px] font-semibold text-white mb-1.5">{f.title}</h3>
-                <p className="text-[12px] text-white/35 leading-relaxed">{f.desc}</p>
-              </div>
+              <h3 className="text-[18px] font-medium text-carbon-900 mb-2">{f.t}</h3>
+              <p className="text-[14px] text-carbon-600 leading-relaxed">{f.d}</p>
             </motion.div>
           ))}
         </div>
@@ -279,28 +448,56 @@ function FeatureGrid() {
   );
 }
 
-function CTAB() {
+function BottomCTA() {
   return (
-    <section className="py-20 bg-carbon-950">
-      <div className="max-w-2xl mx-auto px-6 sm:px-8 text-center">
-        <motion.div {...fadeUp()}>
-          <h2 className="text-3xl font-light text-white mb-4">
-            Stop losing great candidates
-            <br />
-            <span className="text-white/35">to slow screening.</span>
-          </h2>
-          <p className="text-[14px] text-white/35 mb-8">
-            Live in 48 hours. No long-term contract. Works with any ATS.
-          </p>
+    <section className="py-24 lg:py-32 bg-black relative overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none">
+        <div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[500px]"
+          style={{
+            background: 'radial-gradient(ellipse at 50% 50%, rgba(96,165,250,0.08) 0%, transparent 65%)',
+          }}
+        />
+      </div>
+
+      <div className="relative z-10 max-w-3xl mx-auto px-6 lg:px-12 text-center">
+        <motion.h2
+          {...fadeUp()}
+          className="text-white leading-[0.98] tracking-[-0.035em] mb-6"
+          style={{ fontSize: 'clamp(2.5rem, 6vw, 5rem)', fontWeight: 500 }}
+        >
+          Stop losing great candidates
+          <br />
+          <span className="italic font-editorial" style={{ color: ACCENT, fontWeight: 400 }}>
+            to slow screening.
+          </span>
+        </motion.h2>
+
+        <motion.p {...fadeUp(0.1)} className="text-[16px] text-white/50 mb-10 max-w-lg mx-auto">
+          Live in 48 hours. No long-term contract. Works with any ATS.
+        </motion.p>
+
+        <motion.div {...fadeUp(0.2)} className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <Link to="/book-demo">
-            <button className="flex items-center gap-2 mx-auto px-8 h-12 rounded-full bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 text-white text-[14px] font-semibold border border-gold-400/30 shadow-gold-btn transition-all duration-300 hover:-translate-y-0.5 group">
-              See Hiring Intelligence live <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+            <button className="group relative flex items-center gap-3 h-[58px] pl-7 pr-5 rounded-none border border-gold-400/60 bg-gold-500 hover:bg-gold-400 text-black text-[14px] font-semibold tracking-tight transition-all duration-200 hover:translate-x-[-2px] hover:translate-y-[-2px] shadow-[4px_4px_0_0_rgba(212,168,67,0.35)] hover:shadow-[6px_6px_0_0_rgba(212,168,67,0.5)]">
+              See Hiring Intelligence live
+              <ArrowUpRight className="w-5 h-5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" strokeWidth={2} />
             </button>
           </Link>
-          <p className="mt-5 text-[11px] text-white/20 font-mono">
-            No commitment · Live in 48 hours · Cancel anytime
-          </p>
+          <a
+            href="tel:+14077594100"
+            className="text-[13px] font-mono text-white/45 hover:text-white/80 tracking-wide transition-colors"
+          >
+            or call (407) 759-4100 →
+          </a>
         </motion.div>
+
+        <motion.p
+          {...fadeUp(0.3)}
+          className="mt-9 text-[10.5px] font-mono uppercase tracking-[0.2em] text-white/25"
+        >
+          No commitment · Same-day response · Live in 48 hours
+        </motion.p>
       </div>
     </section>
   );
