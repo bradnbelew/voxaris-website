@@ -2,4 +2,8 @@ export { Navbar } from './Navbar';
 export { Hero } from './Hero';
 export { CTASection } from './CTASection';
 export { Footer } from './Footer';
+export { LogoMarquee } from './LogoMarquee';
+export { TabbedScenarios } from './TabbedScenarios';
+export { FounderSection } from './FounderSection';
+export { FAQ } from './FAQ';
 export { GradientMesh } from './backgrounds/GradientMesh';
