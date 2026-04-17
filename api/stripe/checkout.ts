@@ -1,7 +1,4 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import Stripe from 'stripe';
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 type PlanKey = 'go' | 'grow' | 'scale' | 'pro' | 'enterprise';
 
@@ -52,25 +49,44 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(400).json({ error: 'Invalid plan' });
   }
 
-  const priceIds = TIER_PRICE_IDS[plan];
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? process.env.VITE_APP_URL ?? 'https://voxaris.io';
+  const secretKey = process.env.STRIPE_SECRET_KEY;
+  if (!secretKey) {
+    return res.status(500).json({ error: 'Stripe not configured' });
+  }
 
-  const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [
-    { price: priceIds.flatPriceId, quantity: 1 },
-    { price: priceIds.overagePriceId },
-    { price: priceIds.setupFeeId, quantity: 1 },
-  ];
+  const priceIds = TIER_PRICE_IDS[plan];
+  const baseUrl = process.env.VITE_APP_URL ?? 'https://voxaris.io';
+
+  const params = new URLSearchParams();
+  params.append('mode', 'subscription');
+  params.append('line_items[0][price]', priceIds.flatPriceId);
+  params.append('line_items[0][quantity]', '1');
+  params.append('line_items[1][price]', priceIds.overagePriceId);
+  params.append('line_items[2][price]', priceIds.setupFeeId);
+  params.append('line_items[2][quantity]', '1');
+  params.append('metadata[plan]', plan);
+  params.append('metadata[plan_label]', PLAN_LABELS[plan]);
+  params.append('subscription_data[metadata][plan]', plan);
+  params.append('success_url', `${baseUrl}/pricing?success=1&plan=${plan}`);
+  params.append('cancel_url', `${baseUrl}/pricing?canceled=1`);
+  if (email) params.append('customer_email', email);
 
   try {
-    const session = await stripe.checkout.sessions.create({
-      mode: 'subscription',
-      customer_email: email ?? undefined,
-      line_items: lineItems,
-      metadata: { plan, plan_label: PLAN_LABELS[plan] },
-      subscription_data: { metadata: { plan } },
-      success_url: `${baseUrl}/pricing?success=1&plan=${plan}`,
-      cancel_url: `${baseUrl}/pricing?canceled=1`,
+    const stripeRes = await fetch('https://api.stripe.com/v1/checkout/sessions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${secretKey}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: params.toString(),
     });
+
+    const session = await stripeRes.json() as { url?: string; error?: { message: string } };
+
+    if (!stripeRes.ok) {
+      console.error('Stripe API error:', session.error);
+      return res.status(500).json({ error: session.error?.message ?? 'Failed to create checkout session' });
+    }
 
     return res.status(200).json({ url: session.url });
   } catch (err: any) {
