@@ -330,11 +330,11 @@ function HiringCTA() {
                 <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
-            <Link to="/pricing">
+            <a href="tel:+14077594100">
               <Button size="lg" variant="ghost" className="text-white/40 hover:text-white hover:bg-white/[0.05] h-14 px-8 text-[15px] font-medium rounded-full border border-white/[0.08] hover:border-white/[0.16] transition-all duration-300 w-full sm:w-auto">
-                View pricing
+                Call (407) 759-4100
               </Button>
-            </Link>
+            </a>
           </div>
         </motion.div>
       </div>

@@ -1,24 +1,20 @@
 import { Link } from 'react-router-dom';
 
 const footerLinks = {
-  products: [
-    { label: 'V·TEAMS', href: '/#vteams' },
-    { label: 'Talking Postcards', href: '/talking-postcard' },
-    { label: 'AI Hiring Agents', href: '/hiring-agents' },
-    { label: 'Presence', href: '/presence' },
-    { label: 'Pricing', href: '/pricing' },
-  ],
   solutions: [
-    { label: 'Auto Dealerships', href: '/solutions/dealerships' },
-    { label: 'Direct Mail', href: '/solutions/direct-mail' },
-    { label: 'Hotels & Resorts', href: '/solutions/hospitality' },
-    { label: 'Home Services', href: '/solutions/contractors' },
-    { label: 'White Label', href: '/solutions/white-label' },
+    { label: 'Hiring Intelligence', href: '/solutions/hiring-intelligence' },
+    { label: 'Talking Postcards', href: '/talking-postcard' },
+    { label: 'Website Redesign', href: '/solutions/website-redesign' },
+    { label: 'AEO-GEO Optimization', href: '/solutions/aeo-geo' },
   ],
-  company: [
+  resources: [
+    { label: 'Why Voxaris', href: '/why-voxaris' },
     { label: 'How It Works', href: '/how-it-works' },
     { label: 'Blog', href: '/blog' },
-    { label: 'Contact', href: '/book-demo' },
+    { label: 'Free Site Audit', href: 'https://audit.voxaris.io/' },
+  ],
+  company: [
+    { label: 'Book a Demo', href: '/book-demo' },
     { label: 'Privacy Policy', href: '/privacy' },
     { label: 'Terms of Service', href: '/terms' },
   ],
@@ -82,12 +78,23 @@ export function Footer() {
               <ul className="space-y-3">
                 {links.map((link) => (
                   <li key={link.label}>
-                    <Link
-                      to={link.href}
-                      className="text-[13px] text-white/40 hover:text-gold-400 transition-colors duration-200"
-                    >
-                      {link.label}
-                    </Link>
+                    {link.href.startsWith('http') ? (
+                      <a
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[13px] text-white/40 hover:text-gold-400 transition-colors duration-200"
+                      >
+                        {link.label}
+                      </a>
+                    ) : (
+                      <Link
+                        to={link.href}
+                        className="text-[13px] text-white/40 hover:text-gold-400 transition-colors duration-200"
+                      >
+                        {link.label}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>

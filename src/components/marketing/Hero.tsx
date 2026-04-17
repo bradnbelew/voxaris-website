@@ -8,32 +8,32 @@ const ease = [0.22, 1, 0.36, 1] as const;
 /* Four products shown as live activity — all running right now */
 const liveItems = [
   {
-    product: 'V·TEAMS',
-    status: 'Call in progress',
-    detail: '(407) 555-0142 · Qualifier routing to specialist',
-    dot: 'bg-emerald-500',
-    ping: 'bg-emerald-400',
-  },
-  {
-    product: 'AI Hiring',
+    product: 'Hiring Intelligence',
     status: 'Interview complete',
-    detail: 'Sarah M. · Sales Rep · Fit score: 92 · Strong hire',
+    detail: 'Sarah M. · Sales Rep · Fit score: 94 · Recommend hire',
     dot: 'bg-blue-400',
     ping: 'bg-blue-300',
   },
   {
     product: 'Talking Postcards',
     status: 'Appointment booked',
-    detail: 'Michael T. scanned QR 3 min ago · Synced to CRM',
+    detail: 'Michael T. scanned QR 4 min ago · Synced to CRM',
     dot: 'bg-gold-500',
     ping: 'bg-gold-400',
   },
   {
-    product: 'Presence',
-    status: 'Cited in AI search',
-    detail: 'ChatGPT · "Best HVAC contractor Orlando" · 3× today',
+    product: 'Website Redesign',
+    status: 'Site launched',
+    detail: 'Orlando HVAC Co. · PageSpeed 96 · Mobile A+ · Live',
     dot: 'bg-violet-400',
     ping: 'bg-violet-300',
+  },
+  {
+    product: 'AEO-GEO',
+    status: 'Cited in AI search',
+    detail: 'ChatGPT · "best HVAC contractor Orlando" · 9× this week',
+    dot: 'bg-emerald-500',
+    ping: 'bg-emerald-400',
   },
 ];
 
@@ -42,7 +42,7 @@ export function Hero() {
     <section
       data-section="hero"
       className="relative flex flex-col items-center justify-center min-h-screen overflow-hidden pt-16"
-      style={{ background: '#030303' }}
+      style={{ background: '#000' }}
     >
       {/* Background — single warm amber bloom from top center */}
       <div className="absolute inset-0 pointer-events-none">
@@ -75,23 +75,23 @@ export function Hero() {
           transition={{ duration: 0.5, ease }}
           className="mb-8"
         >
-          <span className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-white/[0.08] bg-white/[0.04] text-[11px] font-semibold text-white/40 uppercase tracking-[0.2em]">
+          <span className="inline-flex items-center gap-2.5 px-3 py-1.5 border border-white/[0.08] bg-white/[0.04] text-[10px] font-mono text-white/30 uppercase tracking-[0.15em]" style={{ borderRadius: '3px' }}>
             <span className="w-1.5 h-1.5 rounded-full bg-gold-500" />
-            AI Platform · 4 Products
+            Four solutions. One growth stack.
           </span>
         </motion.div>
 
-        {/* Headline — 2 lines, tight */}
+        {/* Headline */}
         <motion.h1
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.08, ease }}
-          className="font-bold text-white leading-[1.0] tracking-[-0.04em] mb-6"
-          style={{ fontSize: 'clamp(2.8rem, 7vw, 5.5rem)' }}
+          className="font-editorial text-white leading-[1.02] mb-6"
+          style={{ fontSize: 'clamp(3rem, 7.5vw, 6rem)', letterSpacing: '-0.025em' }}
         >
-          Your business,
+          The tools your competitors
           <br />
-          <span className="text-gold-gradient">working 24/7.</span>
+          <em className="text-gold-gradient not-italic" style={{ fontStyle: 'italic' }}>don't have yet.</em>
         </motion.h1>
 
         {/* Subhead */}
@@ -101,8 +101,8 @@ export function Hero() {
           transition={{ duration: 0.7, delay: 0.18, ease }}
           className="text-[17px] sm:text-[18px] text-white/45 leading-[1.75] max-w-2xl mx-auto mb-10"
         >
-          Four AI products that answer every call, screen every hire, convert every
-          mailer, and own your web presence — automatically.
+          AI hiring that phones every applicant. Direct mail that books appointments.
+          Websites that convert. Search visibility that compounds. Pick one or use all four.
         </motion.p>
 
         {/* CTAs */}
@@ -112,24 +112,22 @@ export function Hero() {
           transition={{ duration: 0.6, delay: 0.28, ease }}
           className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-14"
         >
-          <Link to="/book-demo">
-            <Button
-              size="lg"
-              className="bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 hover:from-gold-500 hover:via-gold-400 hover:to-gold-500 text-white h-13 px-9 text-[15px] font-semibold rounded-full group shadow-gold-btn border border-gold-400/30 transition-all duration-500 hover:-translate-y-0.5 w-full sm:w-auto"
-              style={{ height: '52px' }}
+          <Link to="/book-demo" className="w-full sm:w-auto">
+            <button
+              className="group flex w-full sm:w-auto items-center justify-center gap-2 h-[52px] px-8 text-[14px] font-medium text-black bg-white hover:bg-neutral-100 transition-all duration-200 hover:-translate-y-0.5"
+              style={{ borderRadius: '4px', boxShadow: '0 1px 0 rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.6), 0 8px 24px -8px rgba(212,168,67,0.25)' }}
             >
-              Book a Demo
-              <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-            </Button>
+              See a Live Demo
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </button>
           </Link>
-          <a href="#products">
-            <Button
-              size="lg"
-              variant="ghost"
-              className="text-white/40 hover:text-white hover:bg-white/[0.05] h-[52px] px-8 text-[15px] rounded-full border border-white/[0.08] hover:border-white/[0.16] transition-all duration-300 w-full sm:w-auto"
+          <a href="#solutions" className="w-full sm:w-auto">
+            <button
+              className="flex w-full sm:w-auto items-center justify-center h-[52px] px-8 text-[14px] font-medium text-white/55 hover:text-white transition-all duration-200"
+              style={{ borderRadius: '4px', border: '1px solid rgba(255,255,255,0.10)', background: 'transparent' }}
             >
-              See All Products
-            </Button>
+              Explore Solutions
+            </button>
           </a>
         </motion.div>
 
@@ -141,8 +139,8 @@ export function Hero() {
           className="mx-auto max-w-2xl"
         >
           <div
-            className="rounded-2xl border border-white/[0.07] overflow-hidden text-left"
-            style={{ background: '#0a0a0a' }}
+            className="border border-white/[0.07] overflow-hidden text-left"
+            style={{ background: '#0a0a0a', borderRadius: '6px' }}
           >
             {/* Card header */}
             <div className="flex items-center justify-between px-5 py-3.5 border-b border-white/[0.05]">
@@ -228,7 +226,7 @@ export function Hero() {
       <div
         className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none"
         style={{
-          background: 'linear-gradient(to bottom, transparent, #030303)',
+          background: 'linear-gradient(to bottom, transparent, #000)',
         }}
       />
     </section>

@@ -1,292 +1,273 @@
-import { Helmet } from "react-helmet-async";
-import { motion } from "framer-motion";
-import { Navbar, Footer } from "@/components/marketing";
-import { Phone, Globe, PhoneOutgoing, CheckSquare, Calendar, Database, Bell, RefreshCw, ArrowRight, Zap, Shield, BarChart3 } from "lucide-react";
-import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+import { Helmet } from 'react-helmet-async';
+import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import {
+  ArrowRight, Users, Mail, Globe, Search,
+  Phone, BarChart3, Zap, Calendar,
+} from 'lucide-react';
+import { Navbar, Footer } from '@/components/marketing';
 
-const coreFeatures = [
-  {
-    icon: Phone,
-    title: "Inbound Call Handling",
-    description: "Instant 24/7 call answering with zero hold times. Every call is professionally handled, qualified, and routed — no voicemails, no missed opportunities.",
-    highlights: ["24/7/365 availability", "Instant pickup", "Professional greeting"]
-  },
-  {
-    icon: Globe,
-    title: "Web Form Response",
-    description: "Automatic callback within seconds of form submission. Speed-to-lead technology that dramatically increases conversion rates.",
-    highlights: ["Sub-60 second response", "Multi-channel capture", "Smart prioritization"]
-  },
-  {
-    icon: PhoneOutgoing,
-    title: "AI Outbound Calling",
-    description: "Intelligent follow-up calls at optimal times until contact is made. Persistent but respectful outreach that maximizes connection rates.",
-    highlights: ["Smart timing optimization", "Multi-attempt sequences", "Voicemail detection"]
-  }
-];
-
-const qualificationFeatures = [
-  {
-    icon: CheckSquare,
-    title: "Intelligent Qualification",
-    description: "Custom qualification criteria powered by conversational AI. Ask the right questions, score intent, and filter prospects automatically.",
-    highlights: ["Custom question flows", "Intent scoring", "Lead filtering"]
-  },
-  {
-    icon: Calendar,
-    title: "Real-Time Booking",
-    description: "Qualified leads are booked directly into your calendar. No back-and-forth, no scheduling friction — just confirmed appointments.",
-    highlights: ["Calendar integration", "Availability sync", "Instant confirmation"]
-  },
-  {
-    icon: Database,
-    title: "CRM Synchronization",
-    description: "Every interaction is logged, summarized, and pushed to your CRM with structured data. Complete visibility, zero manual entry.",
-    highlights: ["Auto-logging", "Call summaries", "Data enrichment"]
-  }
-];
-
-const automationFeatures = [
-  {
-    icon: Bell,
-    title: "Confirmation & Reminders",
-    description: "Automated appointment confirmations via SMS and email. Smart reminder sequences that minimize no-shows and maximize show rates.",
-    highlights: ["SMS confirmations", "Email reminders", "No-show reduction"]
-  },
-  {
-    icon: RefreshCw,
-    title: "Persistent Follow-up",
-    description: "Leads that don't book enter automated nurture sequences. Multi-touch follow-up until conversion or explicit opt-out.",
-    highlights: ["Nurture sequences", "Re-engagement", "Smart persistence"]
-  }
-];
-
-const capabilities = [
-  {
-    icon: Zap,
-    title: "Speed",
-    stat: "<60s",
-    description: "Average response time to new leads"
-  },
-  {
-    icon: Shield,
-    title: "Reliability",
-    stat: "99.9%",
-    description: "Uptime with enterprise infrastructure"
-  },
-  {
-    icon: BarChart3,
-    title: "Performance",
-    stat: "3x",
-    description: "Typical increase in booked appointments"
-  }
-];
-
-const FeatureCard = ({ feature, index }: { feature: typeof coreFeatures[0], index: number }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, margin: "-50px" }}
-    transition={{ duration: 0.5, delay: index * 0.1 }}
-    className="bg-card border border-border rounded-2xl p-6 lg:p-8 hover:border-primary/30 transition-colors"
-  >
-    <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-5">
-      <feature.icon className="h-6 w-6" />
-    </div>
-    <h3 className="text-xl font-semibold text-foreground mb-3">
-      {feature.title}
-    </h3>
-    <p className="text-muted-foreground leading-relaxed mb-5">
-      {feature.description}
-    </p>
-    <div className="flex flex-wrap gap-2">
-      {feature.highlights.map((highlight) => (
-        <span 
-          key={highlight}
-          className="text-xs font-medium px-3 py-1 rounded-full bg-secondary text-secondary-foreground"
-        >
-          {highlight}
-        </span>
-      ))}
-    </div>
-  </motion.div>
-);
+const ease = [0.22, 1, 0.36, 1] as const;
+const fadeUp = (delay = 0) => ({
+  initial: { opacity: 0, y: 24 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true },
+  transition: { duration: 0.7, delay, ease },
+});
 
 export default function HowItWorks() {
   return (
-    <div className="min-h-screen bg-white">
-      <Navbar />
+    <div className="min-h-screen bg-black">
       <Helmet>
-        <title>How Voxaris Works | AI-Powered Lead Automation Platform</title>
-        <meta name="description" content="Voxaris handles every touchpoint from first contact to confirmed appointment with AI-powered precision. Inbound calls, outbound follow-up, qualification, and booking \u2014 all automated." />
-        <meta name="keywords" content="AI lead automation, AI call handling, automated lead qualification, AI appointment booking, CRM integration, conversational AI platform" />
+        <title>How Voxaris Works | Four Solutions, One Growth Stack</title>
+        <meta name="description" content="Voxaris builds and runs four AI-powered systems for local businesses — AI hiring, talking postcards, website redesign, and AEO-GEO optimization. Here's how each works." />
         <link rel="canonical" href="https://voxaris.io/how-it-works" />
-        <meta property="og:title" content="How Voxaris Works | AI-Powered Lead Automation" />
-        <meta property="og:description" content="A unified platform that handles every touchpoint \u2014 from first contact to confirmed appointment \u2014 with AI-powered precision." />
-        <meta property="og:type" content="website" />
+        <meta property="og:title" content="How Voxaris Works | AI-Powered Growth for Local Business" />
+        <meta property="og:description" content="Four done-for-you solutions that compound. AI hiring, direct mail AI, website redesign, and local AI search optimization." />
         <meta property="og:url" content="https://voxaris.io/how-it-works" />
         <meta property="og:image" content="https://voxaris.io/og-image.png" />
-        <meta name="twitter:image" content="https://voxaris.io/og-image.png" />      </Helmet>
-      {/* Hero */}
-      <section className="pt-28 pb-16 lg:pb-20 bg-secondary/30">
-        <div className="container-wide">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="max-w-3xl"
-          >
-            <span className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-4 block">
-              Platform Features
-            </span>
-            <h1 className="text-4xl lg:text-display-sm font-semibold text-foreground mb-6">
-              Everything you need for complete lead automation
-            </h1>
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              A unified platform that handles every touchpoint — from first contact to confirmed appointment — with AI-powered precision.
-            </p>
-          </motion.div>
-        </div>
-      </section>
+      </Helmet>
 
-      {/* Stats */}
-      <section className="py-12 border-b border-border">
-        <div className="container-wide">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {capabilities.map((cap, index) => (
-              <motion.div
-                key={cap.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="text-center"
-              >
-                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 text-primary mb-4">
-                  <cap.icon className="h-5 w-5" />
-                </div>
-                <div className="text-3xl lg:text-4xl font-bold text-foreground mb-1">
-                  {cap.stat}
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  {cap.description}
-                </div>
-              </motion.div>
-            ))}
+      <Navbar />
+
+      <main id="main-content">
+        {/* Hero */}
+        <section className="relative pt-32 pb-20 overflow-hidden">
+          <div className="absolute inset-0 pointer-events-none">
+            <div
+              className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px]"
+              style={{ background: 'radial-gradient(ellipse at 50% -10%, rgba(139,92,246,0.08) 0%, rgba(139,92,246,0.02) 35%, transparent 65%)' }}
+            />
+            <div className="absolute inset-0 noise-overlay opacity-[0.08]" />
           </div>
-        </div>
-      </section>
 
-      {/* Core Features */}
-      <section className="section-padding">
-        <div className="container-wide">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="mb-12"
-          >
-            <span className="text-sm font-medium text-primary uppercase tracking-wider mb-3 block">
-              Lead Capture
-            </span>
-            <h2 className="text-3xl lg:text-heading font-semibold text-foreground mb-4">
-              Capture every lead, every channel
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl">
-              Multi-channel lead capture that responds instantly — whether they call, submit a form, or need follow-up.
-            </p>
-          </motion.div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {coreFeatures.map((feature, index) => (
-              <FeatureCard key={feature.title} feature={feature} index={index} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Qualification Features */}
-      <section className="section-padding bg-secondary/30">
-        <div className="container-wide">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="mb-12"
-          >
-            <span className="text-sm font-medium text-primary uppercase tracking-wider mb-3 block">
-              Qualification & Booking
-            </span>
-            <h2 className="text-3xl lg:text-heading font-semibold text-foreground mb-4">
-              Qualify and book automatically
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl">
-              Intelligent qualification that filters prospects and books appointments in real-time — no human intervention required.
-            </p>
-          </motion.div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {qualificationFeatures.map((feature, index) => (
-              <FeatureCard key={feature.title} feature={feature} index={index} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Automation Features */}
-      <section className="section-padding">
-        <div className="container-wide">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="mb-12"
-          >
-            <span className="text-sm font-medium text-primary uppercase tracking-wider mb-3 block">
-              Automation & Follow-up
-            </span>
-            <h2 className="text-3xl lg:text-heading font-semibold text-foreground mb-4">
-              Never let a lead slip away
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl">
-              Automated confirmations, reminders, and follow-up sequences that maximize show rates and re-engage cold leads.
-            </p>
-          </motion.div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
-            {automationFeatures.map((feature, index) => (
-              <FeatureCard key={feature.title} feature={feature} index={index} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="section-padding bg-primary text-primary-foreground">
-        <div className="container-wide text-center">
-          <h2 className="text-3xl lg:text-heading font-semibold mb-4">
-            Ready to see these features in action?
-          </h2>
-          <p className="text-lg text-primary-foreground/70 mb-8 max-w-xl mx-auto">
-            Get a personalized demo and see how Voxaris can transform your lead conversion.
-          </p>
-          <Link to="/book-demo">
-            <Button 
-              variant="secondary" 
-              size="xl" 
-              className="bg-primary-foreground text-primary hover:bg-primary-foreground/90"
+          <div className="max-w-5xl mx-auto px-6 sm:px-8 relative z-10">
+            <motion.div
+              initial={{ opacity: 0, y: 32 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease }}
+              className="max-w-3xl"
             >
-              Book a Demo
-              <ArrowRight className="h-5 w-5" />
-            </Button>
-          </Link>
-        </div>
-      </section>
+              <span className="text-[10px] font-mono text-white/25 uppercase tracking-[0.2em] mb-5 block">How It Works</span>
+              <h1 className="text-4xl sm:text-5xl font-light text-white leading-[1.05] tracking-[-0.03em] mb-6">
+                Four tools. Built for you.
+                <br />
+                <span className="text-white/35">Running while you work.</span>
+              </h1>
+              <p className="text-[17px] text-white/45 leading-[1.8] max-w-2xl">
+                Each Voxaris solution is a done-for-you system — we configure it, launch it, and manage it.
+                You get the results without the overhead.
+              </p>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Solutions detail */}
+        <SolutionSection
+          index="01"
+          icon={Users}
+          label="Hiring Intelligence"
+          href="/solutions/hiring-intelligence"
+          accentColor="text-blue-400"
+          accentBg="bg-blue-500/10"
+          accentBorder="border-blue-500/20"
+          headline="Phone every applicant in 5 minutes."
+          subhead="AI handles the screening. You make the hire."
+          body="When someone applies for your job, Voxaris calls them within 5 minutes — any time of day. The AI conducts a real phone interview, scores them against your criteria, and delivers a ranked shortlist. You only talk to the top candidates."
+          steps={[
+            { icon: Phone, label: 'Applicant applies', desc: 'AI calls within 5 minutes, 24/7' },
+            { icon: BarChart3, label: 'Interview & score', desc: 'Custom questions, fit scoring' },
+            { icon: Users, label: 'Ranked shortlist', desc: 'Top 3 candidates delivered to you' },
+            { icon: Calendar, label: 'You interview', desc: 'Only the ones worth your time' },
+          ]}
+          stats={[
+            { value: '< 5 min', label: 'First call' },
+            { value: '10×', label: 'More screened' },
+            { value: '80%', label: 'Time saved' },
+          ]}
+          bg="bg-black"
+        />
+
+        <SolutionSection
+          index="02"
+          icon={Mail}
+          label="Talking Postcards"
+          href="/talking-postcard"
+          accentColor="text-gold-400"
+          accentBg="bg-gold-500/10"
+          accentBorder="border-gold-500/20"
+          headline="Direct mail that starts a conversation."
+          subhead="Handwritten letters. QR codes. Live AI video."
+          body="We send personalized, handwritten mailers to your target list. Each one includes a QR code that launches a live AI video conversation — answering questions, handling objections, and booking appointments on the spot. 6–12× better than standard direct mail."
+          steps={[
+            { icon: Mail, label: 'Mailer delivered', desc: 'Personalized, handwritten feel' },
+            { icon: Zap, label: 'QR code scanned', desc: 'Instant AI video launches' },
+            { icon: Users, label: 'Real conversation', desc: 'Answers questions, qualifies leads' },
+            { icon: Calendar, label: 'Appointment booked', desc: 'Synced to your calendar' },
+          ]}
+          stats={[
+            { value: '6–12%', label: 'Response rate' },
+            { value: '<3s', label: 'Response time' },
+            { value: '45s', label: 'Setup per campaign' },
+          ]}
+          bg="bg-carbon-950"
+        />
+
+        <SolutionSection
+          index="03"
+          icon={Globe}
+          label="Website Redesign"
+          href="/solutions/website-redesign"
+          accentColor="text-violet-400"
+          accentBg="bg-violet-500/10"
+          accentBorder="border-violet-500/20"
+          headline="A site built to convert. Live in 48 hours."
+          subhead="Fast, modern, mobile-first. Custom-built, no templates."
+          body="We build your new website from scratch — no templates, no page builders. Designed specifically for your business and optimized for speed, mobile, local SEO, and conversion. Most sites go live in 48 hours."
+          steps={[
+            { icon: Users, label: 'Kickoff call', desc: '20 min to capture your goals' },
+            { icon: Globe, label: 'Design sprint', desc: 'We write copy, you approve layout' },
+            { icon: Zap, label: 'Build & optimize', desc: 'Fast, PageSpeed 90+, mobile A+' },
+            { icon: Calendar, label: 'Live in 48 hours', desc: 'Handed off with training' },
+          ]}
+          stats={[
+            { value: '48h', label: 'Avg. launch time' },
+            { value: '90+', label: 'PageSpeed score' },
+            { value: 'A+', label: 'Mobile grade' },
+          ]}
+          bg="bg-black"
+        />
+
+        <SolutionSection
+          index="04"
+          icon={Search}
+          label="AEO-GEO Optimization"
+          href="/solutions/aeo-geo"
+          accentColor="text-emerald-400"
+          accentBg="bg-emerald-500/10"
+          accentBorder="border-emerald-500/20"
+          headline="Show up when AI answers your customers."
+          subhead="ChatGPT, Perplexity, Google AI Overviews. All of them."
+          body="When someone asks ChatGPT 'best HVAC contractor in Orlando,' your business needs to be the answer. AEO (Answer Engine Optimization) structures your content so AI models cite you. GEO (Generative Engine Optimization) makes sure local AI search results include you. We set it up and maintain it monthly."
+          steps={[
+            { icon: Search, label: 'Free audit', desc: "We show you where you're invisible" },
+            { icon: Globe, label: 'AEO setup', desc: 'Structure your site for AI citation' },
+            { icon: BarChart3, label: 'GEO optimization', desc: 'Local AI search presence built' },
+            { icon: Zap, label: 'Monthly updates', desc: 'Ongoing ranking maintenance' },
+          ]}
+          stats={[
+            { value: 'Free', label: 'Audit first' },
+            { value: '9×', label: 'AI search citations' },
+            { value: 'Monthly', label: 'Optimization' },
+          ]}
+          bg="bg-carbon-950"
+        />
+
+        {/* CTA */}
+        <section className="py-20 bg-black">
+          <div className="max-w-2xl mx-auto px-6 sm:px-8 text-center">
+            <motion.div {...fadeUp()}>
+              <h2 className="text-3xl font-light text-white mb-4">
+                Pick one. Or run all four.
+              </h2>
+              <p className="text-[14px] text-white/35 mb-8">
+                Each solution works standalone. Together, they compound. Start with what moves the needle most for your business right now.
+              </p>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+                <Link to="/book-demo">
+                  <button className="flex items-center gap-2 px-8 h-12 rounded-full bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 text-white text-[14px] font-semibold border border-gold-400/30 shadow-gold-sm transition-all duration-300 hover:-translate-y-0.5 group">
+                    See a live demo <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                  </button>
+                </Link>
+                <Link to="/why-voxaris">
+                  <button className="flex items-center gap-2 px-7 h-12 rounded-full border border-white/[0.1] text-white/50 hover:text-white hover:border-white/[0.2] text-[14px] transition-all duration-300">
+                    Why Voxaris →
+                  </button>
+                </Link>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      </main>
+
       <Footer />
     </div>
+  );
+}
+
+/* ─── Reusable solution section ─── */
+function SolutionSection({
+  index, icon: Icon, label, href, accentColor, accentBg, accentBorder,
+  headline, subhead, body, steps, stats, bg,
+}: {
+  index: string;
+  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
+  label: string;
+  href: string;
+  accentColor: string;
+  accentBg: string;
+  accentBorder: string;
+  headline: string;
+  subhead: string;
+  body: string;
+  steps: { icon: React.ComponentType<{ className?: string; strokeWidth?: number }>; label: string; desc: string }[];
+  stats: { value: string; label: string }[];
+  bg: string;
+}) {
+  return (
+    <section className={`py-20 lg:py-28 ${bg} relative overflow-hidden`}>
+      <div className="absolute inset-0 noise-overlay opacity-[0.05] pointer-events-none" />
+      <div className="max-w-6xl mx-auto px-6 sm:px-8 relative z-10">
+        <motion.div className="mb-12" {...fadeUp()}>
+          <div className="flex items-center gap-3 mb-5">
+            <span className={`text-[10px] font-mono ${accentColor} opacity-50 uppercase tracking-[0.2em]`}>{index}</span>
+            <div className={`w-8 h-8 rounded-xl ${accentBg} flex items-center justify-center`}>
+              <Icon className={`w-4 h-4 ${accentColor}`} strokeWidth={1.5} />
+            </div>
+            <span className={`text-[11px] font-mono ${accentColor} opacity-70 uppercase tracking-[0.12em]`}>{label}</span>
+          </div>
+
+          <h2 className="text-3xl sm:text-[2.25rem] font-light text-white leading-[1.1] tracking-[-0.02em] mb-3">
+            {headline}
+          </h2>
+          <p className="text-[16px] text-white/35 mb-5">{subhead}</p>
+          <p className="text-[15px] text-white/45 leading-[1.8] max-w-2xl mb-8">{body}</p>
+
+          {/* Stats */}
+          <div className="flex flex-wrap gap-8 mb-10">
+            {stats.map((s) => (
+              <div key={s.label}>
+                <div className={`text-[20px] font-light ${accentColor}`}>{s.value}</div>
+                <div className="text-[10px] font-mono text-white/25 uppercase tracking-wider mt-0.5">{s.label}</div>
+              </div>
+            ))}
+          </div>
+
+          <Link to={href}>
+            <button className={`flex items-center gap-2 text-[13px] font-mono ${accentColor} opacity-60 hover:opacity-100 transition-opacity group`}>
+              Learn more about {label} <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+            </button>
+          </Link>
+        </motion.div>
+
+        {/* Steps */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {steps.map((step, i) => (
+            <motion.div
+              key={step.label}
+              {...fadeUp(i * 0.08)}
+              className={`p-5 rounded-2xl bg-white/[0.02] border border-white/[0.05] hover:${accentBorder} transition-all duration-300`}
+            >
+              <div className={`w-8 h-8 rounded-xl ${accentBg} flex items-center justify-center mb-3`}>
+                <step.icon className={`w-3.5 h-3.5 ${accentColor}`} strokeWidth={1.5} />
+              </div>
+              <div className={`text-[10px] font-mono ${accentColor} opacity-40 uppercase tracking-[0.15em] mb-1`}>Step {i + 1}</div>
+              <h3 className="text-[13px] font-semibold text-white mb-1">{step.label}</h3>
+              <p className="text-[11px] text-white/30 leading-relaxed">{step.desc}</p>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }

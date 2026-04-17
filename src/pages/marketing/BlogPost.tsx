@@ -1,12 +1,11 @@
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Clock } from 'lucide-react';
+import { ArrowLeft, Clock, ArrowRight } from 'lucide-react';
 import { Navbar, Footer } from '@/components/marketing';
-
 import { blogPosts } from '@/data/blog-posts';
 
-const ease = [0.22, 1, 0.36, 1];
+const ease = [0.22, 1, 0.36, 1] as const;
 
 export function BlogPost() {
   const { slug } = useParams<{ slug: string }>();
@@ -25,35 +24,22 @@ export function BlogPost() {
       name: post.author,
       url: 'https://www.linkedin.com/in/ethanstopperich',
       jobTitle: 'President & Founder',
-      worksFor: {
-        '@type': 'Organization',
-        name: 'Voxaris',
-      },
+      worksFor: { '@type': 'Organization', name: 'Voxaris' },
     },
     publisher: {
       '@type': 'Organization',
       name: 'Voxaris',
       url: 'https://voxaris.io',
-      logo: {
-        '@type': 'ImageObject',
-        url: 'https://voxaris.io/favicon.png',
-      },
+      logo: { '@type': 'ImageObject', url: 'https://voxaris.io/favicon.png' },
     },
     datePublished: post.date,
     dateModified: post.date,
-    mainEntityOfPage: {
-      '@type': 'WebPage',
-      '@id': canonicalUrl,
-    },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
     keywords: post.keywords.join(', '),
-    about: {
-      '@type': 'Thing',
-      name: 'AI voice agents and multi-agent AI',
-    },
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-black">
       <Helmet>
         <title>{post.title} | Voxaris Blog</title>
         <meta name="description" content={post.description} />
@@ -71,15 +57,22 @@ export function BlogPost() {
         <meta name="twitter:description" content={post.description} />
         <meta property="og:image" content="https://voxaris.io/og-image.png" />
         <meta name="twitter:image" content="https://voxaris.io/og-image.png" />
-        <script type="application/ld+json">
-          {JSON.stringify(articleJsonLd)}
-        </script>
+        <script type="application/ld+json">{JSON.stringify(articleJsonLd)}</script>
       </Helmet>
+
       <Navbar />
+
       <main>
         {/* Header */}
-        <section className="pt-28 pb-12 lg:pt-40 lg:pb-16">
-          <div className="container-narrow px-4">
+        <section className="relative pt-28 pb-12 lg:pt-36 lg:pb-16 overflow-hidden">
+          <div className="absolute inset-0 pointer-events-none">
+            <div
+              className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px]"
+              style={{ background: 'radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.03) 0%, transparent 60%)' }}
+            />
+            <div className="absolute inset-0 noise-overlay opacity-[0.07]" />
+          </div>
+          <div className="max-w-2xl mx-auto px-6 sm:px-8 relative z-10">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -87,73 +80,69 @@ export function BlogPost() {
             >
               <Link
                 to="/blog"
-                className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-slate-600 transition-colors mb-8"
+                className="inline-flex items-center gap-2 text-[12px] font-mono text-white/25 hover:text-white/60 transition-colors mb-8"
               >
-                <ArrowLeft className="w-4 h-4" /> All Articles
+                <ArrowLeft className="w-3.5 h-3.5" /> All Articles
               </Link>
 
               <div className="flex items-center gap-3 mb-6">
-                <span className="text-[11px] font-semibold text-slate-900 bg-slate-100 px-3 py-1.5 rounded-full uppercase tracking-wider">
+                <span className="text-[10px] font-mono font-semibold text-white/35 bg-white/[0.06] border border-white/[0.08] px-2.5 py-1 rounded-full uppercase tracking-wider">
                   {post.category}
                 </span>
-                <span className="flex items-center gap-1.5 text-[12px] text-slate-400">
+                <span className="flex items-center gap-1.5 text-[11px] font-mono text-white/20">
                   <Clock className="w-3 h-3" />
                   {post.readTime}
                 </span>
               </div>
 
-              <h1 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-bold text-slate-900 tracking-tight leading-[1.15]">
+              <h1 className="text-3xl sm:text-4xl font-light text-white tracking-[-0.02em] leading-[1.15] mb-6">
                 {post.title}
               </h1>
 
-              <div className="mt-6 flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center text-white text-sm font-bold">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-full bg-gold-500/15 border border-gold-500/20 flex items-center justify-center text-gold-400 text-[12px] font-bold font-mono">
                   ES
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-slate-900">{post.author}</p>
-                  <p className="text-[12px] text-slate-400">Founder of Voxaris &middot; {post.date}</p>
+                  <p className="text-[13px] font-medium text-white/60">{post.author}</p>
+                  <p className="text-[11px] font-mono text-white/25">Founder · {post.date}</p>
                 </div>
               </div>
             </motion.div>
           </div>
         </section>
 
+        {/* Divider */}
+        <div className="max-w-2xl mx-auto px-6 sm:px-8">
+          <div className="h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent" />
+        </div>
+
         {/* Content */}
         <section className="pb-24 lg:pb-32">
-          <div className="container-narrow px-4">
+          <div className="max-w-2xl mx-auto px-6 sm:px-8">
             <motion.article
-              className="prose-voxaris"
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.15, ease }}
+              className="pt-10"
             >
               {post.content.map((section, i) => {
                 switch (section.type) {
                   case 'heading':
                     return (
-                      <h2
-                        key={i}
-                        className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight mt-14 mb-5"
-                      >
+                      <h2 key={i} className="text-2xl sm:text-3xl font-light text-white tracking-[-0.02em] mt-14 mb-5">
                         {section.text}
                       </h2>
                     );
                   case 'subheading':
                     return (
-                      <h3
-                        key={i}
-                        className="text-xl font-bold text-slate-900 tracking-tight mt-10 mb-4"
-                      >
+                      <h3 key={i} className="text-xl font-light text-white/80 tracking-[-0.01em] mt-10 mb-4">
                         {section.text}
                       </h3>
                     );
                   case 'paragraph':
                     return (
-                      <p
-                        key={i}
-                        className="text-[16px] sm:text-[17px] text-slate-600 leading-[1.8] mb-5"
-                      >
+                      <p key={i} className="text-[16px] text-white/50 leading-[1.85] mb-5">
                         {section.text}
                       </p>
                     );
@@ -161,11 +150,8 @@ export function BlogPost() {
                     return (
                       <ul key={i} className="space-y-3 my-6 pl-0">
                         {section.items?.map((item, j) => (
-                          <li
-                            key={j}
-                            className="flex gap-3 text-[16px] text-slate-600 leading-[1.7]"
-                          >
-                            <span className="mt-2 w-1.5 h-1.5 rounded-full bg-slate-300 shrink-0" />
+                          <li key={j} className="flex gap-3 text-[15px] text-white/45 leading-[1.75]">
+                            <span className="mt-[9px] w-1 h-1 rounded-full bg-gold-500/60 shrink-0" />
                             <span>{item}</span>
                           </li>
                         ))}
@@ -173,31 +159,26 @@ export function BlogPost() {
                     );
                   case 'quote':
                     return (
-                      <blockquote
-                        key={i}
-                        className="border-l-2 border-slate-200 pl-6 my-8 text-[17px] text-slate-500 italic"
-                      >
+                      <blockquote key={i} className="border-l border-gold-500/30 pl-6 my-8 text-[17px] text-white/35 italic">
                         {section.text}
                       </blockquote>
                     );
                   case 'divider':
                     return (
-                      <hr
-                        key={i}
-                        className="my-12 border-0 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent"
-                      />
+                      <hr key={i} className="my-12 border-0 h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent" />
                     );
                   case 'cta':
                     return (
-                      <div key={i} className="mt-14 pt-10 border-t border-slate-100">
-                        <p className="text-lg text-slate-500 mb-5">
-                          See what an AI video agent looks like on a real website.
+                      <div key={i} className="mt-14 pt-10 border-t border-white/[0.06]">
+                        <p className="text-[15px] text-white/35 mb-5">
+                          See what an AI system looks like for your business.
                         </p>
                         <Link
                           to={section.href || '/book-demo'}
-                          className="inline-flex items-center gap-2 bg-slate-900 hover:bg-black text-white text-sm font-semibold px-7 py-3.5 rounded-xl transition-all duration-300 hover:shadow-lg"
+                          className="inline-flex items-center gap-2 bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 text-white text-[13px] font-semibold px-7 h-11 rounded-full border border-gold-400/30 shadow-gold-sm transition-all duration-300 hover:-translate-y-0.5 group"
                         >
                           {section.label}
+                          <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                         </Link>
                       </div>
                     );
@@ -207,10 +188,10 @@ export function BlogPost() {
               })}
             </motion.article>
 
-            {/* Related Posts */}
-            <div className="mt-20 pt-12 border-t border-slate-100">
-              <h3 className="text-lg font-bold text-slate-900 mb-6">Continue Reading</h3>
-              <div className="grid sm:grid-cols-2 gap-5">
+            {/* Related posts */}
+            <div className="mt-20 pt-10 border-t border-white/[0.06]">
+              <h3 className="text-[11px] font-mono text-white/25 uppercase tracking-[0.2em] mb-6">Continue Reading</h3>
+              <div className="grid sm:grid-cols-2 gap-4">
                 {blogPosts
                   .filter((p) => p.slug !== post.slug)
                   .slice(0, 2)
@@ -218,12 +199,12 @@ export function BlogPost() {
                     <Link
                       key={related.slug}
                       to={`/blog/${related.slug}`}
-                      className="group p-6 rounded-xl border border-slate-100 hover:border-slate-200 hover:shadow-sm transition-all"
+                      className="group p-5 rounded-xl border border-white/[0.06] hover:border-white/[0.12] bg-white/[0.02] hover:bg-white/[0.04] transition-all duration-300"
                     >
-                      <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+                      <span className="text-[10px] font-mono text-white/25 uppercase tracking-wider">
                         {related.category}
                       </span>
-                      <h4 className="mt-2 text-base font-bold text-slate-900 group-hover:text-slate-700 transition-colors leading-snug">
+                      <h4 className="mt-2 text-[14px] font-light text-white/60 group-hover:text-white/90 transition-colors leading-snug">
                         {related.title}
                       </h4>
                     </Link>
@@ -233,6 +214,7 @@ export function BlogPost() {
           </div>
         </section>
       </main>
+
       <Footer />
     </div>
   );

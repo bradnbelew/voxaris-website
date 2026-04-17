@@ -108,15 +108,15 @@ export default {
         "3xl": "1.5rem",
       },
       fontFamily: {
-        sans: ['DM Sans', 'Satoshi', 'system-ui', '-apple-system', 'sans-serif'],
-        display: ['Satoshi', 'DM Sans', 'system-ui', 'sans-serif'],
-        mono: ['JetBrains Mono', 'monospace'],
+        sans: ['Geist Variable', 'system-ui', '-apple-system', 'sans-serif'],
+        display: ['Geist Variable', 'system-ui', 'sans-serif'],
+        mono: ['Geist Mono Variable', 'monospace'],
       },
       fontSize: {
-        'hero': ['clamp(3.5rem, 8vw, 6.5rem)', { lineHeight: '0.95', letterSpacing: '-0.04em', fontWeight: '700' }],
-        'display': ['clamp(2.5rem, 5vw, 4.5rem)', { lineHeight: '1.0', letterSpacing: '-0.035em', fontWeight: '700' }],
-        'display-sm': ['clamp(2rem, 4vw, 3.25rem)', { lineHeight: '1.05', letterSpacing: '-0.03em' }],
-        'heading': ['clamp(1.5rem, 3vw, 2.25rem)', { lineHeight: '1.15', letterSpacing: '-0.02em' }],
+        'hero': ['clamp(3.5rem, 8vw, 6.5rem)', { lineHeight: '0.95', letterSpacing: '-0.04em', fontWeight: '300' }],
+        'display': ['clamp(2.5rem, 5vw, 4.5rem)', { lineHeight: '1.0', letterSpacing: '-0.035em', fontWeight: '300' }],
+        'display-sm': ['clamp(2rem, 4vw, 3.25rem)', { lineHeight: '1.05', letterSpacing: '-0.03em', fontWeight: '400' }],
+        'heading': ['clamp(1.5rem, 3vw, 2.25rem)', { lineHeight: '1.15', letterSpacing: '-0.02em', fontWeight: '500' }],
         'subheading': ['1.25rem', { lineHeight: '1.6' }],
       },
       boxShadow: {

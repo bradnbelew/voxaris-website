@@ -12,4 +12,6 @@ export { BlogIndex } from './BlogIndex';
 export { BlogPost } from './BlogPost';
 export { HiringAgents } from './HiringAgents';
 export { Presence } from './Presence';
-export { Pricing } from './Pricing';
+export { SolutionHiringIntelligence } from './SolutionHiringIntelligence';
+export { SolutionWebsiteRedesign } from './SolutionWebsiteRedesign';
+export { SolutionAeoGeo } from './SolutionAeoGeo';

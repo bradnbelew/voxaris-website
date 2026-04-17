@@ -1,4 +1,7 @@
-/* Typography: Satoshi (display) via Fontshare, DM Sans (body) via Google — loaded in index.html */
+/* Typography: Geist (body) + Geist Mono (labels) + Instrument Serif (editorial display for hero) */
+@import '@fontsource-variable/geist';
+@import '@fontsource-variable/geist-mono';
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -59,17 +62,19 @@
   }
 
   body {
-    @apply bg-white text-carbon-900 antialiased;
-    font-family: 'Satoshi', 'DM Sans', system-ui, -apple-system, sans-serif;
+    @apply bg-black text-white antialiased;
+    font-family: 'Geist Variable', system-ui, -apple-system, sans-serif;
+    background-color: #000;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Satoshi', 'DM Sans', system-ui, sans-serif;
-    @apply tracking-tight font-bold;
+    font-family: 'Geist Variable', system-ui, sans-serif;
+    @apply tracking-tight;
+    font-weight: 300;
   }
 
   code, pre {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: 'Geist Mono Variable', monospace;
   }
 
   ::selection {
@@ -111,29 +116,66 @@
 
   /* Headlines */
   .headline-hero {
-    font-family: 'Satoshi', 'DM Sans', system-ui, sans-serif;
-    @apply text-hero font-bold;
+    font-family: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+    @apply text-hero;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+  }
+
+  /* Editorial display — for hero headlines that should feel human, not AI-generated */
+  .font-editorial {
+    font-family: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+    font-weight: 400;
+  }
+
+  /* Angular, editorial CTA — replaces the AI-pill look */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 h-11 px-6 text-[14px] font-medium text-black bg-white transition-all duration-200;
+    border-radius: 4px;
+    border: 1px solid rgba(0,0,0,0.08);
+    box-shadow: 0 1px 0 rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.6);
+  }
+  .btn-primary:hover {
+    background: #f7f7f7;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 h-11 px-6 text-[14px] font-medium text-white/60 transition-all duration-200;
+    border-radius: 4px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: transparent;
+  }
+  .btn-ghost:hover {
+    color: #fff;
+    border-color: rgba(255,255,255,0.22);
+    background: rgba(255,255,255,0.03);
   }
 
   .headline-xl {
-    font-family: 'Satoshi', 'DM Sans', system-ui, sans-serif;
-    @apply text-display font-bold;
+    font-family: 'Geist Variable', system-ui, sans-serif;
+    @apply text-display;
+    font-weight: 300;
   }
 
   .headline-lg {
-    font-family: 'Satoshi', 'DM Sans', system-ui, sans-serif;
-    @apply text-display-sm font-bold;
+    font-family: 'Geist Variable', system-ui, sans-serif;
+    @apply text-display-sm;
+    font-weight: 400;
   }
 
   .headline-md {
-    font-family: 'Satoshi', 'DM Sans', system-ui, sans-serif;
-    @apply text-heading font-bold;
+    font-family: 'Geist Variable', system-ui, sans-serif;
+    @apply text-heading;
+    font-weight: 500;
   }
 
-  /* Eyebrow */
+  /* Eyebrow — Space Mono monospace labels, audit.voxaris style */
   .eyebrow {
-    @apply text-[11px] font-semibold uppercase tracking-[0.25em] text-carbon-400;
-    font-family: 'Satoshi', 'DM Sans', sans-serif;
+    @apply text-[10px] uppercase tracking-[0.1em] text-carbon-400;
+    font-family: 'Geist Mono Variable', monospace;
+    font-weight: 400;
   }
 
   /* Light divider */
@@ -144,8 +186,9 @@
 
   /* Stat number */
   .stat-number {
-    @apply text-5xl md:text-6xl font-bold text-carbon-900;
-    font-family: 'Satoshi', 'DM Sans', system-ui, sans-serif;
+    @apply text-5xl md:text-6xl text-white;
+    font-family: 'Geist Variable', system-ui, sans-serif;
+    font-weight: 300;
   }
 
   /* Grid pattern — light */

@@ -21,7 +21,9 @@ import {
   BlogPost,
   HiringAgents,
   Presence,
-  Pricing,
+  SolutionHiringIntelligence,
+  SolutionWebsiteRedesign,
+  SolutionAeoGeo,
 } from "./pages/marketing";
 import Technology from "./pages/Technology";
 import HowItWorks from "./pages/HowItWorks";
@@ -86,9 +88,12 @@ const App = () => (
           <Route path="/blog/:slug" element={<BlogPost />} />
 
           {/* Solution Pages */}
-          <Route path="/hiring-agents" element={<HiringAgents />} />
+          <Route path="/hiring-agents" element={<Navigate to="/solutions/hiring-intelligence" replace />} />
+          <Route path="/solutions/hiring-intelligence" element={<SolutionHiringIntelligence />} />
+          <Route path="/solutions/website-redesign" element={<SolutionWebsiteRedesign />} />
+          <Route path="/solutions/aeo-geo" element={<SolutionAeoGeo />} />
           <Route path="/presence" element={<Presence />} />
-          <Route path="/pricing" element={<Pricing />} />
+          <Route path="/pricing" element={<Navigate to="/book-demo" replace />} />
           <Route path="/solutions/dealerships" element={<SolutionDealerships />} />
           <Route path="/solutions/hospitality" element={<SolutionHospitality />} />
           <Route path="/solutions/contractors" element={<SolutionContractors />} />

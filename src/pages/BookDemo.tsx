@@ -2,11 +2,7 @@ import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
 import { Navbar, Footer } from "@/components/marketing";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { ArrowRight, CheckCircle, Loader2, Phone, CalendarCheck, Clock } from "lucide-react";
+import { ArrowRight, CheckCircle, Loader2, CalendarCheck } from "lucide-react";
 import { toast } from "sonner";
 
 export default function BookDemo() {
@@ -41,7 +37,7 @@ export default function BookDemo() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-black">
       <Navbar />
       <Helmet>
         <title>Book a Voxaris AI Demo | Voxaris</title>
@@ -64,18 +60,18 @@ export default function BookDemo() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <span className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-4 block">
+              <span className="eyebrow mb-4 block">
                 Book a Demo
               </span>
-              <h1 className="text-4xl lg:text-display-sm font-semibold text-foreground mb-6">
+              <h1 className="text-4xl lg:text-display-sm font-light text-white mb-6">
                 See Voxaris AI handle a live call.
               </h1>
-              <p className="text-lg text-muted-foreground leading-relaxed mb-10">
+              <p className="text-lg text-white/50 leading-relaxed mb-10">
                 15 minutes. No pitch deck. We'll show you exactly how Voxaris AI answers, qualifies, and books appointments for businesses like yours.
               </p>
 
-              <div className="space-y-6 mb-10">
-                <h3 className="font-semibold text-foreground">What happens in the demo:</h3>
+              <div className="space-y-4 mb-10">
+                <p className="text-[11px] font-mono text-white/30 uppercase tracking-[0.1em]">What happens in the demo</p>
                 {[
                   "Hear Voxaris AI answer a live inbound call",
                   "See the receptionist → qualifier → closer handoff in action",
@@ -84,37 +80,29 @@ export default function BookDemo() {
                   "Get your timeline and implementation plan"
                 ].map((item) => (
                   <div key={item} className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                    <span className="text-muted-foreground">{item}</span>
+                    <CheckCircle className="h-4 w-4 text-gold-500 flex-shrink-0 mt-0.5" strokeWidth={1.5} />
+                    <span className="text-[14px] text-white/60">{item}</span>
                   </div>
                 ))}
               </div>
 
               {/* What happens next */}
-              <div className="bg-muted/50 rounded-2xl p-6 border border-border">
-                <h4 className="font-semibold text-foreground mb-4 text-sm uppercase tracking-wider">What happens next</h4>
-                <div className="space-y-4">
-                  <div className="flex items-start gap-3">
-                    <div className="w-7 h-7 rounded-full bg-foreground text-background flex items-center justify-center text-xs font-bold shrink-0">1</div>
-                    <div>
-                      <div className="text-sm font-medium text-foreground">You submit the form</div>
-                      <div className="text-xs text-muted-foreground">Takes 30 seconds.</div>
+              <div className="rounded-2xl p-6 border border-white/[0.07] bg-white/[0.03]">
+                <p className="text-[11px] font-mono text-white/30 uppercase tracking-[0.1em] mb-5">What happens next</p>
+                <div className="space-y-5">
+                  {[
+                    { num: '1', title: 'You submit the form', sub: 'Takes 30 seconds.' },
+                    { num: '2', title: 'Ethan reaches out to schedule', sub: 'Same business day, usually within hours.' },
+                    { num: '3', title: '15-minute walkthrough, tailored to your business', sub: 'Your process, your hours, your CRM.' },
+                  ].map((step) => (
+                    <div key={step.num} className="flex items-start gap-3">
+                      <div className="w-6 h-6 rounded-full bg-white/[0.08] flex items-center justify-center text-[11px] font-mono text-white/40 shrink-0">{step.num}</div>
+                      <div>
+                        <div className="text-[13px] font-medium text-white/75">{step.title}</div>
+                        <div className="text-[11px] text-white/30">{step.sub}</div>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <div className="w-7 h-7 rounded-full bg-foreground text-background flex items-center justify-center text-xs font-bold shrink-0">2</div>
-                    <div>
-                      <div className="text-sm font-medium text-foreground">Ethan reaches out to schedule</div>
-                      <div className="text-xs text-muted-foreground">Same business day, usually within hours.</div>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <div className="w-7 h-7 rounded-full bg-foreground text-background flex items-center justify-center text-xs font-bold shrink-0">3</div>
-                    <div>
-                      <div className="text-sm font-medium text-foreground">15-minute walkthrough, tailored to your business</div>
-                      <div className="text-xs text-muted-foreground">Your process, your hours, your CRM.</div>
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </div>
             </motion.div>
@@ -126,79 +114,56 @@ export default function BookDemo() {
               transition={{ duration: 0.6, delay: 0.2 }}
             >
               {!submitted ? (
-                <div className="bg-card rounded-3xl border border-border p-8 lg:p-10 shadow-elegant">
+                <div className="rounded-3xl border border-white/[0.07] bg-white/[0.03] p-8 lg:p-10">
                   <div className="flex items-center gap-3 mb-8">
-                    <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center">
-                      <CalendarCheck className="h-5 w-5 text-primary-foreground" />
+                    <div className="w-10 h-10 rounded-full bg-gold-500/15 border border-gold-500/20 flex items-center justify-center">
+                      <CalendarCheck className="h-4 w-4 text-gold-400" strokeWidth={1.5} />
                     </div>
                     <div>
-                      <h2 className="font-semibold text-foreground">Request a Demo</h2>
-                      <p className="text-sm text-muted-foreground">Same-day response. Usually within hours.</p>
+                      <h2 className="text-[15px] font-medium text-white">Request a Demo</h2>
+                      <p className="text-[12px] text-white/35">Same-day response. Usually within hours.</p>
                     </div>
                   </div>
 
-                  <form onSubmit={handleSubmit} className="space-y-5">
-                    <div className="space-y-2">
-                      <Label htmlFor="name">Your Name</Label>
-                      <Input
-                        id="name"
-                        placeholder="John Smith"
-                        value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        required
-                        className="h-12"
-                      />
-                    </div>
+                  <form onSubmit={handleSubmit} className="space-y-7">
+                    {[
+                      { id: 'name', label: 'Your Name', type: 'text', placeholder: 'John Smith', required: true, value: formData.name, onChange: (v: string) => setFormData({ ...formData, name: v }) },
+                      { id: 'phone', label: 'Phone Number', type: 'tel', placeholder: '(555) 555-5555', required: true, value: formData.phone, onChange: (v: string) => setFormData({ ...formData, phone: v }) },
+                      { id: 'company', label: 'Company Name', type: 'text', placeholder: 'Acme Corp', required: true, value: formData.company, onChange: (v: string) => setFormData({ ...formData, company: v }) },
+                      { id: 'locations', label: 'Number of Locations', type: 'text', placeholder: 'e.g. 3', required: false, value: formData.locations, onChange: (v: string) => setFormData({ ...formData, locations: v }) },
+                    ].map((field) => (
+                      <div key={field.id} className="space-y-1.5">
+                        <label htmlFor={field.id} className="block text-[10px] font-mono text-white/35 uppercase tracking-[0.1em]">
+                          {field.label}{!field.required && <span className="ml-1 text-white/20">— optional</span>}
+                        </label>
+                        <input
+                          id={field.id}
+                          type={field.type}
+                          placeholder={field.placeholder}
+                          value={field.value}
+                          onChange={(e) => field.onChange(e.target.value)}
+                          required={field.required}
+                          className="w-full h-11 bg-transparent border-0 border-b border-white/[0.12] text-white text-[14px] placeholder:text-white/20 focus:outline-none focus:border-white/35 transition-colors pb-2"
+                        />
+                      </div>
+                    ))}
 
-                    <div className="space-y-2">
-                      <Label htmlFor="phone">Phone Number</Label>
-                      <Input
-                        id="phone"
-                        type="tel"
-                        placeholder="(555) 555-5555"
-                        value={formData.phone}
-                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        required
-                        className="h-12"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="company">Company Name</Label>
-                      <Input
-                        id="company"
-                        placeholder="Acme Corp"
-                        value={formData.company}
-                        onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                        required
-                        className="h-12"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="locations">Number of Locations (Optional)</Label>
-                      <Input
-                        id="locations"
-                        placeholder="e.g. 3"
-                        value={formData.locations}
-                        onChange={(e) => setFormData({ ...formData, locations: e.target.value })}
-                        className="h-12"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="message">Anything else? (Optional)</Label>
-                      <Textarea
+                    <div className="space-y-1.5">
+                      <label htmlFor="message" className="block text-[10px] font-mono text-white/35 uppercase tracking-[0.1em]">
+                        Anything else? <span className="ml-1 text-white/20">— optional</span>
+                      </label>
+                      <textarea
                         id="message"
                         placeholder="Current challenges, questions, timing..."
                         value={formData.message}
                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                        className="min-h-[80px]"
+                        rows={3}
+                        className="w-full bg-transparent border-0 border-b border-white/[0.12] text-white text-[14px] placeholder:text-white/20 focus:outline-none focus:border-white/35 transition-colors resize-none pb-2 pt-1"
                       />
                     </div>
 
-                    {/* SMS Consent — optional, not required to submit */}
-                    <div className="flex items-start gap-3 mt-2 p-3 rounded-xl" data-consent="sms-optin" data-required="false">
+                    {/* SMS Consent */}
+                    <div className="flex items-start gap-3" data-consent="sms-optin" data-required="false">
                       <input
                         type="checkbox"
                         id="smsConsent"
@@ -207,56 +172,60 @@ export default function BookDemo() {
                         aria-required="false"
                         checked={formData.smsConsent}
                         onChange={(e) => setFormData({ ...formData, smsConsent: e.target.checked })}
-                        className="mt-1 h-4 w-4 rounded border-border text-primary focus:ring-primary shrink-0"
+                        className="mt-0.5 h-3.5 w-3.5 rounded-sm border-white/20 bg-transparent text-gold-500 focus:ring-gold-500 shrink-0"
                       />
-                      <label htmlFor="smsConsent" className="text-xs text-muted-foreground leading-relaxed">
-                        I consent to receive recurring automated marketing and promotional text messages, service notifications, appointment reminders, and AI-powered phone calls from Voxaris LLC at the phone number provided. Consent is not a condition of purchase. Message & data rates may apply. Message frequency varies. Text STOP to opt out, text HELP for help.
+                      <label htmlFor="smsConsent" className="text-[11px] text-white/25 leading-relaxed">
+                        I consent to receive recurring automated marketing and promotional text messages, service notifications, appointment reminders, and AI-powered phone calls from Voxaris LLC at the phone number provided. Consent is not a condition of purchase. Msg &amp; data rates may apply. Text STOP to opt out.
                       </label>
                     </div>
-                    <p className="text-xs text-muted-foreground mt-1 ml-10">
-                      <a href="/privacy" className="text-foreground underline underline-offset-2">Privacy Policy</a>
+                    <p className="text-[11px] text-white/20 -mt-4 ml-[26px]">
+                      <a href="/privacy" className="text-white/35 hover:text-white/60 transition-colors underline underline-offset-2">Privacy Policy</a>
                       {" · "}
-                      <a href="/terms" className="text-foreground underline underline-offset-2">Terms of Service</a>
+                      <a href="/terms" className="text-white/35 hover:text-white/60 transition-colors underline underline-offset-2">Terms of Service</a>
                     </p>
 
-                    <Button type="submit" variant="hero" size="xl" className="w-full mt-6" disabled={submitting}>
+                    <button
+                      type="submit"
+                      disabled={submitting}
+                      className="w-full h-12 rounded-full bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 hover:from-gold-500 hover:via-gold-400 hover:to-gold-500 text-white text-[14px] font-semibold border border-gold-400/30 shadow-gold-btn transition-all duration-300 hover:-translate-y-0.5 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                    >
                       {submitting ? (
                         <>
-                          <Loader2 className="h-5 w-5 animate-spin" />
+                          <Loader2 className="h-4 w-4 animate-spin" />
                           Submitting...
                         </>
                       ) : (
                         <>
                           Request Demo
-                          <ArrowRight className="h-5 w-5" />
+                          <ArrowRight className="h-4 w-4" />
                         </>
                       )}
-                    </Button>
+                    </button>
 
-                    <p className="text-xs text-center text-muted-foreground pt-2">
-                      Or skip the form — call <a href="tel:+14077594100" className="font-medium text-foreground underline underline-offset-2">(407) 759-4100</a> and talk to our AI agent right now.
+                    <p className="text-[11px] text-center text-white/25 pt-1">
+                      Or call <a href="tel:+14077594100" className="text-white/45 hover:text-white transition-colors">(407) 759-4100</a> and talk to our AI agent right now.
                     </p>
                   </form>
                 </div>
               ) : (
-                <div className="bg-card rounded-3xl border border-border p-8 lg:p-10 shadow-elegant text-center">
+                <div className="rounded-3xl border border-white/[0.07] bg-white/[0.03] p-8 lg:p-10 text-center">
                   <motion.div
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 0.5 }}
                   >
-                    <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-6">
-                      <CheckCircle className="h-10 w-10 text-green-600" />
+                    <div className="w-16 h-16 rounded-full bg-gold-500/10 border border-gold-500/20 flex items-center justify-center mx-auto mb-6">
+                      <CheckCircle className="h-8 w-8 text-gold-400" strokeWidth={1.5} />
                     </div>
-                    <h2 className="text-2xl font-semibold text-foreground mb-3">
+                    <h2 className="text-2xl font-light text-white mb-3">
                       You're on the list.
                     </h2>
-                    <p className="text-muted-foreground mb-4">
+                    <p className="text-white/50 mb-4 text-[14px]">
                       Ethan will reach out same business day to schedule your demo. Usually within a few hours.
                     </p>
-                    <p className="text-sm text-muted-foreground mb-6">
+                    <p className="text-[13px] text-white/30 mb-6">
                       In the meantime, hear Voxaris AI handle a live call on our{" "}
-                      <a href="/demo" className="text-foreground underline underline-offset-2 font-medium">
+                      <a href="/demo" className="text-white/60 hover:text-white transition-colors underline underline-offset-2">
                         demo page
                       </a>.
                     </p>

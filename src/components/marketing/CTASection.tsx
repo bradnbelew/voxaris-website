@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -60,22 +59,21 @@ export function CTASection() {
           transition={{ delay: 0.3, duration: 0.7, ease }}
         >
           <Link to="/talking-postcard">
-            <Button
-              size="lg"
-              className="bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 hover:from-gold-500 hover:via-gold-400 hover:to-gold-500 text-white h-14 px-10 text-[15px] font-semibold rounded-full group shadow-gold-btn hover:shadow-[0_8px_32px_rgba(212,168,67,0.35)] transition-all duration-500 hover:-translate-y-0.5 border border-gold-400/30"
+            <button
+              className="bg-white hover:bg-neutral-100 text-black h-14 px-10 text-[15px] font-medium group inline-flex items-center transition-all duration-200 hover:-translate-y-0.5"
+              style={{ borderRadius: '4px', boxShadow: '0 1px 0 rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.6), 0 8px 24px -8px rgba(212,168,67,0.3)' }}
             >
               See It In Action
               <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-            </Button>
+            </button>
           </Link>
           <Link to="/book-demo">
-            <Button
-              size="lg"
-              variant="ghost"
-              className="text-white/60 hover:text-white hover:bg-white/[0.06] h-14 px-8 text-[15px] font-medium rounded-full border border-white/20 hover:border-white/30 transition-all duration-300"
+            <button
+              className="text-white/60 hover:text-white h-14 px-8 text-[15px] font-medium border border-white/20 hover:border-white/35 transition-all duration-200"
+              style={{ borderRadius: '4px', background: 'transparent' }}
             >
               Book a Demo
-            </Button>
+            </button>
           </Link>
         </motion.div>
 
