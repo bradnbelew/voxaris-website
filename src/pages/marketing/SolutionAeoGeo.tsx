@@ -49,7 +49,7 @@ export function SolutionAeoGeo() {
 ═════════════════════════════════════════════ */
 function TopStrip() {
   return (
-    <div className="border-b border-white/[0.06] bg-black">
+    <div className="border-b border-white/[0.06] bg-black pt-16">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 h-11 flex items-center justify-between text-[11px] font-mono text-white/40">
         <div className="flex items-center gap-3">
           <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: ACCENT }} />

@@ -41,7 +41,7 @@ export function SolutionWebsiteRedesign() {
 
 function TopStrip() {
   return (
-    <div className="relative z-10 border-b border-white/[0.06]">
+    <div className="relative z-10 border-b border-white/[0.06] pt-16">
       <div className="max-w-[1400px] mx-auto px-6 lg:px-12 py-4 flex items-center justify-between gap-6">
         <div className="flex items-center gap-3">
           <span className="h-1.5 w-1.5 rounded-full" style={{ background: ACCENT }} />

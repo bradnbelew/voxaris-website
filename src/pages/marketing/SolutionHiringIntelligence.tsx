@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, Sparkles } from 'lucide-react';
 import { Navbar, Footer } from '@/components/marketing';
 
 const ease = [0.22, 1, 0.36, 1] as const;
@@ -42,7 +42,7 @@ export function SolutionHiringIntelligence() {
 
 function TopStrip() {
   return (
-    <div className="relative z-10 border-b border-white/[0.06]">
+    <div className="relative z-10 border-b border-white/[0.06] pt-16">
       <div className="max-w-[1400px] mx-auto px-6 lg:px-12 py-4 flex items-center justify-between gap-6">
         <div className="flex items-center gap-3">
           <span className="h-1.5 w-1.5 rounded-full" style={{ background: ACCENT }} />
@@ -192,7 +192,7 @@ function Hero() {
                 <span className="text-[10px] font-mono text-carbon-500 tabular-nums">00:12:47</span>
               </div>
 
-              <div className="bg-carbon-950 aspect-[4/3] p-5 flex flex-col justify-between">
+              <div className="bg-carbon-950 p-5 flex flex-col gap-4">
                 <div className="flex items-start justify-between">
                   <div>
                     <div className="w-10 h-10 rounded-full bg-blue-500/20 border border-blue-400/40 flex items-center justify-center text-[14px] font-medium text-blue-300 mb-3">
@@ -227,6 +227,21 @@ function Hero() {
                       </div>
                     </div>
                   ))}
+                </div>
+
+                {/* AI summary */}
+                <div className="border-l-2 pl-3 py-0.5" style={{ borderColor: ACCENT }}>
+                  <div className="flex items-center gap-1.5 mb-1.5">
+                    <Sparkles className="w-2.5 h-2.5" style={{ color: ACCENT }} strokeWidth={2} />
+                    <span className="text-[9px] font-mono uppercase tracking-[0.18em]" style={{ color: ACCENT }}>
+                      AI summary
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-white/70 leading-[1.55]">
+                    7 yrs inside-sales experience. Warm, clear on the phone, answers without filler.
+                    Available immediately, flexible on schedule. Handled objections cleanly — would be a
+                    <span className="text-white font-medium"> strong hire for the SDR role.</span>
+                  </p>
                 </div>
 
                 <div className="inline-flex items-center gap-2 px-2.5 py-1 bg-emerald-500/15 border border-emerald-500/30 rounded w-fit">
