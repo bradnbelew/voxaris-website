@@ -1,41 +1,8 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 
 const ease = [0.22, 1, 0.36, 1] as const;
-
-/* Four products shown as live activity — all running right now */
-const liveItems = [
-  {
-    product: 'Hiring Intelligence',
-    status: 'Interview complete',
-    detail: 'Sarah M. · Sales Rep · Fit score: 94 · Recommend hire',
-    dot: 'bg-blue-400',
-    ping: 'bg-blue-300',
-  },
-  {
-    product: 'Talking Postcards',
-    status: 'Appointment booked',
-    detail: 'Michael T. scanned QR 4 min ago · Synced to CRM',
-    dot: 'bg-gold-500',
-    ping: 'bg-gold-400',
-  },
-  {
-    product: 'Website Redesign',
-    status: 'Site launched',
-    detail: 'Orlando HVAC Co. · PageSpeed 96 · Mobile A+ · Live',
-    dot: 'bg-violet-400',
-    ping: 'bg-violet-300',
-  },
-  {
-    product: 'AEO-GEO',
-    status: 'Cited in AI search',
-    detail: 'ChatGPT · "best HVAC contractor Orlando" · 9× this week',
-    dot: 'bg-emerald-500',
-    ping: 'bg-emerald-400',
-  },
-];
 
 export function Hero() {
   return (
@@ -81,17 +48,17 @@ export function Hero() {
           </span>
         </motion.div>
 
-        {/* Headline */}
+        {/* Headline — clean, tight bold sans */}
         <motion.h1
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.08, ease }}
-          className="font-editorial text-white leading-[1.02] mb-6"
-          style={{ fontSize: 'clamp(3rem, 7.5vw, 6rem)', letterSpacing: '-0.025em' }}
+          className="font-bold text-white leading-[1.02] mb-6"
+          style={{ fontSize: 'clamp(2.8rem, 7vw, 5.5rem)', letterSpacing: '-0.04em' }}
         >
           The tools your competitors
           <br />
-          <em className="text-gold-gradient not-italic" style={{ fontStyle: 'italic' }}>don't have yet.</em>
+          <span className="text-gold-gradient">don't have yet.</span>
         </motion.h1>
 
         {/* Subhead */}
@@ -131,73 +98,50 @@ export function Hero() {
           </a>
         </motion.div>
 
-        {/* Live Activity Card */}
+        {/* Hero Image — photorealistic AI agent */}
         <motion.div
           initial={{ opacity: 0, y: 32, scale: 0.98 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.9, delay: 0.35, ease }}
-          className="mx-auto max-w-2xl"
+          className="mx-auto max-w-3xl relative"
         >
+          {/* Ambient glow under image */}
           <div
-            className="border border-white/[0.07] overflow-hidden text-left"
-            style={{ background: '#0a0a0a', borderRadius: '6px' }}
+            className="absolute -inset-8 pointer-events-none"
+            style={{ background: 'radial-gradient(ellipse at 50% 50%, rgba(212,168,67,0.15) 0%, transparent 60%)' }}
+          />
+
+          <div
+            className="relative overflow-hidden border border-white/[0.08]"
+            style={{ borderRadius: '8px', boxShadow: '0 30px 80px -20px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.02) inset' }}
           >
-            {/* Card header */}
-            <div className="flex items-center justify-between px-5 py-3.5 border-b border-white/[0.05]">
-              <div className="flex items-center gap-2.5">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400/40" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-                </span>
-                <span className="text-[11px] font-medium text-white/40 font-mono">
-                  4 agents active right now
-                </span>
-              </div>
-              <span className="text-[10px] font-bold text-white/20 uppercase tracking-[0.15em] font-mono">
-                Live
+            <img
+              src="/maria-hero.png"
+              alt="Voxaris AI video agent — photorealistic, live, answering calls and booking appointments 24/7"
+              className="w-full h-auto block"
+              loading="eager"
+            />
+
+            {/* Live indicator overlay */}
+            <div className="absolute top-4 left-4 flex items-center gap-2 px-3 py-1.5 bg-black/60 backdrop-blur-md border border-white/10" style={{ borderRadius: '4px' }}>
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400/50" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
               </span>
+              <span className="text-[10px] font-mono text-white/70 uppercase tracking-[0.15em]">Live</span>
             </div>
 
-            {/* Activity rows */}
-            <div>
-              {liveItems.map((item, i) => (
-                <motion.div
-                  key={item.product}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.5, delay: 0.6 + i * 0.12, ease }}
-                  className="flex items-start gap-3.5 px-5 py-4 border-b border-white/[0.04] last:border-0 hover:bg-white/[0.02] transition-colors"
-                >
-                  {/* Status dot */}
-                  <span className="relative flex h-2 w-2 shrink-0 mt-[5px]">
-                    <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${item.ping} opacity-40`} />
-                    <span className={`relative inline-flex rounded-full h-2 w-2 ${item.dot}`} />
-                  </span>
-
-                  {/* Content */}
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-baseline gap-2.5 flex-wrap">
-                      <span className="text-[12px] font-bold text-white/65 font-mono whitespace-nowrap">
-                        {item.product}
-                      </span>
-                      <span className="text-[12px] text-white/45">{item.status}</span>
-                    </div>
-                    <p className="text-[11px] text-white/25 font-mono mt-0.5 truncate">
-                      {item.detail}
-                    </p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+            {/* Bottom gradient fade */}
+            <div
+              className="absolute bottom-0 left-0 right-0 h-24 pointer-events-none"
+              style={{ background: 'linear-gradient(to bottom, transparent, rgba(0,0,0,0.4))' }}
+            />
           </div>
 
-          {/* Subtle glow under card */}
+          {/* Subtle glow line under image */}
           <div
             className="h-px w-3/4 mx-auto mt-0"
-            style={{
-              background:
-                'linear-gradient(90deg, transparent, rgba(212,168,67,0.15) 50%, transparent)',
-            }}
+            style={{ background: 'linear-gradient(90deg, transparent, rgba(212,168,67,0.2) 50%, transparent)' }}
           />
         </motion.div>
 

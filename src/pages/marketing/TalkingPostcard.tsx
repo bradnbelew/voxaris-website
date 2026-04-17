@@ -259,15 +259,73 @@ export function TalkingPostcard() {
               className="relative"
             >
               <div
-                className="absolute -inset-4 rounded-3xl pointer-events-none"
-                style={{ background: 'radial-gradient(ellipse at 50% 50%, rgba(212,168,67,0.06) 0%, transparent 70%)' }}
+                className="absolute -inset-8 pointer-events-none"
+                style={{ background: 'radial-gradient(ellipse at 50% 50%, rgba(212,168,67,0.08) 0%, transparent 65%)' }}
               />
-              <div className="rounded-2xl overflow-hidden border border-white/[0.08] shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
-                <img
-                  src="/handwritten-mailer.png"
-                  alt="Personalized handwritten talking postcard with QR code that launches a live AI video agent"
-                  className="w-full h-auto"
+              {/* Clean CSS postcard mockup */}
+              <div
+                className="relative overflow-hidden border border-white/[0.08] shadow-[0_20px_60px_rgba(0,0,0,0.5)] aspect-[5/3.2] bg-gradient-to-br from-[#f5ede0] via-[#f1e6d3] to-[#e8dcc3]"
+                style={{ borderRadius: '10px' }}
+              >
+                {/* Subtle paper texture */}
+                <div
+                  className="absolute inset-0 opacity-[0.15] pointer-events-none"
+                  style={{
+                    backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(120,80,20,0.25) 1px, transparent 0)',
+                    backgroundSize: '3px 3px',
+                  }}
                 />
+
+                {/* Postmark stamp top right */}
+                <div className="absolute top-4 right-4 w-14 h-16 border-2 border-carbon-800/30 flex items-center justify-center" style={{ borderRadius: '4px' }}>
+                  <div className="text-center">
+                    <div className="text-[8px] font-mono text-carbon-800/50 uppercase tracking-wider leading-none">USPS</div>
+                    <div className="w-6 h-6 mx-auto my-1 rounded-full border border-carbon-800/40" />
+                    <div className="text-[7px] font-mono text-carbon-800/50">FL</div>
+                  </div>
+                </div>
+
+                {/* Handwritten-style greeting */}
+                <div className="absolute top-6 left-7 right-24">
+                  <div className="text-[22px] text-carbon-900 leading-tight" style={{ fontFamily: "'Instrument Serif', Georgia, serif", fontStyle: 'italic' }}>
+                    Hi Michael,
+                  </div>
+                </div>
+
+                {/* Body text */}
+                <div className="absolute top-[35%] left-7 right-7">
+                  <p className="text-[13px] text-carbon-900/85 leading-[1.7]" style={{ fontFamily: "'Instrument Serif', Georgia, serif" }}>
+                    Saw your <span className="italic">Silverado</span> is coming off lease. We have 3 pre-qualified trade offers ready for you — no appointment needed.
+                  </p>
+                  <p className="mt-2 text-[11px] text-carbon-900/60 font-mono">
+                    — Ethan, Orlando Chevrolet
+                  </p>
+                </div>
+
+                {/* QR code bottom right */}
+                <div className="absolute bottom-5 right-5 w-16 h-16 bg-carbon-900 p-1.5" style={{ borderRadius: '3px' }}>
+                  <div className="w-full h-full relative">
+                    {/* Simulated QR pattern */}
+                    <div
+                      className="w-full h-full"
+                      style={{
+                        backgroundImage:
+                          'linear-gradient(90deg, white 20%, transparent 20%, transparent 28%, white 28%, white 40%, transparent 40%, transparent 52%, white 52%, white 68%, transparent 68%, transparent 80%, white 80%), linear-gradient(white 15%, transparent 15%, transparent 30%, white 30%, white 45%, transparent 45%, transparent 60%, white 60%, white 75%, transparent 75%, transparent 90%, white 90%)',
+                        backgroundSize: '100% 100%',
+                      }}
+                    />
+                    {/* Corner markers */}
+                    <div className="absolute top-0 left-0 w-3 h-3 border-2 border-white" />
+                    <div className="absolute top-0 right-0 w-3 h-3 border-2 border-white" />
+                    <div className="absolute bottom-0 left-0 w-3 h-3 border-2 border-white" />
+                  </div>
+                </div>
+
+                {/* CTA caption next to QR */}
+                <div className="absolute bottom-6 left-7 right-24">
+                  <div className="text-[9px] font-mono text-carbon-900/40 uppercase tracking-[0.15em] mb-1">Scan to talk</div>
+                  <div className="text-[14px] font-semibold text-carbon-900">Meet your trade-in agent →</div>
+                </div>
               </div>
             </motion.div>
 
