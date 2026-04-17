@@ -7,7 +7,7 @@ const solutions = [
   {
     label: 'Hiring Intelligence',
     href: '/solutions/hiring-intelligence',
-    desc: 'Phone every applicant. Rank the best.',
+    desc: 'AI video-interviews every applicant. You review the best.',
     icon: Users,
     color: 'text-blue-400',
     bg: 'bg-blue-500/10',
@@ -23,7 +23,7 @@ const solutions = [
   {
     label: 'Website Redesign',
     href: '/solutions/website-redesign',
-    desc: 'A site built to convert. Live in weeks.',
+    desc: 'A site built to convert. Live in 48 hours.',
     icon: Globe,
     color: 'text-violet-400',
     bg: 'bg-violet-500/10',

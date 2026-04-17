@@ -19,8 +19,8 @@ export function SolutionHiringIntelligence() {
   return (
     <div className="min-h-screen bg-black">
       <Helmet>
-        <title>Hiring Intelligence | Voxaris — AI That Phones Every Applicant</title>
-        <meta name="description" content="AI hiring agents call every applicant within minutes, run consistent 10-minute screening interviews, score and rank candidates, and push the best to your dashboard." />
+        <title>Hiring Intelligence | Voxaris — AI That Video-Interviews Every Applicant</title>
+        <meta name="description" content="An AI video agent interviews every applicant the moment they apply, scores fit, surfaces strengths and concerns, and hands you a ranked shortlist with recordings you can replay." />
         <link rel="canonical" href="https://voxaris.io/solutions/hiring-intelligence" />
         <meta property="og:title" content="Hiring Intelligence | Voxaris" />
         <meta property="og:description" content="Stop losing great hires to slow screening. AI calls every applicant in minutes — consistent interviews, automatic scoring, ranked shortlists." />
@@ -67,15 +67,16 @@ function HeroSection() {
           </div>
 
           <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-light text-white leading-[1.05] tracking-[-0.03em] mb-6">
-            Phone every applicant.
+            Every applicant interviewed.
             <br />
-            <span className="text-blue-400">Hire only the best.</span>
+            <span className="text-blue-400">Only the best land on your desk.</span>
           </h1>
 
           <p className="text-[17px] text-white/50 leading-[1.8] mb-8 max-w-2xl">
-            The moment someone applies, an AI agent calls them. Consistent 10-minute screening interview.
-            Automatic scoring. Ranked dashboard with transcripts. Your team only talks to the candidates
-            worth their time.
+            The moment someone applies, an AI video agent interviews them. It scores fit,
+            writes up strengths and concerns, and hands you a ranked shortlist with full
+            recordings you can replay. Your team only sits down with the candidates worth
+            their time.
           </p>
 
           <div className="flex flex-wrap gap-4">
@@ -201,10 +202,10 @@ function ProblemSection() {
 
 function HowItWorks() {
   const steps = [
-    { num: '01', icon: Phone, title: 'Applicant submits', desc: 'Someone applies to your open role. Within minutes — not days — an AI agent calls them.' },
-    { num: '02', icon: Users, title: 'AI conducts interview', desc: 'Consistent 10-minute phone screen. Same questions, same tone, every time. No bias, no fatigue.' },
-    { num: '03', icon: BarChart3, title: 'Scores automatically', desc: 'The AI scores experience, fit, availability, and qualifications against your criteria.' },
-    { num: '04', icon: Star, title: 'You see the shortlist', desc: 'Your dashboard shows ranked candidates with transcripts, scores, and AI recommendations.' },
+    { num: '01', icon: Phone, title: 'Applicant submits', desc: 'Someone applies to your open role. The AI agent reaches out to schedule a video interview — usually within the hour.' },
+    { num: '02', icon: Users, title: 'AI conducts interview', desc: 'A structured video interview — same questions, same tone, every time. No bias, no fatigue. Every call recorded.' },
+    { num: '03', icon: BarChart3, title: 'Scores automatically', desc: 'The AI scores experience, fit, and qualifications against your criteria, and writes up the strengths and concerns.' },
+    { num: '04', icon: Star, title: 'You see the shortlist', desc: 'Your dashboard shows ranked candidates with recordings, transcripts, scores, and an AI recommendation on each one.' },
   ];
 
   return (
