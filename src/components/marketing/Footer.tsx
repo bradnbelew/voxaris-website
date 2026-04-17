@@ -6,7 +6,7 @@ const footerLinks = {
     { label: 'Talking Postcards', href: '/talking-postcard' },
     { label: 'AI Hiring Agents', href: '/hiring-agents' },
     { label: 'Presence', href: '/presence' },
-    { label: 'Book Demo', href: '/book-demo' },
+    { label: 'Pricing', href: '/pricing' },
   ],
   solutions: [
     { label: 'Auto Dealerships', href: '/solutions/dealerships' },

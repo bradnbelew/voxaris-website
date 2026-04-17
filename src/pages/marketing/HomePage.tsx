@@ -666,13 +666,13 @@ function FinalCTA() {
               <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
           </Link>
-          <Link to="/talking-postcard">
+          <Link to="/pricing">
             <Button
               size="lg"
               variant="ghost"
               className="text-white/40 hover:text-white hover:bg-white/[0.06] h-14 px-8 text-[14px] rounded-full border border-white/10 hover:border-white/20 transition-all duration-300"
             >
-              Try Talking Postcards
+              View pricing
             </Button>
           </Link>
         </motion.div>

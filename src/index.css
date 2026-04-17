@@ -248,6 +248,31 @@
   transition: opacity 0.3s ease;
 }
 
+/* ── Focus-visible ring (accessibility) ── */
+:focus-visible {
+  outline: 2px solid rgba(212, 168, 67, 0.45);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Remove default outline for mouse users, keep for keyboard */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ── Interactive element micro-interactions ── */
+a, button {
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+}
+
+/* Smooth card lift on hover — apply with .card-lift */
+.card-lift {
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.card-lift:hover {
+  transform: translateY(-2px);
+}
+
 /* Scrollbar styling */
 ::-webkit-scrollbar {
   width: 5px;

@@ -323,12 +323,19 @@ function HiringCTA() {
           <p className="text-[15px] text-white/40 mb-8 max-w-lg mx-auto leading-relaxed">
             See AI Hiring Agents in action. We'll show you exactly how the call flow, scoring, and dashboard work with your open roles.
           </p>
-          <Link to="/book-demo">
-            <Button size="lg" className="bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 hover:from-gold-500 hover:via-gold-400 hover:to-gold-500 text-white h-14 px-10 text-[15px] font-semibold rounded-full group shadow-gold-btn border border-gold-400/30 transition-all duration-500 hover:-translate-y-0.5">
-              Book a Demo
-              <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-            </Button>
-          </Link>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <Link to="/book-demo">
+              <Button size="lg" className="bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 hover:from-gold-500 hover:via-gold-400 hover:to-gold-500 text-white h-14 px-10 text-[15px] font-semibold rounded-full group shadow-gold-btn border border-gold-400/30 transition-all duration-500 hover:-translate-y-0.5 w-full sm:w-auto">
+                Book a Demo
+                <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </Link>
+            <Link to="/pricing">
+              <Button size="lg" variant="ghost" className="text-white/40 hover:text-white hover:bg-white/[0.05] h-14 px-8 text-[15px] font-medium rounded-full border border-white/[0.08] hover:border-white/[0.16] transition-all duration-300 w-full sm:w-auto">
+                View pricing
+              </Button>
+            </Link>
+          </div>
         </motion.div>
       </div>
     </section>

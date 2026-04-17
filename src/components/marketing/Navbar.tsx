@@ -27,6 +27,7 @@ const navLinks = [
     ],
   },
   { label: 'How It Works', href: '/how-it-works' },
+  { label: 'Pricing', href: '/pricing' },
   { label: 'Blog', href: '/blog' },
 ];
 
@@ -126,7 +127,11 @@ export function Navbar() {
                     <Link
                       to={link.href}
                       className={`px-4 py-2 text-[13px] font-medium transition-all duration-200 ${
-                        location.pathname === link.href ? 'text-gold-400' : 'text-white/50 hover:text-white/80'
+                        location.pathname === link.href
+                          ? 'text-gold-400'
+                          : link.label === 'Pricing'
+                            ? 'text-white/60 hover:text-gold-400'
+                            : 'text-white/50 hover:text-white/80'
                       }`}
                     >
                       {link.label}

@@ -21,6 +21,7 @@ import {
   BlogPost,
   HiringAgents,
   Presence,
+  Pricing,
 } from "./pages/marketing";
 import Technology from "./pages/Technology";
 import HowItWorks from "./pages/HowItWorks";
@@ -87,6 +88,7 @@ const App = () => (
           {/* Solution Pages */}
           <Route path="/hiring-agents" element={<HiringAgents />} />
           <Route path="/presence" element={<Presence />} />
+          <Route path="/pricing" element={<Pricing />} />
           <Route path="/solutions/dealerships" element={<SolutionDealerships />} />
           <Route path="/solutions/hospitality" element={<SolutionHospitality />} />
           <Route path="/solutions/contractors" element={<SolutionContractors />} />
