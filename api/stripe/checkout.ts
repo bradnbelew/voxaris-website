@@ -1,9 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import Stripe from 'stripe';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2026-03-25.dahlia' as any,
-});
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 type PlanKey = 'go' | 'grow' | 'scale' | 'pro' | 'enterprise';
 
