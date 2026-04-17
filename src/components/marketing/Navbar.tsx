@@ -151,8 +151,7 @@ export function Navbar() {
             <div className="hidden lg:flex items-center gap-3">
               <Link
                 to="/book-demo"
-                className="flex items-center gap-2 px-5 h-9 bg-white text-black hover:bg-neutral-100 text-[13px] font-medium transition-all duration-200 group"
-                style={{ borderRadius: '4px', boxShadow: '0 1px 0 rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.6)' }}
+                className="flex items-center gap-2 px-5 h-9 rounded-full bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 hover:from-gold-500 hover:via-gold-400 hover:to-gold-500 text-white text-[13px] font-semibold border border-gold-400/30 shadow-gold-btn transition-all duration-300 group"
               >
                 See a Live Demo
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
@@ -229,8 +228,7 @@ export function Navbar() {
               <div className="p-6 border-t border-white/[0.06]">
                 <Link to="/book-demo" className="block">
                   <button
-                    className="w-full h-12 bg-white text-black font-medium text-[15px] flex items-center justify-center gap-2"
-                    style={{ borderRadius: '4px' }}
+                    className="w-full h-12 rounded-full bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 text-white font-semibold text-[15px] border border-gold-400/30 shadow-gold-btn flex items-center justify-center gap-2"
                   >
                     See a Live Demo <ArrowRight className="w-4 h-4" />
                   </button>

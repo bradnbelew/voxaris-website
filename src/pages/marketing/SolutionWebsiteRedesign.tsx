@@ -82,8 +82,7 @@ function HeroSection() {
           <div className="flex flex-wrap gap-3">
             <Link to="/book-demo">
               <button
-                className="flex items-center gap-2 px-7 h-12 bg-white text-black hover:bg-neutral-100 text-[14px] font-medium transition-all duration-200 hover:-translate-y-0.5 group"
-                style={{ borderRadius: '4px', boxShadow: '0 1px 0 rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.6)' }}
+                className="flex items-center gap-2 px-8 h-12 rounded-full bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 hover:from-gold-500 hover:via-gold-400 hover:to-gold-500 text-white text-[14px] font-semibold border border-gold-400/30 shadow-gold-btn transition-all duration-300 hover:-translate-y-0.5 group"
               >
                 Get a free quote <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
               </button>
@@ -92,8 +91,7 @@ function HeroSection() {
               href="https://audit.voxaris.io/"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-7 h-12 border border-white/[0.1] text-white/55 hover:text-white hover:border-white/[0.22] text-[14px] transition-all duration-200"
-              style={{ borderRadius: '4px' }}
+              className="flex items-center gap-2 px-7 h-12 rounded-full border border-white/20 hover:border-white/35 text-white/60 hover:text-white text-[14px] transition-all duration-200"
             >
               Free site audit →
             </a>
@@ -225,8 +223,7 @@ function CTAB() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link to="/book-demo">
               <button
-                className="flex items-center gap-2 px-8 h-12 bg-white text-black hover:bg-neutral-100 text-[14px] font-medium transition-all duration-200 hover:-translate-y-0.5 group"
-                style={{ borderRadius: '4px', boxShadow: '0 1px 0 rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.6)' }}
+                className="flex items-center gap-2 px-8 h-12 rounded-full bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 hover:from-gold-500 hover:via-gold-400 hover:to-gold-500 text-white text-[14px] font-semibold border border-gold-400/30 shadow-gold-btn transition-all duration-300 hover:-translate-y-0.5 group"
               >
                 Book a Free Demo <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
               </button>
@@ -235,8 +232,7 @@ function CTAB() {
               href="https://audit.voxaris.io/"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-7 h-12 border border-white/[0.1] text-white/55 hover:text-white hover:border-white/[0.22] text-[14px] transition-all duration-200"
-              style={{ borderRadius: '4px' }}
+              className="flex items-center gap-2 px-7 h-12 rounded-full border border-white/20 hover:border-white/35 text-white/60 hover:text-white text-[14px] transition-all duration-200"
             >
               Free site audit →
             </a>

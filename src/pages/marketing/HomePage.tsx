@@ -2,7 +2,6 @@ import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { NumberTicker } from '@/components/magicui/number-ticker';
-import { BorderBeam } from '@/components/magicui/border-beam';
 import {
   ArrowRight,
   Users,
@@ -362,11 +361,10 @@ function HowItAll() {
 
         {/* Bundle callout */}
         <motion.div
-          className="mt-10 relative p-6 border border-gold-500/20 bg-gold-500/[0.04] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 overflow-hidden"
+          className="mt-10 p-6 border border-gold-500/20 bg-gold-500/[0.04] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5"
           style={{ borderRadius: '6px' }}
           {...fadeUp(0.3)}
         >
-          <BorderBeam size={80} duration={8} colorFrom="#d4a843" colorTo="rgba(212,168,67,0)" />
           <div>
             <div className="flex items-center gap-2 mb-1.5">
               <Star className="w-3.5 h-3.5 text-gold-400" strokeWidth={1.5} />
@@ -381,8 +379,7 @@ function HowItAll() {
           </div>
           <Link
             to="/book-demo"
-            className="shrink-0 flex items-center gap-2 px-6 h-10 bg-white text-black hover:bg-neutral-100 text-[13px] font-medium transition-all duration-200 hover:-translate-y-0.5 group"
-            style={{ borderRadius: '4px', boxShadow: '0 1px 0 rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.6)' }}
+            className="shrink-0 flex items-center gap-2 px-6 h-10 rounded-full bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 hover:from-gold-500 hover:via-gold-400 hover:to-gold-500 text-white text-[13px] font-semibold border border-gold-400/30 shadow-gold-btn transition-all duration-300 hover:-translate-y-0.5 group"
           >
             Get the bundle <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
           </Link>
@@ -423,8 +420,8 @@ function FinalCTA() {
         <motion.div className="flex flex-col sm:flex-row items-center justify-center gap-3" {...fadeUp(0.1)}>
           <Link to="/book-demo">
             <button
-              className="flex items-center gap-2 px-8 bg-white text-black hover:bg-neutral-100 text-[14px] font-medium transition-all duration-200 hover:-translate-y-0.5 group"
-              style={{ height: '52px', borderRadius: '4px', boxShadow: '0 1px 0 rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.6), 0 8px 24px -8px rgba(212,168,67,0.25)' }}
+              className="flex items-center gap-2 px-9 rounded-full bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 hover:from-gold-500 hover:via-gold-400 hover:to-gold-500 text-white text-[14px] font-semibold border border-gold-400/30 shadow-gold-btn transition-all duration-300 hover:-translate-y-0.5 group"
+              style={{ height: '52px' }}
             >
               Book a Free Demo
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -434,8 +431,7 @@ function FinalCTA() {
             href="https://audit.voxaris.io/"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 px-7 h-[52px] border border-white/[0.1] text-white/55 hover:text-white hover:border-white/[0.22] text-[14px] transition-all duration-200"
-            style={{ borderRadius: '4px' }}
+            className="flex items-center gap-2 px-7 h-[52px] rounded-full border border-white/20 hover:border-white/35 text-white/60 hover:text-white text-[14px] transition-all duration-200"
           >
             Free website audit →
           </a>

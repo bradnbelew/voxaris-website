@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Sparkles } from 'lucide-react';
-import { BorderBeam } from '@/components/magicui/border-beam';
+import { ShineBorder } from '@/components/magicui/shine-border';
 import { AuroraText } from '@/components/magicui/aurora-text';
 import { AnimatedShinyText } from '@/components/magicui/animated-shiny-text';
 import { NumberTicker } from '@/components/magicui/number-ticker';
@@ -88,7 +88,7 @@ export function Hero() {
           Websites that convert. Search visibility that compounds. Pick one or use all four.
         </motion.p>
 
-        {/* CTAs */}
+        {/* CTAs — gold gradient rounded-full */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -97,12 +97,7 @@ export function Hero() {
         >
           <Link to="/book-demo" className="w-full sm:w-auto">
             <button
-              className="group relative flex w-full sm:w-auto items-center justify-center gap-2 h-[52px] px-8 text-[14px] font-medium text-black bg-white hover:bg-neutral-100 transition-all duration-200 hover:-translate-y-0.5 overflow-hidden"
-              style={{
-                borderRadius: '6px',
-                boxShadow:
-                  '0 1px 0 rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.6), 0 8px 24px -8px rgba(212,168,67,0.3)',
-              }}
+              className="group flex w-full sm:w-auto items-center justify-center gap-2 h-[52px] px-9 text-[14px] font-semibold text-white rounded-full bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 hover:from-gold-500 hover:via-gold-400 hover:to-gold-500 border border-gold-400/30 shadow-gold-btn transition-all duration-300 hover:-translate-y-0.5"
             >
               See a Live Demo
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -110,8 +105,7 @@ export function Hero() {
           </Link>
           <a href="#solutions" className="w-full sm:w-auto">
             <button
-              className="flex w-full sm:w-auto items-center justify-center h-[52px] px-8 text-[14px] font-medium text-white/60 hover:text-white hover:border-white/25 transition-all duration-200"
-              style={{ borderRadius: '6px', border: '1px solid rgba(255,255,255,0.12)', background: 'transparent' }}
+              className="flex w-full sm:w-auto items-center justify-center h-[52px] px-8 text-[14px] font-medium text-white/60 hover:text-white rounded-full border border-white/[0.1] hover:border-white/[0.22] transition-all duration-200"
             >
               Explore Solutions
             </button>
@@ -175,15 +169,11 @@ export function Hero() {
               <div className="text-[10px] font-mono text-white/30">00:42</div>
             </div>
 
-            {/* Animated border beams (two, offset) */}
-            <BorderBeam size={120} duration={8} colorFrom="#d4a843" colorTo="rgba(212,168,67,0)" />
-            <BorderBeam
-              size={120}
-              duration={8}
-              delay={4}
-              colorFrom="#f1c578"
-              colorTo="rgba(241,197,120,0)"
-              reverse
+            {/* Subtle animated shine on the border */}
+            <ShineBorder
+              borderWidth={2}
+              duration={18}
+              shineColor={['#d4a843', 'transparent', '#f1c578', 'transparent']}
             />
           </div>
 

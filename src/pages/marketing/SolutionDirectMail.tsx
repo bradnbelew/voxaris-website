@@ -65,8 +65,7 @@ export function SolutionDirectMail() {
           >
             <Link to="/book-demo">
               <button
-                className="bg-carbon-900 hover:bg-carbon-800 text-white px-8 h-12 font-medium text-[14px] group inline-flex items-center transition-all duration-200 hover:-translate-y-0.5"
-                style={{ borderRadius: '4px' }}
+                className="rounded-full bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 hover:from-gold-500 hover:via-gold-400 hover:to-gold-500 text-white px-8 h-12 font-semibold text-[14px] border border-gold-400/30 shadow-gold-btn group inline-flex items-center transition-all duration-300 hover:-translate-y-0.5"
               >
                 Book a Demo
                 <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-0.5 transition-transform" />
@@ -410,8 +409,7 @@ export function SolutionDirectMail() {
             </p>
             <Link to="/book-demo">
               <button
-                className="bg-white hover:bg-neutral-100 text-carbon-900 px-10 h-14 font-medium text-[15px] group inline-flex items-center transition-all duration-200 hover:-translate-y-0.5"
-                style={{ borderRadius: '4px', boxShadow: '0 4px 20px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.6)' }}
+                className="rounded-full bg-gradient-to-r from-gold-600 via-gold-500 to-gold-600 hover:from-gold-500 hover:via-gold-400 hover:to-gold-500 text-white px-10 h-14 font-semibold text-[15px] border border-gold-400/30 shadow-gold-btn group inline-flex items-center transition-all duration-300 hover:-translate-y-0.5"
               >
                 Book a Demo
                 <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-0.5 transition-transform" />
